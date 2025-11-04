@@ -125,88 +125,21 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen font-sans bg-background">
       <main className="flex-1">
-        <ParallaxHero
-          imageUrls={[heroSectionImage]}
-          baseImageClassName="object-cover"
-          overlayClassName="bg-gradient-to-b from-[#0b3a86]/25 via-[#9B2242]/15 to-transparent"
-          contentClassName="flex h-full items-center"
-          className="h-auto min-h-[70vh] lg:min-h-[80vh]"
-          imageQuality={100}
-        >
-          <div className="container grid items-center gap-12 px-4 py-24 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:py-32">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="space-y-6 text-white drop-shadow-xl"
-            >
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-                className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.45em] text-white"
-              >
-                {t("homepage.hero.badge")}
-              </motion.span>
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-                className="font-serif text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
-              >
-                {t("homepage.hero.title")}
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-                className="max-w-xl text-lg leading-relaxed text-white/90"
-              >
-                {heroTagline}
-              </motion.p>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-              >
-                <div className="flex flex-wrap items-center gap-4">
-                  <Button
-                    asChild
-                    size="lg"
-                    className="rounded-full bg-white px-10 py-6 text-lg font-semibold text-[#9B2242] shadow-[0_14px_28px_rgba(0,0,0,0.25)] transition-all duration-300 hover:bg-white/90"
-                  >
-                    <Link href="/register">{t("homepage.hero.cta")}</Link>
-                  </Button>
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="lg"
-                    className="rounded-full border-white/70 bg-white/10 px-10 py-6 text-lg font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white/20"
-                  >
-                    <Link href="/contact">{t("homepage.hero.secondaryCta")}</Link>
-                  </Button>
-                </div>
-              </motion.div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
-              className="hidden justify-end lg:flex"
-            >
-              <div className="max-w-md rounded-[32px] border border-white/25 bg-white/10 p-6 text-left text-white shadow-2xl backdrop-blur-lg">
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.4em] text-white">
-                  {primaryStory.badge}
-                </span>
-                <p className="mt-4 text-2xl font-semibold leading-snug">
-                  {primaryStory.title}
-                </p>
-                <p className="mt-2 text-sm text-white/80">
-                  {primaryStory.subtitle}
-                </p>
-              </div>
-            </motion.div>
+        <ParallaxHero imageUrls={[
+          'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=2070&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=1974&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1974&auto=format&fit=crop',
+        ]}>
+          <div className="flex flex-col items-center space-y-6 text-white">
+            <h1 className="font-serif text-5xl font-extrabold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
+              A Love That Lasts a Lifetime
+            </h1>
+            <p className="max-w-[700px] text-gray-200 md:text-xl font-light">
+              Jodohmu is where serious commitment meets modern matchmaking. We provide a heartfelt, premium service to help you find your soulmate in a way that honors your faith and values.
+            </p>
+            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-8 py-6 text-lg font-semibold">
+              <Link href="/register">Begin Your Journey</Link>
+            </Button>
           </div>
         </ParallaxHero>
 
