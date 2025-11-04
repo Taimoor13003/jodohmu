@@ -12,9 +12,13 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen font-sans bg-background">
       <main className="flex-1">
-        <ParallaxHero imageUrl="https://images.unsplash.com/photo-1597688393224-8624de4d1253?q=80&w=1935&auto=format&fit=crop">
-          <div className="flex flex-col items-center space-y-6">
-            <h1 className="font-serif text-5xl font-extrabold tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl">
+        <ParallaxHero imageUrls={[
+          'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=2070&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=1974&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1974&auto=format&fit=crop',
+        ]}>
+          <div className="flex flex-col items-center space-y-6 text-white">
+            <h1 className="font-serif text-5xl font-extrabold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
               A Love That Lasts a Lifetime
             </h1>
             <p className="max-w-[700px] text-gray-200 md:text-xl font-light">
