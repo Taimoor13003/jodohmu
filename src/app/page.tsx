@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
@@ -71,7 +72,7 @@ export default function Home() {
         </HorizontalScrollSection>
 
         <AnimatedSection className="w-full py-20 md:py-28 lg:py-36">
-          <div className="container grid items-center gap-12 px-4 md:px-6 lg:grid-cols-2 overflow-hidden">
+          <div className="container grid items-center gap-12 px-4 md:px-6 lg:grid-cols-2">
             <div className="space-y-4">
               <div className="inline-block rounded-lg bg-accent px-3 py-1 text-sm font-semibold text-accent-foreground">Our Philosophy</div>
               <h2 className="text-4xl font-bold font-serif tracking-tighter sm:text-5xl">More Than an App, We're Your Partners</h2>
@@ -80,26 +81,37 @@ export default function Home() {
               </p>
             </div>
             <div className="relative">
-              <img
+              <Image
                 alt="Our Philosophy"
-                className="mx-auto aspect-square overflow-hidden rounded-xl object-cover object-center sm:w-full shadow-2xl"
-                // src="https://images.unsplash.com/photo-1587825140708-df876a5b4df7?q=80&w=2070&auto=format&fit=crop"
-                src="https://images.unsplash.com/photo-1623595286233-393a7020002d?q=80&w=1974&auto=format&fit=crop"
+                className="mx-auto rounded-xl sm:w-full shadow-2xl"
+                src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=2070&auto=format&fit=crop"
+                width={550}
+                height={550}
+                sizes="(min-width: 1024px) 550px, 100vw"
+                priority
+                placeholder="blur"
+                blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
               />
-              <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-accent rounded-full -z-10"></div>
+              <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-accent rounded-full z-20 pointer-events-none"></div>
             </div>
           </div>
         </AnimatedSection>
 
         <AnimatedSection className="w-full py-20 md:py-28 lg:py-36 bg-secondary">
-          <div className="container grid items-center gap-12 px-4 md:px-6 lg:grid-cols-2 overflow-hidden">
+          <div className="container grid items-center gap-12 px-4 md:px-6 lg:grid-cols-2">
             <div className="relative lg:order-last">
-              <img
+              <Image
                 alt="Guided Meetings"
-                className="mx-auto aspect-square overflow-hidden rounded-xl object-cover object-center sm:w-full shadow-2xl"
-                src="https://images.unsplash.com/photo-1610642372651-fe6e7bc20934?q=80&w=1974&auto=format&fit=crop"
+                className="mx-auto rounded-xl sm:w-full shadow-2xl"
+                src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=2070&auto=format&fit=crop"
+                width={550}
+                height={550}
+                sizes="(min-width: 1024px) 550px, 100vw"
+                priority
+                placeholder="blur"
+                blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
               />
-              <div className="absolute -top-8 -left-8 w-48 h-48 bg-primary rounded-full -z-10"></div>
+              <div className="absolute -top-8 -left-8 w-48 h-48 bg-primary rounded-full z-20 pointer-events-none"></div>
             </div>
             <div className="space-y-4">
               <div className="inline-block rounded-lg bg-accent px-3 py-1 text-sm font-semibold text-accent-foreground">Safe & Respectful</div>
