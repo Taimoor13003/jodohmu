@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 100% 99%; /* Ivory */
+    --foreground: 20 14.3% 4.1%;
+
+    --card: 30 100% 99%;
+    --card-foreground: 20 14.3% 4.1%;
+
+    --popover: 30 100% 99%;
+    --popover-foreground: 20 14.3% 4.1%;
+
+    --primary: 340 60% 48%; /* Dusty Rose */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 150 40% 95%; /* Sage Green */
+    --secondary-foreground: 20 14.3% 4.1%;
+
+    --muted: 150 40% 95%;
+    --muted-foreground: 20 8% 40%;
+
+    --accent: 40 90% 65%; /* Gold */
+    --accent-foreground: 20 14.3% 4.1%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 30 20% 90%;
+    --input: 30 20% 90%;
+    --ring: 340 60% 48%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 20 14.3% 4.1%;
+    --foreground: 30 100% 99%;
+
+    --card: 20 14.3% 4.1%;
+    --card-foreground: 30 100% 99%;
+
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 30 100% 99%;
+
+    --primary: 340 60% 48%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 20 10% 15%;
+    --secondary-foreground: 30 100% 99%;
+
+    --muted: 20 10% 15%;
+    --muted-foreground: 30 5% 60%;
+
+    --accent: 40 90% 65%;
+    --accent-foreground: 20 14.3% 4.1%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 20 10% 15%;
+    --input: 20 10% 15%;
+    --ring: 340 60% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
