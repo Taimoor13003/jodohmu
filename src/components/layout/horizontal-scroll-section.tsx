@@ -54,8 +54,18 @@ export function HorizontalScrollSection({ children }: HorizontalScrollSectionPro
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/40 to-secondary" />
       </div>
 
-      <div className="sticky top-0 z-10 flex h-screen items-center overflow-hidden">
-        <motion.div style={{ x }} className="flex gap-8 px-6">
+      <div className="sticky top-0 z-10 flex h-screen items-center">
+                {/* Mobile: simple horizontal scroller */}
+        <div className="no-scrollbar relative mx-auto flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 py-4 w-full md:hidden">
+          {Children.map(children, (child, idx) => (
+            <div key={idx} className="snap-center shrink-0 w-[85vw] max-w-[24rem]">
+              {child}
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop: parallax-linked track */}
+        <motion.div style={{ x }} className="hidden md:flex gap-8 px-6 w-full">
           {Children.map(children, (child, idx) => (
             <motion.div
               key={idx}

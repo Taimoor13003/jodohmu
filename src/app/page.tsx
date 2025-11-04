@@ -39,36 +39,34 @@ export default function Home() {
         </AnimatedSection>
 
         <HorizontalScrollSection>
-          <div className="flex gap-8 p-8">
-            <Card className="w-96 flex-shrink-0 p-6 flex flex-col items-center text-center shadow-xl">
+            <Card className="w-[85vw] max-w-[24rem] sm:w-96 flex-shrink-0 p-6 flex flex-col items-center text-center shadow-xl">
               <div className="bg-primary rounded-full p-4 mb-4">
                 <Heart className="h-10 w-10 text-primary-foreground" />
               </div>
               <h3 className="text-2xl font-bold font-serif mb-2">Personalized Matching</h3>
               <p className="text-muted-foreground">Our dedicated team gets to know you, your values, and your aspirations to find matches that truly resonate with your heart.</p>
             </Card>
-            <Card className="w-96 flex-shrink-0 p-6 flex flex-col items-center text-center shadow-xl">
+            <Card className="w-[85vw] max-w-[24rem] sm:w-96 flex-shrink-0 p-6 flex flex-col items-center text-center shadow-xl">
               <div className="bg-primary rounded-full p-4 mb-4">
                 <Users className="h-10 w-10 text-primary-foreground" />
               </div>
               <h3 className="text-2xl font-bold font-serif mb-2">Serious Community</h3>
               <p className="text-muted-foreground">Join a private, vetted community of individuals who are genuinely ready for a meaningful, long-term commitment.</p>
             </Card>
-            <Card className="w-96 flex-shrink-0 p-6 flex flex-col items-center text-center shadow-xl">
+            <Card className="w-[85vw] max-w-[24rem] sm:w-96 flex-shrink-0 p-6 flex flex-col items-center text-center shadow-xl">
               <div className="bg-primary rounded-full p-4 mb-4">
                 <Calendar className="h-10 w-10 text-primary-foreground" />
               </div>
               <h3 className="text-2xl font-bold font-serif mb-2">Guided Meetings</h3>
               <p className="text-muted-foreground">We facilitate meetings in a way that is comfortable, respectful, and true to your faith.</p>
             </Card>
-            <Card className="w-96 flex-shrink-0 p-6 flex flex-col items-center text-center shadow-xl">
+            <Card className="w-[85vw] max-w-[24rem] sm:w-96 flex-shrink-0 p-6 flex flex-col items-center text-center shadow-xl">
               <div className="bg-primary rounded-full p-4 mb-4">
                 <Star className="h-10 w-10 text-primary-foreground" />
               </div>
               <h3 className="text-2xl font-bold font-serif mb-2">Halal & Supervised</h3>
               <p className="text-muted-foreground">All interactions are designed to be respectful, with options for supervised meetings.</p>
             </Card>
-          </div>
         </HorizontalScrollSection>
 
         <AnimatedSection className="w-full py-20 md:py-28 lg:py-36">
