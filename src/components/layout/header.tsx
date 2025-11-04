@@ -29,7 +29,7 @@ export function Header() {
   return (
     <header className="px-4 lg:px-6 h-16 flex items-center bg-white shadow-sm">
       <Link className="flex items-center justify-center" href="/">
-        <span className="text-xl font-bold">Jodohmu</span>
+        <span className="text-xl font-bold">Jodohmuu</span>
       </Link>
       <nav className="ml-auto flex gap-4 sm:gap-6">
         {user ? (
