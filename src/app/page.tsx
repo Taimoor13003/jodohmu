@@ -130,7 +130,7 @@ export default function Home() {
               <Card className="border-0 shadow-lg">
                 <CardContent className="p-8 flex flex-col items-center text-center">
                   <Avatar className="w-24 h-24 mb-4 border-4 border-accent">
-                    <AvatarImage src="https://images.unsplash.com/photo-1587075234232-3b0f373528d2?q=80&w=1974&auto=format&fit=crop" />
+                    <AvatarImage src="https://i.pravatar.cc/200?u=aisha.omar@example.com" />
                     <AvatarFallback>AO</AvatarFallback>
                   </Avatar>
                   <p className="text-lg italic text-muted-foreground">"Jodohmu helped me find a partner who shares my values and life goals. The process was so respectful and personalized. We are now happily married!"</p>
@@ -140,7 +140,7 @@ export default function Home() {
               <Card className="border-0 shadow-lg">
                 <CardContent className="p-8 flex flex-col items-center text-center">
                   <Avatar className="w-24 h-24 mb-4 border-4 border-accent">
-                    <AvatarImage src="https://images.unsplash.com/photo-1611601372299-9c5d75789a49?q=80&w=1974&auto=format&fit=crop" />
+                    <AvatarImage src="https://i.pravatar.cc/200?u=fatima.ali@example.com" />
                     <AvatarFallback>FA</AvatarFallback>
                   </Avatar>
                   <p className="text-lg italic text-muted-foreground">"I was tired of endless swiping. Jodohmu's team took the time to understand me and introduced me to my husband. I couldn't be happier."</p>
