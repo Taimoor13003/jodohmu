@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LogoIcon from "@/assets/jodohmu-icon-logo.png";
-import { Globe } from "lucide-react";
+import { Globe, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export function Header() {
@@ -54,14 +54,14 @@ export function Header() {
 
   return (
     <header
-      className="sticky top-0 z-50 h-16 flex items-center bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm border-b"
+      className="sticky top-0 z-50 h-20 flex items-center bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm border-b"
       style={{ borderColor: "#9B224233", backgroundImage: "linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.6))" }}
     >
       <div className="container flex items-center w-full">
         <Link className="flex items-center justify-center" href="/">
-          <Image src={LogoIcon} alt="Jodohmu" className="h-8 w-auto" priority />
-          <span className="text-xl font-bold text-blue-900">Jodoh</span>
-          <span className="text-xl font-bold" style={{ color: "#9B2242" }}>mu</span>
+          <Image src={LogoIcon} alt="Jodohmu" className="h-10 w-auto" priority />
+          <span className="text-2xl font-bold text-blue-900">Jodoh</span>
+          <span className="text-2xl font-bold" style={{ color: "#9B2242" }}>mu</span>
 
         </Link>
         <nav className="ml-auto flex items-center gap-2 sm:gap-4">
@@ -71,11 +71,11 @@ export function Header() {
               variant="ghost"
               size="icon"
               aria-label={`Language: ${lang.toUpperCase()}`}
-              className="relative h-9 w-9 rounded-full text-[#0b3a86] border border-[#0b3a86]/30 hover:bg-[#f1f5ff]"
+              className="relative h-12 w-12 rounded-full text-[#0b3a86] border border-[#0b3a86]/30 hover:bg-[#f1f5ff]"
             >
-              <Globe className="h-5 w-5" />
+              <Globe className="h-7 w-7" />
               <span
-                className="absolute -top-1 -right-1 rounded-full px-1.5 py-0.5 text-[10px] leading-none font-semibold text-white shadow"
+                className="absolute -top-1 -right-1 rounded-full px-1.5 py-0.5 text-[11px] leading-none font-semibold text-white shadow"
                 style={{ backgroundColor: badgeBg }}
               >
                 {lang.toUpperCase()}
@@ -102,8 +102,8 @@ export function Header() {
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-8 w-8 rounded-full ring-1" style={{ boxShadow: "none", borderColor: "transparent" }}>
-                <Avatar className="h-8 w-8 ring-1 ring-[#0b3a86]/20 hover:ring-[#0b3a86]/40 transition">
+              <Button variant="ghost" className="relative h-10 w-10 rounded-full ring-1" style={{ boxShadow: "none", borderColor: "transparent" }}>
+                <Avatar className="h-10 w-10 ring-1 ring-[#0b3a86]/20 hover:ring-[#0b3a86]/40 transition">
                   <AvatarImage src={user.photoURL || "/placeholder-user.jpg"} alt={user.displayName || "User"} />
                   <AvatarFallback>{user.displayName?.[0]}</AvatarFallback>
                 </Avatar>
@@ -126,8 +126,15 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button asChild variant="default" className="bg-[#9B2242] hover:bg-[#7f1a36] text-white border-0 rounded-full shadow-sm px-5">
-            <Link href="/login">Login</Link>
+          <Button
+            asChild
+            variant="default"
+            className="group bg-gradient-to-r from-[#9B2242] to-[#0b3a86] hover:from-[#861b37] hover:to-[#0a3377] text-white border-0 rounded-md shadow-md hover:shadow-lg px-6 py-3 text-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b3a86]/40 focus-visible:ring-offset-2"
+         >
+            <Link href="/login" className="flex items-center gap-2">
+              <span>Login</span>
+              <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
+            </Link>
           </Button>
         )}
         </nav>
