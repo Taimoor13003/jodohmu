@@ -17,39 +17,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LogoIcon from "@/assets/jodohmu-icon-logo.png";
-<<<<<<< HEAD
 import { Globe, ArrowRight } from "lucide-react";
 
 export function Header() {
   const { user } = useAuth();
   const { lang, setLang, t } = useLanguage();
-=======
-import { Globe } from "lucide-react";
-import { useEffect, useState } from "react";
-
-export function Header() {
-  const { user } = useAuth();
-  const [lang, setLang] = useState<"id" | "en">("id");
-
-  useEffect(() => {
-    const saved = typeof window !== "undefined" ? (localStorage.getItem("lang") as "id" | "en" | null) : null;
-    const initial = saved || "id";
-    setLang(initial);
-    if (typeof document !== "undefined") {
-      document.documentElement.lang = initial;
-    }
-  }, []);
-
-  const selectLang = (value: "id" | "en") => {
-    setLang(value);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("lang", value);
-    }
-    if (typeof document !== "undefined") {
-      document.documentElement.lang = value;
-    }
-  };
->>>>>>> 655bf31 (feat: add language switcher to header)
 
   const handleLogout = async () => {
     try {
