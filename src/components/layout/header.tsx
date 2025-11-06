@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { auth } from "@/lib/firebase";
@@ -14,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import LogoIcon from "@/assets/jodohmu-icon-logo.png";
 
 export function Header() {
   const { user } = useAuth();
@@ -29,7 +31,10 @@ export function Header() {
   return (
     <header className="px-4 lg:px-6 h-16 flex items-center bg-white shadow-sm">
       <Link className="flex items-center justify-center" href="/">
-        <span className="text-xl font-bold">Jodohmu</span>
+        <Image src={LogoIcon} alt="Jodohmu" className="h-8 w-auto" priority />
+        <span className="text-xl font-bold text-blue-900">Jodoh</span>
+        <span className="text-xl font-bold text-primary">mu</span>
+
       </Link>
       <nav className="ml-auto flex gap-4 sm:gap-6">
         {user ? (
