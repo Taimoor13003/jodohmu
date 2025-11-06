@@ -35,7 +35,7 @@ export function Header() {
 
   return (
     <header
-      className="sticky top-0 z-50 h-16 flex items-center bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm border-b"
+      className="sticky top-0 z-50 h-20 flex items-center bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm border-b"
       style={{ borderColor: "#9B224233", backgroundImage: "linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.6))" }}
     >
       <Link className="flex items-center justify-center" href="/">
@@ -50,11 +50,11 @@ export function Header() {
               variant="ghost"
               size="icon"
               aria-label={`Language: ${lang.toUpperCase()}`}
-              className="relative h-9 w-9 rounded-full text-[#0b3a86] border border-[#0b3a86]/30 hover:bg-[#f1f5ff]"
+              className="relative h-12 w-12 rounded-full text-[#0b3a86] border border-[#0b3a86]/30 hover:bg-[#f1f5ff]"
             >
-              <Globe className="h-5 w-5" />
+              <Globe className="h-7 w-7" />
               <span
-                className="absolute -top-1 -right-1 rounded-full px-1.5 py-0.5 text-[10px] leading-none font-semibold text-white shadow"
+                className="absolute -top-1 -right-1 rounded-full px-1.5 py-0.5 text-[11px] leading-none font-semibold text-white shadow"
                 style={{ backgroundColor: badgeBg }}
               >
                 {lang.toUpperCase()}
@@ -105,8 +105,15 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button asChild variant="default" className="bg-[#9B2242] hover:bg-[#7f1a36] text-white border-0 rounded-full shadow-sm px-5">
-            <Link href="/login">Login</Link>
+          <Button
+            asChild
+            variant="default"
+            className="group bg-gradient-to-r from-[#9B2242] to-[#0b3a86] hover:from-[#861b37] hover:to-[#0a3377] text-white border-0 rounded-md shadow-md hover:shadow-lg px-6 py-3 text-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b3a86]/40 focus-visible:ring-offset-2"
+         >
+            <Link href="/login" className="flex items-center gap-2">
+              <span>Login</span>
+              <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
+            </Link>
           </Button>
         )}
         </nav>
