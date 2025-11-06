@@ -54,16 +54,17 @@ export function Header() {
 
   return (
     <header
-      className="sticky top-0 z-50 px-4 lg:px-6 h-16 flex items-center bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm border-b"
+      className="sticky top-0 z-50 h-16 flex items-center bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm border-b"
       style={{ borderColor: "#9B224233", backgroundImage: "linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.6))" }}
     >
-      <Link className="flex items-center justify-center" href="/">
-        <Image src={LogoIcon} alt="Jodohmu" className="h-8 w-auto" priority />
-        <span className="text-xl font-bold text-blue-900">Jodoh</span>
-        <span className="text-xl font-bold" style={{ color: "#9B2242" }}>mu</span>
+      <div className="container flex items-center w-full">
+        <Link className="flex items-center justify-center" href="/">
+          <Image src={LogoIcon} alt="Jodohmu" className="h-8 w-auto" priority />
+          <span className="text-xl font-bold text-blue-900">Jodoh</span>
+          <span className="text-xl font-bold" style={{ color: "#9B2242" }}>mu</span>
 
-      </Link>
-      <nav className="ml-auto flex items-center gap-2 sm:gap-4">
+        </Link>
+        <nav className="ml-auto flex items-center gap-2 sm:gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -129,7 +130,8 @@ export function Header() {
             <Link href="/login">Login</Link>
           </Button>
         )}
-      </nav>
+        </nav>
+      </div>
     </header>
   );
 }
