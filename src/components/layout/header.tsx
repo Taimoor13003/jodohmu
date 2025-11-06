@@ -35,7 +35,7 @@ export function Header() {
 
   return (
     <header
-      className="sticky top-0 z-50 px-4 lg:px-6 h-16 flex items-center bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm border-b"
+      className="sticky top-0 z-50 h-16 flex items-center bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm border-b"
       style={{ borderColor: "#9B224233", backgroundImage: "linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.6))" }}
     >
       <Link className="flex items-center justify-center" href="/">
@@ -109,7 +109,8 @@ export function Header() {
             <Link href="/login">Login</Link>
           </Button>
         )}
-      </nav>
+        </nav>
+      </div>
     </header>
   );
 }
