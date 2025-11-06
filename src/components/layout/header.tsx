@@ -61,7 +61,7 @@ export function Header() {
       <nav className="ml-auto flex items-center gap-2 sm:gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" aria-label="Language">
+            <Button variant="ghost" size="icon" aria-label="Language" className="text-[#0b3a86] hover:bg-[#e6f0ff]">
               <Globe className="h-5 w-5" />
             </Button>
           </DropdownMenuTrigger>
@@ -103,7 +103,7 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button asChild variant="outline">
+          <Button asChild variant="default" className="bg-[#9B2242] hover:bg-[#7f1a36] text-white border-0">
             <Link href="/login">Login</Link>
           </Button>
         )}
