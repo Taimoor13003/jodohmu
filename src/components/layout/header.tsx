@@ -16,9 +16,31 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LogoIcon from "@/assets/jodohmu-icon-logo.png";
+import { Globe } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function Header() {
   const { user } = useAuth();
+  const [lang, setLang] = useState<"id" | "en">("id");
+
+  useEffect(() => {
+    const saved = typeof window !== "undefined" ? (localStorage.getItem("lang") as "id" | "en" | null) : null;
+    const initial = saved || "id";
+    setLang(initial);
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = initial;
+    }
+  }, []);
+
+  const selectLang = (value: "id" | "en") => {
+    setLang(value);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("lang", value);
+    }
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = value;
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -36,7 +58,24 @@ export function Header() {
         <span className="text-xl font-bold text-primary">mu</span>
 
       </Link>
-      <nav className="ml-auto flex gap-4 sm:gap-6">
+      <nav className="ml-auto flex items-center gap-2 sm:gap-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" aria-label="Language">
+              <Globe className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Language</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => selectLang("id")}>
+              {lang === "id" ? "✓ " : ""}Bahasa Indonesia
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => selectLang("en")}>
+              {lang === "en" ? "✓ " : ""}English
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
