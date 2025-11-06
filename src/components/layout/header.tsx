@@ -50,6 +50,8 @@ export function Header() {
     }
   };
 
+  const badgeBg = lang === "id" ? "#9B2242" : "#0b3a86";
+
   return (
     <header className="px-4 lg:px-6 h-16 flex items-center bg-white shadow-sm">
       <Link className="flex items-center justify-center" href="/">
@@ -61,8 +63,19 @@ export function Header() {
       <nav className="ml-auto flex items-center gap-2 sm:gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" aria-label="Language" className="text-[#0b3a86] hover:bg-[#e6f0ff]">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label={`Language: ${lang.toUpperCase()}`}
+              className="relative h-9 w-9 rounded-full text-[#0b3a86] border border-[#0b3a86]/30 hover:bg-[#f1f5ff]"
+            >
               <Globe className="h-5 w-5" />
+              <span
+                className="absolute -top-1 -right-1 rounded-full px-1.5 py-0.5 text-[10px] leading-none font-semibold text-white shadow"
+                style={{ backgroundColor: badgeBg }}
+              >
+                {lang.toUpperCase()}
+              </span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
