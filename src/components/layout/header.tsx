@@ -34,7 +34,10 @@ export function Header() {
   const badgeBg = lang === "id" ? "#9B2242" : "#0b3a86";
 
   return (
-    <header className="px-4 lg:px-6 h-16 flex items-center bg-white shadow-sm">
+    <header
+      className="sticky top-0 z-50 px-4 lg:px-6 h-16 flex items-center bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm border-b"
+      style={{ borderColor: "#9B224233", backgroundImage: "linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.6))" }}
+    >
       <Link className="flex items-center justify-center" href="/">
         <Image src={LogoIcon} alt="Jodohmu" className="h-8 w-auto" priority />
         <span className="text-xl font-bold text-blue-900">Jodoh</span>
@@ -58,13 +61,19 @@ export function Header() {
               </span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="min-w-[200px] border" style={{ borderColor: "#0b3a8626" }}>
             <DropdownMenuLabel>Language</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => selectLang("id")}>
+            <DropdownMenuItem
+              onClick={() => selectLang("id")}
+              className={lang === "id" ? "bg-[#9B2242]/10 text-[#9B2242]" : undefined}
+            >
               {lang === "id" ? "✓ " : ""}Bahasa Indonesia
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => selectLang("en")}>
+            <DropdownMenuItem
+              onClick={() => selectLang("en")}
+              className={lang === "en" ? "bg-[#0b3a86]/10 text-[#0b3a86]" : undefined}
+            >
               {lang === "en" ? "✓ " : ""}English
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -96,7 +105,7 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button asChild variant="default" className="bg-[#9B2242] hover:bg-[#7f1a36] text-white border-0">
+          <Button asChild variant="default" className="bg-[#9B2242] hover:bg-[#7f1a36] text-white border-0 rounded-full shadow-sm px-5">
             <Link href="/login">Login</Link>
           </Button>
         )}
