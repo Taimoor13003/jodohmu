@@ -22,7 +22,7 @@ const config = {
         'login-bg': "url('https://images.unsplash.com/photo-1523902995823-0b4352a43c75?q=80&w=1974&auto=format&fit=crop')",
       },
       fontFamily: {
-        sans: ['var(--font-montserrat)'],
+        sans: ['var(--font-nunito)'],
         serif: ['var(--font-playfair)'],
       },
       colors: {
