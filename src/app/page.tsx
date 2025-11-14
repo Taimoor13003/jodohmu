@@ -138,7 +138,7 @@ export default function Home() {
               className="text-center"
             >
               <h1 className="font-serif text-5xl font-extrabold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl bg-gradient-to-r from-white via-[#ffd7e2] to-white bg-clip-text text-transparent drop-shadow-2xl">
-                A Love That Lasts a Lifetime
+                {t("homepage.hero.title")}
               </h1>
               <motion.p 
                 initial={{ opacity: 0, y: 20 }}
@@ -146,7 +146,7 @@ export default function Home() {
                 transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
                 className="max-w-[700px] text-gray-100 md:text-xl font-light leading-relaxed mt-6"
               >
-                Jodohmu is where serious commitment meets modern matchmaking. We provide a heartfelt, premium service to help you find your soulmate in a way that honors your faith and values.
+                {t("homepage.hero.description")}
               </motion.p>
             </motion.div>
             <motion.div
@@ -157,7 +157,7 @@ export default function Home() {
               whileTap={{ scale: 0.95 }}
             >
               <Button asChild size="lg" className="bg-gradient-to-r from-[#9B2242] to-[#9B2242]/80 hover:from-[#9B2242]/90 hover:to-[#9B2242]/70 text-white rounded-full px-10 py-7 text-lg font-semibold shadow-2xl hover:shadow-[#9B2242]/25 transition-all duration-300 border border-white/20">
-                <Link href="/register">Begin Your Journey</Link>
+                <Link href="/register">{t("homepage.hero.cta")}</Link>
               </Button>
             </motion.div>
           </div>

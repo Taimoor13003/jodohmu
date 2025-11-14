@@ -258,7 +258,7 @@ export default function RegisterPage() {
               <div className="space-y-6">
                 <div className="flex items-center gap-3 pb-2 border-b border-[#9B2242]/20">
                   <div className="bg-gradient-to-r from-[#9B2242] to-[#0b3a86] rounded-full p-2">
-                    <User className="w-5 h-5 text-white" />
+                    <FileText className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="text-xl font-serif font-semibold text-foreground">{t("register.sections.personal")}</h3>
                 </div>
