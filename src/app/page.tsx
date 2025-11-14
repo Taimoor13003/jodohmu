@@ -126,20 +126,40 @@ export default function Home() {
     <div className="flex flex-col min-h-screen font-sans bg-background">
       <main className="flex-1">
         <ParallaxHero imageUrls={[
-          'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=2070&auto=format&fit=crop',
+          'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=2070&auto=format&fit=crop',
           'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=1974&auto=format&fit=crop',
           'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1974&auto=format&fit=crop',
         ]}>
-          <div className="flex flex-col items-center space-y-6 text-white">
-            <h1 className="font-serif text-5xl font-extrabold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
-              A Love That Lasts a Lifetime
-            </h1>
-            <p className="max-w-[700px] text-gray-200 md:text-xl font-light">
-              Jodohmu is where serious commitment meets modern matchmaking. We provide a heartfelt, premium service to help you find your soulmate in a way that honors your faith and values.
-            </p>
-            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-8 py-6 text-lg font-semibold">
-              <Link href="/register">Begin Your Journey</Link>
-            </Button>
+          <div className="flex flex-col items-center space-y-8 text-white">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              className="text-center"
+            >
+              <h1 className="font-serif text-5xl font-extrabold tracking-tight sm:text-6xl md:text-7xl lg:text-8xl bg-gradient-to-r from-white via-[#ffd7e2] to-white bg-clip-text text-transparent drop-shadow-2xl">
+                A Love That Lasts a Lifetime
+              </h1>
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
+                className="max-w-[700px] text-gray-100 md:text-xl font-light leading-relaxed mt-6"
+              >
+                Jodohmu is where serious commitment meets modern matchmaking. We provide a heartfelt, premium service to help you find your soulmate in a way that honors your faith and values.
+              </motion.p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.4, ease: 'easeOut' }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Button asChild size="lg" className="bg-gradient-to-r from-[#9B2242] to-[#9B2242]/80 hover:from-[#9B2242]/90 hover:to-[#9B2242]/70 text-white rounded-full px-10 py-7 text-lg font-semibold shadow-2xl hover:shadow-[#9B2242]/25 transition-all duration-300 border border-white/20">
+                <Link href="/register">Begin Your Journey</Link>
+              </Button>
+            </motion.div>
           </div>
         </ParallaxHero>
 
