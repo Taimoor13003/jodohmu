@@ -177,6 +177,11 @@
       "passwordMatch": "Kata sandi tidak cocok",
       "phone": "Format telepon tidak valid",
       "height": "Tinggi harus antara 120 dan 250"
+    },
+    "guard": {
+      "title": "Silakan masuk untuk melanjutkan",
+      "description": "Masuk dengan akun Google Anda untuk mengakses formulir pembuatan profil dan melanjutkan perjalanan perjodohan Anda.",
+      "cta": "Masuk dengan Google"
     }
   }
 }

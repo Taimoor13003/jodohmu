@@ -17,12 +17,13 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { User, Mail, Lock, Phone, MapPin, Briefcase, GraduationCap, Heart, Calendar, FileText, Star } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
 
 const formSchema = z
   .object({
@@ -61,6 +62,8 @@ type FormValues = z.infer<typeof formSchema>;
 export default function RegisterPage() {
   const router = useRouter();
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const [isLoginPending, setIsLoginPending] = React.useState(false);
   const {
     register,
     handleSubmit,
@@ -105,6 +108,51 @@ export default function RegisterPage() {
       updatedAt: serverTimestamp(),
     });
     router.push("/dashboard");
+  }
+
+  const handleGoogleLogin = async () => {
+    setIsLoginPending(true);
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+    } finally {
+      setIsLoginPending(false);
+    }
+  };
+
+  if (!user) {
+    return (
+      <div className="min-h-[calc(100vh-5rem)] bg-gradient-to-b from-background via-background to-muted/30">
+        <div className="container mx-auto max-w-2xl px-4 py-16">
+          <Card className="shadow-2xl border-0 bg-gradient-to-br from-card via-card to-[#9B2242]/5 overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-[#0b3a86] via-[#0b3a86]/90 to-[#9B2242]/80 text-white relative overflow-hidden">
+              <div className="absolute inset-0">
+                <div className="absolute top-0 left-0 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
+                <div className="absolute bottom-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
+              </div>
+              <div className="relative z-10 text-center space-y-2">
+                <Heart className="w-10 h-10 mx-auto" />
+                <CardTitle className="text-2xl md:text-3xl font-serif">{t("register.guard.title")}</CardTitle>
+                <p className="text-white/85 text-base md:text-lg max-w-xl mx-auto">{t("register.guard.description")}</p>
+              </div>
+            </CardHeader>
+            <CardFooter className="flex justify-center bg-gradient-to-r from-[#0b3a86]/5 to-[#9B2242]/5 p-8">
+              <Button
+                type="button"
+                size="lg"
+                onClick={handleGoogleLogin}
+                disabled={isLoginPending}
+                className="bg-gradient-to-r from-[#9B2242] to-[#0b3a86] text-white border-0 shadow-lg hover:from-[#861b37] hover:to-[#0a3377]"
+              >
+                {isLoginPending ? t("register.buttonLoading") : t("register.guard.cta")}
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
+      </div>
+    );
   }
 
   return (

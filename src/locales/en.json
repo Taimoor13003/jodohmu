@@ -171,12 +171,17 @@
     "buttonLoading": "Creating...",
     "validation": {
       "required": "This field is required",
-      "email": "Invalid email format",
+      "email": "Please enter a valid email address",
       "minLength": "Minimum {{min}} characters",
       "maxLength": "Maximum {{max}} characters",
       "passwordMatch": "Passwords do not match",
-      "phone": "Invalid phone format",
+      "phone": "Please enter a valid phone number",
       "height": "Height must be between 120 and 250"
+    },
+    "guard": {
+      "title": "Please log in to continue",
+      "description": "Sign in with your Google account to access the profile creation form and continue your matchmaking journey.",
+      "cta": "Log in with Google"
     }
   }
 }
