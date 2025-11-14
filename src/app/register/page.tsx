@@ -208,7 +208,7 @@ export default function RegisterPage() {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="you@example.com"
+                      placeholder={t("register.fields.emailPlaceholder")}
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("email")}
                       required
@@ -225,7 +225,7 @@ export default function RegisterPage() {
                     <Input
                       id="password"
                       type="password"
-                      placeholder="At least 8 characters"
+                      placeholder={t("register.fields.passwordPlaceholder")}
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("password")}
                       required
@@ -242,7 +242,7 @@ export default function RegisterPage() {
                     <Input
                       id="confirmPassword"
                       type="password"
-                      placeholder="Re-enter password"
+                      placeholder={t("register.fields.confirmPasswordPlaceholder")}
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("confirmPassword")}
                       required
@@ -270,7 +270,7 @@ export default function RegisterPage() {
                     <Input
                       id="phone"
                       type="tel"
-                      placeholder="+62 8xx xxxx xxxx"
+                      placeholder={t("register.fields.phonePlaceholder")}
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("phone")}
                     />
@@ -293,10 +293,10 @@ export default function RegisterPage() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectLabel>Gender</SelectLabel>
-                              <SelectItem value="female">Female</SelectItem>
-                              <SelectItem value="male">Male</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
+                              <SelectLabel>{t("register.fields.gender")}</SelectLabel>
+                              <SelectItem value="female">{t("register.options.gender.female")}</SelectItem>
+                              <SelectItem value="male">{t("register.options.gender.male")}</SelectItem>
+                              <SelectItem value="other">{t("register.options.gender.other")}</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>
@@ -329,7 +329,7 @@ export default function RegisterPage() {
                     </label>
                     <Input
                       id="location"
-                      placeholder="City, Country"
+                      placeholder={t("register.fields.locationPlaceholder")} 
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("location")}
                     />
@@ -344,7 +344,7 @@ export default function RegisterPage() {
                     </label>
                     <Input
                       id="profession"
-                      placeholder="e.g. Software Engineer"
+                      placeholder={t("register.fields.professionPlaceholder")}
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("profession")}
                     />
@@ -359,7 +359,7 @@ export default function RegisterPage() {
                     </label>
                     <Input
                       id="education"
-                      placeholder="e.g. B.Sc. Computer Science"
+                      placeholder={t("register.fields.educationPlaceholder")}
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("education")}
                     />
@@ -382,10 +382,10 @@ export default function RegisterPage() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectLabel>Status</SelectLabel>
-                              <SelectItem value="single">Single</SelectItem>
-                              <SelectItem value="divorced">Divorced</SelectItem>
-                              <SelectItem value="widowed">Widowed</SelectItem>
+                              <SelectLabel>{t("register.fields.maritalStatus")}</SelectLabel>
+                              <SelectItem value="single">{t("register.options.maritalStatus.single")}</SelectItem>
+                              <SelectItem value="divorced">{t("register.options.maritalStatus.divorced")}</SelectItem>
+                              <SelectItem value="widowed">{t("register.options.maritalStatus.widowed")}</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>
@@ -405,7 +405,7 @@ export default function RegisterPage() {
                       type="number"
                       min={120}
                       max={250}
-                      placeholder="e.g. 170"
+                      placeholder={t("register.fields.heightPlaceholder")}
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("height")}
                     />
@@ -428,12 +428,12 @@ export default function RegisterPage() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectLabel>Religion</SelectLabel>
-                              <SelectItem value="islam">Islam</SelectItem>
-                              <SelectItem value="christianity">Christianity</SelectItem>
-                              <SelectItem value="hinduism">Hinduism</SelectItem>
-                              <SelectItem value="buddhism">Buddhism</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
+                              <SelectLabel>{t("register.fields.religion")}</SelectLabel>
+                              <SelectItem value="islam">{t("register.options.religion.islam")}</SelectItem>
+                              <SelectItem value="christianity">{t("register.options.religion.christianity")}</SelectItem>
+                              <SelectItem value="hinduism">{t("register.options.religion.hinduism")}</SelectItem>
+                              <SelectItem value="buddhism">{t("register.options.religion.buddhism")}</SelectItem>
+                              <SelectItem value="other">{t("register.options.religion.other")}</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>
@@ -448,7 +448,7 @@ export default function RegisterPage() {
 
               {/* About You Section */}
               <div className="space-y-6">
-                <div className="flex items-center gap-3 pb-2 border-b border-[#9B2242]/20">
+                <div className="flex itemscenter gap-3 pb-2 border-b border-[#9B2242]/20">
                   <div className="bg-gradient-to-r from-[#9B2242] to-[#0b3a86] rounded-full p-2">
                     <FileText className="w-5 h-5 text-white" />
                   </div>
@@ -460,7 +460,7 @@ export default function RegisterPage() {
                   </label>
                   <Textarea
                     id="bio"
-                    placeholder="Tell us a little about yourself"
+                    placeholder={t("register.fields.bioPlaceholder")}
                     className="min-h-28 focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                     {...register("bio")}
                   />
@@ -473,11 +473,6 @@ export default function RegisterPage() {
                   <label htmlFor="interests" className="text-sm font-medium">
                     Interests & preferences
                   </label>
-                  <Textarea
-                    id="interests"
-                    placeholder="Hobbies, values, preferences, etc."
-                    className="min-h-24 focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
-                    {...register("interests")}
                   />
                   {errors.interests && (
                     <p className="text-sm text-destructive">{errors.interests.message}</p>
