@@ -34,7 +34,7 @@ export function Footer() {
               <span className="hidden sm:block text-white/20">•</span>
               <Link href="/privacy" className="hover:text-[#ffd7e2] hover:underline underline-offset-4 decoration-[#ffd7e2] transition-colors">Privacy</Link>
               <span className="hidden sm:block text-white/20">•</span>
-              <Link href="#" className="hover:text-[#ffd7e2] hover:underline underline-offset-4 decoration-[#ffd7e2] transition-colors">Terms</Link>
+              <Link href="/terms" className="hover:text-[#ffd7e2] hover:underline underline-offset-4 decoration-[#ffd7e2] transition-colors">Terms</Link>
             </div>
 
             {/* Social */}
