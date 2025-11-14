@@ -186,13 +186,12 @@ export default function RegisterPage() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label htmlFor="fullName" className="text-sm font-medium flex items-center gap-2">
-                      <User className="w-4 h-4 text-[#9B2242]" />
-                      {t("register.fields.fullName")}
+                    <label htmlFor="fullName" className="text-sm font-medium">
+                      Full Name
                     </label>
                     <Input
                       id="fullName"
-                      placeholder={t("register.fields.fullNamePlaceholder")}
+                      placeholder="John Doe"
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("fullName")}
                       required
@@ -203,14 +202,13 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-[#9B2242]" />
-                      {t("register.fields.email")}
+                    <label htmlFor="email" className="text-sm font-medium">
+                      Email
                     </label>
                     <Input
                       id="email"
                       type="email"
-                      placeholder={t("register.fields.emailPlaceholder")}
+                      placeholder="you@example.com"
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("email")}
                       required
@@ -221,14 +219,13 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="password" className="text-sm font-medium flex items-center gap-2">
-                      <Lock className="w-4 h-4 text-[#9B2242]" />
-                      {t("register.fields.password")}
+                    <label htmlFor="password" className="text-sm font-medium">
+                      Password
                     </label>
                     <Input
                       id="password"
                       type="password"
-                      placeholder={t("register.fields.passwordPlaceholder")}
+                      placeholder="At least 8 characters"
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("password")}
                       required
@@ -239,14 +236,13 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="confirmPassword" className="text-sm font-medium flex items-center gap-2">
-                      <Lock className="w-4 h-4 text-[#9B2242]" />
-                      {t("register.fields.confirmPassword")}
+                    <label htmlFor="confirmPassword" className="text-sm font-medium">
+                      Confirm Password
                     </label>
                     <Input
                       id="confirmPassword"
                       type="password"
-                      placeholder={t("register.fields.confirmPasswordPlaceholder")}
+                      placeholder="Re-enter password"
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("confirmPassword")}
                       required
@@ -268,14 +264,13 @@ export default function RegisterPage() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label htmlFor="phone" className="text-sm font-medium flex items-center gap-2">
-                      <Phone className="w-4 h-4 text-[#9B2242]" />
-                      {t("register.fields.phone")}
+                    <label htmlFor="phone" className="text-sm font-medium">
+                      Phone
                     </label>
                     <Input
                       id="phone"
                       type="tel"
-                      placeholder={t("register.fields.phonePlaceholder")}
+                      placeholder="+62 8xx xxxx xxxx"
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("phone")}
                     />
@@ -285,24 +280,23 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium flex items-center gap-2">
-                      <Heart className="w-4 h-4 text-[#9B2242]" />
-                      {t("register.fields.gender")}
+                    <label className="text-sm font-medium">
+                      Gender
                     </label>
                     <Controller
                       control={control}
                       name="gender"
                       render={({ field }) => (
                         <Select value={field.value} onValueChange={field.onChange}>
-                          <SelectTrigger className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all">
-                            <SelectValue placeholder={t("register.fields.genderPlaceholder")} />
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select gender" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectLabel>{t("register.fields.gender")}</SelectLabel>
-                              <SelectItem value="female">{t("register.options.gender.female")}</SelectItem>
-                              <SelectItem value="male">{t("register.options.gender.male")}</SelectItem>
-                              <SelectItem value="other">{t("register.options.gender.other")}</SelectItem>
+                              <SelectLabel>Gender</SelectLabel>
+                              <SelectItem value="female">Female</SelectItem>
+                              <SelectItem value="male">Male</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>
@@ -314,9 +308,8 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="dob" className="text-sm font-medium flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-[#9B2242]" />
-                      {t("register.fields.dob")}
+                    <label htmlFor="dob" className="text-sm font-medium">
+                      Date of birth
                     </label>
                     <Input
                       id="dob"
@@ -331,13 +324,12 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="location" className="text-sm font-medium flex items-center gap-2">
-                      <MapPin className="w-4 h-4 text-[#9B2242]" />
-                      {t("register.fields.location")}
+                    <label htmlFor="location" className="text-sm font-medium">
+                      Location
                     </label>
                     <Input
                       id="location"
-                      placeholder={t("register.fields.locationPlaceholder")} 
+                      placeholder="City, Country"
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("location")}
                     />
@@ -347,13 +339,12 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="profession" className="text-sm font-medium flex items-center gap-2">
-                      <Briefcase className="w-4 h-4 text-[#9B2242]" />
-                      {t("register.fields.profession")}
+                    <label htmlFor="profession" className="text-sm font-medium">
+                      Profession
                     </label>
                     <Input
                       id="profession"
-                      placeholder={t("register.fields.professionPlaceholder")}
+                      placeholder="e.g. Software Engineer"
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("profession")}
                     />
@@ -363,13 +354,12 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="education" className="text-sm font-medium flex items-center gap-2">
-                      <GraduationCap className="w-4 h-4 text-[#9B2242]" />
-                      {t("register.fields.education")}
+                    <label htmlFor="education" className="text-sm font-medium">
+                      Education
                     </label>
                     <Input
                       id="education"
-                      placeholder={t("register.fields.educationPlaceholder")}
+                      placeholder="e.g. B.Sc. Computer Science"
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("education")}
                     />
@@ -379,24 +369,23 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium flex items-center gap-2">
-                      <Heart className="w-4 h-4 text-[#9B2242]" />
-                      {t("register.fields.maritalStatus")}
+                    <label className="text-sm font-medium">
+                      Marital status
                     </label>
                     <Controller
                       control={control}
                       name="maritalStatus"
                       render={({ field }) => (
                         <Select value={field.value} onValueChange={field.onChange}>
-                          <SelectTrigger className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all">
-                            <SelectValue placeholder={t("register.fields.maritalStatusPlaceholder")} />
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select status" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectLabel>{t("register.fields.maritalStatus")}</SelectLabel>
-                              <SelectItem value="single">{t("register.options.maritalStatus.single")}</SelectItem>
-                              <SelectItem value="divorced">{t("register.options.maritalStatus.divorced")}</SelectItem>
-                              <SelectItem value="widowed">{t("register.options.maritalStatus.widowed")}</SelectItem>
+                              <SelectLabel>Status</SelectLabel>
+                              <SelectItem value="single">Single</SelectItem>
+                              <SelectItem value="divorced">Divorced</SelectItem>
+                              <SelectItem value="widowed">Widowed</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>
@@ -408,16 +397,15 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="height" className="text-sm font-medium flex items-center gap-2">
-                      <User className="w-4 h-4 text-[#9B2242]" />
-                      {t("register.fields.height")}
+                    <label htmlFor="height" className="text-sm font-medium">
+                      Height (cm)
                     </label>
                     <Input
                       id="height"
                       type="number"
                       min={120}
                       max={250}
-                      placeholder={t("register.fields.heightPlaceholder")}
+                      placeholder="e.g. 170"
                       className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                       {...register("height")}
                     />
@@ -427,26 +415,25 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium flex items-center gap-2">
-                      <Star className="w-4 h-4 text-[#9B2242]" />
-                      {t("register.fields.religion")}
+                    <label className="text-sm font-medium">
+                      Religion
                     </label>
                     <Controller
                       control={control}
                       name="religion"
                       render={({ field }) => (
                         <Select value={field.value} onValueChange={field.onChange}>
-                          <SelectTrigger className="focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all">
-                            <SelectValue placeholder={t("register.fields.religionPlaceholder")} />
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select religion" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectGroup>
-                              <SelectLabel>{t("register.fields.religion")}</SelectLabel>
-                              <SelectItem value="islam">{t("register.options.religion.islam")}</SelectItem>
-                              <SelectItem value="christianity">{t("register.options.religion.christianity")}</SelectItem>
-                              <SelectItem value="hinduism">{t("register.options.religion.hinduism")}</SelectItem>
-                              <SelectItem value="buddhism">{t("register.options.religion.buddhism")}</SelectItem>
-                              <SelectItem value="other">{t("register.options.religion.other")}</SelectItem>
+                              <SelectLabel>Religion</SelectLabel>
+                              <SelectItem value="islam">Islam</SelectItem>
+                              <SelectItem value="christianity">Christianity</SelectItem>
+                              <SelectItem value="hinduism">Hinduism</SelectItem>
+                              <SelectItem value="buddhism">Buddhism</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
                             </SelectGroup>
                           </SelectContent>
                         </Select>
@@ -461,20 +448,19 @@ export default function RegisterPage() {
 
               {/* About You Section */}
               <div className="space-y-6">
-                <div className="flex itemscenter gap-3 pb-2 border-b border-[#9B2242]/20">
+                <div className="flex items-center gap-3 pb-2 border-b border-[#9B2242]/20">
                   <div className="bg-gradient-to-r from-[#9B2242] to-[#0b3a86] rounded-full p-2">
                     <FileText className="w-5 h-5 text-white" />
                   </div>
                   <h3 className="text-xl font-serif font-semibold text-foreground">{t("register.sections.about")}</h3>
                 </div>
                 <div className="space-y-2">
-                  <label htmlFor="bio" className="text-sm font-medium flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-[#9B2242]" />
-                    {t("register.fields.bio")}
+                  <label htmlFor="bio" className="text-sm font-medium">
+                    About you
                   </label>
                   <Textarea
                     id="bio"
-                    placeholder={t("register.fields.bioPlaceholder")}
+                    placeholder="Tell us a little about yourself"
                     className="min-h-28 focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                     {...register("bio")}
                   />
@@ -484,13 +470,12 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="interests" className="text-sm font-medium flex items-center gap-2">
-                    <Heart className="w-4 h-4 text-[#9B2242]" />
-                    {t("register.fields.interests")}
+                  <label htmlFor="interests" className="text-sm font-medium">
+                    Interests & preferences
                   </label>
                   <Textarea
                     id="interests"
-                    placeholder={t("register.fields.interestsPlaceholder")}
+                    placeholder="Hobbies, values, preferences, etc."
                     className="min-h-24 focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
                     {...register("interests")}
                   />

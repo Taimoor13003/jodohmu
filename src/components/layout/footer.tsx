@@ -12,22 +12,30 @@ export function Footer() {
 
   return (
     <footer className="w-full text-white">
-      <div className="h-1 w-full" style={{ backgroundImage: "linear-gradient(to right, #9B2242, #0b3a86)" }} />
-      <div className="bg-[#0b3a86]" style={{ backgroundImage: "linear-gradient(to bottom, rgba(11,58,134,0.96), rgba(11,58,134,0.86))" }}>
-        <div className="container py-12">
-          <div className="grid gap-10 lg:grid-cols-3 items-start">
+      <div className="h-1 w-full bg-gradient-to-r from-brand-rose to-brand-blue" />
+      <div className="bg-gradient-to-b from-brand-blue/96 to-brand-blue/86 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/4 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
+        </div>
+        <div className="container py-16 relative z-10">
+          <div className="grid gap-12 lg:grid-cols-3 items-start">
             {/* Brand */}
-            <div className="space-y-3">
+            <div className="space-y-6">
               <div className="flex items-center">
-                <Image src={LogoIcon} alt="Jodohmu" className="h-9 w-auto" />
-                <div className="ml-2 flex items-baseline">
-                  <span className="text-2xl font-bold">Jodoh</span>
-                  <span className="text-2xl font-bold" style={{ color: "#ffd7e2" }}>mu</span>
+                <Image src={LogoIcon} alt="Jodohmu" className="h-10 w-auto" />
+                <div className="ml-3 flex items-baseline">
+                  <span className="text-3xl font-bold">Jodoh</span>
+                  <span className="text-3xl font-bold text-brand-pink">mu</span>
                 </div>
               </div>
               <p className="text-white/80 text-sm max-w-sm">
                 {t("footer.hero.tagline")}
               </p>
+              <div className="flex items-center gap-2 text-brand-pink/80">
+                <Heart className="w-4 h-4 fill-current" />
+                <span className="text-sm">Trusted by thousands</span>
+              </div>
             </div>
 
             {/* Links */}
