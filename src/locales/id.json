@@ -1,0 +1,182 @@
+{
+  "common": {
+    "login": "Masuk",
+    "logout": "Keluar",
+    "dashboard": "Dashboard",
+    "language": "Bahasa",
+    "loading": "Memuat...",
+    "submit": "Kirim",
+    "cancel": "Batal",
+    "save": "Simpan",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "close": "Tutup",
+    "back": "Kembali",
+    "next": "Selanjutnya",
+    "previous": "Sebelumnya",
+    "search": "Cari",
+    "filter": "Filter",
+    "sort": "Urutkan",
+    "all": "Semua",
+    "none": "Tidak ada",
+    "yes": "Ya",
+    "no": "Tidak"
+  },
+  "header": {
+    "language": "Bahasa",
+    "dashboard": "Dashboard",
+    "logout": "Keluar"
+  },
+  "footer": {
+    "brand": {
+      "description": "Temukan jodoh Anda dengan penuh kasih, iman, dan ketulusan.",
+      "trustedBy": "Dipercaya oleh ribuan orang"
+    },
+    "links": {
+      "quickLinks": "Tautan Cepat",
+      "about": "Tentang",
+      "howItWorks": "Cara Kerja",
+      "pricing": "Harga",
+      "privacy": "Privasi",
+      "terms": "Syarat & Ketentuan"
+    },
+    "social": {
+      "connectWithUs": "Hubungi Kami"
+    },
+    "copyright": {
+      "rights": "Hak cipta dilindungi",
+      "craftedWith": "Dibuat dengan",
+      "andFaith": "dan iman"
+    }
+  },
+  "homepage": {
+    "hero": {
+      "title": "Cinta Seumur Hidup",
+      "description": "Jodohmu adalah tempat komitmen serius bertemu dengan perjodohan modern. Kami menyediakan layanan premium yang tulus untuk membantu Anda menemukan belahan jiwa dengan cara yang menghormati iman dan nilai-nilai Anda.",
+      "cta": "Mulai Perjalanan Anda"
+    },
+    "whyChoose": {
+      "title": "Mengapa Memilih Jodohmu?",
+      "description": "Kami lebih dari sekadar aplikasi. Kami adalah mitra Anda yang berdedikasi dalam menemukan pernikahan yang bermakna dan langgeng."
+    },
+    "features": {
+      "cards": {
+        "personalized": {
+          "title": "Pencocokan Personal",
+          "description": "Tim kami memahami nilai, prinsip, dan harapan Anda untuk menghadirkan kandidat yang benar-benar sejalan dengan hati Anda."
+        },
+        "community": {
+          "title": "Komunitas Serius",
+          "description": "Bergabunglah dengan komunitas privat yang terkurasi, berisi individu yang siap membangun komitmen jangka panjang."
+        },
+        "guided": {
+          "title": "Pertemuan Terarah",
+          "description": "Kami memfasilitasi pertemuan yang nyaman, santun, dan sesuai dengan nilai-nilai keimanan Anda."
+        },
+        "halal": {
+          "title": "Halal & Diawasi",
+          "description": "Setiap interaksi dijaga agar tetap hormat dengan opsi pendampingan keluarga atau tokoh agama."
+        }
+      }
+    },
+    "philosophy": {
+      "badge": "Filosofi Kami",
+      "heading": "Lebih dari Sekadar Aplikasi, Kami Mitra Anda",
+      "description": "Mencari pasangan hidup adalah perjalanan penting. Di Jodohmu, kami tidak membiarkannya berjalan sendiri. Matchmaker kami mendampingi Anda secara personal, memberi panduan dan dukungan dengan sentuhan manusiawi yang tidak dapat digantikan algoritma."
+    },
+    "meetings": {
+      "badge": "Aman & Penuh Hormat",
+      "title": "Pertemuan dengan Niat",
+      "description": "Kenyamanan dan keselamatan Anda menjadi prioritas kami. Pertemuan berlangsung di tempat yang terkontrol—kantor kami atau lokasi publik tepercaya—sering kali dengan kehadiran keluarga atau imam agar tetap terarah dan bermartabat."
+    },
+    "testimonials": {
+      "title": "Cerita dari Komunitas",
+      "subtitle": "Dengarkan kisah pasangan yang menemukan belahan jiwa melalui Jodohmu",
+      "stories": {
+        "aishaOmar": {
+          "quote": "Jodohmu membantu saya bertemu pasangan yang sejalan dengan nilai dan tujuan hidup. Prosesnya sangat santun dan personal. Kini kami hidup bahagia sebagai suami istri!",
+          "name": "Aisha & Omar"
+        },
+        "fatimaAli": {
+          "quote": "Saya lelah dengan aplikasi kencan biasa. Tim Jodohmu memahami saya dan mempertemukan saya dengan suami saya sekarang. Rasanya seperti mimpi jadi nyata.",
+          "name": "Fatima & Ali"
+        }
+      }
+    },
+    "cta": {
+      "title": "Siap Menemukan 'Belahan Jiwa'?",
+      "description": "Perjalanan menuju pernikahan yang penuh makna dimulai di sini. Biarkan kami mendampingi langkah Anda menuju kebahagiaan.",
+      "button": "Buat Profil Anda"
+    }
+  },
+  "register": {
+    "title": "Buat Profil Anda",
+    "subtitle": "Kami bersemangat untuk membantu Anda menemukan pasangan sempurna",
+    "sections": {
+      "account": "Informasi Akun",
+      "personal": "Detail Pribadi",
+      "about": "Tentang Anda"
+    },
+    "fields": {
+      "fullName": "Nama lengkap",
+      "fullNamePlaceholder": "mis. Aisyah Rahma",
+      "email": "Email",
+      "emailPlaceholder": "anda@example.com",
+      "password": "Kata sandi",
+      "passwordPlaceholder": "Minimal 8 karakter",
+      "confirmPassword": "Konfirmasi kata sandi",
+      "confirmPasswordPlaceholder": "Masukkan ulang kata sandi",
+      "phone": "Telepon",
+      "phonePlaceholder": "+62 8xx xxxx xxxx",
+      "gender": "Jenis kelamin",
+      "genderPlaceholder": "Pilih jenis kelamin",
+      "dob": "Tanggal lahir",
+      "location": "Lokasi",
+      "locationPlaceholder": "Kota, Negara",
+      "profession": "Profesi",
+      "professionPlaceholder": "mis. Software Engineer",
+      "education": "Pendidikan",
+      "educationPlaceholder": "mis. S1 Ilmu Komputer",
+      "maritalStatus": "Status pernikahan",
+      "maritalStatusPlaceholder": "Pilih status",
+      "height": "Tinggi (cm)",
+      "heightPlaceholder": "mis. 170",
+      "religion": "Agama",
+      "religionPlaceholder": "Pilih agama",
+      "bio": "Tentang Anda",
+      "bioPlaceholder": "Ceritakan sedikit tentang diri Anda",
+      "interests": "Minat & preferensi",
+      "interestsPlaceholder": "Hobi, nilai, preferensi, dll."
+    },
+    "options": {
+      "gender": {
+        "female": "Perempuan",
+        "male": "Laki-laki",
+        "other": "Lainnya"
+      },
+      "maritalStatus": {
+        "single": "Lajang",
+        "divorced": "Cerai",
+        "widowed": "Duda/Janda"
+      },
+      "religion": {
+        "islam": "Islam",
+        "christianity": "Kristen",
+        "hinduism": "Hindu",
+        "buddhism": "Buddha",
+        "other": "Lainnya"
+      }
+    },
+    "button": "Buat profil",
+    "buttonLoading": "Membuat...",
+    "validation": {
+      "required": "Field ini wajib diisi",
+      "email": "Format email tidak valid",
+      "minLength": "Minimal {{min}} karakter",
+      "maxLength": "Maksimal {{max}} karakter",
+      "passwordMatch": "Kata sandi tidak cocok",
+      "phone": "Format telepon tidak valid",
+      "height": "Tinggi harus antara 120 dan 250"
+    }
+  }
+}

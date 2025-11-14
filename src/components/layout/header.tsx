@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { auth } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
 import {
@@ -17,30 +18,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LogoIcon from "@/assets/jodohmu-icon-logo.png";
 import { Globe, ArrowRight } from "lucide-react";
-import { useEffect, useState } from "react";
 
 export function Header() {
   const { user } = useAuth();
-  const [lang, setLang] = useState<"id" | "en">("id");
-
-  useEffect(() => {
-    const saved = typeof window !== "undefined" ? (localStorage.getItem("lang") as "id" | "en" | null) : null;
-    const initial = saved || "id";
-    setLang(initial);
-    if (typeof document !== "undefined") {
-      document.documentElement.lang = initial;
-    }
-  }, []);
-
-  const selectLang = (value: "id" | "en") => {
-    setLang(value);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("lang", value);
-    }
-    if (typeof document !== "undefined") {
-      document.documentElement.lang = value;
-    }
-  };
+  const { lang, setLang, t } = useLanguage();
 
   const handleLogout = async () => {
     try {
@@ -83,16 +64,16 @@ export function Header() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="min-w-[200px] border" style={{ borderColor: "#0b3a8626" }}>
-            <DropdownMenuLabel>Language</DropdownMenuLabel>
+            <DropdownMenuLabel>{t("header.language")}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => selectLang("id")}
+              onClick={() => setLang("id")}
               className={lang === "id" ? "bg-[#9B2242]/10 text-[#9B2242]" : undefined}
             >
               {lang === "id" ? "✓ " : ""}Bahasa Indonesia
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => selectLang("en")}
+              onClick={() => setLang("en")}
               className={lang === "en" ? "bg-[#0b3a86]/10 text-[#0b3a86]" : undefined}
             >
               {lang === "en" ? "✓ " : ""}English
@@ -120,9 +101,9 @@ export function Header() {
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/dashboard">Dashboard</Link>
+                <Link href="/dashboard">{t("header.dashboard")}</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>{t("header.logout")}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
@@ -132,7 +113,7 @@ export function Header() {
             className="group bg-gradient-to-r from-[#9B2242] to-[#0b3a86] hover:from-[#861b37] hover:to-[#0a3377] text-white border-0 rounded-md shadow-md hover:shadow-lg px-6 py-3 text-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b3a86]/40 focus-visible:ring-offset-2"
          >
             <Link href="/login" className="flex items-center gap-2">
-              <span>Login</span>
+              <span>{t("common.login")}</span>
               <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
             </Link>
           </Button>

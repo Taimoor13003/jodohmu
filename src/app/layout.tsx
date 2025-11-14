@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { AuthProvider } from "@/context/AuthContext";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
 const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" });
@@ -21,11 +22,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${nunito.variable}`}>
       <body>
-        <AuthProvider>
-          <Header />
-          {children}
-          <Footer />
-        </AuthProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <Header />
+            {children}
+            <Footer />
+          </AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

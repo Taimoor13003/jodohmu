@@ -1,0 +1,182 @@
+{
+  "common": {
+    "login": "Login",
+    "logout": "Log out",
+    "dashboard": "Dashboard",
+    "language": "Language",
+    "loading": "Loading...",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "all": "All",
+    "none": "None",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "header": {
+    "language": "Language",
+    "dashboard": "Dashboard",
+    "logout": "Log out"
+  },
+  "footer": {
+    "brand": {
+      "description": "Find your soulmate with care, faith, and sincerity.",
+      "trustedBy": "Trusted by thousands"
+    },
+    "links": {
+      "quickLinks": "Quick Links",
+      "about": "About",
+      "howItWorks": "How It Works",
+      "pricing": "Pricing",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    },
+    "social": {
+      "connectWithUs": "Connect With Us"
+    },
+    "copyright": {
+      "rights": "All rights reserved",
+      "craftedWith": "Crafted with",
+      "andFaith": "and faith"
+    }
+  },
+  "homepage": {
+    "hero": {
+      "title": "A Love That Lasts a Lifetime",
+      "description": "Jodohmu is where serious commitment meets modern matchmaking. We provide a heartfelt, premium service to help you find your soulmate in a way that honors your faith and values.",
+      "cta": "Begin Your Journey"
+    },
+    "whyChoose": {
+      "title": "Why Choose Jodohmu?",
+      "description": "We are more than an app. We are your dedicated partners in finding a meaningful, lasting marriage."
+    },
+    "features": {
+      "cards": {
+        "personalized": {
+          "title": "Personalized Matching",
+          "description": "Our dedicated team gets to know you, your values, and your aspirations to find matches that truly resonate with your heart."
+        },
+        "community": {
+          "title": "Serious Community",
+          "description": "Join a private, vetted community of individuals who are genuinely ready for a meaningful, long-term commitment."
+        },
+        "guided": {
+          "title": "Guided Meetings",
+          "description": "We facilitate meetings in a way that is comfortable, respectful, and true to your faith."
+        },
+        "halal": {
+          "title": "Halal & Supervised",
+          "description": "All interactions are designed to be respectful, with options for supervised meetings."
+        }
+      }
+    },
+    "philosophy": {
+      "badge": "Our Philosophy",
+      "heading": "More Than an App, We're Your Partners",
+      "description": "Finding a life partner is one of the most important journeys you'll ever take. At Jodohmu, we don't leave it to chance. Our matchmakers work with you like a dedicated team, providing guidance, support, and a human touch that algorithms can't replicate."
+    },
+    "meetings": {
+      "badge": "Safe & Respectful",
+      "title": "Meetings with Intention",
+      "description": "Your comfort and safety are our top priorities. We arrange meetings in a controlled, respectful environment—be it our office or a trusted public space—often with the presence of an imam or family members, ensuring every interaction is dignified and purposeful."
+    },
+    "testimonials": {
+      "title": "From Our Community",
+      "subtitle": "Hear from couples who found their lifelong partners through Jodohmu",
+      "stories": {
+        "aishaOmar": {
+          "quote": "Jodohmu helped me find a partner who shares my values and life goals. The process was so respectful and personalized. We are now happily married!",
+          "name": "Aisha & Omar"
+        },
+        "fatimaAli": {
+          "quote": "I was tired of endless swiping. Jodohmu's team took the time to understand me and introduced me to my husband. I couldn't be happier.",
+          "name": "Fatima & Ali"
+        }
+      }
+    },
+    "cta": {
+      "title": "Ready to Find 'The One'?",
+      "description": "Your search for a meaningful, lasting partnership starts here. Let us be your guide on the beautiful journey to marriage.",
+      "button": "Create Your Profile"
+    }
+  },
+  "register": {
+    "title": "Create Your Profile",
+    "subtitle": "We're excited to help you find your perfect match",
+    "sections": {
+      "account": "Account Information",
+      "personal": "Personal Details",
+      "about": "About You"
+    },
+    "fields": {
+      "fullName": "Full name",
+      "fullNamePlaceholder": "e.g. Aisyah Rahma",
+      "email": "Email",
+      "emailPlaceholder": "you@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter password",
+      "phone": "Phone",
+      "phonePlaceholder": "+62 8xx xxxx xxxx",
+      "gender": "Gender",
+      "genderPlaceholder": "Select gender",
+      "dob": "Date of birth",
+      "location": "Location",
+      "locationPlaceholder": "City, Country",
+      "profession": "Profession",
+      "professionPlaceholder": "e.g. Software Engineer",
+      "education": "Education",
+      "educationPlaceholder": "e.g. B.Sc. Computer Science",
+      "maritalStatus": "Marital status",
+      "maritalStatusPlaceholder": "Select status",
+      "height": "Height (cm)",
+      "heightPlaceholder": "e.g. 170",
+      "religion": "Religion",
+      "religionPlaceholder": "Select religion",
+      "bio": "About you",
+      "bioPlaceholder": "Tell us a little about yourself",
+      "interests": "Interests & preferences",
+      "interestsPlaceholder": "Hobbies, values, preferences, etc."
+    },
+    "options": {
+      "gender": {
+        "female": "Female",
+        "male": "Male",
+        "other": "Other"
+      },
+      "maritalStatus": {
+        "single": "Single",
+        "divorced": "Divorced",
+        "widowed": "Widowed"
+      },
+      "religion": {
+        "islam": "Islam",
+        "christianity": "Christianity",
+        "hinduism": "Hinduism",
+        "buddhism": "Buddhism",
+        "other": "Other"
+      }
+    },
+    "button": "Create profile",
+    "buttonLoading": "Creating...",
+    "validation": {
+      "required": "This field is required",
+      "email": "Invalid email format",
+      "minLength": "Minimum {{min}} characters",
+      "maxLength": "Maximum {{max}} characters",
+      "passwordMatch": "Passwords do not match",
+      "phone": "Invalid phone format",
+      "height": "Height must be between 120 and 250"
+    }
+  }
+}

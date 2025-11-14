@@ -22,6 +22,7 @@ import { auth, db } from "@/lib/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { User, Mail, Lock, Phone, MapPin, Briefcase, GraduationCap, Heart, Calendar, FileText, Star } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 const formSchema = z
   .object({
@@ -59,6 +60,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const {
     register,
     handleSubmit,
@@ -120,8 +122,8 @@ export default function RegisterPage() {
                   <Heart className="w-8 h-8 text-white" />
                 </div>
               </div>
-              <CardTitle className="text-3xl md:text-4xl font-serif">Create Your Profile</CardTitle>
-              <p className="text-white/90 mt-2">We're excited to help you find your perfect match</p>
+              <CardTitle className="text-3xl md:text-4xl font-serif">{t("register.title")}</CardTitle>
+              <p className="text-white/90 mt-2">{t("register.subtitle")}</p>
             </div>
           </CardHeader>
           <form onSubmit={handleSubmit(onSubmit)}>
