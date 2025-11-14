@@ -11,7 +11,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="w-full text-white">
+    <footer className="w-full text-white" style={{background: "#9d455cff"}}>
       <div className="h-1 w-full bg-gradient-to-r from-brand-rose to-brand-blue" />
       <div className="bg-gradient-to-b from-brand-blue/96 to-brand-blue/86 relative overflow-hidden">
         <div className="absolute inset-0">
@@ -26,7 +26,7 @@ export function Footer() {
                 <Image src={LogoIcon} alt="Jodohmu" className="h-10 w-auto" />
                 <div className="ml-3 flex items-baseline">
                   <span className="text-3xl font-bold">Jodoh</span>
-                  <span className="text-3xl font-bold text-brand-pink">mu</span>
+                  <span className="text-3xl font-bold text-[#ffd7e2]">mu</span>
                 </div>
               </div>
               <p className="text-white/80 text-sm max-w-sm">
