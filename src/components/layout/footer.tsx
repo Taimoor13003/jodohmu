@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Facebook, Instagram, Twitter, FileText, Shield, Info, Heart, DollarSign } from "lucide-react";
-import LogoIcon from "@/assets/jodohmu-icon-logo.png";
+import LogoIcon from "@/assets/jodohmu-logo.png";
 
 export function Footer() {
   return (
@@ -17,16 +17,12 @@ export function Footer() {
             {/* Brand */}
             <div className="space-y-6">
               <div className="flex items-center">
-                <Image src={LogoIcon} alt="Jodohmu" className="h-10 w-auto" />
-                <div className="ml-3 flex items-baseline">
-                  <span className="text-3xl font-bold text-[#0b3a86]">Jodoh</span>
-                  <span className="text-3xl font-bold text-[#0b3a86]">mu</span>
-                </div>
+                <Image src={LogoIcon} alt="Jodohmu" height={250} />
               </div>
-              <p className="text-[#0b3a86] text-base leading-relaxed max-w-sm">
+              <p className="text-[#0b3a86] text-base leading-relaxed max-w-sm font-semibold">
                 Find your soulmate with care, faith, and sincerity.
               </p>
-              <div className="flex items-center gap-2 text-[#0b3a86]">
+              <div className="flex items-center gap-2 text-[#0b3a86] font-semibold">
                 <Heart className="w-4 h-4" style={{ color: "#0b3a86" }} />
                 <span className="text-sm">Trusted by thousands</span>
               </div>
@@ -35,28 +31,28 @@ export function Footer() {
             {/* Links */}
             <div className="flex flex-col items-center space-y-6">
               <h3 className="text-lg font-semibold text-[#0b3a86]">Quick Links</h3>
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-4 text-sm text-[#0b3a86]">
-                <Link href="#" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-4 text-sm text-[#0b3a86] font-medium">
+                <Link href="#" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105 font-semibold">
                   <Info className="w-4 h-4" />
                   About
                 </Link>
                 <span className="hidden sm:block text-[#0b3a86]/30">•</span>
-                <Link href="#" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105">
+                <Link href="#" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105 font-semibold">
                   <Heart className="w-4 h-4" />
                   How It Works
                 </Link>
                 <span className="hidden sm:block text-[#0b3a86]/30">•</span>
-                <Link href="#" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105">
+                <Link href="#" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105 font-semibold">
                   <Info className="w-4 h-4" />
                   Pricing
                 </Link>
                 <span className="hidden sm:block text-[#0b3a86]/30">•</span>
-                <Link href="/privacy" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105">
+                <Link href="/privacy" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105 font-semibold">
                   <Shield className="w-4 h-4" />
                   Privacy
                 </Link>
                 <span className="hidden sm:block text-[#0b3a86]/30">•</span>
-                <Link href="/terms" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105">
+                <Link href="/terms" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105 font-semibold">
                   <FileText className="w-4 h-4" />
                   Terms
                 </Link>
@@ -86,13 +82,13 @@ export function Footer() {
           <div className="absolute top-0 left-0 w-24 h-24 bg-white/15 rounded-full blur-xl"></div>
           <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/15 rounded-full blur-xl"></div>
         </div>
-        <div className="container flex flex-col sm:flex-row items-center justify-between py-6 text-sm text-[#0b3a86] gap-4 relative z-10">
-          <p className="flex items-center gap-2">
-            <span>© {new Date().getFullYear()} Jodohmu</span>
+        <div className="container flex flex-col sm:flex-row items-center justify-between py-6 text-sm text-[#0b3a86] gap-4 relative z-10 font-medium">
+          <p className="flex items-center gap-2 font-semibold">
+            <span> {new Date().getFullYear()} Jodohmu</span>
             <span>•</span>
             <span>All rights reserved</span>
           </p>
-          <p className="flex items-center gap-2">
+          <p className="flex items-center gap-2 font-semibold">
             <span>Crafted with</span>
             <Heart className="w-4 h-4" style={{ color: "#0b3a86" }} />
             <span>and faith</span>

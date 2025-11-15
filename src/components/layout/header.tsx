@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import LogoIcon from "@/assets/jodohmu-icon-logo.png";
+import LogoIcon from "@/assets/jodohmu-logo.png";
 import { Globe, ArrowRight } from "lucide-react";
 
 export function Header() {
@@ -40,9 +40,9 @@ export function Header() {
     >
       <div className="container flex items-center w-full">
         <Link className="flex items-center justify-center" href="/">
-          <Image src={LogoIcon} alt="Jodohmu" className="h-10 w-auto" priority />
-          <span className="text-2xl font-bold text-blue-900">Jodoh</span>
-          <span className="text-2xl font-bold" style={{ color: "#9B2242" }}>mu</span>
+          <Image src={LogoIcon} alt="Jodohmu" style={{ height: 250, width: 250 }} priority />
+          {/* <span className="text-2xl font-bold text-blue-900">Jodoh</span>
+          <span className="text-2xl font-bold" style={{ color: "#9B2242" }}>mu</span> */}
 
         </Link>
         <nav className="ml-auto flex items-center gap-2 sm:gap-4">
