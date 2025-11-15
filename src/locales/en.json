@@ -287,9 +287,9 @@
     "connect": {
       "title": "Connect With Us",
       "description": "Stay close to the JodohMu community and never miss heartfelt success stories, events, and tips curated for your journey.",
-      "email": "Email",
-      "phone": "Phone",
-      "whatsapp": "WhatsApp"
+      "email": "info@jodohmu.com",
+      "phone": "+628123456789",
+      "whatsapp": "+628123456789"
     },
     "subfooter": {
       "copyright": "© {{year}} Jodohmu",
