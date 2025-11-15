@@ -101,13 +101,17 @@ export function Footer() {
               </p>
               <div className="mt-5 flex items-center justify-start gap-4">
                 <Link
-                  href="#"
+                  href="https://web.facebook.com/profile.php?id=61583458260206"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/60 bg-white/75 shadow-sm shadow-[#f18aa7]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-gradient-to-r hover:from-[#9B2242] hover:to-[#0b3a86]"
                 >
                   <Facebook className="h-5 w-5 text-[#0b3a86] transition-colors group-hover:text-white" />
                 </Link>
                 <Link
-                  href="#"
+                  href="https://www.instagram.com/cari_jodoh_kamu/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/60 bg-white/75 shadow-sm shadow-[#f18aa7]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-gradient-to-r hover:from-[#9B2242] hover:to-[#0b3a86]"
                 >
                   <Instagram className="h-5 w-5 text-[#0b3a86] transition-colors group-hover:text-white" />
