@@ -11,10 +11,9 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    // <footer className="w-full text-white" style={{background: "#9d455cff"}}>
-    <footer className="w-full text-white">
-      <div className="h-1 w-full bg-gradient-to-r from-brand-rose to-brand-blue" />
-      <div className="bg-gradient-to-b from-brand-blue/96 to-brand-blue/86 relative overflow-hidden">
+    <footer className="w-full text-[#0b3a86]">
+      <div className="h-1 w-full bg-gradient-to-r from-[#f6adc3] via-[#f39cb5] to-[#f18aa7]" />
+      <div className="bg-gradient-to-b from-[#fbe0ea] via-[#f7c7d7] to-[#f3aec4] relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-0 left-1/4 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
           <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
@@ -27,14 +26,14 @@ export function Footer() {
                 <Image src={LogoIcon} alt="Jodohmu" className="h-10 w-auto" />
                 <div className="ml-3 flex items-baseline">
                   <span className="text-3xl font-bold text-[#0b3a86]">Jodoh</span>
-                  <span className="text-3xl font-bold text-[#9B2242]">mu</span>
+                  <span className="text-3xl font-bold text-[#0b3a86]">mu</span>
                 </div>
               </div>
               <p className="text-white/80 text-sm max-w-sm">
                 {t("footer.hero.tagline")}
               </p>
-              <div className="flex items-center gap-2 text-[#9B2242]">
-                <Heart className="w-4 h-4" style={{ color: "#9B2242" }} />
+              <div className="flex items-center gap-2 text-[#0b3a86]">
+                <Heart className="w-4 h-4" style={{ color: "#0b3a86" }} />
                 <span className="text-sm">Trusted by thousands</span>
               </div>
             </div>
