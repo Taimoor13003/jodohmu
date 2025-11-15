@@ -399,6 +399,159 @@
       }
     }
   },
+  "terms": {
+    "hero": {
+      "title": "Terms and Conditions",
+      "subtitle": "Please read these terms carefully. By using Jodohmu, you agree to honor these commitments rooted in respect, safety, and sincerity.",
+      "updatedPrefix": "Last updated"
+    },
+    "sections": {
+      "acceptance": {
+        "title": "Acceptance of Terms",
+        "body": "By accessing and using Jodohmu, you agree to be bound by these terms and any additional guidelines we provide. If you cannot agree, please refrain from using our services."
+      },
+      "eligibility": {
+        "title": "Eligibility",
+        "body": "You must be at least 18 years old and capable of entering into a binding agreement to create an account. By registering, you confirm that you meet these requirements.",
+        "important": {
+          "label": "Important:",
+          "body": "Providing false age information is a violation of these terms and may result in immediate account termination and possible legal action."
+        }
+      },
+      "account": {
+        "title": "Account Registration & Security",
+        "registration": {
+          "title": "Registration Requirements",
+          "body": "Provide accurate and complete information when creating your account. Keep your profile details up to date so we can offer the best experience."
+        },
+        "security": {
+          "title": "Account Security",
+          "items": {
+            "responsibility": "You are responsible for all activity that occurs under your account.",
+            "notify": "Notify us immediately if you suspect unauthorized access or misuse.",
+            "liability": "We are not liable for losses arising from unauthorized access caused by your actions.",
+            "sharing": "Do not share your login credentials with anyone."
+          }
+        }
+      },
+      "conduct": {
+        "title": "User Conduct & Prohibited Activities",
+        "description": "Help us nurture a respectful community by following these guidelines and avoiding prohibited activity.",
+        "content": {
+          "title": "Content Prohibitions",
+          "items": {
+            "falseInfo": "Posting false, misleading, or deceptive information.",
+            "inappropriate": "Uploading offensive, obscene, or unlawful content.",
+            "fakePhotos": "Using fake or misrepresentative photos.",
+            "explicit": "Sharing explicit or sexually suggestive material."
+          }
+        },
+        "behavior": {
+          "title": "Behavioral Prohibitions",
+          "items": {
+            "harassment": "Harassing, bullying, or threatening other users.",
+            "spam": "Spamming or sending unsolicited commercial messages.",
+            "personalInfo": "Attempting to obtain personal information from other users.",
+            "illegal": "Engaging in or encouraging illegal activities."
+          }
+        }
+      },
+      "guidelines": {
+        "title": "Content Guidelines",
+        "profile": {
+          "title": "Profile Content",
+          "items": {
+            "photos": "Use recent photos that clearly represent you.",
+            "bio": "Ensure your bio and details are honest and accurate.",
+            "contactInfo": "Do not share contact information publicly.",
+            "promotions": "Avoid watermarks, advertisements, or promotional content."
+          }
+        },
+        "removal": {
+          "title": "Content Removal",
+          "body": "We reserve the right to remove any content violating these guidelines without prior notice. Repeated violations may result in suspension or account closure."
+        }
+      },
+      "intellectual": {
+        "title": "Intellectual Property",
+        "your": {
+          "title": "Your Content",
+          "body": "You retain ownership of the content you submit. By posting, you grant us a non-exclusive, royalty-free license to display and distribute your content to operate the service."
+        },
+        "platform": {
+          "title": "Platform Content",
+          "body": "All Jodohmu trademarks, designs, and technology are protected by law. Do not use them without written permission."
+        }
+      },
+      "disclaimers": {
+        "title": "Disclaimers & Limitations of Liability",
+        "items": {
+          "guarantees": {
+            "title": "No Guarantees",
+            "body": "Jodohmu does not guarantee that you will find a match, relationship, or life partner through the service."
+          },
+          "safety": {
+            "title": "Meeting Safety",
+            "body": "You are responsible for your safety during in-person meetings. Meet in public places and inform someone you trust of your plans."
+          },
+          "liability": {
+            "title": "Limitation of Liability",
+            "body": "To the maximum extent permitted by law, Jodohmu is not liable for indirect, incidental, or consequential damages resulting from your use of our services."
+          }
+        }
+      },
+      "termination": {
+        "title": "Account Termination",
+        "voluntary": {
+          "title": "Voluntary Termination",
+          "body": "You may delete your account at any time through your settings. We will remove your profile within 30 days, consistent with our Privacy Policy."
+        },
+        "byJodohmu": {
+          "title": "Termination by Jodohmu",
+          "body": "We may suspend or terminate your account immediately for violations of these terms, illegal activity, or actions that put our community at risk."
+        }
+      },
+      "changes": {
+        "title": "Changes to Terms",
+        "description": "We may modify these terms at any time. Updated terms will be posted here with the revised date noted above.",
+        "notification": "For significant updates, we will notify you via email or in-app messaging. Continuing to use Jodohmu after changes means you accept the new terms."
+      },
+      "privacy": {
+        "title": "Privacy Policy",
+        "description": "Your use of Jodohmu is also governed by our Privacy Policy. Review how we collect and protect your data at",
+        "linkText": "jodohmu.com/privacy"
+      },
+      "law": {
+        "title": "Governing Law & Dispute Resolution",
+        "governing": {
+          "title": "Governing Law",
+          "body": "These terms are governed by the laws of Indonesia without regard to conflict-of-law principles."
+        },
+        "dispute": {
+          "title": "Dispute Resolution",
+          "body": "Disputes will first be addressed through good-faith negotiations. If unresolved, they will be submitted to arbitration in Bandung, Indonesia."
+        }
+      },
+      "contact": {
+        "title": "Contact Us",
+        "description": "Questions about these terms? We're here to help:",
+        "items": {
+          "email": {
+            "label": "Email:",
+            "value": "info@jodohmu.com"
+          },
+          "phone": {
+            "label": "Phone:",
+            "value": "+6281327054561"
+          },
+          "location": {
+            "label": "Location:",
+            "value": "Bandung, Indonesia"
+          }
+        }
+      }
+    }
+  },
   "footer": {
     "hero": {
       "tagline": "Find your soulmate with care, faith, and sincerity.",

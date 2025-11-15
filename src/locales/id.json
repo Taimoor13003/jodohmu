@@ -399,6 +399,159 @@
       }
     }
   },
+  "terms": {
+    "hero": {
+      "title": "Syarat dan Ketentuan",
+      "subtitle": "Harap baca syarat ini dengan cermat. Dengan menggunakan Jodohmu, Anda menyetujui komitmen yang dilandasi rasa hormat, keamanan, dan ketulusan.",
+      "updatedPrefix": "Terakhir diperbarui"
+    },
+    "sections": {
+      "acceptance": {
+        "title": "Penerimaan Syarat",
+        "body": "Dengan mengakses dan menggunakan Jodohmu, Anda setuju terikat pada syarat ini dan panduan tambahan yang kami sampaikan. Jika tidak setuju, mohon hentikan penggunaan layanan kami."
+      },
+      "eligibility": {
+        "title": "Kelayakan",
+        "body": "Anda harus berusia minimal 18 tahun dan memiliki kapasitas hukum untuk membuat perjanjian ketika membuat akun. Dengan mendaftar, Anda memastikan bahwa syarat ini terpenuhi.",
+        "important": {
+          "label": "Penting:",
+          "body": "Memberikan informasi usia yang tidak benar melanggar syarat ini dan dapat berakibat penghentian akun secara langsung serta potensi konsekuensi hukum."
+        }
+      },
+      "account": {
+        "title": "Pendaftaran & Keamanan Akun",
+        "registration": {
+          "title": "Persyaratan Pendaftaran",
+          "body": "Berikan informasi yang akurat dan lengkap saat membuat akun. Perbarui detail profil secara berkala agar kami dapat memberikan pengalaman terbaik."
+        },
+        "security": {
+          "title": "Keamanan Akun",
+          "items": {
+            "responsibility": "Anda bertanggung jawab atas seluruh aktivitas yang terjadi di akun Anda.",
+            "notify": "Segera beri tahu kami bila terjadi akses tidak sah atau penyalahgunaan.",
+            "liability": "Kami tidak bertanggung jawab atas kerugian akibat akses tidak sah yang disebabkan tindakan Anda.",
+            "sharing": "Jangan membagikan kredensial masuk Anda kepada siapa pun."
+          }
+        }
+      },
+      "conduct": {
+        "title": "Perilaku Pengguna & Aktivitas Terlarang",
+        "description": "Bantu kami menjaga komunitas yang saling menghormati dengan mengikuti panduan ini dan menghindari aktivitas terlarang.",
+        "content": {
+          "title": "Larangan Konten",
+          "items": {
+            "falseInfo": "Mengunggah informasi yang palsu, menyesatkan, atau menipu.",
+            "inappropriate": "Mengunggah konten yang ofensif, cabul, atau melanggar hukum.",
+            "fakePhotos": "Menggunakan foto palsu atau yang menyesatkan.",
+            "explicit": "Menyebarkan materi eksplisit atau bermuatan seksual."
+          }
+        },
+        "behavior": {
+          "title": "Larangan Perilaku",
+          "items": {
+            "harassment": "Mengganggu, mengintimidasi, atau mengancam pengguna lain.",
+            "spam": "Mengirim spam atau pesan komersial tanpa diminta.",
+            "personalInfo": "Berusaha memperoleh informasi pribadi dari pengguna lain.",
+            "illegal": "Melakukan atau mendorong aktivitas ilegal."
+          }
+        }
+      },
+      "guidelines": {
+        "title": "Panduan Konten",
+        "profile": {
+          "title": "Konten Profil",
+          "items": {
+            "photos": "Gunakan foto terbaru yang jelas menggambarkan diri Anda.",
+            "bio": "Pastikan bio dan detail Anda jujur serta akurat.",
+            "contactInfo": "Jangan cantumkan informasi kontak di profil publik.",
+            "promotions": "Hindari watermark, iklan, atau konten promosi."
+          }
+        },
+        "removal": {
+          "title": "Penghapusan Konten",
+          "body": "Kami berhak menghapus konten yang melanggar panduan ini tanpa pemberitahuan. Pelanggaran berulang dapat mengakibatkan suspensi atau penutupan akun."
+        }
+      },
+      "intellectual": {
+        "title": "Kekayaan Intelektual",
+        "your": {
+          "title": "Konten Anda",
+          "body": "Anda tetap memiliki hak atas konten yang diunggah. Dengan membagikannya, Anda memberi kami lisensi non-eksklusif tanpa royalti untuk menampilkan dan mendistribusikan konten guna mengoperasikan layanan."
+        },
+        "platform": {
+          "title": "Konten Platform",
+          "body": "Seluruh merek dagang, desain, dan teknologi Jodohmu dilindungi hukum. Jangan gunakan tanpa izin tertulis."
+        }
+      },
+      "disclaimers": {
+        "title": "Penafian & Batas Tanggung Jawab",
+        "items": {
+          "guarantees": {
+            "title": "Tanpa Jaminan",
+            "body": "Jodohmu tidak menjamin Anda akan menemukan pasangan atau hubungan melalui layanan ini."
+          },
+          "safety": {
+            "title": "Keamanan Pertemuan",
+            "body": "Keselamatan saat bertemu langsung menjadi tanggung jawab Anda. Temui di tempat umum dan beri tahu pihak terpercaya tentang rencana Anda."
+          },
+          "liability": {
+            "title": "Batas Tanggung Jawab",
+            "body": "Sejauh diizinkan hukum, Jodohmu tidak bertanggung jawab atas kerugian tidak langsung, insidental, atau konsekuensial akibat penggunaan layanan kami."
+          }
+        }
+      },
+      "termination": {
+        "title": "Penghentian Akun",
+        "voluntary": {
+          "title": "Penghentian Sukarela",
+          "body": "Anda dapat menghapus akun kapan saja melalui pengaturan. Profil akan kami hapus dalam 30 hari sesuai Kebijakan Privasi."
+        },
+        "byJodohmu": {
+          "title": "Penghentian oleh Jodohmu",
+          "body": "Kami dapat menangguhkan atau menghentikan akun Anda segera jika melanggar syarat ini, melakukan aktivitas ilegal, atau membahayakan komunitas."
+        }
+      },
+      "changes": {
+        "title": "Perubahan Syarat",
+        "description": "Kami dapat memperbarui syarat ini kapan saja. Versi terbaru akan ditampilkan di halaman ini beserta tanggal revisi.",
+        "notification": "Untuk perubahan penting, kami akan memberi tahu melalui email atau notifikasi aplikasi. Penggunaan berkelanjutan berarti Anda menyetujui syarat terbaru."
+      },
+      "privacy": {
+        "title": "Kebijakan Privasi",
+        "description": "Penggunaan Jodohmu juga tunduk pada Kebijakan Privasi kami. Pelajari cara kami mengelola data Anda di",
+        "linkText": "jodohmu.com/privacy"
+      },
+      "law": {
+        "title": "Hukum yang Berlaku & Penyelesaian Sengketa",
+        "governing": {
+          "title": "Hukum yang Berlaku",
+          "body": "Syarat ini diatur oleh hukum Indonesia tanpa memperhatikan konflik peraturan hukum."
+        },
+        "dispute": {
+          "title": "Penyelesaian Sengketa",
+          "body": "Sengketa akan diupayakan melalui negosiasi baik-baik. Jika tidak selesai, akan diajukan ke arbitrase di Bandung, Indonesia."
+        }
+      },
+      "contact": {
+        "title": "Hubungi Kami",
+        "description": "Ada pertanyaan seputar syarat ini? Kami siap membantu:",
+        "items": {
+          "email": {
+            "label": "Email:",
+            "value": "info@jodohmu.com"
+          },
+          "phone": {
+            "label": "Telepon:",
+            "value": "+6281327054561"
+          },
+          "location": {
+            "label": "Lokasi:",
+            "value": "Bandung, Indonesia"
+          }
+        }
+      }
+    }
+  },
   "footer": {
     "hero": {
       "tagline": "Temukan jodoh Anda dengan penuh kasih, iman, dan ketulusan.",
