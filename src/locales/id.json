@@ -183,5 +183,18 @@
       "description": "Masuk dengan akun Google Anda untuk mengakses formulir pembuatan profil dan melanjutkan perjalanan perjodohan Anda.",
       "cta": "Masuk dengan Google"
     }
+  },
+  "login": {
+    "badge": "Selamat datang kembali",
+    "title": "Masuk untuk melanjutkan perjalanan Anda",
+    "subtitle": "Nikmati matchmaking premium, profil terkurasi, dan pendampingan khusus untuk komitmen yang serius.",
+    "button": "Lanjutkan dengan Google",
+    "buttonLoading": "Membuka Google...",
+    "back": "Kembali ke beranda",
+    "features": {
+      "security": "Data Anda tetap pribadi dan terlindungi",
+      "matches": "Temui kandidat serius yang sudah diseleksi",
+      "support": "Matchmaker profesional mendampingi setiap langkah"
+    }
   }
 }

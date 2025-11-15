@@ -183,5 +183,18 @@
       "description": "Sign in with your Google account to access the profile creation form and continue your matchmaking journey.",
       "cta": "Log in with Google"
     }
+  },
+  "login": {
+    "badge": "Selamat datang kembali",
+    "title": "Sign in to continue your journey",
+    "subtitle": "Unlock premium matchmaking, curated profiles, and a guided experience crafted just for serious commitment.",
+    "button": "Continue with Google",
+    "buttonLoading": "Opening Google...",
+    "back": "Back to homepage",
+    "features": {
+      "security": "Your data stays private and protected",
+      "matches": "Meet only curated, serious candidates",
+      "support": "Personal matchmakers supporting each step"
+    }
   }
 }
