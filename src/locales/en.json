@@ -27,28 +27,6 @@
     "dashboard": "Dashboard",
     "logout": "Log out"
   },
-  "footer": {
-    "brand": {
-      "description": "Find your soulmate with care, faith, and sincerity.",
-      "trustedBy": "Trusted by thousands"
-    },
-    "links": {
-      "quickLinks": "Quick Links",
-      "about": "About",
-      "howItWorks": "How It Works",
-      "pricing": "Pricing",
-      "privacy": "Privacy",
-      "terms": "Terms"
-    },
-    "social": {
-      "connectWithUs": "Connect With Us"
-    },
-    "copyright": {
-      "rights": "All rights reserved",
-      "craftedWith": "Crafted with",
-      "andFaith": "and faith"
-    }
-  },
   "homepage": {
     "hero": {
       "title": "A Love That Lasts a Lifetime",
@@ -195,6 +173,39 @@
       "security": "Your data stays private and protected",
       "matches": "Meet only curated, serious candidates",
       "support": "Personal matchmakers supporting each step"
+    }
+  },
+  "footer": {
+    "hero": {
+      "tagline": "Find your soulmate with care, faith, and sincerity.",
+      "description": "Join thousands of hearts who trust JodohMu to nurture meaningful introductions grounded in shared values and purposeful intentions.",
+      "cta": "Start Your Journey"
+    },
+    "badges": {
+      "community": "Trusted Community",
+      "safety": "Safe & Guided",
+      "support": "Personalized Support"
+    },
+    "quickLinks": {
+      "title": "Quick Links",
+      "about": "About",
+      "howItWorks": "How It Works",
+      "pricing": "Pricing",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    },
+    "connect": {
+      "title": "Connect With Us",
+      "description": "Stay close to the JodohMu community and never miss heartfelt success stories, events, and tips curated for your journey.",
+      "email": "Email",
+      "phone": "Phone",
+      "whatsapp": "WhatsApp"
+    },
+    "subfooter": {
+      "copyright": "© {{year}} Jodohmu",
+      "rights": "All rights reserved",
+      "crafted": "Crafted with",
+      "andFaith": "and faith"
     }
   }
 }

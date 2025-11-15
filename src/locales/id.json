@@ -27,28 +27,6 @@
     "dashboard": "Dashboard",
     "logout": "Keluar"
   },
-  "footer": {
-    "brand": {
-      "description": "Temukan jodoh Anda dengan penuh kasih, iman, dan ketulusan.",
-      "trustedBy": "Dipercaya oleh ribuan orang"
-    },
-    "links": {
-      "quickLinks": "Tautan Cepat",
-      "about": "Tentang",
-      "howItWorks": "Cara Kerja",
-      "pricing": "Harga",
-      "privacy": "Privasi",
-      "terms": "Syarat & Ketentuan"
-    },
-    "social": {
-      "connectWithUs": "Hubungi Kami"
-    },
-    "copyright": {
-      "rights": "Hak cipta dilindungi",
-      "craftedWith": "Dibuat dengan",
-      "andFaith": "dan iman"
-    }
-  },
   "homepage": {
     "hero": {
       "title": "Cinta Seumur Hidup",
@@ -195,6 +173,39 @@
       "security": "Data Anda tetap pribadi dan terlindungi",
       "matches": "Temui kandidat serius yang sudah diseleksi",
       "support": "Matchmaker profesional mendampingi setiap langkah"
+    }
+  },
+  "footer": {
+    "hero": {
+      "tagline": "Temukan jodoh Anda dengan penuh kasih, iman, dan ketulusan.",
+      "description": "Bergabunglah dengan ribuan hati yang mempercayai JodohMu untuk menghadirkan perkenalan bermakna yang berlandaskan nilai dan niat baik.",
+      "cta": "Mulai Perjalanan Anda"
+    },
+    "badges": {
+      "community": "Komunitas Terpercaya",
+      "safety": "Aman & Terarah",
+      "support": "Pendampingan Personal"
+    },
+    "quickLinks": {
+      "title": "Tautan Cepat",
+      "about": "Tentang",
+      "howItWorks": "Cara Kerja",
+      "pricing": "Harga",
+      "privacy": "Privasi",
+      "terms": "Syarat & Ketentuan"
+    },
+    "connect": {
+      "title": "Terhubung dengan Kami",
+      "description": "Tetap dekat dengan komunitas JodohMu dan dapatkan kisah inspiratif, acara, serta tips yang kami kurasi untuk perjalanan Anda.",
+      "email": "Email",
+      "phone": "Telepon",
+      "whatsapp": "WhatsApp"
+    },
+    "subfooter": {
+      "copyright": "© {{year}} Jodohmu",
+      "rights": "Hak cipta dilindungi",
+      "crafted": "Dibuat dengan",
+      "andFaith": "dan iman"
     }
   }
 }

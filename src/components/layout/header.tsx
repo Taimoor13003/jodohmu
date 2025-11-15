@@ -40,7 +40,7 @@ export function Header() {
     >
       <div className="container flex items-center w-full">
         <Link className="flex items-center justify-center" href="/">
-          <Image src={LogoIcon} alt="Jodohmu" style={{ height: 250, width: 250 }} priority />
+          <Image src={LogoIcon} alt="Jodohmu" style={{ height: 75, width: 175 }} priority />
           {/* <span className="text-2xl font-bold text-blue-900">Jodoh</span>
           <span className="text-2xl font-bold" style={{ color: "#9B2242" }}>mu</span> */}
 
