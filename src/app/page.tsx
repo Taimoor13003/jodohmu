@@ -12,6 +12,8 @@ import { Heart, Users, Star, Calendar, Quote, ShieldCheck, Handshake, Sparkles, 
 import Link from "next/link";
 import { motion } from 'framer-motion';
 import heroSectionImage from "@/assets/jodoh-mu-hero-section.png";
+import indoBrideImage from "@/assets/indo-bride.png";
+import indoGroomImage from "@/assets/indo-groom.png";
 
 export default function Home() {
   const { t } = useLanguage();
@@ -387,57 +389,85 @@ export default function Home() {
           </div>
         </AnimatedSection>
 
-        <AnimatedSection className="w-full py-20 md:py-28 lg:py-36">
-          <div className="container grid items-center gap-12 px-4 md:px-6 lg:grid-cols-2">
-            <motion.div 
-              initial={{ opacity: 0, x: -50 }}
+        <AnimatedSection className="relative w-full bg-white py-20 md:py-28 lg:py-32">
+          <div className="container grid items-center gap-10 px-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)_minmax(0,1fr)]">
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="space-y-6"
+              className="hidden justify-end lg:flex"
             >
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="inline-block rounded-lg bg-gradient-to-r from-[#9B2242]/10 to-[#0b3a86]/10 px-4 py-2 text-sm font-semibold text-foreground border border-[#9B2242]/20"
-              >
+              <div className="relative h-[420px] w-full max-w-xs overflow-hidden rounded-[32px] border border-[#f7c7d8]/40 bg-white/70 p-4 shadow-[0_20px_60px_rgba(15,23,42,0.18)]">
+                <Image
+                  src={indoBrideImage}
+                  alt="Indonesian bride smiling"
+                  fill
+                  className="rounded-[24px] object-cover"
+                  priority
+                />
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="order-first space-y-6 text-center lg:order-none lg:text-left"
+            >
+              <span className="inline-flex items-center justify-center gap-2 rounded-full border border-[#9B2242]/20 bg-gradient-to-r from-[#9B2242]/10 to-[#0b3a86]/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#9B2242]">
                 {t("homepage.philosophy.badge")}
-              </motion.div>
-              <h2 className="text-4xl font-bold font-serif tracking-tighter sm:text-5xl bg-gradient-to-r from-foreground via-[#9B2242] to-foreground bg-clip-text text-transparent">{t("homepage.philosophy.heading")}</h2>
-              <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed leading-relaxed">
+              </span>
+              <h2 className="text-4xl font-serif font-bold tracking-tighter sm:text-5xl bg-gradient-to-r from-foreground via-[#9B2242] to-foreground bg-clip-text text-transparent">
+                {t("homepage.philosophy.heading")}
+              </h2>
+              <p className="mx-auto max-w-2xl text-muted-foreground md:text-xl/relaxed leading-relaxed lg:mx-0">
                 {t("homepage.philosophy.description")}
               </p>
             </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, x: 50 }}
+
+            <motion.div
+              initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="relative"
+              className="hidden justify-start lg:flex"
             >
-              <div className="relative">
+              <div className="relative h-[420px] w-full max-w-xs overflow-hidden rounded-[32px] border border-[#dce6ff]/40 bg-white/70 p-4 shadow-[0_20px_60px_rgba(15,23,42,0.15)]">
                 <Image
-                  alt="Our Philosophy"
-                  className="mx-auto rounded-2xl sm:w-full shadow-2xl"
-                  src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=2070&auto=format&fit=crop"
-                  width={550}
-                  height={550}
-                  sizes="(min-width: 1024px) 550px, 100vw"
+                  src={indoGroomImage}
+                  alt="Indonesian groom smiling"
+                  fill
+                  className="rounded-[24px] object-cover"
                   priority
-                  placeholder="blur"
-                  blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#9B2242]/20 via-transparent to-[#0b3a86]/10 rounded-2xl pointer-events-none"></div>
               </div>
-              <motion.div 
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="absolute -bottom-8 -right-8 w-48 h-48 bg-gradient-to-br from-[#9B2242]/20 to-[#0b3a86]/20 rounded-full z-20 pointer-events-none blur-xl"
-              ></motion.div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="order-last flex flex-col items-center gap-6 lg:hidden"
+            >
+              <div className="relative h-64 w-full max-w-sm overflow-hidden rounded-[28px] border border-[#f7c7d8]/40 bg-white/70 p-4 shadow-[0_20px_60px_rgba(15,23,42,0.18)]">
+                <Image
+                  src={indoBrideImage}
+                  alt="Indonesian bride smiling"
+                  fill
+                  className="rounded-[20px] object-cover"
+                />
+              </div>
+              <div className="relative h-64 w-full max-w-sm overflow-hidden rounded-[28px] border border-[#dce6ff]/40 bg-white/70 p-4 shadow-[0_20px_60px_rgba(15,23,42,0.15)]">
+                <Image
+                  src={indoGroomImage}
+                  alt="Indonesian groom smiling"
+                  fill
+                  className="rounded-[20px] object-cover"
+                />
+              </div>
             </motion.div>
           </div>
         </AnimatedSection>
