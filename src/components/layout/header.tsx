@@ -34,89 +34,86 @@ export function Header() {
   const badgeBg = lang === "id" ? "#9B2242" : "#0b3a86";
 
   return (
-    <header
-      className="sticky top-0 z-50 h-20 flex items-center bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm border-b"
-      style={{ borderColor: "#9B224233", backgroundImage: "linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.6))" }}
-    >
-      <Link className="flex items-center justify-center" href="/">
-        <Image src={LogoIcon} alt="Jodohmu" className="h-8 w-auto" priority />
-        <span className="text-xl font-bold text-blue-900">Jodoh</span>
-        <span className="text-xl font-bold text-primary">mu</span>
-      </Link>
-      <nav className="ml-auto flex items-center gap-2 sm:gap-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label={`Language: ${lang.toUpperCase()}`}
-              className="relative h-12 w-12 rounded-full text-[#0b3a86] border border-[#0b3a86]/30 hover:bg-[#f1f5ff]"
-            >
-              <Globe className="h-7 w-7" />
-              <span
-                className="absolute -top-1 -right-1 rounded-full px-1.5 py-0.5 text-[11px] leading-none font-semibold text-white shadow"
-                style={{ backgroundColor: badgeBg }}
-              >
-                {lang.toUpperCase()}
-              </span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="min-w-[200px] border" style={{ borderColor: "#0b3a8626" }}>
-            <DropdownMenuLabel>{t("header.language")}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => setLang("id")}
-              className={lang === "id" ? "bg-[#9B2242]/10 text-[#9B2242]" : undefined}
-            >
-              {lang === "id" ? "✓ " : ""}Bahasa Indonesia
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setLang("en")}
-              className={lang === "en" ? "bg-[#0b3a86]/10 text-[#0b3a86]" : undefined}
-            >
-              {lang === "en" ? "✓ " : ""}English
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        {user ? (
+    <header className="sticky top-0 z-50 h-20 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm border-b">
+      <div className="container mx-auto flex h-full items-center px-4">
+        <Link className="flex items-center justify-center" href="/">
+          <Image src={LogoIcon} alt="Jodohmu" className="h-20 w-auto" priority />
+        </Link>
+        <nav className="ml-auto flex items-center gap-2 sm:gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full ring-1" style={{ boxShadow: "none", borderColor: "transparent" }}>
-                <Avatar className="h-10 w-10 ring-1 ring-[#0b3a86]/20 hover:ring-[#0b3a86]/40 transition">
-                  <AvatarImage src={user.photoURL || "/placeholder-user.jpg"} alt={user.displayName || "User"} />
-                  <AvatarFallback>{user.displayName?.[0]}</AvatarFallback>
-                </Avatar>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={`Language: ${lang.toUpperCase()}`}
+                className="relative h-14 w-14 rounded-full text-[#0b3a86] border border-[#0b3a86]/30 hover:bg-[#f1f5ff]"
+              >
+                <Globe className="h-8 w-8" />
+                <span
+                  className="absolute -top-1 -right-1 rounded-full px-1.5 py-0.5 text-[11px] leading-none font-semibold text-white shadow"
+                  style={{ backgroundColor: badgeBg }}
+                >
+                  {lang.toUpperCase()}
+                </span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 border" style={{ borderColor: "#0b3a8626" }} align="end" forceMount>
-              <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{user.displayName}</p>
-                  <p className="text-xs leading-none text-muted-foreground">
-                    {user.email}
-                  </p>
-                </div>
-              </DropdownMenuLabel>
+            <DropdownMenuContent align="end" className="min-w-[200px] border" style={{ borderColor: "#0b3a8626" }}>
+              <DropdownMenuLabel>{t("header.language")}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href="/dashboard">{t("header.dashboard")}</Link>
+              <DropdownMenuItem
+                onClick={() => setLang("id")}
+                className={lang === "id" ? "bg-[#9B2242]/10 text-[#9B2242]" : undefined}
+              >
+                {lang === "id" ? "✓ " : ""}Bahasa Indonesia
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleLogout}>{t("header.logout")}</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setLang("en")}
+                className={lang === "en" ? "bg-[#0b3a86]/10 text-[#0b3a86]" : undefined}
+              >
+                {lang === "en" ? "✓ " : ""}English
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : (
-          <Button
-            asChild
-            variant="default"
-            className="group bg-gradient-to-r from-[#9B2242] to-[#0b3a86] hover:from-[#861b37] hover:to-[#0a3377] text-white border-0 rounded-md shadow-md hover:shadow-lg px-6 py-3 text-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b3a86]/40 focus-visible:ring-offset-2"
-         >
-            <Link href="/login" className="flex items-center gap-2">
-              <span>{t("common.login")}</span>
-              <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
-            </Link>
-          </Button>
-        )}
+
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Avatar className="h-10 w-10 border-2" style={{ borderColor: badgeBg }}>
+                    <AvatarImage src={user.photoURL ?? ""} alt={user.displayName ?? ""} />
+                    <AvatarFallback>
+                      {user.displayName
+                        ?.split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">{user.displayName}</p>
+                    <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/dashboard">{t("header.dashboard")}</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>{t("header.logout")}</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button asChild className="bg-gradient-to-r from-[#9B2242] to-[#0b3a86] text-white rounded-full px-6 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
+              <Link href="/login">
+                <span>{t("common.login")}</span>
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          )}
         </nav>
-      </header>
-    );
+      </div>
+    </header>
+  );
 }
