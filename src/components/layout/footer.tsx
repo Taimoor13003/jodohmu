@@ -1,96 +1,140 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Instagram, Twitter, FileText, Shield, Info, Heart, DollarSign } from "lucide-react";
+import { Facebook, Instagram, Twitter, FileText, Shield, Info, Heart } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 
 export function Footer() {
   return (
-    <footer className="w-full text-[#0b3a86]">
-      <div className="h-1 w-full bg-gradient-to-r from-[#f6adc3] via-[#f39cb5] to-[#f18aa7]" />
-      <div className="bg-gradient-to-b from-[#fbe0ea] via-[#f7c7d7] to-[#f3aec4] relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-32 h-32 bg-white/5 rounded-full blur-2xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
-        </div>
-        <div className="container py-16 relative z-10">
-          <div className="grid gap-12 lg:grid-cols-3 items-start">
-            {/* Brand */}
-            <div className="space-y-6">
-              <div className="flex items-center">
-                <Image src={LogoIcon} alt="Jodohmu" height={250} />
-              </div>
-              <p className="text-[#0b3a86] text-base leading-relaxed max-w-sm font-semibold">
-                Find your soulmate with care, faith, and sincerity.
-              </p>
-              <div className="flex items-center gap-2 text-[#0b3a86] font-semibold">
-                <Heart className="w-4 h-4" style={{ color: "#0b3a86" }} />
-                <span className="text-sm">Trusted by thousands</span>
+    <footer className="relative overflow-hidden bg-gradient-to-br from-[#fde4ec] via-[#f9c7d7] to-[#f2a5c3] text-[#0b3a86]">
+      <div className="h-1 w-full bg-gradient-to-r from-[#9B2242] via-[#f18aa7] to-[#0b3a86]" />
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-32 -left-24 h-72 w-72 rounded-full bg-white/25 blur-3xl" />
+        <div className="absolute top-1/3 -right-24 h-80 w-80 rounded-full bg-[#f18aa7]/30 blur-[140px]" />
+        <div className="absolute -bottom-24 left-1/3 h-64 w-64 rounded-full bg-white/20 blur-3xl" />
+      </div>
+      <div className="container relative z-10 py-16 sm:py-20">
+        <div className="grid gap-12 xl:gap-16 lg:grid-cols-[1.45fr_1fr] items-start">
+          <div className="flex flex-col gap-8 rounded-[32px] border border-white/50 bg-white/65 p-8 md:p-10 shadow-2xl shadow-[#f18aa7]/25 backdrop-blur-2xl">
+            <div className="flex flex-col items-center md:items-start gap-6">
+              <Image src={LogoIcon} alt="Jodohmu" className="h-[220px] sm:h-[250px] w-auto drop-shadow-2xl" />
+              <div className="space-y-4 text-center md:text-left">
+                <h2 className="text-2xl md:text-3xl font-semibold leading-tight">
+                  Find your soulmate with care, faith, and sincerity.
+                </h2>
+                <p className="text-base md:text-lg font-medium leading-relaxed text-[#0b3a86]/80">
+                  Join thousands of hearts who trust JodohMu to nurture meaningful introductions grounded in shared values and purposeful intentions.
+                </p>
               </div>
             </div>
-
-            {/* Links */}
-            <div className="flex flex-col items-center space-y-6">
-              <h3 className="text-lg font-semibold text-[#0b3a86]">Quick Links</h3>
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center gap-4 text-sm text-[#0b3a86] font-medium">
-                <Link href="#" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105 font-semibold">
-                  <Info className="w-4 h-4" />
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="rounded-2xl border border-white/60 bg-white/75 p-4 text-center shadow-sm shadow-[#f18aa7]/20">
+                <Heart className="mx-auto h-6 w-6 text-[#9B2242]" />
+                <p className="mt-3 text-sm font-semibold">Trusted Community</p>
+              </div>
+              <div className="rounded-2xl border border-white/60 bg-white/75 p-4 text-center shadow-sm shadow-[#f18aa7]/20">
+                <Shield className="mx-auto h-6 w-6 text-[#0b3a86]" />
+                <p className="mt-3 text-sm font-semibold">Safe &amp; Guided</p>
+              </div>
+              <div className="rounded-2xl border border-white/60 bg-white/75 p-4 text-center shadow-sm shadow-[#f18aa7]/20">
+                <Info className="mx-auto h-6 w-6 text-[#9B2242]" />
+                <p className="mt-3 text-sm font-semibold">Personalized Support</p>
+              </div>
+            </div>
+            <Link
+              href="/register"
+              className="inline-flex items-center justify-center self-center md:self-start rounded-full bg-gradient-to-r from-[#9B2242] via-[#c9365d] to-[#0b3a86] px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-[#0b3a86]/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b3a86]/40 focus-visible:ring-offset-2"
+            >
+              Start Your Journey
+            </Link>
+          </div>
+          <div className="grid gap-6">
+            <div className="rounded-3xl border border-white/55 bg-white/70 p-6 md:p-8 shadow-xl shadow-[#f18aa7]/15 backdrop-blur-xl">
+              <h3 className="text-xl font-semibold">Quick Links</h3>
+              <div className="mt-5 grid grid-cols-1 gap-3 text-base font-medium">
+                <Link
+                  href="#"
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-[#0b3a86] transition-all duration-200 hover:bg-white hover:shadow-sm"
+                >
+                  <Info className="h-4 w-4" />
                   About
                 </Link>
-                <span className="hidden sm:block text-[#0b3a86]/30">•</span>
-                <Link href="#" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105 font-semibold">
-                  <Heart className="w-4 h-4" />
+                <Link
+                  href="#"
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-[#0b3a86] transition-all duration-200 hover:bg-white hover:shadow-sm"
+                >
+                  <Heart className="h-4 w-4 text-[#9B2242]" />
                   How It Works
                 </Link>
-                <span className="hidden sm:block text-[#0b3a86]/30">•</span>
-                <Link href="#" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105 font-semibold">
-                  <Info className="w-4 h-4" />
+                <Link
+                  href="#"
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-[#0b3a86] transition-all duration-200 hover:bg-white hover:shadow-sm"
+                >
+                  <Info className="h-4 w-4" />
                   Pricing
                 </Link>
-                <span className="hidden sm:block text-[#0b3a86]/30">•</span>
-                <Link href="/privacy" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105 font-semibold">
-                  <Shield className="w-4 h-4" />
+                <Link
+                  href="/privacy"
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-[#0b3a86] transition-all duration-200 hover:bg-white hover:shadow-sm"
+                >
+                  <Shield className="h-4 w-4" />
                   Privacy
                 </Link>
-                <span className="hidden sm:block text-[#0b3a86]/30">•</span>
-                <Link href="/terms" className="flex items-center gap-2 text-[#0b3a86] hover:text-[#07265d] hover:underline underline-offset-4 decoration-[#0b3a86] transition-all duration-300 hover:scale-105 font-semibold">
-                  <FileText className="w-4 h-4" />
+                <Link
+                  href="/terms"
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-[#0b3a86] transition-all duration-200 hover:bg-white hover:shadow-sm"
+                >
+                  <FileText className="h-4 w-4" />
                   Terms
                 </Link>
               </div>
             </div>
-
-            {/* Social */}
-            <div className="flex flex-col items-center lg:items-end space-y-4">
-              <h3 className="text-lg font-semibold text-[#0b3a86]">Connect With Us</h3>
-              <div className="flex items-center gap-4">
-                <Link href="#" className="group inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/15 hover:bg-gradient-to-r hover:from-[#f18aa7] hover:to-[#f6adc3] ring-1 ring-white/30 hover:ring-white/50 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-[#f18aa7]/30">
-                  <Facebook className="h-5 w-5 text-[#0b3a86] group-hover:text-white transition-colors" />
+            <div className="rounded-3xl border border-white/55 bg-white/70 p-6 md:p-8 shadow-xl shadow-[#f18aa7]/15 backdrop-blur-xl">
+              <h3 className="text-xl font-semibold">Connect With Us</h3>
+              <p className="mt-3 text-sm font-medium leading-relaxed text-[#0b3a86]/75">
+                Stay close to the JodohMu community and never miss heartfelt success stories, events, and tips curated for your journey.
+              </p>
+              <div className="mt-5 flex items-center justify-start gap-4">
+                <Link
+                  href="#"
+                  className="group inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/60 bg-white/75 shadow-sm shadow-[#f18aa7]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-gradient-to-r hover:from-[#9B2242] hover:to-[#0b3a86]"
+                >
+                  <Facebook className="h-5 w-5 text-[#0b3a86] transition-colors group-hover:text-white" />
                 </Link>
-                <Link href="#" className="group inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/15 hover:bg-gradient-to-r hover:from-[#f18aa7] hover:to-[#f6adc3] ring-1 ring-white/30 hover:ring-white/50 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-[#f18aa7]/30">
-                  <Instagram className="h-5 w-5 text-[#0b3a86] group-hover:text-white transition-colors" />
+                <Link
+                  href="#"
+                  className="group inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/60 bg-white/75 shadow-sm shadow-[#f18aa7]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-gradient-to-r hover:from-[#9B2242] hover:to-[#0b3a86]"
+                >
+                  <Instagram className="h-5 w-5 text-[#0b3a86] transition-colors group-hover:text-white" />
                 </Link>
-                <Link href="#" className="group inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/15 hover:bg-gradient-to-r hover:from-[#f18aa7] hover:to-[#f6adc3] ring-1 ring-white/30 hover:ring-white/50 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-[#f18aa7]/30">
-                  <Twitter className="h-5 w-5 text-[#0b3a86] group-hover:text-white transition-colors" />
+                <Link
+                  href="#"
+                  className="group inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/60 bg-white/75 shadow-sm shadow-[#f18aa7]/20 transition-all duration-300 hover:-translate-y-1 hover:bg-gradient-to-r hover:from-[#9B2242] hover:to-[#0b3a86]"
+                >
+                  <Twitter className="h-5 w-5 text-[#0b3a86] transition-colors group-hover:text-white" />
                 </Link>
+              </div>
+              <div className="mt-6 space-y-2 text-sm font-semibold text-[#0b3a86]/80">
+                <p>
+                  Email: <a className="underline decoration-[#9B2242]/40 underline-offset-4 hover:text-[#9B2242]" href="mailto:info@jodohmu.id">info@jodohmu.id</a>
+                </p>
+                <p>
+                  Phone: <a className="underline decoration-[#9B2242]/40 underline-offset-4 hover:text-[#9B2242]" href="tel:+6281234567890">+62 812-3456-7890</a>
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="border-t border-[#f18aa7]/40 bg-[#f7c7d7] relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-24 h-24 bg-white/15 rounded-full blur-xl"></div>
-          <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/15 rounded-full blur-xl"></div>
-        </div>
-        <div className="container flex flex-col sm:flex-row items-center justify-between py-6 text-sm text-[#0b3a86] gap-4 relative z-10 font-medium">
-          <p className="flex items-center gap-2 font-semibold">
+      <div className="relative border-t border-white/60 bg-white/25 backdrop-blur-xl">
+        <div className="container flex flex-col items-center justify-between gap-2 py-3 text-xs font-medium text-[#0b3a86]/85 sm:flex-row sm:text-sm">
+          <p className="flex items-center gap-2">
             <span> {new Date().getFullYear()} Jodohmu</span>
             <span>•</span>
             <span>All rights reserved</span>
           </p>
-          <p className="flex items-center gap-2 font-semibold">
+          <p className="flex items-center gap-1">
             <span>Crafted with</span>
-            <Heart className="w-4 h-4" style={{ color: "#0b3a86" }} />
+            <Heart className="h-4 w-4 text-[#9B2242]" />
             <span>and faith</span>
           </p>
         </div>
