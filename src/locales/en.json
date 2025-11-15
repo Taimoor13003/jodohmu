@@ -29,9 +29,35 @@
   },
   "homepage": {
     "hero": {
+      "badge": "SERIOUS MATCHMAKING",
       "title": "A Love That Lasts a Lifetime",
       "description": "Jodohmu is where serious commitment meets modern matchmaking. We provide a heartfelt, premium service to help you find your soulmate in a way that honors your faith and values.",
-      "cta": "Begin Your Journey"
+      "cta": "Begin Your Journey",
+      "secondaryCta": "Talk to an Advisor",
+      "highlight": {
+        "points": {
+          "support": "Dedicated matchmakers for every step",
+          "faith": "Faith-aligned introductions and guidance",
+          "confidential": "Confidential, respectful meeting spaces"
+        }
+      },
+      "statsTitle": "Trusted by serious hearts",
+      "statsSubtitle": "Our concierge team has nurtured hundreds of meaningful introductions grounded in love, trust, and faith.",
+      "statsFooter": "Every match is personally reviewed by our matchmakers.",
+      "stats": {
+        "matches": {
+          "value": "450+",
+          "label": "Curated introductions"
+        },
+        "success": {
+          "value": "82%",
+          "label": "Engagement success rate"
+        },
+        "cities": {
+          "value": "20",
+          "label": "Cities served"
+        }
+      }
     },
     "whyChoose": {
       "badge": "WHY JODOHMU",

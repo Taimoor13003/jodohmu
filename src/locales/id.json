@@ -29,9 +29,35 @@
   },
   "homepage": {
     "hero": {
+      "badge": "PENCARIAN JODOH SERIUS",
       "title": "Cinta Seumur Hidup",
       "description": "Jodohmu adalah tempat komitmen serius bertemu dengan perjodohan modern. Kami menyediakan layanan premium yang tulus untuk membantu Anda menemukan belahan jiwa dengan cara yang menghormati iman dan nilai-nilai Anda.",
-      "cta": "Mulai Perjalanan Anda"
+      "cta": "Mulai Perjalanan Anda",
+      "secondaryCta": "Bicara dengan Advisor",
+      "highlight": {
+        "points": {
+          "support": "Matchmaker pribadi mendampingi setiap langkah",
+          "faith": "Perkenalan dan bimbingan yang selaras iman",
+          "confidential": "Ruang pertemuan yang rahasia dan penuh hormat"
+        }
+      },
+      "statsTitle": "Dipercaya para pencari serius",
+      "statsSubtitle": "Tim concierge kami telah merawat ratusan perkenalan bermakna yang berlandaskan cinta, kepercayaan, dan iman.",
+      "statsFooter": "Setiap kecocokan ditinjau langsung oleh matchmaker kami.",
+      "stats": {
+        "matches": {
+          "value": "450+",
+          "label": "Perkenalan terkurasi"
+        },
+        "success": {
+          "value": "82%",
+          "label": "Tingkat keberhasilan lamaran"
+        },
+        "cities": {
+          "value": "20",
+          "label": "Kota yang dilayani"
+        }
+      }
     },
     "whyChoose": {
       "badge": "KENAPA JODOHMU",
