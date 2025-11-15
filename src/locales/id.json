@@ -34,8 +34,24 @@
       "cta": "Mulai Perjalanan Anda"
     },
     "whyChoose": {
+      "badge": "KENAPA JODOHMU",
       "title": "Mengapa Memilih Jodohmu?",
-      "description": "Kami lebih dari sekadar aplikasi. Kami adalah mitra Anda yang berdedikasi dalam menemukan pernikahan yang bermakna dan langgeng."
+      "description": "Kami lebih dari sekadar aplikasi. Kami adalah mitra setia Anda dalam menemukan pernikahan yang bermakna dan langgeng.",
+      "secondary": "Dengan matchmaker pribadi mendampingi, setiap perkenalan dikurasi penuh kepedulian, niat baik, dan penghormatan terhadap nilai-nilai Anda.",
+      "highlights": {
+        "trust": {
+          "title": "Komunitas Serius & Terverifikasi",
+          "description": "Setiap anggota disaring dan dibimbing tim kami agar Anda dapat membuka hati dengan penuh keyakinan."
+        },
+        "guidance": {
+          "title": "Matchmaker Pribadi",
+          "description": "Advisor khusus mendampingi Anda—dari percakapan pertama hingga saat lamaran terasa tepat."
+        },
+        "curation": {
+          "title": "Perkenalan yang Penuh Tujuan",
+          "description": "Kecocokan dipilih secara saksama dengan fokus pada kesesuaian, iman bersama, dan visi jangka panjang menuju pernikahan penuh berkah."
+        }
+      }
     },
     "features": {
       "cards": {

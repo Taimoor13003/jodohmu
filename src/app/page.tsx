@@ -9,7 +9,7 @@ import { AnimatedSection } from "@/components/layout/animated-section";
 import { HorizontalScrollSection } from "@/components/layout/horizontal-scroll-section";
 import { ParallaxHero } from "@/components/layout/parallax-hero";
 import { useLanguage } from "@/context/LanguageContext";
-import { Heart, Users, Star, Calendar, Quote } from "lucide-react";
+import { Heart, Users, Star, Calendar, Quote, ShieldCheck, Handshake, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { motion } from 'framer-motion';
 
@@ -103,16 +103,75 @@ export default function Home() {
           </div>
         </ParallaxHero>
 
-        <AnimatedSection className="w-full py-20 md:py-28 lg:py-36">
-          <div className="container text-center">
+        <AnimatedSection className="relative overflow-hidden w-full py-20 md:py-28 lg:py-36 bg-gradient-to-br from-[#fde0ed] via-white to-[#e4efff]">
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute -top-20 left-12 h-64 w-64 rounded-full bg-[#f8bcd4]/55 blur-[140px]" />
+            <div className="absolute bottom-0 right-10 h-60 w-60 rounded-full bg-[#bed4ff]/50 blur-[140px]" />
+            <div className="absolute top-1/3 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-white/60 blur-3xl" />
+          </div>
+          <div className="container relative z-10 flex flex-col items-center text-center gap-16">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
+              className="max-w-3xl space-y-6"
             >
-              <h2 className="font-serif text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl bg-gradient-to-r from-foreground via-[#9B2242] to-foreground bg-clip-text text-transparent">{t("homepage.whyChoose.title")}</h2>
-              <p className="mx-auto max-w-[800px] text-muted-foreground md:text-xl mt-4 leading-relaxed">{t("homepage.whyChoose.description")}</p>
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#9B2242] shadow-sm shadow-white/40">
+                {t("homepage.whyChoose.badge")}
+              </span>
+              <h2 className="font-serif text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl bg-gradient-to-r from-[#0b3a86] via-[#9B2242] to-[#0b3a86] bg-clip-text text-transparent">
+                {t("homepage.whyChoose.title")}
+              </h2>
+              <p className="text-lg md:text-xl leading-relaxed text-[#183056]/90">
+                {t("homepage.whyChoose.description")}
+              </p>
+              <p className="text-base md:text-lg leading-relaxed text-[#183056]/75">
+                {t("homepage.whyChoose.secondary")}
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="grid w-full max-w-5xl gap-6 md:grid-cols-3"
+            >
+              {[
+                {
+                  icon: ShieldCheck,
+                  title: t("homepage.whyChoose.highlights.trust.title"),
+                  description: t("homepage.whyChoose.highlights.trust.description"),
+                  accent: "from-[#9B2242]/85 to-[#c1486c]"
+                },
+                {
+                  icon: Handshake,
+                  title: t("homepage.whyChoose.highlights.guidance.title"),
+                  description: t("homepage.whyChoose.highlights.guidance.description"),
+                  accent: "from-[#0b3a86]/85 to-[#4364c7]"
+                },
+                {
+                  icon: Sparkles,
+                  title: t("homepage.whyChoose.highlights.curation.title"),
+                  description: t("homepage.whyChoose.highlights.curation.description"),
+                  accent: "from-[#f7a4c7]/90 to-[#f4c2d8]"
+                }
+              ].map(({ icon: Icon, title, description, accent }) => (
+                <div
+                  key={title}
+                  className="group relative overflow-hidden rounded-3xl border border-white/70 bg-white/75 p-8 backdrop-blur-xl shadow-xl shadow-[#9B2242]/10 transition-all duration-300 hover:-translate-y-2"
+                >
+                  <div className={`absolute inset-x-6 -top-16 h-32 rounded-full bg-gradient-to-br ${accent} opacity-40 blur-3xl transition-opacity duration-300 group-hover:opacity-60`} />
+                  <div className="relative flex flex-col gap-4">
+                    <div className="h-12 w-12 rounded-2xl bg-gradient-to-r from-white/80 to-white/40 shadow-lg shadow-[#0b3a86]/10 flex items-center justify-center">
+                      <Icon className="h-6 w-6 text-[#0b3a86]" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-[#112142]">{title}</h3>
+                    <p className="text-sm leading-relaxed text-[#2a3a5a]/80">{description}</p>
+                  </div>
+                </div>
+              ))}
             </motion.div>
           </div>
         </AnimatedSection>

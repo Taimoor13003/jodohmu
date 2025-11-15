@@ -34,8 +34,24 @@
       "cta": "Begin Your Journey"
     },
     "whyChoose": {
+      "badge": "WHY JODOHMU",
       "title": "Why Choose Jodohmu?",
-      "description": "We are more than an app. We are your dedicated partners in finding a meaningful, lasting marriage."
+      "description": "We are more than an app. We are your dedicated partners in finding a meaningful, lasting marriage.",
+      "secondary": "With a dedicated matchmaker by your side, every introduction is curated with care, intention, and deep respect for your values.",
+      "highlights": {
+        "trust": {
+          "title": "Serious, Vetted Community",
+          "description": "Every member is screened and guided by our team so you can invest your heart with confidence."
+        },
+        "guidance": {
+          "title": "Personal Matchmakers",
+          "description": "Dedicated advisors walk with you—from first conversation to the moment a proposal feels right."
+        },
+        "curation": {
+          "title": "Purposeful Introductions",
+          "description": "Thoughtful matches focus on compatibility, shared faith, and long-term vision for a blessed marriage."
+        }
+      }
     },
     "features": {
       "cards": {
