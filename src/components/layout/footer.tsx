@@ -17,8 +17,8 @@ export function Footer() {
         <div className="grid gap-12 lg:grid-cols-4">
           {/* Brand */}
           <div className="space-y-4 lg:col-span-1">
-            <Image src={LogoIcon} alt="Jodohmu" className="h-20 w-auto" />
-            <p className="text-sm text-brand-blue/80 max-w-sm">
+            <Image src={LogoIcon} alt="Jodohmu" className="h-10 w-auto" />
+            <p className="text-sm font-medium text-brand-blue/80 max-w-sm">
               {t("footer.hero.tagline")}
             </p>
           </div>
@@ -26,7 +26,7 @@ export function Footer() {
           {/* Quick Links */}
           <div className="space-y-4">
             <h3 className="font-bold text-brand-blue">{t("footer.quickLinks.title")}</h3>
-            <div className="flex flex-col gap-2 text-sm font-medium">
+            <div className="flex flex-col gap-2 text-sm font-semibold">
               <Link href="#" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.about")}</Link>
               <Link href="#" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.howItWorks")}</Link>
               <Link href="#" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.pricing")}</Link>
@@ -38,10 +38,10 @@ export function Footer() {
           {/* Connect With Us */}
           <div className="space-y-4">
             <h3 className="font-bold text-brand-blue">{t("footer.connect.title")}</h3>
-            <p className="text-sm text-brand-blue/80">
+            <p className="text-sm font-medium text-brand-blue/80">
               {t("footer.connect.description")}
             </p>
-            <div className="flex flex-col gap-3 text-sm font-medium">
+            <div className="flex flex-col gap-3 text-sm font-semibold">
               <a href="mailto:info@jodohmu.com" className="flex items-center gap-3 hover:text-brand-rose transition-colors">
                 <Mail className="h-5 w-5" />
                 <span>{t("footer.connect.email")}</span>
@@ -68,7 +68,7 @@ export function Footer() {
 
           {/* Social */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-brand-blue">Follow Us</h3>
+            <h3 className="font-bold text-brand-blue">Follow Us</h3>
             <div className="flex items-center gap-3">
               <Link href="https://web.facebook.com/profile.php?id=61583458260206" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue hover:bg-brand-rose/10 hover:text-brand-rose transition-colors">
                 <Facebook className="h-5 w-5" />
@@ -84,7 +84,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-brand-blue/10">
-        <div className="container flex flex-col items-center justify-between gap-2 py-4 text-xs font-medium text-brand-blue/60 sm:flex-row sm:text-sm">
+        <div className="container flex flex-col items-center justify-between gap-2 py-4 text-xs font-semibold text-brand-blue/60 sm:flex-row sm:text-sm">
           <p className="flex items-center gap-2">
             <span>{t("footer.subfooter.copyright", { year })}</span>
             <span>•</span>
