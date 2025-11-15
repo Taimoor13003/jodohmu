@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { AnimatedSection } from "@/components/layout/animated-section";
-import { ParallaxHero } from "@/components/layout/parallax-hero";
 import { useLanguage } from "@/context/LanguageContext";
 import { Heart, Users, Star, Calendar, Quote, ShieldCheck, Handshake, Sparkles, HeartHandshake, MessageCircle, CheckCircle2, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { motion } from 'framer-motion';
+import heroSectionImage from "@/assets/jodoh-mu-hero-section.png";
 
 export default function Home() {
   const { t } = useLanguage();
@@ -71,27 +71,6 @@ export default function Home() {
 
   const [primaryStory, ...secondaryStories] = matchingStories;
 
-  const heroHighlights = [
-    t("homepage.hero.highlight.points.support"),
-    t("homepage.hero.highlight.points.faith"),
-    t("homepage.hero.highlight.points.confidential"),
-  ];
-
-  const heroStats = [
-    {
-      value: t("homepage.hero.stats.matches.value"),
-      label: t("homepage.hero.stats.matches.label"),
-    },
-    {
-      value: t("homepage.hero.stats.success.value"),
-      label: t("homepage.hero.stats.success.label"),
-    },
-    {
-      value: t("homepage.hero.stats.cities.value"),
-      label: t("homepage.hero.stats.cities.label"),
-    },
-  ];
-
   const meetingPhases = [
     {
       icon: ShieldCheck,
@@ -138,89 +117,55 @@ export default function Home() {
     },
   ];
 
+  const heroTagline = t("homepage.hero.tagline");
+
   return (
     <div className="flex flex-col min-h-screen font-sans bg-background">
       <main className="flex-1">
-        <ParallaxHero imageUrls={[
-          'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=2070&auto=format&fit=crop',
-          'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=1974&auto=format&fit=crop',
-          'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1974&auto=format&fit=crop',
-        ]}>
-          <div className="relative w-full">
-            <div className="absolute inset-0 bg-gradient-to-br from-black/70 via-[#9B2242]/40 to-black/60" />
-            <div className="container relative z-10 px-4 py-24 lg:py-32">
-              <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.9fr)]">
+        <section className="w-full bg-white">
+          <div className="container px-4 py-24 lg:py-32">
+            <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
                 <motion.div
                   initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                  className="space-y-8 text-white"
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  className="space-y-6 text-[#1d2440]"
                 >
                   <motion.span
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2, ease: 'easeOut' }}
-                    className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-white/85"
+                    transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+                    className="inline-flex items-center gap-2 rounded-full border border-[#9B2242]/20 bg-white px-5 py-2 text-xs font-semibold uppercase tracking-[0.45em] text-[#9B2242]"
                   >
                     {t("homepage.hero.badge")}
                   </motion.span>
                   <motion.h1
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.3, ease: 'easeOut' }}
-                    className="font-serif text-4xl font-extrabold tracking-tight sm:text-5xl md:text-7xl lg:text-8xl bg-gradient-to-r from-white via-[#ffd7e2] to-white bg-clip-text text-transparent drop-shadow-[0_35px_45px_rgba(0,0,0,0.45)]"
+                    transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+                    className="font-serif text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
                   >
                     {t("homepage.hero.title")}
                   </motion.h1>
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-                    className="max-w-2xl text-base md:text-lg lg:text-xl leading-relaxed text-white/85"
+                    transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+                    className="max-w-xl text-lg leading-relaxed text-[#364159]/82"
                   >
-                    {t("homepage.hero.description")}
+                    {heroTagline}
                   </motion.p>
-
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.5, ease: 'easeOut' }}
-                    className="flex flex-wrap gap-3"
-                  >
-                    {heroHighlights.map((point) => (
-                      <span
-                        key={point}
-                        className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-medium text-white/90 shadow-sm shadow-black/30"
-                      >
-                        <CheckCircle2 className="h-4 w-4 text-[#ffd7e2]" />
-                        {point}
-                      </span>
-                    ))}
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
-                    className="flex flex-wrap items-center gap-4"
+                    transition={{ duration: 0.8, delay: 0.5, ease: "easeOut" }}
                   >
                     <Button
                       asChild
                       size="lg"
-                      className="bg-gradient-to-r from-[#9B2242] to-[#b63b62] hover:from-[#9B2242]/90 hover:to-[#b63b62]/90 text-white rounded-full px-10 py-7 text-lg font-semibold shadow-2xl hover:shadow-[#9B2242]/35 transition-all duration-300 border border-white/30"
+                      className="rounded-full bg-gradient-to-r from-[#9B2242] via-[#f48fb1] to-[#9B2242] px-10 py-6 text-lg font-semibold text-white shadow-[0_14px_28px_rgba(155,34,66,0.25)] transition-all duration-300 hover:shadow-[0_18px_32px_rgba(155,34,66,0.28)]"
                     >
                       <Link href="/register">{t("homepage.hero.cta")}</Link>
-                    </Button>
-                    <Button
-                      asChild
-                      size="lg"
-                      variant="outline"
-                      className="rounded-full border-white/40 bg-white/10 px-8 py-6 text-base font-medium text-white/90 backdrop-blur-md transition-all duration-300 hover:bg-white/15 hover:text-white"
-                    >
-                      <Link href="/contact" className="inline-flex items-center gap-2">
-                        {t("homepage.hero.secondaryCta")}
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
                     </Button>
                   </motion.div>
                 </motion.div>
@@ -228,41 +173,36 @@ export default function Home() {
                 <motion.div
                   initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-                  className="relative"
+                  transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+                  className="relative flex justify-center"
                 >
-                  <div className="absolute -top-10 -right-8 h-40 w-40 rounded-full bg-[#ffd7e2]/40 blur-3xl" />
-                  <div className="relative rounded-[32px] border border-white/25 bg-white/12 p-8 backdrop-blur-3xl shadow-[0_30px_80px_rgba(0,0,0,0.45)] text-white space-y-8">
-                    <div className="space-y-3">
-                      <p className="text-xs font-semibold uppercase tracking-[0.45em] text-white/70">
-                        {t("homepage.hero.statsTitle")}
-                      </p>
-                      <p className="text-lg leading-relaxed text-white/85">
-                        {t("homepage.hero.statsSubtitle")}
-                      </p>
+                  <div className="relative w-full max-w-xl overflow-hidden rounded-[44px] border border-[#f7c7d8]/35 bg-white shadow-[0_45px_90px_rgba(30,37,64,0.16)]">
+                    <div className="relative h-[440px] w-full">
+                      <Image
+                        src={heroSectionImage}
+                        alt={primaryStory.title}
+                        fill
+                        priority
+                        className="object-cover"
+                        sizes="(min-width: 1024px) 420px, 90vw"
+                      />
                     </div>
-                    <div className="grid gap-6 sm:grid-cols-3">
-                      {heroStats.map(({ value, label }) => (
-                        <div key={label} className="space-y-1.5">
-                          <p className="text-3xl font-semibold tracking-tight text-white">
-                            {value}
-                          </p>
-                          <p className="text-sm text-white/70">
-                            {label}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="flex items-center gap-3 rounded-2xl bg-white/10 p-4 text-sm text-white/80">
-                      <Heart className="h-5 w-5 text-[#ffd7e2]" />
-                      <span>{t("homepage.hero.statsFooter")}</span>
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#9B2242]/70 via-[#9B2242]/10 to-transparent p-6 text-white space-y-2">
+                      <span className="inline-flex items-center gap-2 rounded-full bg-white/25 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.4em] text-white">
+                        {primaryStory.badge}
+                      </span>
+                      <p className="text-lg font-semibold leading-tight">
+                        {primaryStory.title}
+                      </p>
+                      <p className="text-xs text-white/85">
+                        {primaryStory.subtitle}
+                      </p>
                     </div>
                   </div>
                 </motion.div>
               </div>
             </div>
-          </div>
-        </ParallaxHero>
+        </section>
 
         <AnimatedSection className="relative overflow-hidden w-full py-20 md:py-28 lg:py-36 bg-gradient-to-br from-[#fde0ed] via-[#fbe7f1] to-[#f6ccd9]">
           <div className="absolute inset-0 pointer-events-none">
