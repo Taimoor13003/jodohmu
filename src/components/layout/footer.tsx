@@ -23,16 +23,12 @@ export function Footer() {
             {/* Brand */}
             <div className="space-y-6">
               <div className="flex items-center">
-                <Image src={LogoIcon} alt="Jodohmu" className="h-10 w-auto" />
-                <div className="ml-3 flex items-baseline">
-                  <span className="text-3xl font-bold text-[#0b3a86]">Jodoh</span>
-                  <span className="text-3xl font-bold text-[#0b3a86]">mu</span>
-                </div>
+                <Image src={LogoIcon} alt="Jodohmu" height={250} />
               </div>
               <p className="text-white/80 text-sm max-w-sm">
                 {t("footer.hero.tagline")}
               </p>
-              <div className="flex items-center gap-2 text-[#0b3a86]">
+              <div className="flex items-center gap-2 text-[#0b3a86] font-semibold">
                 <Heart className="w-4 h-4" style={{ color: "#0b3a86" }} />
                 <span className="text-sm">Trusted by thousands</span>
               </div>

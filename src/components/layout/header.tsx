@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import LogoIcon from "@/assets/jodohmu-icon-logo.png";
+import LogoIcon from "@/assets/jodohmu-logo.png";
 import { Globe, ArrowRight } from "lucide-react";
 
 export function Header() {
