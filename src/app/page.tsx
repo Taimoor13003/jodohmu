@@ -9,7 +9,7 @@ import { AnimatedSection } from "@/components/layout/animated-section";
 import { HorizontalScrollSection } from "@/components/layout/horizontal-scroll-section";
 import { ParallaxHero } from "@/components/layout/parallax-hero";
 import { useLanguage } from "@/context/LanguageContext";
-import { Heart, Users, Star, Calendar, Quote, ShieldCheck, Handshake, Sparkles } from "lucide-react";
+import { Heart, Users, Star, Calendar, Quote, ShieldCheck, Handshake, Sparkles, HeartHandshake, MessageCircle, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { motion } from 'framer-motion';
 
@@ -41,6 +41,33 @@ export default function Home() {
       description: t("homepage.features.cards.halal.description"),
       delay: 0.3,
     },
+  ];
+
+  const meetingPhases = [
+    {
+      icon: ShieldCheck,
+      title: t("homepage.meetings.steps.intake.title"),
+      description: t("homepage.meetings.steps.intake.description"),
+      accent: "from-[#9B2242]/80 to-[#c1486c]/90"
+    },
+    {
+      icon: HeartHandshake,
+      title: t("homepage.meetings.steps.curated.title"),
+      description: t("homepage.meetings.steps.curated.description"),
+      accent: "from-[#0b3a86]/85 to-[#4364c7]/95"
+    },
+    {
+      icon: MessageCircle,
+      title: t("homepage.meetings.steps.checkins.title"),
+      description: t("homepage.meetings.steps.checkins.description"),
+      accent: "from-[#f7a4c7]/90 to-[#f4c2d8]/95"
+    }
+  ];
+
+  const meetingPromises = [
+    t("homepage.meetings.promises.safe"),
+    t("homepage.meetings.promises.transparent"),
+    t("homepage.meetings.promises.family")
   ];
 
   const testimonials = [
@@ -103,11 +130,11 @@ export default function Home() {
           </div>
         </ParallaxHero>
 
-        <AnimatedSection className="relative overflow-hidden w-full py-20 md:py-28 lg:py-36 bg-gradient-to-br from-[#fde0ed] via-white to-[#e4efff]">
+        <AnimatedSection className="relative overflow-hidden w-full py-20 md:py-28 lg:py-36 bg-gradient-to-br from-[#fde0ed] via-[#fbe7f1] to-[#f6ccd9]">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute -top-20 left-12 h-64 w-64 rounded-full bg-[#f8bcd4]/55 blur-[140px]" />
-            <div className="absolute bottom-0 right-10 h-60 w-60 rounded-full bg-[#bed4ff]/50 blur-[140px]" />
-            <div className="absolute top-1/3 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-white/60 blur-3xl" />
+            <div className="absolute -top-20 left-12 h-64 w-64 rounded-full bg-[#f8bcd4]/70 blur-[140px]" />
+            <div className="absolute bottom-0 right-10 h-60 w-60 rounded-full bg-[#f5a9c5]/65 blur-[140px]" />
+            <div className="absolute top-1/3 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-white/70 blur-3xl" />
           </div>
           <div className="container relative z-10 flex flex-col items-center text-center gap-16">
             <motion.div
@@ -117,16 +144,16 @@ export default function Home() {
               transition={{ duration: 0.6 }}
               className="max-w-3xl space-y-6"
             >
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#9B2242] shadow-sm shadow-white/40">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/78 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#9B2242] shadow-sm shadow-white/45">
                 {t("homepage.whyChoose.badge")}
               </span>
-              <h2 className="font-serif text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl bg-gradient-to-r from-[#0b3a86] via-[#9B2242] to-[#0b3a86] bg-clip-text text-transparent">
+              <h2 className="font-serif text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl bg-gradient-to-r from-[#9B2242] via-[#f26d9b] to-[#b23a62] bg-clip-text text-transparent">
                 {t("homepage.whyChoose.title")}
               </h2>
-              <p className="text-lg md:text-xl leading-relaxed text-[#183056]/90">
+              <p className="text-lg md:text-xl leading-relaxed text-[#732845]/88">
                 {t("homepage.whyChoose.description")}
               </p>
-              <p className="text-base md:text-lg leading-relaxed text-[#183056]/75">
+              <p className="text-base md:text-lg leading-relaxed text-[#732845]/75">
                 {t("homepage.whyChoose.secondary")}
               </p>
             </motion.div>
@@ -143,32 +170,32 @@ export default function Home() {
                   icon: ShieldCheck,
                   title: t("homepage.whyChoose.highlights.trust.title"),
                   description: t("homepage.whyChoose.highlights.trust.description"),
-                  accent: "from-[#9B2242]/85 to-[#c1486c]"
+                  accent: "from-[#f26d9b]/85 to-[#f59fba]/90"
                 },
                 {
                   icon: Handshake,
                   title: t("homepage.whyChoose.highlights.guidance.title"),
                   description: t("homepage.whyChoose.highlights.guidance.description"),
-                  accent: "from-[#0b3a86]/85 to-[#4364c7]"
+                  accent: "from-[#eb588a]/82 to-[#f383ab]/90"
                 },
                 {
                   icon: Sparkles,
                   title: t("homepage.whyChoose.highlights.curation.title"),
                   description: t("homepage.whyChoose.highlights.curation.description"),
-                  accent: "from-[#f7a4c7]/90 to-[#f4c2d8]"
+                  accent: "from-[#f49cba]/80 to-[#f7bbcf]/88"
                 }
               ].map(({ icon: Icon, title, description, accent }) => (
                 <div
                   key={title}
                   className="group relative overflow-hidden rounded-3xl border border-white/70 bg-white/75 p-8 backdrop-blur-xl shadow-xl shadow-[#9B2242]/10 transition-all duration-300 hover:-translate-y-2"
                 >
-                  <div className={`absolute inset-x-6 -top-16 h-32 rounded-full bg-gradient-to-br ${accent} opacity-40 blur-3xl transition-opacity duration-300 group-hover:opacity-60`} />
+                  <div className={`absolute inset-x-6 -top-16 h-32 rounded-full bg-gradient-to-br ${accent} opacity-38 blur-3xl transition-opacity duration-300 group-hover:opacity-58`} />
                   <div className="relative flex flex-col gap-4">
-                    <div className="h-12 w-12 rounded-2xl bg-gradient-to-r from-white/80 to-white/40 shadow-lg shadow-[#0b3a86]/10 flex items-center justify-center">
-                      <Icon className="h-6 w-6 text-[#0b3a86]" />
+                    <div className="h-12 w-12 rounded-2xl bg-gradient-to-r from-white/85 via-[#fde8f2]/80 to-white/60 shadow-lg shadow-[#b23a62]/12 flex items-center justify-center">
+                      <Icon className="h-6 w-6 text-[#9B2242]" />
                     </div>
-                    <h3 className="text-xl font-semibold text-[#112142]">{title}</h3>
-                    <p className="text-sm leading-relaxed text-[#2a3a5a]/80">{description}</p>
+                    <h3 className="text-xl font-semibold text-[#681c34]">{title}</h3>
+                    <p className="text-sm leading-relaxed text-[#7a2c41]/80">{description}</p>
                   </div>
                 </div>
               ))}
@@ -258,57 +285,75 @@ export default function Home() {
           </div>
         </AnimatedSection>
 
-        <AnimatedSection className="w-full py-20 md:py-28 lg:py-36 bg-gradient-to-br from-secondary via-secondary/50 to-background">
-          <div className="container grid items-center gap-12 px-4 md:px-6 lg:grid-cols-2">
-            <motion.div 
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="relative lg:order-last"
-            >
-              <div className="relative">
-                <Image
-                  alt="Guided Meetings"
-                  className="mx-auto rounded-2xl sm:w-full shadow-2xl"
-                  src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=2070&auto=format&fit=crop"
-                  width={550}
-                  height={550}
-                  sizes="(min-width: 1024px) 550px, 100vw"
-                  priority
-                  placeholder="blur"
-                  blurDataURL="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0b3a86]/20 via-transparent to-[#9B2242]/10 rounded-2xl pointer-events-none"></div>
-              </div>
-              <motion.div 
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="absolute -top-8 -left-8 w-48 h-48 bg-gradient-to-br from-[#0b3a86]/20 to-[#9B2242]/20 rounded-full z-20 pointer-events-none blur-xl"
-              ></motion.div>
-            </motion.div>
+        <AnimatedSection className="relative overflow-hidden w-full py-20 md:py-28 lg:py-36 bg-gradient-to-br from-[#dfe9ff] via-[#f3f7ff] to-[#e4f0ff]">
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute -top-24 right-16 h-60 w-60 rounded-full bg-[#c0d5ff]/60 blur-[160px]" />
+            <div className="absolute bottom-0 left-10 h-64 w-64 rounded-full bg-[#a9caff]/55 blur-[150px]" />
+            <div className="absolute top-1/3 right-1/3 h-36 w-36 rounded-full bg-white/58 blur-3xl" />
+          </div>
+          <div className="container relative z-10 grid items-center gap-16 px-4 md:px-6 lg:grid-cols-[1.1fr_1fr]">
             <motion.div 
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="space-y-6"
+              className="space-y-8"
             >
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="inline-block rounded-lg bg-gradient-to-r from-[#0b3a86]/10 to-[#9B2242]/10 px-4 py-2 text-sm font-semibold text-foreground border border-[#0b3a86]/20"
+                className="inline-flex items-center gap-2 rounded-full bg-white/82 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-[#264380] shadow-sm shadow-white/40"
               >
                 {t("homepage.meetings.badge")}
               </motion.div>
-              <h2 className="text-4xl font-bold font-serif tracking-tighter sm:text-5xl bg-gradient-to-r from-foreground via-[#0b3a86] to-foreground bg-clip-text text-transparent">{t("homepage.meetings.title")}</h2>
-              <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed leading-relaxed">
+              <h2 className="text-4xl font-bold font-serif tracking-tighter sm:text-5xl bg-gradient-to-r from-[#1f3f7f] via-[#4a6cf7] to-[#1f3f7f] bg-clip-text text-transparent">
+                {t("homepage.meetings.title")}
+              </h2>
+              <p className="max-w-[620px] text-lg md:text-xl leading-relaxed text-[#1b2f52]/88">
                 {t("homepage.meetings.description")}
               </p>
+              <p className="max-w-[620px] text-base md:text-lg leading-relaxed text-[#1b2f52]/72">
+                {t("homepage.meetings.secondary")}
+              </p>
+
+              <div className="grid gap-3">
+                {meetingPromises.map((promise) => (
+                  <div key={promise} className="flex items-start gap-3 rounded-2xl bg-white/82 p-4 shadow-sm shadow-[#27407a]/10 border border-white/70">
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 text-[#3655c5]" />
+                    <p className="text-sm md:text-base leading-relaxed text-[#1b2f52]/84">{promise}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative flex flex-col gap-6"
+            >
+              <div className="absolute -top-10 -right-6 h-32 w-32 rounded-full bg-[#4a6cf7]/18 blur-3xl" />
+              {meetingPhases.map(({ icon: Icon, title, description, accent }, index) => (
+                <div
+                  key={title}
+                  className="relative overflow-hidden rounded-3xl border border-white/70 bg-white/80 p-6 backdrop-blur-xl shadow-xl shadow-[#0b3a86]/10"
+                >
+                  <div className={`absolute inset-x-6 -top-20 h-32 rounded-full bg-gradient-to-br ${accent} opacity-35 blur-3xl`} />
+                  <div className="relative flex items-start gap-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/86 shadow-lg shadow-[#27407a]/12">
+                      <Icon className="h-6 w-6 text-[#1f3f7f]" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#2f4a8a]/78">{String(index + 1).padStart(2, '0')}</p>
+                      <h3 className="mt-1 text-lg font-semibold text-[#12213f]">{title}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-[#23365a]/82">{description}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </motion.div>
           </div>
         </AnimatedSection>

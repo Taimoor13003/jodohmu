@@ -81,7 +81,27 @@
     "meetings": {
       "badge": "Safe & Respectful",
       "title": "Meetings with Intention",
-      "description": "Your comfort and safety are our top priorities. We arrange meetings in a controlled, respectful environment—be it our office or a trusted public space—often with the presence of an imam or family members, ensuring every interaction is dignified and purposeful."
+      "description": "Your comfort and safety are our top priorities. We arrange meetings in a controlled, respectful environment—be it our office or a trusted public space—often with the presence of an imam or family members, ensuring every interaction is dignified and purposeful.",
+      "secondary": "Every introduction is coordinated by our team, with regular check-ins to keep feelings, expectations, and next steps aligned for both families.",
+      "promises": {
+        "safe": "Private lounges, respectful venues, and the option for chaperones with every meeting.",
+        "transparent": "Clear expectations, guided conversations, and structured follow-up so no moment feels uncertain.",
+        "family": "Family members and spiritual advisors can be involved at every stage to keep the process anchored in faith."
+      },
+      "steps": {
+        "intake": {
+          "title": "Intentional Intake",
+          "description": "We learn your story, faith priorities, and comfort level to design meetings that feel safe and tailored to you."
+        },
+        "curated": {
+          "title": "Curated Introductions",
+          "description": "Our matchmakers coordinate respectful encounters with candidates who share your values and long-term vision."
+        },
+        "checkins": {
+          "title": "Compassionate Check-ins",
+          "description": "After each meeting we listen, support, and guide next steps so you always feel confident moving forward."
+        }
+      }
     },
     "testimonials": {
       "title": "From Our Community",

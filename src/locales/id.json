@@ -80,8 +80,28 @@
     },
     "meetings": {
       "badge": "Aman & Penuh Hormat",
-      "title": "Pertemuan dengan Niat",
-      "description": "Kenyamanan dan keselamatan Anda menjadi prioritas kami. Pertemuan berlangsung di tempat yang terkontrol—kantor kami atau lokasi publik tepercaya—sering kali dengan kehadiran keluarga atau imam agar tetap terarah dan bermartabat."
+      "title": "Pertemuan Penuh Niat",
+      "description": "Kenyamanan dan keamanan Anda adalah prioritas utama kami. Kami mengatur pertemuan di lingkungan yang terkendali dan penuh hormat—baik di kantor kami maupun ruang publik terpercaya—sering kali dengan kehadiran imam atau anggota keluarga, memastikan setiap interaksi berlangsung bermartabat dan penuh tujuan.",
+      "secondary": "Setiap perkenalan dikordinasikan tim kami, dengan check-in berkala untuk menyelaraskan perasaan, harapan, dan langkah berikutnya bagi kedua keluarga.",
+      "promises": {
+        "safe": "Ruang privat, lokasi yang sopan, serta opsi pendamping di setiap pertemuan.",
+        "transparent": "Ekspektasi yang jelas, percakapan terarah, dan tindak lanjut terstruktur sehingga tak ada momen yang terasa membingungkan.",
+        "family": "Anggota keluarga dan pembimbing rohani dapat dilibatkan pada setiap tahap agar proses tetap berlandaskan iman."
+      },
+      "steps": {
+        "intake": {
+          "title": "Intake yang Penuh Niat",
+          "description": "Kami memahami cerita, prioritas iman, dan batas kenyamanan Anda untuk merancang pertemuan yang aman dan sesuai kebutuhan."
+        },
+        "curated": {
+          "title": "Perkenalan yang Dikurasi",
+          "description": "Matchmaker kami mengatur pertemuan yang penuh hormat dengan kandidat yang sevisi, seiman, dan siap membangun masa depan."
+        },
+        "checkins": {
+          "title": "Pendampingan Hangat",
+          "description": "Setelah setiap pertemuan kami mendengarkan, mendukung, dan memandu langkah berikutnya agar Anda selalu mantap melangkah."
+        }
+      }
     },
     "testimonials": {
       "title": "Cerita dari Komunitas",
