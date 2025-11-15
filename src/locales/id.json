@@ -80,6 +80,33 @@
       }
     },
     "features": {
+      "badge": "PENCARIAN PERSONAL",
+      "title": "Matchmaking concierge yang dirancang khusus untuk Anda",
+      "subtitle": "Setiap perkenalan dipilih langsung oleh matchmaker kami—memadukan data, intuisi, dan percakapan hangat agar perjalanan terasa terkurasi, bukan otomatis.",
+      "tagline": "Layanan Premium",
+      "cta": "Pelajari cara kami membimbing Anda",
+      "storyTitle": "SEPERTI APA RASANYA",
+      "storyDescription": "Pengalaman concierge pribadi untuk perkenalan yang bermakna",
+      "storyNote": "Anggap kami sebagai sahabat terpercaya. Kami mendengarkan, memberi saran, dan merangkai pertemuan dengan tulus serta menghormati niat Anda.",
+      "storyCta": "Mulai Perjalanan Concierge Anda",
+      "storyFootnote": "Matchmaker kami menindaklanjuti setiap perkenalan.",
+      "stories": {
+        "curated": {
+          "badge": "Terkurasi",
+          "title": "Kecocokan tulus yang selaras nilai Anda",
+          "subtitle": "Kami mempertemukan kisah Anda dengan hati yang seiman, sevisi keluarga, dan seirama." 
+        },
+        "trusted": {
+          "badge": "Dipercaya",
+          "title": "Profil nyata dengan niat yang terverifikasi",
+          "subtitle": "Setiap kandidat disaring dan disambut langsung oleh tim concierge kami." 
+        },
+        "celebrated": {
+          "badge": "Cinta Dirayakan",
+          "title": "Cerita yang bersemi menjadi selamanya",
+          "subtitle": "Dari salam pertama hingga lamaran, kami mendampingi pasangan di setiap momen penting." 
+        }
+      },
       "cards": {
         "personalized": {
           "title": "Pencocokan Personal",

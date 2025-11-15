@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { AnimatedSection } from "@/components/layout/animated-section";
-import { HorizontalScrollSection } from "@/components/layout/horizontal-scroll-section";
 import { ParallaxHero } from "@/components/layout/parallax-hero";
 import { useLanguage } from "@/context/LanguageContext";
 import { Heart, Users, Star, Calendar, Quote, ShieldCheck, Handshake, Sparkles, HeartHandshake, MessageCircle, CheckCircle2, ArrowRight } from "lucide-react";
@@ -42,6 +41,35 @@ export default function Home() {
       delay: 0.3,
     },
   ];
+
+  const matchingStories = [
+    {
+      badge: t("homepage.features.stories.curated.badge"),
+      title: t("homepage.features.stories.curated.title"),
+      subtitle: t("homepage.features.stories.curated.subtitle"),
+      gradient: "from-[#ffe0ef] to-[#ffd2dd]",
+      image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1080&auto=format&fit=crop",
+      position: "lg:-rotate-6 lg:-translate-y-10 lg:-translate-x-16 z-30",
+    },
+    {
+      badge: t("homepage.features.stories.trusted.badge"),
+      title: t("homepage.features.stories.trusted.title"),
+      subtitle: t("homepage.features.stories.trusted.subtitle"),
+      gradient: "from-[#fff2d9] to-[#ffe7b3]",
+      image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1080&auto=format&fit=crop",
+      position: "lg:rotate-3 lg:translate-y-4 lg:-translate-x-2 z-20",
+    },
+    {
+      badge: t("homepage.features.stories.celebrated.badge"),
+      title: t("homepage.features.stories.celebrated.title"),
+      subtitle: t("homepage.features.stories.celebrated.subtitle"),
+      gradient: "from-[#e7f0ff] to-[#d3e2ff]",
+      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1080&auto=format&fit=crop",
+      position: "lg:rotate-8 lg:translate-y-16 lg:translate-x-12 z-10",
+    },
+  ];
+
+  const [primaryStory, ...secondaryStories] = matchingStories;
 
   const heroHighlights = [
     t("homepage.hero.highlight.points.support"),
@@ -309,32 +337,111 @@ export default function Home() {
           </div>
         </AnimatedSection>
 
-        <div className="w-full py-20 md:py-28 lg:py-36">
-          <HorizontalScrollSection>
-            {featureCards.map(({ Icon, title, description, delay }) => (
-              <motion.div
-                key={title}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay }}
-                whileHover={{ y: -5, scale: 1.02 }}
-              >
-                <Card className="w-[85vw] max-w-[24rem] sm:w-96 flex-shrink-0 p-6 flex flex-col items-center text-center shadow-2xl border-0 bg-gradient-to-br from-card via-card to-[#9B2242]/5 hover:from-[#9B2242]/10 hover:via-card hover:to-[#0b3a86]/10 transition-all duration-300">
-                  <motion.div 
-                    whileHover={{ rotate: 360, scale: 1.1 }}
-                    transition={{ duration: 0.6 }}
-                    className="bg-gradient-to-r from-[#9B2242] to-[#0b3a86] rounded-full p-4 mb-4 shadow-lg"
+        <AnimatedSection className="relative overflow-hidden w-full py-20 md:py-28 lg:py-36">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_#ffe9f3,_transparent_55%),_radial-gradient(circle_at_bottom_right,_#e6efff,_transparent_50%)]" />
+          <div className="relative container space-y-12">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center space-y-4"
+            >
+              <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-[#9B2242] shadow-sm shadow-white/70">
+                {t("homepage.features.badge")}
+              </span>
+              <h2 className="font-serif text-3xl font-bold tracking-tight text-[#4c1f35] sm:text-4xl">
+                {t("homepage.features.title")}
+              </h2>
+              <p className="mx-auto max-w-3xl text-base md:text-lg leading-relaxed text-[#6a3952]/85">
+                {t("homepage.features.subtitle")}
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="relative mx-auto flex w-full max-w-5xl flex-col rounded-[48px] border border-white/70 bg-white/90 shadow-[0_55px_120px_rgba(155,34,66,0.22)] backdrop-blur-xl lg:flex-row"
+            >
+              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-t-[48px] bg-gradient-to-br from-[#ffe0ef] via-[#ffd2dd] to-[#fce5f1] lg:w-[42%] lg:rounded-l-[48px] lg:rounded-tr-[0]">
+                <Image
+                  src={primaryStory.image}
+                  alt={primaryStory.title}
+                  fill
+                  priority
+                  className="object-cover"
+                  sizes="(min-width: 1024px) 40vw, 90vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.45em] text-white">
+                    {primaryStory.badge}
+                  </span>
+                  <h3 className="mt-4 font-serif text-2xl font-semibold leading-tight">
+                    {primaryStory.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-white/85">
+                    {primaryStory.subtitle}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-1 flex-col gap-8 px-8 py-10 text-left text-[#4c1f35] lg:px-12">
+                <div className="space-y-4">
+                  {featureCards.map(({ Icon, title, description }) => (
+                    <div key={title} className="flex items-start gap-4 rounded-3xl bg-[#fdeaf1]/70 px-5 py-4 text-sm text-[#7d2f4d]">
+                      <div className="mt-1 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#9B2242] to-[#f7a4c7] text-white shadow-lg shadow-[#9B2242]/25">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-base font-semibold text-[#4c1f35]">{title}</p>
+                        <p className="text-[#684157]/85">{description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap items-center gap-4">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="rounded-full bg-gradient-to-r from-[#9B2242] to-[#c24977] px-8 py-6 text-sm font-semibold text-white shadow-lg shadow-[#9B2242]/30 transition-all duration-300 hover:shadow-[#9B2242]/40"
                   >
-                    <Icon className="h-10 w-10 text-white" />
-                  </motion.div>
-                  <h3 className="text-2xl font-bold font-serif mb-2 text-foreground">{title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{description}</p>
-                </Card>
-              </motion.div>
-            ))}
-          </HorizontalScrollSection>
-        </div>
+                    <Link href="/register">{t("homepage.features.storyCta")}</Link>
+                  </Button>
+                  <p className="text-xs text-[#6a3952]/70 max-w-[260px]">
+                    {t("homepage.features.storyFootnote")}
+                  </p>
+                </div>
+
+                <div className="grid gap-4 lg:grid-cols-2">
+                  {secondaryStories.map(({ badge, title, subtitle, image }) => (
+                    <div key={title} className="flex items-center gap-3 rounded-3xl border border-white/70 bg-white/85 p-4 shadow-sm shadow-[#9B2242]/15 backdrop-blur-xl">
+                      <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-2xl">
+                        <Image
+                          src={image}
+                          alt={title}
+                          fill
+                          className="object-cover"
+                          sizes="64px"
+                        />
+                      </div>
+                      <div className="space-y-1 text-left">
+                        <span className="inline-block rounded-full bg-[#fdeaf1] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.35em] text-[#9B2242]">
+                          {badge}
+                        </span>
+                        <p className="text-sm font-semibold text-[#4c1f35]">{title}</p>
+                        <p className="text-xs text-[#684157]/80">{subtitle}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </AnimatedSection>
 
         <AnimatedSection className="w-full py-20 md:py-28 lg:py-36">
           <div className="container grid items-center gap-12 px-4 md:px-6 lg:grid-cols-2">

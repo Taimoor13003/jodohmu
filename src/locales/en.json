@@ -80,6 +80,33 @@
       }
     },
     "features": {
+      "badge": "PERSONAL MATCHING",
+      "title": "Concierge matchmaking crafted around you",
+      "subtitle": "Each introduction is handpicked by our matchmakers, blending data, discernment, and heartfelt conversations so your journey feels designed—not automated.",
+      "tagline": "Premium Service",
+      "cta": "Discover how we guide you",
+      "storyTitle": "HOW IT FEELS",
+      "storyDescription": "A private concierge experience crafted for meaningful introductions",
+      "storyNote": "Think of us as your trusted confidants. We listen, advise, and orchestrate introductions with sincerity and respect for your intentions.",
+      "storyCta": "Start Your Concierge Journey",
+      "storyFootnote": "Dedicated matchmakers follow up after every introduction.",
+      "stories": {
+        "curated": {
+          "badge": "Handpicked",
+          "title": "Thoughtful matches shaped around your values",
+          "subtitle": "We pair your story with hearts that share the same faith, family vision, and pace." 
+        },
+        "trusted": {
+          "badge": "Trusted Hearts",
+          "title": "Real people, verified intentions",
+          "subtitle": "Every profile is screened and welcomed personally by our concierge team." 
+        },
+        "celebrated": {
+          "badge": "Celebrated Love",
+          "title": "Stories that blossom into forever",
+          "subtitle": "From first salaam to engagement, we stand beside couples at every milestone." 
+        }
+      },
       "cards": {
         "personalized": {
           "title": "Personalized Matching",
