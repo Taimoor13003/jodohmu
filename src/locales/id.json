@@ -265,6 +265,140 @@
       "support": "Matchmaker profesional mendampingi setiap langkah"
     }
   },
+  "privacy": {
+    "hero": {
+      "title": "Kebijakan Privasi",
+      "subtitle": "Privasi Anda penting bagi kami. Kami berkomitmen melindungi informasi pribadi Anda dengan penuh kepedulian, iman, dan ketulusan.",
+      "updatedPrefix": "Terakhir diperbarui"
+    },
+    "sections": {
+      "introduction": {
+        "title": "Pendahuluan",
+        "body": "Selamat datang di Jodohmu. Kami menghormati privasi Anda dan berkomitmen melindungi data pribadi Anda. Kebijakan ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan menjaga informasi Anda saat menggunakan layanan kami."
+      },
+      "information": {
+        "title": "Informasi yang Kami Kumpulkan",
+        "personal": {
+          "title": "Informasi Pribadi",
+          "items": {
+            "nameEmail": "Nama dan alamat email",
+            "phone": "Nomor telepon",
+            "profile": "Informasi profil termasuk foto, bio, dan preferensi",
+            "age": "Detail verifikasi usia",
+            "location": "Informasi lokasi (jika diberikan)"
+          }
+        },
+        "usage": {
+          "title": "Data Penggunaan",
+          "items": {
+            "interactions": "Cara Anda berinteraksi dengan platform kami",
+            "views": "Tayangan profil dan kecocokan",
+            "communication": "Komunikasi dengan pengguna lain",
+            "analytics": "Statistik penggunaan platform dan analitik"
+          }
+        },
+        "technical": {
+          "title": "Data Teknis",
+          "items": {
+            "ip": "Alamat IP dan informasi perangkat",
+            "browser": "Jenis dan versi peramban",
+            "os": "Detail sistem operasi",
+            "cookies": "Cookie dan teknologi pelacakan serupa"
+          }
+        }
+      },
+      "usage": {
+        "title": "Bagaimana Kami Menggunakan Informasi Anda",
+        "description": "Kami menggunakan informasi pribadi Anda untuk:",
+        "items": {
+          "service": "Menyediakan dan memelihara layanan matchmaking kami",
+          "profile": "Membuat serta mengelola profil Anda",
+          "matching": "Mencarikan pasangan yang kompatibel",
+          "communication": "Memfasilitasi komunikasi antar pengguna",
+          "safety": "Menjaga keamanan platform dan mencegah penipuan",
+          "notifications": "Mengirim pemberitahuan terkait layanan",
+          "improvements": "Meningkatkan layanan dan pengalaman pengguna",
+          "legal": "Memenuhi kewajiban hukum"
+        }
+      },
+      "sharing": {
+        "title": "Berbagi Data & Pihak Ketiga",
+        "description": "Kami dapat membagikan informasi Anda dengan mitra terpercaya untuk membantu pengoperasian dan keamanan platform:",
+        "items": {
+          "firebase": {
+            "title": "Firebase/Google",
+            "description": "Layanan basis data dan autentikasi kami dihosting di Firebase. Google bertindak sebagai pemroses data dan menyimpan informasi atas nama kami.",
+            "linkText": "Lihat kebijakan privasi Google"
+          },
+          "providers": {
+            "title": "Penyedia Layanan",
+            "description": "Mitra pihak ketiga tepercaya yang membantu infrastruktur, analitik, dan dukungan pelanggan"
+          },
+          "legal": {
+            "title": "Otoritas Hukum",
+            "description": "Jika diwajibkan oleh hukum atau untuk melindungi hak, keamanan, atau pengguna lain"
+          }
+        },
+        "note": "Kami tidak pernah menjual informasi pribadi Anda kepada pihak ketiga untuk tujuan pemasaran."
+      },
+      "security": {
+        "title": "Bagaimana Kami Melindungi Data Anda",
+        "description": "Kami menerapkan langkah teknis dan organisasi untuk mengamankan data pribadi Anda, termasuk:",
+        "items": {
+          "encryption": "Enkripsi SSL/TLS untuk transmisi data",
+          "authentication": "Autentikasi dan kontrol akses yang aman",
+          "assessments": "Peninjauan dan evaluasi keamanan secara berkala",
+          "access": "Kebijakan akses karyawan yang ketat"
+        }
+      },
+      "rights": {
+        "title": "Hak Anda",
+        "description": "Sesuai hukum yang berlaku, Anda berhak untuk:",
+        "items": {
+          "access": "Mengakses data pribadi yang kami simpan",
+          "correct": "Memperbaiki informasi yang tidak akurat",
+          "delete": "Meminta penghapusan akun dan data",
+          "object": "Menolak atau membatasi pemrosesan tertentu",
+          "portability": "Meminta salinan data dalam format portabel",
+          "withdraw": "Mencabut persetujuan bila pemrosesan berdasarkan persetujuan"
+        }
+      },
+      "retention": {
+        "title": "Penyimpanan Data",
+        "description": "Kami menyimpan data pribadi Anda hanya selama diperlukan untuk menyediakan layanan dan memenuhi kewajiban hukum. Saat Anda menghapus akun, informasi profil akan dihapus dalam 30 hari kecuali harus disimpan karena alasan hukum."
+      },
+      "children": {
+        "title": "Privasi Anak",
+        "description": "Jodohmu ditujukan bagi pengguna berusia 18 tahun ke atas. Kami tidak sengaja mengumpulkan informasi dari anak di bawah umur dan akan segera menghapusnya jika diketahui."
+      },
+      "international": {
+        "title": "Transfer Data Internasional",
+        "description": "Data Anda dapat diproses di luar Indonesia. Kami memastikan perlindungan yang sesuai sesuai peraturan perlindungan data yang berlaku."
+      },
+      "updates": {
+        "title": "Pembaruan Kebijakan",
+        "description": "Kami dapat memperbarui kebijakan ini dari waktu ke waktu. Perubahan penting akan kami informasikan melalui email atau notifikasi aplikasi, dan kebijakan terbaru selalu tersedia di halaman ini."
+      },
+      "contact": {
+        "title": "Hubungi Kami",
+        "description": "Jika Anda memiliki pertanyaan mengenai kebijakan ini atau data Anda, silakan hubungi kami:",
+        "items": {
+          "email": {
+            "label": "Email:",
+            "value": "info@jodohmu.com"
+          },
+          "phone": {
+            "label": "Telepon:",
+            "value": "+6281327054561"
+          },
+          "location": {
+            "label": "Lokasi:",
+            "value": "Bandung, Indonesia"
+          }
+        }
+      }
+    }
+  },
   "footer": {
     "hero": {
       "tagline": "Temukan jodoh Anda dengan penuh kasih, iman, dan ketulusan.",

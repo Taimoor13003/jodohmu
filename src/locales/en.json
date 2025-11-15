@@ -265,6 +265,140 @@
       "support": "Personal matchmakers supporting each step"
     }
   },
+  "privacy": {
+    "hero": {
+      "title": "Privacy Policy",
+      "subtitle": "Your privacy matters to us. We're committed to protecting your personal information with care, faith, and sincerity.",
+      "updatedPrefix": "Last updated"
+    },
+    "sections": {
+      "introduction": {
+        "title": "Introduction",
+        "body": "Welcome to Jodohmu. We respect your privacy and are committed to protecting your personal data. This policy explains how we collect, use, and safeguard your information when you use our services."
+      },
+      "information": {
+        "title": "Information We Collect",
+        "personal": {
+          "title": "Personal Information",
+          "items": {
+            "nameEmail": "Name and email address",
+            "phone": "Phone number",
+            "profile": "Profile information including photos, bio, and preferences",
+            "age": "Age verification details",
+            "location": "Location information (if provided)"
+          }
+        },
+        "usage": {
+          "title": "Usage Data",
+          "items": {
+            "interactions": "How you interact with our platform",
+            "views": "Profile views and matches",
+            "communication": "Communication with other users",
+            "analytics": "Platform usage statistics and analytics"
+          }
+        },
+        "technical": {
+          "title": "Technical Data",
+          "items": {
+            "ip": "IP address and device information",
+            "browser": "Browser type and version",
+            "os": "Operating system details",
+            "cookies": "Cookies and similar tracking technologies"
+          }
+        }
+      },
+      "usage": {
+        "title": "How We Use Your Information",
+        "description": "We use your personal information to:",
+        "items": {
+          "service": "Provide and maintain our matchmaking service",
+          "profile": "Create and manage your profile",
+          "matching": "Match you with compatible partners",
+          "communication": "Facilitate communication between users",
+          "safety": "Ensure platform safety and prevent fraud",
+          "notifications": "Send service-related notifications",
+          "improvements": "Improve our services and user experience",
+          "legal": "Comply with legal obligations"
+        }
+      },
+      "sharing": {
+        "title": "Data Sharing & Third Parties",
+        "description": "We may share your information with trusted partners to help operate and protect our platform:",
+        "items": {
+          "firebase": {
+            "title": "Firebase/Google",
+            "description": "Our database and authentication services are hosted on Firebase. Google acts as our data processor and stores information on our behalf.",
+            "linkText": "View Google's privacy policy"
+          },
+          "providers": {
+            "title": "Service Providers",
+            "description": "Verified third-party partners who assist with infrastructure, analytics, and customer support"
+          },
+          "legal": {
+            "title": "Legal Authorities",
+            "description": "When required by law or to protect our rights, safety, or other users"
+          }
+        },
+        "note": "We never sell your personal information to third parties for marketing purposes."
+      },
+      "security": {
+        "title": "How We Protect Your Data",
+        "description": "We implement technical and organizational measures to secure your personal data, including:",
+        "items": {
+          "encryption": "SSL/TLS encryption for data transmission",
+          "authentication": "Secure authentication and access controls",
+          "assessments": "Regular security reviews and assessments",
+          "access": "Strict employee access policies"
+        }
+      },
+      "rights": {
+        "title": "Your Rights",
+        "description": "Subject to applicable law, you have the right to:",
+        "items": {
+          "access": "Access the personal data we hold about you",
+          "correct": "Correct inaccurate or incomplete information",
+          "delete": "Request deletion of your account and data",
+          "object": "Object to or restrict certain processing",
+          "portability": "Request a copy of your data in a portable format",
+          "withdraw": "Withdraw consent where processing is based on consent"
+        }
+      },
+      "retention": {
+        "title": "Data Retention",
+        "description": "We retain your personal data only as long as necessary to provide our services and meet legal obligations. When you delete your account, we remove profile information within 30 days unless we must retain it for legal reasons."
+      },
+      "children": {
+        "title": "Children's Privacy",
+        "description": "Jodohmu is intended for users 18 years and older. We do not knowingly collect information from minors and will delete any such data immediately if discovered."
+      },
+      "international": {
+        "title": "International Data Transfers",
+        "description": "Your information may be processed outside Indonesia. We ensure appropriate safeguards are in place to protect your data in accordance with applicable laws."
+      },
+      "updates": {
+        "title": "Updates to This Policy",
+        "description": "We may update this policy from time to time. Significant changes will be communicated via email or in-app notifications, and the updated policy will always be available here."
+      },
+      "contact": {
+        "title": "Contact Us",
+        "description": "If you have questions about this policy or your data, reach out to us:",
+        "items": {
+          "email": {
+            "label": "Email:",
+            "value": "info@jodohmu.com"
+          },
+          "phone": {
+            "label": "Phone:",
+            "value": "+6281327054561"
+          },
+          "location": {
+            "label": "Location:",
+            "value": "Bandung, Indonesia"
+          }
+        }
+      }
+    }
+  },
   "footer": {
     "hero": {
       "tagline": "Find your soulmate with care, faith, and sincerity.",
