@@ -117,7 +117,6 @@ export function Header() {
           </Button>
         )}
         </nav>
-      </div>
-    </header>
-  );
+      </header>
+    );
 }
