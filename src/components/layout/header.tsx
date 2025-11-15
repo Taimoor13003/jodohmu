@@ -43,7 +43,7 @@ export function Header() {
       <nav className="ml-auto flex items-center gap-2 sm:gap-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" aria-label="Language">
+            <Button variant="ghost" size="icon" aria-label="Language" className="text-[#0b3a86] hover:bg-[#e6f0ff]">
               <Globe className="h-5 w-5" />
             </Button>
           </DropdownMenuTrigger>
@@ -85,15 +85,8 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button
-            asChild
-            variant="default"
-            className="group bg-gradient-to-r from-[#9B2242] to-[#0b3a86] hover:from-[#861b37] hover:to-[#0a3377] text-white border-0 rounded-md shadow-md hover:shadow-lg px-6 py-3 text-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0b3a86]/40 focus-visible:ring-offset-2"
-         >
-            <Link href="/login" className="flex items-center gap-2">
-              <span>{t("common.login")}</span>
-              <ArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
-            </Link>
+          <Button asChild variant="default" className="bg-[#9B2242] hover:bg-[#7f1a36] text-white border-0">
+            <Link href="/login">Login</Link>
           </Button>
         )}
       </nav>
