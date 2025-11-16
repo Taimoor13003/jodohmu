@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Instagram, Twitter, Mail, Phone, Info, Heart, Smartphone } from "lucide-react";
+import { Facebook, Instagram, Mail, Phone, Info, Heart, Smartphone } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -17,7 +17,7 @@ export function Footer() {
         <div className="grid gap-12 lg:grid-cols-4">
           {/* Brand */}
           <div className="space-y-4 lg:col-span-1">
-            <Image src={LogoIcon} alt="Jodohmu" className="h-10 w-auto" />
+            <Image src={LogoIcon} alt="Jodohmu" className="h-16 w-auto" />
             <p className="text-sm font-medium text-brand-blue/80 max-w-sm">
               {t("footer.hero.tagline")}
             </p>
@@ -27,9 +27,6 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="font-bold text-brand-blue">{t("footer.quickLinks.title")}</h3>
             <div className="flex flex-col gap-2 text-sm font-semibold">
-              <Link href="#" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.about")}</Link>
-              <Link href="#" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.howItWorks")}</Link>
-              <Link href="#" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.pricing")}</Link>
               <Link href="/privacy" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.privacy")}</Link>
               <Link href="/terms" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.terms")}</Link>
             </div>
@@ -75,9 +72,6 @@ export function Footer() {
               </Link>
               <Link href="https://www.instagram.com/cari_jodoh_kamu/" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue hover:bg-brand-rose/10 hover:text-brand-rose transition-colors">
                 <Instagram className="h-5 w-5" />
-              </Link>
-              <Link href="#" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue hover:bg-brand-rose/10 hover:text-brand-rose transition-colors">
-                <Twitter className="h-5 w-5" />
               </Link>
             </div>
           </div>
