@@ -44,10 +44,14 @@ export function HorizontalScrollSection({ children }: HorizontalScrollSectionPro
         {/* Animated sheen */}
         <motion.div
           aria-hidden
-          className="absolute -inset-[20%] rounded-[9999px] bg-[conic-gradient(from_0deg,theme(colors.accent/10),transparent_30%,transparent_70%,theme(colors.primary/10))]"
+          className="absolute -inset-[20%] rounded-[9999px]"
           animate={{ rotate: 360 }}
           transition={{ repeat: Infinity, duration: 60, ease: 'linear' }}
-          style={{ filter: 'blur(50px)' }}
+          style={{
+            filter: 'blur(50px)',
+            background:
+              'conic-gradient(from 0deg, hsl(var(--accent) / 0.1), transparent 30%, transparent 70%, hsl(var(--primary) / 0.1))',
+          }}
         />
 
         {/* Gradient overlay for depth */}

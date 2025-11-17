@@ -15,7 +15,7 @@ type ParallaxHeroProps = {
   imageQuality?: number;
 };
 
-const MotionImage = motion(Image);
+const MotionImage = motion.create(Image);
 
 export function ParallaxHero({
   imageUrls,
