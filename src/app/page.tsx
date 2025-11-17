@@ -14,6 +14,9 @@ import { motion } from 'framer-motion';
 import heroSectionImage from "@/assets/jodoh-mu-hero-section.png";
 import indoBrideImage from "@/assets/indo-bride.png";
 import indoGroomImage from "@/assets/indo-groom.png";
+import sundaneseGroomImage from "@/assets/sundanese-groom.png";
+import sundaneseBrideImage from "@/assets/sundanese-bride.png";
+import indoGroomImage2 from "@/assets/indo-groom2.png";
 
 export default function Home() {
   const { t } = useLanguage();
@@ -51,7 +54,7 @@ export default function Home() {
       title: t("homepage.features.stories.curated.title"),
       subtitle: t("homepage.features.stories.curated.subtitle"),
       gradient: "from-[#ffe0ef] to-[#ffd2dd]",
-      image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1080&auto=format&fit=crop",
+      image: sundaneseBrideImage,
       position: "lg:-rotate-6 lg:-translate-y-10 lg:-translate-x-16 z-30",
     },
     {
@@ -59,7 +62,7 @@ export default function Home() {
       title: t("homepage.features.stories.trusted.title"),
       subtitle: t("homepage.features.stories.trusted.subtitle"),
       gradient: "from-[#fff2d9] to-[#ffe7b3]",
-      image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=1080&auto=format&fit=crop",
+      image: sundaneseGroomImage,
       position: "lg:rotate-3 lg:translate-y-4 lg:-translate-x-2 z-20",
     },
     {
@@ -67,7 +70,7 @@ export default function Home() {
       title: t("homepage.features.stories.celebrated.title"),
       subtitle: t("homepage.features.stories.celebrated.subtitle"),
       gradient: "from-[#e7f0ff] to-[#d3e2ff]",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1080&auto=format&fit=crop",
+      image: indoGroomImage2,
       position: "lg:rotate-8 lg:translate-y-16 lg:translate-x-12 z-10",
     },
   ];
