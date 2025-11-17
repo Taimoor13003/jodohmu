@@ -21,7 +21,7 @@ export default function DashboardPage() {
         {role === "candidate" && (
           <div>
             <h2 className="text-xl font-semibold">Your Profile</h2>
-            <p>This is where you'll create and manage your profile.</p>
+            <p>This is where you&apos;ll create and manage your profile.</p>
             <Button asChild className="mt-4">
               <Link href="/profile/create">Create Profile</Link>
             </Button>
@@ -30,7 +30,7 @@ export default function DashboardPage() {
         {role === "worker" && (
           <div>
             <h2 className="text-xl font-semibold">Manage Profiles</h2>
-            <p>This is where you'll manage candidate profiles and find matches.</p>
+            <p>This is where you&apos;ll manage candidate profiles and find matches.</p>
             <Button asChild className="mt-4">
               <Link href="/profiles">View Profiles</Link>
             </Button>
@@ -39,7 +39,7 @@ export default function DashboardPage() {
         {role === "admin" && (
           <div>
             <h2 className="text-xl font-semibold">Admin Dashboard</h2>
-            <p>This is where you'll manage the entire application.</p>
+            <p>This is where you&apos;ll manage the entire application.</p>
             <Button asChild className="mt-4">
               <Link href="/profiles">View Profiles</Link>
             </Button>

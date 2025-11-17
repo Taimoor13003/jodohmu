@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AnimatedSection } from "@/components/layout/animated-section";
 import { ParallaxHero } from "@/components/layout/parallax-hero";
 import { useLanguage } from "@/context/LanguageContext";
-import { Heart, Users, Star, Calendar, Quote, ShieldCheck, Handshake, Sparkles, HeartHandshake, MessageCircle, CheckCircle2, ArrowRight } from "lucide-react";
+import { Heart, Users, Star, Calendar, Quote, ShieldCheck, Handshake, Sparkles, HeartHandshake, MessageCircle, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { motion } from 'framer-motion';
 import heroSectionImage from "@/assets/jodoh-mu-hero-section.png";

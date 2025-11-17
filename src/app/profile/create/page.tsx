@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/context/AuthContext";
 
 export default function CreateProfilePage() {
-  const { user, role } = useAuth();
+  const { role } = useAuth();
 
   if (role !== 'candidate') {
     return <div>You are not authorized to view this page.</div>;

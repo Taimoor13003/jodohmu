@@ -16,9 +16,33 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 import idTranslations from "../locales/id.json";
 import enTranslations from "../locales/en.json";
 
-const translations = {
-  id: idTranslations,
-  en: enTranslations,
+type TranslationObject = { [key: string]: TranslationNode };
+type TranslationNode = string | TranslationObject;
+
+const translations: Record<Language, TranslationNode> = {
+  id: idTranslations as TranslationNode,
+  en: enTranslations as TranslationNode,
+};
+
+const isTranslationObject = (value: TranslationNode | undefined): value is TranslationObject =>
+  typeof value === "object" && value !== null;
+
+const resolveTranslation = (node: TranslationNode | undefined, segments: string[]): string | undefined => {
+  let current: TranslationNode | undefined = node;
+
+  for (const segment of segments) {
+    if (!isTranslationObject(current)) {
+      return undefined;
+    }
+
+    current = current[segment];
+
+    if (current === undefined) {
+      return undefined;
+    }
+  }
+
+  return typeof current === "string" ? current : undefined;
 };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
@@ -47,30 +71,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   // Translation function
   const t = (key: string, vars?: Record<string, string | number>): string => {
-    const keys = key.split(".");
-    let value: any = translations[lang];
-    
-    for (const k of keys) {
-      if (value && typeof value === "object" && k in value) {
-        value = value[k];
-      } else {
-        // Fallback to English if key not found in current language
-        let fallback: any = translations.en;
-        for (const k of keys) {
-          if (fallback && typeof fallback === "object" && k in fallback) {
-            fallback = fallback[k];
-          } else {
-            return key; // Return key if not found anywhere
-          }
-        }
-        value = fallback;
-        break;
-      }
-    }
-
-    if (typeof value !== "string") {
-      return key;
-    }
+    const segments = key.split(".");
+    const localized = resolveTranslation(translations[lang], segments);
+    const fallback = localized ?? resolveTranslation(translations.en, segments);
+    const value = fallback ?? key;
 
     if (!vars) {
       return value;

@@ -21,7 +21,7 @@ import { createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, sign
 import { auth, db } from "@/lib/firebase";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { User, Mail, Lock, Phone, MapPin, Briefcase, GraduationCap, Heart, Calendar, FileText, Star } from "lucide-react";
+import { User, Heart, FileText } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 
@@ -91,7 +91,7 @@ export default function RegisterPage() {
   });
 
   async function onSubmit(values: FormValues) {
-    const { email, password, fullName, confirmPassword, ...profile } = values;
+    const { email, password, fullName, ...profile } = values;
     const cred = await createUserWithEmailAndPassword(auth, email, password);
     if (auth.currentUser) {
       await updateProfile(auth.currentUser, { displayName: fullName });
@@ -473,6 +473,11 @@ export default function RegisterPage() {
                   <label htmlFor="interests" className="text-sm font-medium">
                     Interests & preferences
                   </label>
+                  <Textarea
+                    id="interests"
+                    placeholder={t("register.fields.interestsPlaceholder")}
+                    className="min-h-28 focus:ring-2 focus:ring-[#9B2242]/20 focus:border-[#9B2242] transition-all"
+                    {...register("interests")}
                   />
                   {errors.interests && (
                     <p className="text-sm text-destructive">{errors.interests.message}</p>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Instagram, Mail, Phone, Info, Heart, Smartphone } from "lucide-react";
+import { Facebook, Instagram, Mail, Phone, Heart } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 import { useLanguage } from "@/context/LanguageContext";
 
