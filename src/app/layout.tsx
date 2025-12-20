@@ -92,6 +92,9 @@ export default function RootLayout({
           <link key={lang} rel="alternate" hrefLang={lang} href={href} />
         ))}
         <link rel="alternate" hrefLang="x-default" href={siteUrl} />
+        <link rel="preload" href="/fonts/nunito-latin-400.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/playfair-latin-700.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" as="image" href="/hero/jodohmu-hero.jpg" />
       </head>
       <body>
         <LanguageProvider>

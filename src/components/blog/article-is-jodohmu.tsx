@@ -63,6 +63,13 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
     image: [ogImage],
   };
 
+  const relatedLinks = [
+    { href: "/blog/how-meetings-are-supervised", label: "How Jodohmu supervises offline meetings" },
+    { href: "/blog/syariah-safeguards", label: "Syariah safeguards in every ta'aruf" },
+    { href: "/faq", label: "See frequently asked questions" },
+    { href: "https://wa.me/6281122210303", label: "Chat Jodohmu via WhatsApp", external: true },
+  ];
+
   return (
     <div className="pb-24 pt-16">
       <Script
@@ -209,6 +216,28 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
               >
                 <h3 className="text-lg font-semibold text-[#0b3a86]">{t(`${articleKey}.benefits.${idx}.title`)}</h3>
                 <p className="mt-2 text-sm text-[#3d425a] leading-relaxed">{t(`${articleKey}.benefits.${idx}.desc`)}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
+          <h2 className="text-2xl font-semibold text-[#0b3a86]">Related & next steps</h2>
+          <p className="mt-2 text-[#4a4f63]">
+            Explore more guidance and get in touch for facilitated, marriage-focused matchmaking.
+          </p>
+          <ul className="mt-4 space-y-3">
+            {relatedLinks.map((link) => (
+              <li key={link.href} className="flex items-center gap-2 text-[#0b3a86]">
+                <span aria-hidden="true">↗</span>
+                <Link
+                  href={link.href}
+                  className="font-semibold hover:text-[#9B2242]"
+                  target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noopener noreferrer" : undefined}
+                >
+                  {link.label}
+                </Link>
               </li>
             ))}
           </ul>
