@@ -12,6 +12,9 @@ const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" });
 export const metadata: Metadata = {
   title: "Jodohmu",
   description: "Find your soulmate.",
+  verification: {
+    google: "zoe-2544eLiXzE6RJLS4dfDl3qU6sxqs6kGXKPUEa24",
+  },
 };
 
 export default function RootLayout({

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Instagram, Mail, Phone, Heart } from "lucide-react";
+import { Facebook, Instagram, Mail, Phone, Heart, Youtube } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -67,11 +67,24 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="font-bold text-brand-blue">Follow Us</h3>
             <div className="flex items-center gap-3">
-              <Link href="https://web.facebook.com/profile.php?id=61583458260206" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue hover:bg-brand-rose/10 hover:text-brand-rose transition-colors">
+              <Link href="https://www.facebook.com/profile.php?id=61583458260206" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue hover:bg-brand-rose/10 hover:text-brand-rose transition-colors">
                 <Facebook className="h-5 w-5" />
               </Link>
-              <Link href="https://www.instagram.com/cari_jodoh_kamu/" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue hover:bg-brand-rose/10 hover:text-brand-rose transition-colors">
+              <Link href="https://www.instagram.com/jodohmu_official/" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue hover:bg-brand-rose/10 hover:text-brand-rose transition-colors">
                 <Instagram className="h-5 w-5" />
+              </Link>
+              <Link href="https://www.tiktok.com/@jodohmu.official" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue hover:bg-brand-rose/10 hover:text-brand-rose transition-colors">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="h-5 w-5"
+                >
+                  <path d="M21 8.5c-1.4-.1-2.7-.5-3.9-1.3-1.1-.8-1.9-1.8-2.3-2.9-.2-.6-.3-1.2-.4-1.8V2h-3.6v13.1c0 .7-.3 1.4-.9 1.9-.6.5-1.3.8-2.1.8C7.1 17.8 6 16.7 6 15.3c0-1.4 1.1-2.5 2.5-2.5.3 0 .6.1.9.2l.7.3V9.6l-.3-.1c-.4-.1-.9-.2-1.3-.2-1.3 0-2.5.4-3.5 1.2C4.1 11.4 3.5 12.8 3.5 14.2 3.5 17 5.7 19.2 8.5 19.2c1.3 0 2.5-.4 3.5-1.2 1.1-.8 1.8-2 2-3.3v-.2-.1-6.3c.7.7 1.5 1.3 2.4 1.7.9.4 1.9.7 2.9.8h.3V8.5H21z" />
+                </svg>
+              </Link>
+              <Link href="https://www.youtube.com/@jodohmu_official" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue hover:bg-brand-rose/10 hover:text-brand-rose transition-colors">
+                <Youtube className="h-5 w-5" />
               </Link>
             </div>
           </div>

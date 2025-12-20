@@ -155,7 +155,13 @@
           "title": "Compassionate Check-ins",
           "description": "After each meeting we listen, support, and guide next steps so you always feel confident moving forward."
         }
-      }
+      },
+      "us": "Contact Us"
+    },
+    "whatsappCta": {
+      "caption": "Want personal guidance? Chat directly with our team on WhatsApp.",
+      "button": "Chat on WhatsApp",
+      "prefill": "Hello JodohMu, I'd love to consult with your team."
     },
     "testimonials": {
       "title": "From Our Community",
@@ -389,7 +395,7 @@
           },
           "phone": {
             "label": "Phone:",
-            "value": "+6281327054561"
+            "value": "+6281122210303"
           },
           "location": {
             "label": "Location:",
@@ -542,7 +548,7 @@
           },
           "phone": {
             "label": "Phone:",
-            "value": "+6281327054561"
+            "value": "+6281122210303"
           },
           "location": {
             "label": "Location:",
@@ -572,8 +578,8 @@
       "title": "Connect With Us",
       "description": "Stay close to the JodohMu community and never miss heartfelt success stories, events, and tips curated for your journey.",
       "email": "info@jodohmu.com",
-      "phone": "+628123456789",
-      "whatsapp": "+628123456789"
+      "phone": "+6281122210303",
+      "whatsapp": "+6281122210303"
     },
     "subfooter": {
       "copyright": "© {{year}} Jodohmu",
