@@ -20,6 +20,15 @@ type ArticleDetailProps = {
 export function ArticleDetail({ articleKey, slug }: ArticleDetailProps) {
   const { t, lang } = useLanguage();
   const articleUrl = `${siteUrl}${slug}`;
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Blog", item: `${siteUrl}/blog` },
+      { "@type": "ListItem", position: 3, name: t(`${articleKey}.title`), item: articleUrl },
+    ],
+  };
   const schema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -56,6 +65,12 @@ export function ArticleDetail({ articleKey, slug }: ArticleDetailProps) {
         type="application/ld+json"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
+      <Script
+        id={`ld-breadcrumb-${articleKey}`}
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <section className="container max-w-5xl">
         <div className="relative overflow-hidden rounded-3xl border border-[#e6eaf5] bg-gradient-to-br from-[#fef6f9] via-white to-[#eaf1ff] px-8 py-12 shadow-sm sm:px-12">

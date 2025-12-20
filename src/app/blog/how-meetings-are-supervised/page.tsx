@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ArticleDetail } from "@/components/blog/article-is-jodohmu";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
+const ogImage = "https://placehold.co/1200x630/0b3a86/ffffff?text=Supervised+Meetings+|+Jodohmu";
 
 const titleEn = "How Jodohmu supervises offline meetings | Safety, respect, and clarity";
 const titleId = "Cara Jodohmu mengawasi pertemuan offline | Aman, hormat, dan jelas";
@@ -19,11 +20,13 @@ export const metadata: Metadata = {
     description: mergedDescription,
     url: `${siteUrl}/blog/how-meetings-are-supervised`,
     type: "article",
+    images: [{ url: ogImage, alt: "Supervised meetings by Jodohmu", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary",
     title: titleEn,
     description: mergedDescription,
+    images: [{ url: ogImage, alt: "Supervised meetings by Jodohmu" }],
   },
   alternates: {
     canonical: `${siteUrl}/blog/how-meetings-are-supervised`,

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ArticleDetail } from "@/components/blog/article-is-jodohmu";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
+const ogImage = "https://placehold.co/1200x630/0b3a86/ffffff?text=Family+Involvement+|+Jodohmu";
 
 const titleEn = "Family involvement in ta'aruf | How Jodohmu aligns parents early";
 const titleId = "Pelibatan keluarga di ta'aruf | Cara Jodohmu selaraskan orang tua sejak awal";
@@ -19,11 +20,13 @@ export const metadata: Metadata = {
     description: mergedDescription,
     url: `${siteUrl}/blog/family-involvement`,
     type: "article",
+    images: [{ url: ogImage, alt: "Family involvement in ta'aruf - Jodohmu", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary",
     title: titleEn,
     description: mergedDescription,
+    images: [{ url: ogImage, alt: "Family involvement in ta'aruf - Jodohmu" }],
   },
   alternates: {
     canonical: `${siteUrl}/blog/family-involvement`,

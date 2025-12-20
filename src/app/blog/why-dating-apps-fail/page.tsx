@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ArticleDetail } from "@/components/blog/article-is-jodohmu";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
+const ogImage = "https://placehold.co/1200x630/0b3a86/ffffff?text=Why+Dating+Apps+Fail+%7C+Jodohmu";
 
 const titleEn = "Why dating apps fail for marriage seekers | Offline, vetted alternative";
 const titleId = "Kenapa dating app gagal untuk yang serius nikah | Alternatif offline terkurasi";
@@ -19,11 +20,13 @@ export const metadata: Metadata = {
     description: mergedDescription,
     url: `${siteUrl}/blog/why-dating-apps-fail`,
     type: "article",
+    images: [{ url: ogImage, alt: "Why dating apps fail - Jodohmu", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary",
     title: titleEn,
     description: mergedDescription,
+    images: [{ url: ogImage, alt: "Why dating apps fail - Jodohmu" }],
   },
   alternates: {
     canonical: `${siteUrl}/blog/why-dating-apps-fail`,

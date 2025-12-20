@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ArticleDetail } from "@/components/blog/article-is-jodohmu";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
+const ogImage = "https://placehold.co/1200x630/0b3a86/ffffff?text=Step-by-step+Ta'aruf+|+Jodohmu";
 
 const titleEn = "Offline ta'aruf step-by-step | How Jodohmu guides you to marriage";
 const titleId = "Alur ta'aruf offline langkah demi langkah | Panduan Jodohmu menuju pernikahan";
@@ -19,11 +20,13 @@ export const metadata: Metadata = {
     description: mergedDescription,
     url: `${siteUrl}/blog/step-by-step-process`,
     type: "article",
+    images: [{ url: ogImage, alt: "Step-by-step ta'aruf - Jodohmu", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary",
     title: titleEn,
     description: mergedDescription,
+    images: [{ url: ogImage, alt: "Step-by-step ta'aruf - Jodohmu" }],
   },
   alternates: {
     canonical: `${siteUrl}/blog/step-by-step-process`,
