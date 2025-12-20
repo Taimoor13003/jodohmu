@@ -16,15 +16,20 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 import idTranslations from "../locales/id.json";
 import enTranslations from "../locales/en.json";
 
-type TranslationObject = { [key: string]: TranslationNode };
-type TranslationNode = string | TranslationObject;
+type TranslationNode =
+  | string
+  | number
+  | boolean
+  | null
+  | TranslationNode[]
+  | { [key: string]: TranslationNode };
 
 const translations: Record<Language, TranslationNode> = {
   id: idTranslations as TranslationNode,
   en: enTranslations as TranslationNode,
 };
 
-const isTranslationObject = (value: TranslationNode | undefined): value is TranslationObject =>
+const isTranslationObject = (value: TranslationNode | undefined): value is { [key: string]: TranslationNode } =>
   typeof value === "object" && value !== null;
 
 const resolveTranslation = (node: TranslationNode | undefined, segments: string[]): string | undefined => {
@@ -35,7 +40,7 @@ const resolveTranslation = (node: TranslationNode | undefined, segments: string[
       return undefined;
     }
 
-    current = current[segment];
+    current = (current as Record<string, TranslationNode>)[segment];
 
     if (current === undefined) {
       return undefined;
