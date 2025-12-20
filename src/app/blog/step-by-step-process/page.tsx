@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { ArticleDetail } from "@/components/blog/article-is-jodohmu";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
-const ogImage = "https://placehold.co/1200x630/0b3a86/ffffff?text=Step-by-step+Ta'aruf+|+Jodohmu";
+const ogImage = `${siteUrl}/og/step-by-step-process.svg`;
+const datePublished = "2024-11-20";
+const dateModified = "2025-01-20";
 
 const titleEn = "Offline ta'aruf step-by-step | How Jodohmu guides you to marriage";
 const titleId = "Alur ta'aruf offline langkah demi langkah | Panduan Jodohmu menuju pernikahan";
@@ -21,6 +23,8 @@ export const metadata: Metadata = {
     url: `${siteUrl}/blog/step-by-step-process`,
     type: "article",
     images: [{ url: ogImage, alt: "Step-by-step ta'aruf - Jodohmu", width: 1200, height: 630 }],
+    publishedTime: datePublished,
+    modifiedTime: dateModified,
   },
   twitter: {
     card: "summary",
@@ -38,5 +42,13 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <ArticleDetail articleKey="blogArticle.stepByStepProcess" slug="/blog/step-by-step-process" />;
+  return (
+    <ArticleDetail
+      articleKey="blogArticle.stepByStepProcess"
+      slug="/blog/step-by-step-process"
+      ogImage={ogImage}
+      datePublished={datePublished}
+      dateModified={dateModified}
+    />
+  );
 }

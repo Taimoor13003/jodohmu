@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { ArticleDetail } from "@/components/blog/article-is-jodohmu";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
-const ogImage = "https://placehold.co/1200x630/0b3a86/ffffff?text=Why+Dating+Apps+Fail+%7C+Jodohmu";
+const ogImage = `${siteUrl}/og/why-dating-apps-fail.svg`;
+const datePublished = "2024-12-01";
+const dateModified = "2025-01-20";
 
 const titleEn = "Why dating apps fail for marriage seekers | Offline, vetted alternative";
 const titleId = "Kenapa dating app gagal untuk yang serius nikah | Alternatif offline terkurasi";
@@ -21,6 +23,8 @@ export const metadata: Metadata = {
     url: `${siteUrl}/blog/why-dating-apps-fail`,
     type: "article",
     images: [{ url: ogImage, alt: "Why dating apps fail - Jodohmu", width: 1200, height: 630 }],
+    publishedTime: datePublished,
+    modifiedTime: dateModified,
   },
   twitter: {
     card: "summary",
@@ -38,5 +42,13 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <ArticleDetail articleKey="blogArticle.whyDatingAppsFail" slug="/blog/why-dating-apps-fail" />;
+  return (
+    <ArticleDetail
+      articleKey="blogArticle.whyDatingAppsFail"
+      slug="/blog/why-dating-apps-fail"
+      ogImage={ogImage}
+      datePublished={datePublished}
+      dateModified={dateModified}
+    />
+  );
 }

@@ -2,9 +2,12 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import Script from "next/script";
 import { ChevronDown } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
 
 const whatsappHref = "https://wa.me/6281122210303";
 
@@ -33,12 +36,33 @@ export function FaqPage() {
     [t]
   );
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+      inLanguage: ["en", "id"],
+    })),
+    url: `${siteUrl}/faq`,
+  };
+
   const toggle = (key: string) => {
     setOpenKey((prev) => (prev === key ? null : key));
   };
 
   return (
     <div className="flex flex-col gap-12 pb-20 pt-16">
+      <Script
+        id="faq-schema"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <section className="container max-w-4xl space-y-5 text-center">
         <div className="inline-flex items-center gap-2 rounded-full bg-[#ffe4ed] px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-[#9B2242]">
           {t("header.faq")}

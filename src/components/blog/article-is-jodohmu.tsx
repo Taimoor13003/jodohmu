@@ -15,9 +15,12 @@ const benefitKeys = ["0", "1", "2"];
 type ArticleDetailProps = {
   articleKey: string;
   slug: string;
+  ogImage: string;
+  datePublished: string;
+  dateModified: string;
 };
 
-export function ArticleDetail({ articleKey, slug }: ArticleDetailProps) {
+export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateModified }: ArticleDetailProps) {
   const { t, lang } = useLanguage();
   const articleUrl = `${siteUrl}${slug}`;
   const breadcrumbSchema = {
@@ -35,6 +38,8 @@ export function ArticleDetail({ articleKey, slug }: ArticleDetailProps) {
     headline: t(`${articleKey}.title`),
     description: t(`${articleKey}.subtitle`),
     inLanguage: lang,
+    datePublished,
+    dateModified,
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": articleUrl,
@@ -55,7 +60,7 @@ export function ArticleDetail({ articleKey, slug }: ArticleDetailProps) {
       name: "Jodohmu",
       url: siteUrl,
     },
-    image: [`${siteUrl}/favicon.ico`],
+    image: [ogImage],
   };
 
   return (
@@ -73,6 +78,13 @@ export function ArticleDetail({ articleKey, slug }: ArticleDetailProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <section className="container max-w-5xl">
+        <nav className="mb-4 flex items-center gap-2 text-sm text-[#0b3a86]">
+          <Link href="/" className="hover:text-[#9B2242]">Home</Link>
+          <span aria-hidden="true">›</span>
+          <Link href="/blog" className="hover:text-[#9B2242]">Blog</Link>
+          <span aria-hidden="true">›</span>
+          <span className="text-muted-foreground">{t(`${articleKey}.title`)}</span>
+        </nav>
         <div className="relative overflow-hidden rounded-3xl border border-[#e6eaf5] bg-gradient-to-br from-[#fef6f9] via-white to-[#eaf1ff] px-8 py-12 shadow-sm sm:px-12">
           <div className="absolute inset-0 pointer-events-none" aria-hidden />
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">

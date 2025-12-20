@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { ArticleDetail } from "@/components/blog/article-is-jodohmu";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
-const ogImage = "https://placehold.co/1200x630/0b3a86/ffffff?text=Syariah+Safeguards+|+Jodohmu";
+const ogImage = `${siteUrl}/og/syariah-safeguards.svg`;
+const datePublished = "2024-11-22";
+const dateModified = "2025-01-20";
 
 const titleEn = "Syariah safeguards in offline ta'aruf | How Jodohmu keeps boundaries";
 const titleId = "Penjagaan syariah dalam ta'aruf offline | Cara Jodohmu jaga batasan";
@@ -21,6 +23,8 @@ export const metadata: Metadata = {
     url: `${siteUrl}/blog/syariah-safeguards`,
     type: "article",
     images: [{ url: ogImage, alt: "Syariah safeguards in ta'aruf - Jodohmu", width: 1200, height: 630 }],
+    publishedTime: datePublished,
+    modifiedTime: dateModified,
   },
   twitter: {
     card: "summary",
@@ -38,5 +42,13 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <ArticleDetail articleKey="blogArticle.syariahSafeguards" slug="/blog/syariah-safeguards" />;
+  return (
+    <ArticleDetail
+      articleKey="blogArticle.syariahSafeguards"
+      slug="/blog/syariah-safeguards"
+      ogImage={ogImage}
+      datePublished={datePublished}
+      dateModified={dateModified}
+    />
+  );
 }

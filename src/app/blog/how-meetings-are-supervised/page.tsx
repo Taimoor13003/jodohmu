@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { ArticleDetail } from "@/components/blog/article-is-jodohmu";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
-const ogImage = "https://placehold.co/1200x630/0b3a86/ffffff?text=Supervised+Meetings+|+Jodohmu";
+const ogImage = `${siteUrl}/og/how-meetings-are-supervised.svg`;
+const datePublished = "2024-11-28";
+const dateModified = "2025-01-20";
 
 const titleEn = "How Jodohmu supervises offline meetings | Safety, respect, and clarity";
 const titleId = "Cara Jodohmu mengawasi pertemuan offline | Aman, hormat, dan jelas";
@@ -21,6 +23,8 @@ export const metadata: Metadata = {
     url: `${siteUrl}/blog/how-meetings-are-supervised`,
     type: "article",
     images: [{ url: ogImage, alt: "Supervised meetings by Jodohmu", width: 1200, height: 630 }],
+    publishedTime: datePublished,
+    modifiedTime: dateModified,
   },
   twitter: {
     card: "summary",
@@ -38,5 +42,13 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <ArticleDetail articleKey="blogArticle.howMeetingsAreSupervised" slug="/blog/how-meetings-are-supervised" />;
+  return (
+    <ArticleDetail
+      articleKey="blogArticle.howMeetingsAreSupervised"
+      slug="/blog/how-meetings-are-supervised"
+      ogImage={ogImage}
+      datePublished={datePublished}
+      dateModified={dateModified}
+    />
+  );
 }
