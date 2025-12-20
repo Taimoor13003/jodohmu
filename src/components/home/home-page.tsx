@@ -111,19 +111,19 @@ export default function HomePage() {
 
   const testimonials = [
     {
-      quote: t("homepage.testimonials.stories.aishaOmar.quote"),
-      name: t("homepage.testimonials.stories.aishaOmar.name"),
+      quote: t("homepage.testimonials.stories.miraGuide.quote"),
+      name: t("homepage.testimonials.stories.miraGuide.name"),
       accentColor: "#9B2242",
-      avatar: "https://i.pravatar.cc/200?u=aisha.omar@example.com",
-      fallback: "AO",
+      avatar: "https://i.pravatar.cc/200?u=mira.guide@example.com",
+      fallback: "MG",
       delay: 0,
     },
     {
-      quote: t("homepage.testimonials.stories.fatimaAli.quote"),
-      name: t("homepage.testimonials.stories.fatimaAli.name"),
+      quote: t("homepage.testimonials.stories.bimaAssistant.quote"),
+      name: t("homepage.testimonials.stories.bimaAssistant.name"),
       accentColor: "#0b3a86",
-      avatar: "https://i.pravatar.cc/200?u=fatima.ali@example.com",
-      fallback: "FA",
+      avatar: "https://i.pravatar.cc/200?u=bima.assistant@example.com",
+      fallback: "BA",
       delay: 0.1,
     },
   ];

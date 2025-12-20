@@ -9,6 +9,10 @@ import { useLanguage } from "@/context/LanguageContext";
 export function Footer() {
   const { t } = useLanguage();
   const year = new Date().getFullYear();
+  const phoneDisplay = t("footer.connect.phone");
+  const phoneHref = phoneDisplay.replace(/\s+/g, "");
+  const whatsappNumber = t("footer.connect.whatsapp").replace(/\D/g, "");
+  const whatsappHref = `https://wa.me/${whatsappNumber}`;
 
   return (
     <footer className="w-full bg-white text-brand-blue">
@@ -43,11 +47,11 @@ export function Footer() {
                 <Mail className="h-5 w-5" />
                 <span>{t("footer.connect.email")}</span>
               </a>
-              <a href="tel:+6281327054561" className="flex items-center gap-3 hover:text-brand-rose transition-colors">
+              <a href={`tel:${phoneHref}`} className="flex items-center gap-3 hover:text-brand-rose transition-colors">
                 <Phone className="h-5 w-5" />
-                <span>{t("footer.connect.phone")}</span>
+                <span>{phoneDisplay}</span>
               </a>
-              <a href="https://wa.me/6281327054561" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-brand-rose transition-colors">
+              <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-brand-rose transition-colors">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"

@@ -156,7 +156,12 @@ export function ArticleDetail({ articleKey }: ArticleDetailProps) {
                   {t(`${articleKey}.ctaPrimary`)}
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="border-white bg-white text-[#0b3a86] hover:bg-white/90"
+              >
                 <Link href="/blog">{t(`${articleKey}.ctaSecondary`)}</Link>
               </Button>
             </div>

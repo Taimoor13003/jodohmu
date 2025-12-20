@@ -167,15 +167,15 @@
     },
     "testimonials": {
       "title": "From Our Community",
-      "subtitle": "Hear from couples who found their lifelong partners through Jodohmu",
+      "subtitle": "Two friendly humans who guide you through Jodohmu—no endless testimonials, just real help.",
       "stories": {
-        "aishaOmar": {
-          "quote": "Jodohmu helped me find a partner who shares my values and life goals. The process was so respectful and personalized. We are now happily married!",
-          "name": "Aisha & Omar"
+        "miraGuide": {
+          "quote": "Hi, I’m Mira—your calm match guide. I’ll walk you through how Jodohmu works, explain the halal/offline flow, and earn your trust step by step.",
+          "name": "Mira • Match Guide"
         },
-        "fatimaAli": {
-          "quote": "I was tired of endless swiping. Jodohmu's team took the time to understand me and introduced me to my husband. I couldn't be happier.",
-          "name": "Fatima & Ali"
+        "bimaAssistant": {
+          "quote": "I’m Bima—your personal marriage assistant. I’ll shortlist matches, schedule supervised meetings, and stay with you until you’re ready to say yes.",
+          "name": "Bima • Marriage Assistant"
         }
       }
     },
@@ -397,7 +397,7 @@
           },
           "phone": {
             "label": "Phone:",
-            "value": "+6281122210303"
+            "value": "+62 811 222 10303"
           },
           "location": {
             "label": "Location:",
@@ -550,7 +550,7 @@
           },
           "phone": {
             "label": "Phone:",
-            "value": "+6281122210303"
+            "value": "+62 811 222 10303"
           },
           "location": {
             "label": "Location:",
@@ -580,8 +580,8 @@
       "title": "Connect With Us",
       "description": "Stay close to the JodohMu community and never miss heartfelt success stories, events, and tips curated for your journey.",
       "email": "info@jodohmu.com",
-      "phone": "+6281122210303",
-      "whatsapp": "+6281122210303"
+      "phone": "+62 811 222 10303",
+      "whatsapp": "+62 811 222 10303"
     },
     "subfooter": {
       "copyright": "© {{year}} Jodohmu",

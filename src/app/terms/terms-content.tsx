@@ -291,37 +291,42 @@ export function TermsContent() {
               {t("terms.sections.contact.description")}
             </p>
             <div className="bg-gradient-to-r from-[#9B2242]/5 to-[#0b3a86]/5 p-6 rounded-xl border border-border/50 space-y-4">
-              <div className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-primary" />
-                <p className="text-foreground">
-                  <strong>{t("terms.sections.contact.items.email.label")}</strong>{" "}
-                  <a
-                    href={`mailto:${t("terms.sections.contact.items.email.value")}`}
-                    className="text-primary hover:underline"
-                  >
-                    {t("terms.sections.contact.items.email.value")}
-                  </a>
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-primary" />
-                <p className="text-foreground">
-                  <strong>{t("terms.sections.contact.items.phone.label")}</strong>{" "}
-                  <a
-                    href={`tel:${t("terms.sections.contact.items.phone.value")}`}
-                    className="text-primary hover:underline"
-                  >
-                    {t("terms.sections.contact.items.phone.value")}
-                  </a>
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <MapPin className="w-5 h-5 text-primary" />
-                <p className="text-foreground">
-                  <strong>{t("terms.sections.contact.items.location.label")}</strong>{" "}
-                  {t("terms.sections.contact.items.location.value")}
-                </p>
-              </div>
+              {(() => {
+                const phoneDisplay = t("terms.sections.contact.items.phone.value");
+                const phoneHref = phoneDisplay.replace(/\s+/g, "");
+                return (
+                  <>
+                    <div className="flex items-center gap-3">
+                      <Mail className="w-5 h-5 text-primary" />
+                      <p className="text-foreground">
+                        <strong>{t("terms.sections.contact.items.email.label")}</strong>{" "}
+                        <a
+                          href={`mailto:${t("terms.sections.contact.items.email.value")}`}
+                          className="text-primary hover:underline"
+                        >
+                          {t("terms.sections.contact.items.email.value")}
+                        </a>
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Phone className="w-5 h-5 text-primary" />
+                      <p className="text-foreground">
+                        <strong>{t("terms.sections.contact.items.phone.label")}</strong>{" "}
+                        <a href={`tel:${phoneHref}`} className="text-primary hover:underline">
+                          {phoneDisplay}
+                        </a>
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <MapPin className="w-5 h-5 text-primary" />
+                      <p className="text-foreground">
+                        <strong>{t("terms.sections.contact.items.location.label")}</strong>{" "}
+                        {t("terms.sections.contact.items.location.value")}
+                      </p>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
           </SectionCard>
         </div>

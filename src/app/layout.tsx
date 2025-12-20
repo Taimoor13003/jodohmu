@@ -114,7 +114,7 @@ export default function RootLayout({
                       "Family-friendly matchmaking",
                     ],
                     inLanguage: ["en", "id"],
-                    telephone: "+6281122210303",
+                    telephone: "+62 811 222 10303",
                     sameAs: [
                       "https://www.facebook.com/profile.php?id=61583458260206",
                       "https://www.instagram.com/jodohmu_official/",

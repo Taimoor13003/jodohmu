@@ -160,16 +160,16 @@
       }
     },
     "testimonials": {
-      "title": "Cerita dari Komunitas",
-      "subtitle": "Dengarkan kisah pasangan yang menemukan belahan jiwa melalui Jodohmu",
+      "title": "Dari Komunitas Kami",
+      "subtitle": "Bukan testimoni panjang—dua teman Jodohmu yang siap bantu kamu melangkah.",
       "stories": {
-        "aishaOmar": {
-          "quote": "Jodohmu membantu saya bertemu pasangan yang sejalan dengan nilai dan tujuan hidup. Prosesnya sangat santun dan personal. Kini kami hidup bahagia sebagai suami istri!",
-          "name": "Aisha & Omar"
+        "miraGuide": {
+          "quote": "Hai, aku Mira—pemandu jodohmu. Aku jelaskan cara kerja Jodohmu, alur halal/offline, dan bangun kepercayaanmu pelan-pelan.",
+          "name": "Mira • Pemandu Jodohmu"
         },
-        "fatimaAli": {
-          "quote": "Saya lelah dengan aplikasi kencan biasa. Tim Jodohmu memahami saya dan mempertemukan saya dengan suami saya sekarang. Rasanya seperti mimpi jadi nyata.",
-          "name": "Fatima & Ali"
+        "bimaAssistant": {
+          "quote": "Aku Bima—asisten pernikahanmu. Aku shortlist kandidat, atur pertemuan terawasi, dan dampingi sampai kamu siap mengucap ya.",
+          "name": "Bima • Asisten Pernikahan"
         }
       }
     },
