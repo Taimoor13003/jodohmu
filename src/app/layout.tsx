@@ -27,6 +27,15 @@ export const metadata: Metadata = {
   verification: {
     google: "zoe-2544eLiXzE6RJLS4dfDl3qU6sxqs6kGXKPUEa24",
   },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
   alternates: {
     canonical: siteUrl,
     languages: {
@@ -88,7 +97,9 @@ export default function RootLayout({
         <LanguageProvider>
           <AuthProvider>
             <Header />
-            {children}
+            <main id="main-content" role="main">
+              {children}
+            </main>
             <Footer />
           </AuthProvider>
         </LanguageProvider>

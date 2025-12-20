@@ -47,7 +47,7 @@ export function Header() {
             priority
           />
         </Link>
-        <nav className="ml-auto hidden items-center gap-2 sm:gap-3 sm:flex">
+        <nav className="ml-auto hidden items-center gap-2 sm:gap-3 sm:flex" aria-label="Primary">
           <Link
             href="/blog"
             className="inline-flex items-center gap-1.5 rounded-full border border-[#0b3a86]/15 bg-white/80 px-3 py-2 text-sm font-semibold text-[#0b3a86] shadow-sm shadow-[#0b3a86]/10 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#9B2242]/40 hover:text-[#9B2242] hover:shadow-md hover:shadow-[#9B2242]/15"
@@ -162,7 +162,10 @@ export function Header() {
         </div>
 
         {isMobileOpen ? (
-          <div className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-[#e6eaf5] bg-white/95 shadow-lg shadow-[#0b3a86]/10 p-4 space-y-3 sm:hidden">
+          <nav
+            className="absolute left-0 right-0 top-full mt-2 rounded-2xl border border-[#e6eaf5] bg-white/95 shadow-lg shadow-[#0b3a86]/10 p-4 space-y-3 sm:hidden"
+            aria-label="Primary mobile"
+          >
             <div className="flex flex-col gap-2">
               <Link
                 href="/blog"
@@ -230,7 +233,7 @@ export function Header() {
                 </Link>
               </Button>
             )}
-          </div>
+          </nav>
         ) : null}
       </div>
     </header>
