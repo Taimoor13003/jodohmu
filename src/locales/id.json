@@ -587,10 +587,17 @@
   ,
   "blogPage": {
     "hero": {
-      "title": "Wawasan Siap Nikah untuk Pencari Ta'aruf Serius",
-      "subtitle": "Panduan perjodohan offline, ta'aruf halal, penyaringan keluarga, dan praktik terbaik di Indonesia untuk bantu Anda menemukan pasangan hidup."
+      "title": "Satu jawaban jelas: Jodohmu cocokkan sesuai niatmu",
+      "subtitle": "Mulai dengan artikel utama tentang siapa yang kami layani, bagaimana kami memfasilitasi pertemuan, dan kenapa fokusnya selalu ke pernikahan."
     },
     "sections": {
+      "article": {
+        "label": "Artikel Unggulan",
+        "title": "Apakah Jodohmu hanya untuk Muslim?",
+        "desc": "Tidak. Kami mencocokkan Anda sesuai harapan dan nilai yang ingin Anda jaga. Jika Anda Kristen, kami bisa hadirkan pastor atau tokoh Kristen terhormat untuk memandu pertemuan—membingkai obrolan tentang iman, kesiapan keluarga, dan langkah nyata menuju pernikahan.",
+        "cta": "Baca penjelasan lengkap",
+        "secondaryCta": "Tanya via WhatsApp"
+      },
       "guides": {
         "title": "Panduan Unggulan",
         "items": [
@@ -617,6 +624,10 @@
           {
             "title": "Checklist menuju khitbah",
             "desc": "Checklist singkat untuk melangkah dari perkenalan hingga khitbah dengan jelas dan percaya diri."
+          },
+          {
+            "title": "Apakah Jodohmu hanya untuk Muslim?",
+            "desc": "Tidak. Kami mencocokkan sesuai harapan dan nilai Anda. Untuk klien Kristen, kami bisa menghadirkan pastor tepercaya atau tokoh Kristen yang dihormati untuk memandu pertemuan—membingkai obrolan tentang iman, kesiapan keluarga, dan langkah jelas menuju pernikahan. Bayangkan lounge hotel yang tenang atau kafe santun, kedua keluarga diundang, logistik diurus, dan Anda fokus berkomitmen dengan paket transparan yang memudahkan untuk lanjut."
           }
         ]
       },
@@ -625,6 +636,357 @@
         "subtitle": "Ngobrol dengan matchmaker kami untuk perjalanan halal-first yang terarah.",
         "button": "Chat di WhatsApp"
       }
+    }
+  },
+  "blogArticle": {
+    "isJodohmuOnlyForMuslims": {
+      "metaTitle": "Apakah Jodohmu hanya untuk Muslim? | Cara kami mencocokkan niat dan fasilitasi pertemuan",
+      "metaDescription": "Tidak. Jodohmu mencocokkan sesuai niat dan nilai Anda. Untuk klien Kristen, kami dapat hadirkan pastor atau fasilitator terhormat, venue tenang, dan alur jelas menuju pernikahan.",
+      "ogTitle": "Apakah Jodohmu hanya untuk Muslim? | Jawaban lengkap",
+      "ogDescription": "Kami mencocokkan berdasarkan niat dan nilai. Fasilitator/pastor tersedia untuk klien Kristen, venue tenang, kandidat terkurasi, dan langkah jelas menuju pernikahan.",
+      "tag": "Blog Jodohmu",
+      "title": "Apakah Jodohmu hanya untuk Muslim?",
+      "subtitle": "Jawaban singkat: tidak. Kami cocokkan sesuai niat, nilai, dan cara Anda ingin memulai pernikahan. Untuk klien Kristen, kami bisa hadirkan pastor atau fasilitator Kristen terhormat. Tujuannya jelas: pernikahan.",
+      "heroBadge": "Inklusif, fokus pernikahan",
+      "heroLead": "Pertemuan offline terarah untuk klien Muslim maupun Kristen—dengan pendamping/fasilitator, venue tenang, dan alur menuju komitmen.",
+      "whyTitle": "Mengapa kami bukan hanya untuk Muslim",
+      "flowTitle": "Bayangkan alurnya",
+      "flowIntro": "Begini gambaran alur pertemuan terarah yang fokus ke pernikahan bersama Jodohmu:",
+      "points": [
+        "Tidak eksklusif untuk Muslim. Pencocokan digerakkan niat, nilai, dan tujuan pernikahan Anda.",
+        "Untuk klien Kristen, kami bisa menghadirkan pastor atau tokoh Kristen terhormat agar percakapan terarah dan nyaman.",
+        "Tujuan akhirnya pernikahan. Setiap percakapan dan tindak lanjut diarahkan ke komitmen, bukan sekadar kenalan santai.",
+        "Vetting kandidat, jadwal, dan venue santun kami siapkan; Anda fokus menilai kecocokan."
+      ],
+      "steps": [
+        "Pre-call singkat: kami dengarkan niat, batasan, dan preferensi Anda (termasuk kebutuhan fasilitator agama).",
+        "Seleksi kandidat: disaring untuk keseriusan, niat menikah, keselarasan nilai, dan kesiapan keluarga.",
+        "Penjadwalan & venue: lounge hotel atau kafe santun/ruang privat, tenang, kondusif untuk obrolan serius.",
+        "Fasilitator hadir: pastor atau tokoh Kristen (atau pendamping lain) memandu alur, menjaga adab, dan bantu bahas kesiapan keluarga.",
+        "Tindak lanjut & biaya: paket transparan; lanjut ke sesi berikutnya atau lamaran dengan panduan jelas."
+      ],
+      "scenario": "Bayangkan lounge hotel atau kafe santun yang tenang, kedua keluarga diundang, fasilitator memandu, logistik beres, dan Anda fokus pada komitmen. Biaya transparan memudahkan Anda siap lanjut begitu merasa cocok.",
+      "whatWeHandleTitle": "Apa yang kami tangani agar Anda fokus menilai kecocokan",
+      "whatWeHandle": [
+        "Perkenalan terkurasi: kandidat disaring untuk niat menikah, keselarasan nilai, dan kesiapan keluarga.",
+        "Fasilitasi sensitif iman: pastor/tokoh Kristen tersedia bila diminta; imam/pendamping untuk klien Muslim.",
+        "Venue & jadwal: ruang netral, tenang, santun dengan alur dan waktu yang tertata.",
+        "Keamanan & kejelasan: batasan disepakati di awal; langkah lanjut dijelaskan sebelum Anda bertemu."
+      ],
+      "benefitsTitle": "Yang Anda dapat dari pertemuan terarah",
+      "benefits": [
+        {
+          "title": "Jelas sejak menit pertama",
+          "desc": "Kami membingkai niat, kesiapan keluarga, dan pertimbangan iman di awal—tidak ada tebak-tebakan."
+        },
+        {
+          "title": "Venue netral dan tenang",
+          "desc": "Lounge hotel atau ruang privat kafe—nyaman, tertutup, dan kondusif untuk obrolan fokus."
+        },
+        {
+          "title": "Lebih cepat ke komitmen",
+          "desc": "Dengan agenda, fasilitator, dan biaya transparan, Anda mudah memutuskan lanjut, komit, atau berhenti dengan terhormat."
+        }
+      ],
+      "facilitationTitle": "Fasilitator, venue, dan suasana",
+      "facilitationBody": "Anda tiba di lounge/ruang kafe yang sudah disiapkan untuk obrolan tenang. Pastor/tokoh Kristen (untuk klien Kristen) atau fasilitator yang diminta memandu alur, menjaga adab, dan membantu kedua pihak membahas iman, ekspektasi keluarga, serta kesiapan. Orang tua dipersilakan hadir. Anda fokus menilai kecocokan.",
+      "pricingTitle": "Biaya & komitmen",
+      "pricingBody": "Paket transparan meliputi screening, penjadwalan, venue, dan kehadiran fasilitator. Jika merasa cocok, kami pandu sesi berikutnya atau langkah lamaran tanpa biaya kejutan.",
+      "ctaTitle": "Siap bergerak ke pernikahan?",
+      "ctaBody": "Kami pandu dari perkenalan sampai komitmen. Ingin jadwalkan sesi dengan fasilitator (termasuk pastor untuk klien Kristen) dan tahu rincian biaya secara transparan?",
+      "ctaPrimary": "Chat via WhatsApp",
+      "ctaSecondary": "Kembali ke blog utama"
+    },
+    "stepByStepProcess": {
+      "metaTitle": "Alur ta'aruf offline langkah demi langkah | Panduan Jodohmu menuju pernikahan",
+      "metaDescription": "Dari intake hingga lamaran: kandidat terkurasi, pre-call, pertemuan terverifikasi, fasilitator, dan tindak lanjut transparan—semua offline dan fokus nikah.",
+      "ogTitle": "Alur ta'aruf offline langkah demi langkah",
+      "ogDescription": "Lihat bagaimana Jodohmu memandu: intake, screening, penjadwalan, pertemuan terfasilitasi, dan langkah jelas menuju pernikahan.",
+      "tag": "Step-by-step process",
+      "title": "Alur ta'aruf offline kami, langkah demi langkah",
+      "subtitle": "Dari intake sampai siap lamaran: setiap langkah terstruktur, diawasi, dan transparan agar Anda mantap menuju pernikahan.",
+      "heroBadge": "Alur offline terarah",
+      "heroLead": "Kandidat terkurasi, venue tenang, fasilitator sesuai permintaan, dan follow-up jelas—Anda tinggal fokus memutuskan.",
+      "whyTitle": "Mengapa alur ini efektif",
+      "flowTitle": "6 langkah perjalanan",
+      "flowIntro": "Gambaran ringkas bagaimana kami membawa Anda dari intake ke komitmen dengan pertemuan offline terawasi.",
+      "points": [
+        "Hanya kandidat terkurasi: niat nikah, keselarasan nilai, dan kesiapan disaring sejak awal.",
+        "Venue netral dan tenang: lounge/ruang privat untuk obrolan fokus dan santun.",
+        "Fasilitator siap: imam/pastor/pendamping keluarga untuk memandu alur.",
+        "Keputusan terstruktur: follow-up jelas agar Anda tidak bingung atau tertunda."
+      ],
+      "steps": [
+        "Intake call: pahami niat, batasan, pertimbangan iman, dan ekspektasi keluarga Anda.",
+        "Profil & screening: verifikasi keseriusan, keselarasan nilai, dan kesiapan bertemu.",
+        "Shortlist & konfirmasi: Anda setujui kandidat; kami kunci jadwal dan venue.",
+        "Pertemuan terfasilitasi: dengan pendamping/imam/pastor; agenda jelas soal iman, keluarga, dan masa depan.",
+        "Refleksi & tindak lanjut: debrief terstruktur, kejelasan minat, dan komunikasi yang menjaga batas.",
+        "Langkah lanjut & biaya: paket transparan untuk pertemuan berikutnya atau bimbingan menuju lamaran—tanpa biaya tersembunyi."
+      ],
+      "scenario": "Bayangkan timeline rapi: discovery Senin, shortlist terverifikasi di tengah pekan, pertemuan lounge hotel Sabtu dengan fasilitator, dan Senin sudah ada keputusan jelas plus biaya yang sudah diberitahu.",
+      "whatWeHandleTitle": "Yang kami tangani",
+      "whatWeHandle": [
+        "Screening & verifikasi: niat menikah, dasar background, dan sinyal kesiapan keluarga.",
+        "Penjadwalan & venue: ruang santun, netral, dan nyaman kami siapkan.",
+        "Fasilitasi: imam/pastor atau pendamping tepercaya sesuai permintaan agar alur terjaga.",
+        "Bantuan keputusan: debrief terstruktur dan panduan lanjut atau mundur dengan beradab."
+      ],
+      "benefitsTitle": "Kenapa alur ini efektif",
+      "benefits": [
+        {
+          "title": "Ada momentum, tanpa chaos",
+          "desc": "Setiap langkah terjadwal; Anda selalu tahu apa berikutnya."
+        },
+        {
+          "title": "Santun dan peka iman",
+          "desc": "Fasilitator/pendamping menjaga adab dan kebutuhan syariah."
+        },
+        {
+          "title": "Biaya transparan",
+          "desc": "Paket dijelaskan sebelum lanjut ke sesi atau proposal berikutnya."
+        }
+      ],
+      "facilitationTitle": "Pertemuan yang terasa terarah",
+      "facilitationBody": "Kami siapkan venue tenang, memberi briefing ke fasilitator, menyelaraskan pertanyaan soal iman, nilai, dan keluarga. Anda datang sudah tahu alur, durasi, dan siapa yang memandu.",
+      "pricingTitle": "Biaya yang bisa Anda rencanakan",
+      "pricingBody": "Intake gratis. Pertemuan dan fasilitasi dipaketkan; biaya terlihat jelas sebelum Anda lanjut ke milestone berikut.",
+      "ctaTitle": "Jalani langkahnya bersama kami",
+      "ctaBody": "Siap untuk alur terstruktur? Minta paket terbaru dan opsi fasilitator (imam/pastor/pendamping).",
+      "ctaPrimary": "Mulai prosesnya",
+      "ctaSecondary": "Kembali ke blog utama"
+    },
+    "whyDatingAppsFail": {
+      "metaTitle": "Kenapa dating app gagal untuk yang serius nikah | Alternatif offline terkurasi",
+      "metaDescription": "Aplikasi mengejar swipe, bukan nikah. Lihat bagaimana Jodohmu mengganti chat tanpa akhir dengan pertemuan offline terkurasi dan difasilitasi.",
+      "ogTitle": "Kenapa dating app gagal untuk yang serius nikah",
+      "ogDescription": "Algoritma kejar engagement, bukan komitmen. Jodohmu fokus pada pertemuan offline, terkurasi, dan difasilitasi menuju nikah.",
+      "tag": "Kenapa dating apps gagal",
+      "title": "Kenapa dating app gagal untuk pencari pasangan serius",
+      "subtitle": "Aplikasi dirancang untuk swipe, bukan akad. Pendekatan offline terkurasi kami membuat Anda fokus ke komitmen.",
+      "heroBadge": "Fokus pernikahan",
+      "heroLead": "Kami ganti feed tak berujung dengan kandidat terbatas yang terverifikasi—offline, diawasi, dan transparan.",
+      "whyTitle": "Masalah di aplikasi kencan",
+      "flowTitle": "Bagaimana Jodohmu mengatasinya",
+      "flowIntro": "Kontras yang mengubah swipe jadi pertemuan siap nikah.",
+      "points": [
+        "Aplikasi optimasi engagement; kami optimasi komitmen.",
+        "Aplikasi minim verifikasi; kami saring niat, nilai, dan kesiapan.",
+        "Aplikasi tak berbatas; kami berikan opsi terkurasi dengan timeline.",
+        "Aplikasi memicu DM chaos; kami siapkan pertemuan terawasi dengan agenda."
+      ],
+      "steps": [
+        "Daftar kurasi, bukan feed tanpa batas: hanya kandidat terverifikasi yang ingin menikah.",
+        "Pertemuan terarah: fasilitator/pendamping hadir menjaga hormat dan fokus.",
+        "Progres transparan: Anda tahu kapan memutuskan, lanjut, atau berhenti.",
+        "Ramah keluarga: orang tua atau penasihat bisa dilibatkan sejak awal.",
+        "Aman & jelas: venue, waktu, dan batasan diatur oleh tim."
+      ],
+      "scenario": "Alih-alih berminggu chat dan ghosting, bayangkan dua kandidat terverifikasi bulan ini, masing-masing ditemui di lounge tenang dengan fasilitator, dan dalam hitungan hari Anda sudah punya keputusan jelas plus langkah lanjut.",
+      "whatWeHandleTitle": "Cara kami lebih baik dari aplikasi",
+      "whatWeHandle": [
+        "Cek identitas & niat sebelum pertemuan.",
+        "Perkenalan terkurasi dengan penjadwalan diurus.",
+        "Fasilitator/pendamping menjaga adab dan arah pembicaraan.",
+        "Follow-up terstruktur agar tidak ada yang menggantung."
+      ],
+      "benefitsTitle": "Keunggulan dibanding dating app",
+      "benefits": [
+        {
+          "title": "Jelas, bukan sekadar chat",
+          "desc": "Tanpa texting tak berujung—langsung pertemuan fokus dengan agenda."
+        },
+        {
+          "title": "Keamanan nyata",
+          "desc": "Kandidat terverifikasi, venue dikenal, fasilitator hadir."
+        },
+        {
+          "title": "Sinyal komitmen",
+          "desc": "Kesiapan menikah disaring sebelum perkenalan."
+        }
+      ],
+      "facilitationTitle": "Dari swipe ke pertemuan terawasi",
+      "facilitationBody": "Kami ubah niat digital menjadi pertemuan nyata: venue terpesan, fasilitator/imam/pastor jika diminta, dengan alur yang menghormati iman dan keluarga.",
+      "pricingTitle": "Nilai lebih dari sekadar langganan",
+      "pricingBody": "Tanpa subscription sia-sia. Paket per pertemuan dan milestone transparan—Anda bayar untuk progres nyata, bukan swipe tanpa akhir.",
+      "ctaTitle": "Siap keluar dari loop swipe?",
+      "ctaBody": "Bicaralah tentang kandidat terkurasi, pertemuan terawasi, dan langkah jelas menuju nikah.",
+      "ctaPrimary": "Jadwalkan konsultasi",
+      "ctaSecondary": "Kembali ke blog utama"
+    },
+    "familyInvolvement": {
+      "metaTitle": "Pelibatan keluarga di ta'aruf | Cara Jodohmu selaraskan orang tua sejak awal",
+      "metaDescription": "Kami sambut orang tua/pembimbing lebih awal. Lihat cara format undangan, venue santun, dan fasilitator menjaga ketenangan dan fokus komitmen.",
+      "ogTitle": "Pelibatan keluarga di ta'aruf",
+      "ogDescription": "Orang tua/pembimbing dilibatkan sejak awal, venue santun, percakapan terarah agar keluarga merasa aman dan selaras.",
+      "tag": "Pelibatan keluarga",
+      "title": "Cara kami libatkan keluarga tanpa menghambat",
+      "subtitle": "Orang tua dan penasihat bisa masuk sejak awal dengan pertemuan terstruktur dan santun, sehingga keputusan lebih cepat dan tenang.",
+      "heroBadge": "Selaras dengan keluarga",
+      "heroLead": "Kami beri briefing, siapkan venue yang nyaman, dan gunakan fasilitator agar semua pihak merasa didengar dan aman.",
+      "whyTitle": "Kenapa selaras dengan keluarga itu penting",
+      "flowTitle": "Cara kami libatkan keluarga",
+      "flowIntro": "Jalur lembut untuk mengajak orang tua/pembimbing tanpa membebani pasangan.",
+      "points": [
+        "Kejelasan awal mencegah keberatan di akhir.",
+        "Venue santun menenangkan orang tua.",
+        "Fasilitator menyeimbangkan percakapan.",
+        "Agenda terstruktur hindari momen canggung atau intrusif."
+      ],
+      "steps": [
+        "Pre-brief: pahami ekspektasi dan sensitivitas keluarga.",
+        "Format undangan: pilih apakah orang tua hadir, mengamati, atau dibriefing setelahnya.",
+        "Penataan venue: ruang privat dan tenang yang nyaman bagi orang tua.",
+        "Dialog terfasilitasi: iman, nilai, dan kesiapan dibahas dengan santun.",
+        "Keputusan & langkah lanjut: keluarga tahu timeline, biaya, dan batasan."
+      ],
+      "scenario": "Bayangkan pertemuan Sabtu di lounge privat: orang tua duduk nyaman, fasilitator memandu perkenalan, iman dan kesiapan dibahas, dan semua pulang dengan jadwal dan ekspektasi yang jelas.",
+      "whatWeHandleTitle": "Struktur ramah keluarga",
+      "whatWeHandle": [
+        "Venue dan tata duduk ramah orang tua.",
+        "Briefing keluarga soal agenda dan batasan.",
+        "Fasilitator menyeimbangkan suara dan menjaga rasa hormat.",
+        "Catatan tindak lanjut agar tidak ada yang bingung."
+      ],
+      "benefitsTitle": "Manfaat bagi Anda dan orang tua",
+      "benefits": [
+        {
+          "title": "Konflik berkurang",
+          "desc": "Kekhawatiran diutarakan lebih awal dengan fasilitator hadir."
+        },
+        {
+          "title": "Kepercayaan bersama",
+          "desc": "Orang tua melihat proses serius dan terhormat, bukan sekadar dating."
+        },
+        {
+          "title": "Timeline jelas",
+          "desc": "Semua tahu kapan keputusan diambil dan apa langkah berikutnya."
+        }
+      ],
+      "facilitationTitle": "Percakapan terpandu yang hormat",
+      "facilitationBody": "Kami bantu orang tua merasa aman: tempat duduk, tempo, dan topik dibingkai. Fasilitator (imam/pastor/pendamping) menjaga nada tetap tenang dan konstruktif.",
+      "pricingTitle": "Paket transparan dengan opsi keluarga",
+      "pricingBody": "Tambahan ruang besar, sesi ekstra dengan orang tua, atau fasilitator tertentu diinformasikan di awal—tanpa biaya mengejutkan.",
+      "ctaTitle": "Mau orang tua selaras sejak awal?",
+      "ctaBody": "Kami usulkan format ramah keluarga, venue, dan fasilitator agar Anda bisa melangkah dengan yakin.",
+      "ctaPrimary": "Rencanakan sesi keluarga",
+      "ctaSecondary": "Kembali ke blog utama"
+    },
+    "syariahSafeguards": {
+      "metaTitle": "Penjagaan syariah dalam ta'aruf offline | Cara Jodohmu jaga batasan",
+      "metaDescription": "Pendamping, fasilitator, venue terpilih, dan agenda terstruktur untuk menjaga syariah sambil bergerak menuju pernikahan.",
+      "ogTitle": "Penjagaan syariah dalam ta'aruf offline",
+      "ogDescription": "Batasan, chaperone, kandidat terverifikasi, dan venue santun agar ta'aruf Anda halal dan fokus ke nikah.",
+      "tag": "Penjagaan syariah",
+      "title": "Penjagaan syariah yang kami terapkan di setiap pertemuan",
+      "subtitle": "Proses halal-first: kandidat terverifikasi, setting berpendamping, percakapan difasilitasi, dan langkah lanjut yang jelas.",
+      "heroBadge": "Halal-first",
+      "heroLead": "Kami jalankan syariah dengan pendamping, skrip fasilitator, venue santun, dan penyepakatan batasan sebelum bertemu.",
+      "whyTitle": "Kenapa penjagaan penting",
+      "flowTitle": "Safeguards yang kami jalankan",
+      "flowIntro": "Praktik konkret untuk menjaga pertemuan tetap halal sambil tetap tegas menuju keputusan.",
+      "points": [
+        "Screening menyingkirkan niat tidak serius sebelum pertemuan.",
+        "Pendamping/fasilitator menjaga adab dan batasan.",
+        "Venue netral menghindari khalwah dan menjaga fokus.",
+        "Agenda terstruktur mengurangi obrolan kosong dan ketidakjelasan."
+      ],
+      "steps": [
+        "Kesepakatan batasan dan topik sebelum bertemu.",
+        "Pendamping atau fasilitator hadir (imam/pastor/pendamping).",
+        "Pemilihan venue yang hindari khalwah namun tetap nyaman.",
+        "Agenda berdurasi: iman, nilai, kesiapan, dan ekspektasi keluarga.",
+        "Ringkasan pasca pertemuan dengan langkah lanjut yang tetap dalam batas halal."
+      ],
+      "scenario": "Anda tiba di sudut lounge yang terlihat tapi privat; fasilitator hadir, pertanyaan disiapkan, alur menghormati hijab/adab. Anda pulang dengan kejelasan tanpa berlama di situasi tanpa pengawasan.",
+      "whatWeHandleTitle": "Safeguard operasional",
+      "whatWeHandle": [
+        "Penetapan batas dan agenda disepakati sebelum pertemuan.",
+        "Penjadwalan dan briefing pendamping/fasilitator.",
+        "Kuratkan venue untuk hindari khalwah sekaligus nyaman.",
+        "Dokumentasi keputusan dan tindak lanjut dalam koridor halal."
+      ],
+      "benefitsTitle": "Mengapa ini membuat Anda aman",
+      "benefits": [
+        {
+          "title": "Halal dan fokus",
+          "desc": "Tidak ada sinyal campur aduk—semua langkah selaras dengan niat nikah."
+        },
+        {
+          "title": "Risiko berkurang",
+          "desc": "Setting terawasi menekan potensi perilaku buruk atau salah paham."
+        },
+        {
+          "title": "Percaya diri melangkah",
+          "desc": "Anda maju dengan tenang karena adab dan syariah dijaga."
+        }
+      ],
+      "facilitationTitle": "Fasilitasi peka iman",
+      "facilitationBody": "Fasilitator dibekali untuk menjaga adab, memandu pertanyaan soal iman, nilai, keluarga, dan menutup pertemuan tepat waktu dengan action items.",
+      "pricingTitle": "Biaya jelas untuk sesi terawasi",
+      "pricingBody": "Paket menjabarkan biaya pendamping, fasilitator, dan venue, jadi Anda tidak mengorbankan safeguard karena biaya mendadak.",
+      "ctaTitle": "Perlu pertemuan halal dan terawasi?",
+      "ctaBody": "Sampaikan batasan dan preferensi fasilitator; kami siapkan alur halal-first dengan biaya transparan.",
+      "ctaPrimary": "Atur safeguard saya",
+      "ctaSecondary": "Kembali ke blog utama"
+    },
+    "howMeetingsAreSupervised": {
+      "metaTitle": "Cara Jodohmu mengawasi pertemuan offline | Aman, hormat, dan jelas",
+      "metaDescription": "Model supervisi kami: fasilitator/pendamping, venue terkurasi, agenda, dan ringkasan pasca pertemuan agar Anda aman dan tegas.",
+      "ogTitle": "Bagaimana pertemuan diawasi",
+      "ogDescription": "Venue terawasi, fasilitator/pendamping, dan agenda terstruktur agar Anda merasa aman, dihormati, dan bisa memutuskan.",
+      "tag": "Supervisi pertemuan",
+      "title": "Cara kami mengawasi setiap pertemuan",
+      "subtitle": "Mulai dari siapa yang hadir hingga durasi pertemuan—supervisi bawaan agar Anda fokus pada kecocokan dan komitmen.",
+      "heroBadge": "Terawasi & aman",
+      "heroLead": "Fasilitator terlatih, agenda jelas, dan venue terkurasi membuat pertemuan hormat, efisien, dan berujung keputusan.",
+      "whyTitle": "Mengapa supervisi mengubah hasil",
+      "flowTitle": "Model supervisi kami",
+      "flowIntro": "Apa yang terjadi sebelum, selama, dan sesudah pertemuan agar Anda aman dan yakin.",
+      "points": [
+        "Presence: fasilitator atau pendamping disiapkan secara default.",
+        "Place: venue dicek agar privat tanpa khalwah.",
+        "Plan: agenda, durasi, dan batasan disepakati sebelum bertemu.",
+        "Proof: ringkasan dan langkah lanjut didokumentasi."
+      ],
+      "steps": [
+        "Pre-brief: selaraskan batasan, agenda, dan siapa yang hadir.",
+        "Kedatangan: tempat duduk siap; fasilitator/pendamping menyambut kedua pihak.",
+        "Saat sesi: pertanyaan mengalir lewat fasilitator, menjaga adab dan fokus.",
+        "Timebox: pertemuan selesai sesuai jadwal; tidak dibiarkan tanpa pengawasan.",
+        "Pasca: ringkasan tertulis dan aksi lanjut dikirim di hari yang sama."
+      ],
+      "scenario": "Anda bertemu di lounge yang dipesan; fasilitator membuka, memandu topik iman/keluarga, menjaga waktu, dan menutup dengan rekap. Malamnya Anda mendapat ringkasan tertulis dan langkah lanjut.",
+      "whatWeHandleTitle": "Supervisi bawaan",
+      "whatWeHandle": [
+        "Penjadwalan dan briefing fasilitator/pendamping.",
+        "Kuratkan dan reservasi venue.",
+        "Desain agenda: iman, nilai, kesiapan, logistik.",
+        "Dokumentasi pasca pertemuan dan koordinasi."
+      ],
+      "benefitsTitle": "Kenapa terawasi lebih nyaman",
+      "benefits": [
+        {
+          "title": "Aman & hormat",
+          "desc": "Fasilitasi profesional mencegah momen canggung atau tidak aman."
+        },
+        {
+          "title": "Keputusan efisien",
+          "desc": "Topik penting dibahas cepat; Anda pulang dengan kejelasan."
+        },
+        {
+          "title": "Didukung keluarga",
+          "desc": "Orang tua melihat proses halal-first yang bisa mereka percayai."
+        }
+      ],
+      "facilitationTitle": "Memandu, bukan sekadar mengawasi",
+      "facilitationBody": "Fasilitator mengatur nada, menjaga batas, mengelola tempo, dan bantu kedua pihak mengungkap kesiapan dan kekhawatiran—dengan hormat pada iman dan keluarga.",
+      "pricingTitle": "Transparansi untuk sesi terawasi",
+      "pricingBody": "Biaya mencakup fasilitasi/pendamping dan venue; upgrade atau sesi tambahan diinformasikan sebelum Anda setuju.",
+      "ctaTitle": "Ingin pertemuan Anda disupervisi?",
+      "ctaBody": "Sebutkan kota dan preferensi fasilitator—kami jadwalkan sesi terawasi dengan biaya transparan.",
+      "ctaPrimary": "Jadwalkan supervisi",
+      "ctaSecondary": "Kembali ke blog utama"
     }
   },
   "faqPage": {

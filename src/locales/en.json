@@ -593,10 +593,17 @@
   ,
   "blogPage": {
     "hero": {
-      "title": "Marriage-Ready Insights for Serious Ta'aruf Seekers",
-      "subtitle": "Guides on offline matchmaking, halal ta'aruf, family-friendly vetting, and Indonesia-focused best practices to help you find a spouse."
+      "title": "Jodohmu Blog: start with one clear answer",
+      "subtitle": "Begin with our main article on how we match by intent—not just religion—and how meetings are facilitated for marriage-minded singles."
     },
     "sections": {
+      "article": {
+        "label": "Featured article",
+        "title": "Featured guide",
+        "desc": "Explore how Jodohmu runs offline, supervised, marriage-focused meetings with vetted candidates and transparent steps.",
+        "cta": "Read the full guide",
+        "secondaryCta": "Ask via WhatsApp"
+      },
       "guides": {
         "title": "Featured Guides",
         "items": [
@@ -631,6 +638,299 @@
         "subtitle": "Talk to our matchmakers for a guided, halal-first journey.",
         "button": "Chat on WhatsApp"
       }
+    }
+  },
+  "blogArticle": {
+    "stepByStepProcess": {
+      "metaTitle": "Offline ta'aruf step-by-step | How Jodohmu guides you to marriage",
+      "metaDescription": "From intake to proposal: curated candidates, pre-call, vetted meetings, facilitators, and transparent follow-ups—offline and marriage-focused.",
+      "ogTitle": "Offline ta'aruf step-by-step",
+      "ogDescription": "See how Jodohmu guides you: intake, vetting, scheduling, facilitated meetings, and clear next steps toward marriage.",
+      "tag": "Step-by-step process",
+      "title": "Our step-by-step offline ta'aruf process",
+      "subtitle": "From intake to proposal readiness: every step is structured, supervised, and transparent so you move confidently toward marriage.",
+      "heroBadge": "Guided offline flow",
+      "heroLead": "Curated candidates, calm venues, facilitators on request, and clear follow-ups—so you focus on deciding.",
+      "whyTitle": "What makes this flow effective",
+      "flowTitle": "The 6-step journey",
+      "flowIntro": "A concise view of how we move you from intake to commitment with offline, supervised meetings.",
+      "points": [
+        "Curated candidates only: intent to marry, values fit, and readiness screened upfront.",
+        "Calm, neutral venues: hotel lounges/private rooms for focused, respectful talk.",
+        "Facilitators available: imam/pastor/family chaperone to guide the flow.",
+        "Structured decisions: clear follow-ups so you don't stall or guess."
+      ],
+      "steps": [
+        "Intake call: understand your intent, boundaries, faith considerations, and family expectations.",
+        "Profile & screening: verify seriousness, values alignment, and readiness to meet.",
+        "Shortlist & confirm: you approve who to meet; we lock schedule and venue.",
+        "Facilitated meeting: chaperoned or with requested imam/pastor; clear agenda for faith, family, and future.",
+        "Reflection & follow-up: structured debrief, clarity on interest, and boundary-respecting communication.",
+        "Next steps & fees: transparent packages for additional meetings or proposal guidance—no surprises."
+      ],
+      "scenario": "Picture a neat timeline: discovery on Monday, vetted shortlist midweek, a calm hotel lounge meeting on Saturday with facilitator present, and by Monday you have a clear yes/no and next steps with costs disclosed.",
+      "whatWeHandleTitle": "What Jodohmu handles",
+      "whatWeHandle": [
+        "Screening & verification: intent to marry, background basics, and family readiness signals.",
+        "Scheduling & venues: respectful, neutral spaces booked for you.",
+        "Facilitation: imam/pastor or trusted chaperone on request to keep the flow on track.",
+        "Decision support: structured debriefs and guidance to proceed or exit gracefully."
+      ],
+      "benefitsTitle": "Why this step-by-step works",
+      "benefits": [
+        {
+          "title": "Momentum without chaos",
+          "desc": "Every step is timed; you always know what happens next."
+        },
+        {
+          "title": "Respectful and faith-aware",
+          "desc": "Facilitators/chaperones keep adab and faith needs honored."
+        },
+        {
+          "title": "Transparent costs",
+          "desc": "Packages are laid out before you move to next sessions or proposal."
+        }
+      ],
+      "facilitationTitle": "Meetings that feel intentional",
+      "facilitationBody": "We set a calm venue, brief the facilitator, align questions on faith, values, and family. You arrive knowing the flow, timebox, and who guides it.",
+      "pricingTitle": "Pricing you can plan for",
+      "pricingBody": "Intake is free. Meetings and facilitation are packaged; you see fees before committing to the next milestone.",
+      "ctaTitle": "Walk the steps with us",
+      "ctaBody": "Ready for a structured path? Ask for the latest packages and facilitator options (imam/pastor/chaperone).",
+      "ctaPrimary": "Start the process",
+      "ctaSecondary": "Back to main blog"
+    },
+    "whyDatingAppsFail": {
+      "metaTitle": "Why dating apps fail for marriage seekers | Offline, vetted alternative",
+      "metaDescription": "Apps reward swipes, not marriage. See how Jodohmu replaces endless chatting with vetted, offline, facilitator-guided meetings.",
+      "ogTitle": "Why dating apps fail for marriage seekers",
+      "ogDescription": "Algorithms optimize for engagement, not commitment. Jodohmu optimizes for vetted, offline, facilitator-guided meetings toward marriage.",
+      "tag": "Why dating apps fail",
+      "title": "Why dating apps fail for serious marriage seekers",
+      "subtitle": "Apps are built for swipes, not spouses. Our offline, curated approach keeps you focused on commitment.",
+      "heroBadge": "Marriage-first",
+      "heroLead": "We trade infinite feeds for finite, vetted candidates—offline, supervised, and transparent.",
+      "whyTitle": "The problem with apps",
+      "flowTitle": "How Jodohmu fixes it",
+      "flowIntro": "See the contrasts that turn swipes into real, marriage-minded meetings.",
+      "points": [
+        "Apps optimize engagement; we optimize commitment.",
+        "Apps lack verification; we screen for intent, values, and readiness.",
+        "Apps are endless; we give you finite, curated options and timelines.",
+        "Apps push DM chaos; we set supervised, agenda-led meetings."
+      ],
+      "steps": [
+        "Curated list, not endless feed: only vetted candidates who want marriage.",
+        "Guided meetings: facilitator/chaperone present to keep respect and focus.",
+        "Transparent progress: you know when to decide, continue, or exit.",
+        "Family-friendly: parents or advisors can be included early.",
+        "Safety & clarity: venues, timing, and boundaries are managed by us."
+      ],
+      "scenario": "Instead of weeks of ghosting and small talk, imagine a set of two vetted candidates this month, each met in a calm lounge with a facilitator, and a clear yes/no plus next steps within days.",
+      "whatWeHandleTitle": "How we outperform apps",
+      "whatWeHandle": [
+        "Identity & intent checks before you meet.",
+        "Finite, curated introductions with scheduling handled.",
+        "Facilitators/chaperones to keep decorum and direction.",
+        "Structured follow-ups so no one drifts or ghosts."
+      ],
+      "benefitsTitle": "Benefits over dating apps",
+      "benefits": [
+        {
+          "title": "Clarity over chatter",
+          "desc": "No endless texting—just focused meetings with clear agendas."
+        },
+        {
+          "title": "Real safety",
+          "desc": "Vetted candidates, known venues, facilitators present."
+        },
+        {
+          "title": "Commitment signals",
+          "desc": "Readiness to marry is screened before introductions."
+        }
+      ],
+      "facilitationTitle": "From swipes to supervised meetings",
+      "facilitationBody": "We convert digital intent into offline reality: reserved venues, facilitator/imam/pastor on request, and a guided flow that respects faith and families.",
+      "pricingTitle": "Value beyond subscriptions",
+      "pricingBody": "No sunk-cost subscriptions. You see transparent packages for each meeting and milestone, so you pay for real progress, not endless swipes.",
+      "ctaTitle": "Ready to leave the swipe loop?",
+      "ctaBody": "Talk to us about curated candidates, supervised meetings, and clear next steps toward marriage.",
+      "ctaPrimary": "Book a consult",
+      "ctaSecondary": "Back to main blog"
+    },
+    "familyInvolvement": {
+      "metaTitle": "Family involvement in ta'aruf | How Jodohmu aligns parents early",
+      "metaDescription": "We welcome parents and advisors early. Learn how family input, respectful venues, and facilitators keep meetings calm and commitment-focused.",
+      "ogTitle": "Family involvement in ta'aruf",
+      "ogDescription": "Parents/advisors included early, respectful venues, and guided conversations so families feel safe and aligned.",
+      "tag": "Family involvement",
+      "title": "How we involve family without losing momentum",
+      "subtitle": "Parents and advisors can be included early through structured, respectful meetings so decisions are faster and calmer.",
+      "heroBadge": "Family-aligned",
+      "heroLead": "We brief families, set respectful venues, and use facilitators so everyone feels heard and safe.",
+      "whyTitle": "Why family alignment matters",
+      "flowTitle": "How we include family smoothly",
+      "flowIntro": "A gentle path to bring parents/advisors in without overwhelming the couple.",
+      "points": [
+        "Early clarity prevents late-stage objections.",
+        "Respectful venues reduce anxiety for parents.",
+        "Facilitators keep conversations balanced and calm.",
+        "Structured agendas avoid awkward or intrusive moments."
+      ],
+      "steps": [
+        "Pre-brief: understand family expectations and sensitivities.",
+        "Invite format: decide whether parents join, observe, or debrief later.",
+        "Venue setup: private, calm space suitable for elders.",
+        "Facilitated dialogue: faith, values, and readiness discussed with civility.",
+        "Decision & next steps: families know timelines, costs, and boundaries."
+      ],
+      "scenario": "Picture a Saturday meeting in a private lounge: parents seated comfortably, facilitator guiding respectful introductions, faith and readiness addressed, and everyone leaves knowing the next date and expectations.",
+      "whatWeHandleTitle": "Family-friendly structure",
+      "whatWeHandle": [
+        "Elder-ready venues and seating.",
+        "Briefing families on agenda and boundaries.",
+        "Facilitator to balance voices and keep respect.",
+        "Follow-up notes so no one is left guessing."
+      ],
+      "benefitsTitle": "Benefits for you and your parents",
+      "benefits": [
+        {
+          "title": "Reduced conflict",
+          "desc": "Concerns are aired early with a facilitator present."
+        },
+        {
+          "title": "Shared confidence",
+          "desc": "Parents see a respectful, serious process—not casual dating."
+        },
+        {
+          "title": "Clear timeline",
+          "desc": "Everyone knows when decisions are due and what comes next."
+        }
+      ],
+      "facilitationTitle": "Respectful, guided conversations",
+      "facilitationBody": "We help parents feel safe: seating, pace, and topics are framed. A facilitator (imam/pastor/chaperone) keeps the tone calm and constructive.",
+      "pricingTitle": "Transparent packages with family options",
+      "pricingBody": "Add-ons for larger rooms, extra sessions with parents, or specific facilitators are quoted upfront—no surprises after meetings.",
+      "ctaTitle": "Want parents on board early?",
+      "ctaBody": "We’ll propose a family-friendly format, venue, and facilitator so you can move forward confidently.",
+      "ctaPrimary": "Plan a family session",
+      "ctaSecondary": "Back to main blog"
+    },
+    "syariahSafeguards": {
+      "metaTitle": "Syariah safeguards in offline ta'aruf | How Jodohmu keeps boundaries",
+      "metaDescription": "Chaperones, facilitators, vetted venues, and structured agendas to honor syariah while moving toward marriage.",
+      "ogTitle": "Syariah safeguards in offline ta'aruf",
+      "ogDescription": "Boundaries, chaperones, vetted candidates, and respectful venues to keep your ta'aruf halal and focused on nikah.",
+      "tag": "Syariah safeguards",
+      "title": "Syariah safeguards we apply in every meeting",
+      "subtitle": "Halal-first process: vetted candidates, chaperoned settings, facilitator-guided conversations, and clear next steps.",
+      "heroBadge": "Halal-first",
+      "heroLead": "We operationalize syariah with chaperones, facilitator scripts, respectful venues, and boundary-setting before you meet.",
+      "whyTitle": "Why safeguards matter",
+      "flowTitle": "Safeguards we implement",
+      "flowIntro": "Concrete practices that keep meetings halal while enabling decisive progress.",
+      "points": [
+        "Vetting removes unserious intent before any meeting.",
+        "Chaperones/facilitators maintain adab and boundaries.",
+        "Neutral venues prevent seclusion and keep focus.",
+        "Structured agendas reduce idle talk and ambiguity."
+      ],
+      "steps": [
+        "Pre-meeting agreement on boundaries and topics.",
+        "Chaperone or facilitator presence (imam/pastor/chaperone).",
+        "Venue selection that avoids khalwah while staying comfortable.",
+        "Timeboxed agenda: faith, values, readiness, and family expectations.",
+        "Post-meeting summary with next steps that stay within halal limits."
+      ],
+      "scenario": "You arrive at a private-yet-visible lounge corner; a facilitator is present, questions are prepared, and the flow respects hijab/adab. You leave with clarity, not lingering in unsupervised settings.",
+      "whatWeHandleTitle": "Operational safeguards",
+      "whatWeHandle": [
+        "Boundary-setting and consented agenda before meeting.",
+        "Chaperone/facilitator scheduling and briefing.",
+        "Venue curation to prevent khalwah and maintain comfort.",
+        "Documentation of decisions and follow-ups within halal limits."
+      ],
+      "benefitsTitle": "Why this keeps you safe",
+      "benefits": [
+        {
+          "title": "Halal and focused",
+          "desc": "No mixed signals—every step aligns with marriage intent."
+        },
+        {
+          "title": "Lower risk",
+          "desc": "Supervised settings reduce misconduct and misunderstandings."
+        },
+        {
+          "title": "Confidence to proceed",
+          "desc": "You can move forward knowing adab and syariah are upheld."
+        }
+      ],
+      "facilitationTitle": "Faith-aware facilitation",
+      "facilitationBody": "Facilitators are briefed to maintain adab, guide questions on deen, values, and family, and close meetings on time with action items.",
+      "pricingTitle": "Clear fees for supervised meetings",
+      "pricingBody": "Packages spell out costs for chaperones, facilitators, and venues so you never compromise safeguards for budget surprises.",
+      "ctaTitle": "Need halal, supervised meetings?",
+      "ctaBody": "Tell us your boundaries and facilitator preference; we’ll set a halal-first meeting flow with transparent fees.",
+      "ctaPrimary": "Set my safeguards",
+      "ctaSecondary": "Back to main blog"
+    },
+    "howMeetingsAreSupervised": {
+      "metaTitle": "How Jodohmu supervises offline meetings | Safety, respect, and clarity",
+      "metaDescription": "See the supervision model: facilitators/chaperones, vetted venues, agendas, and post-meeting summaries to keep you safe and decisive.",
+      "ogTitle": "How meetings are supervised",
+      "ogDescription": "Supervised venues, facilitators, chaperones, and structured agendas so you feel safe, respected, and able to decide.",
+      "tag": "Meeting supervision",
+      "title": "How we supervise every meeting",
+      "subtitle": "From who’s present to how long you meet—supervision is built in so you can focus on fit and commitment.",
+      "heroBadge": "Supervised & safe",
+      "heroLead": "Trained facilitators, clear agendas, and vetted venues keep meetings respectful, efficient, and decision-oriented.",
+      "whyTitle": "Why supervision changes outcomes",
+      "flowTitle": "Our supervision model",
+      "flowIntro": "What happens before, during, and after each meeting to keep you safe and confident.",
+      "points": [
+        "Presence: facilitator or chaperone is arranged by default.",
+        "Place: venues are pre-checked for privacy without seclusion.",
+        "Plan: agendas, timing, and boundaries are agreed beforehand.",
+        "Proof: summaries and next steps are documented."
+      ],
+      "steps": [
+        "Pre-brief: align on boundaries, agenda, and who attends.",
+        "Arrival: seating is set; facilitator/chaperone greets both sides.",
+        "During: questions flow through facilitator, keeping adab and focus.",
+        "Timebox: meetings end on schedule; no drifting into unsupervised settings.",
+        "Post: written summary and agreed next actions sent the same day."
+      ],
+      "scenario": "You meet in a reserved lounge corner; the facilitator opens, guides faith/family topics, keeps time, and closes with a recap. Later that evening you receive a written summary and next steps.",
+      "whatWeHandleTitle": "Built-in supervision",
+      "whatWeHandle": [
+        "Facilitator/chaperone scheduling and briefing.",
+        "Venue vetting and reservations.",
+        "Agenda design to cover faith, values, readiness, and logistics.",
+        "Post-meeting documentation and coordination."
+      ],
+      "benefitsTitle": "Why supervised feels better",
+      "benefits": [
+        {
+          "title": "Safe & respectful",
+          "desc": "Professional facilitation prevents awkward or unsafe moments."
+        },
+        {
+          "title": "Efficient decisions",
+          "desc": "You cover the right topics fast and leave with clarity."
+        },
+        {
+          "title": "Trusted by families",
+          "desc": "Parents see a supervised, halal-first process they can support."
+        }
+      ],
+      "facilitationTitle": "People who guide, not just watch",
+      "facilitationBody": "Facilitators set tone, enforce boundaries, keep pace, and help both sides articulate readiness and concerns—while honoring faith and family.",
+      "pricingTitle": "Transparency for supervised sessions",
+      "pricingBody": "Session fees include facilitation/chaperone and venue; upgrades or extra sessions are quoted before you confirm.",
+      "ctaTitle": "Want your next meeting supervised?",
+      "ctaBody": "Tell us your city and facilitator preference—we’ll schedule a supervised session with transparent fees.",
+      "ctaPrimary": "Schedule supervision",
+      "ctaSecondary": "Back to main blog"
     }
   },
   "faqPage": {

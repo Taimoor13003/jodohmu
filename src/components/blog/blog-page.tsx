@@ -6,13 +6,12 @@ import { Button } from "@/components/ui/button";
 
 const whatsappHref = "https://wa.me/6281122210303";
 
-const guideKeys = [
-  "blogPage.sections.guides.items.0",
-  "blogPage.sections.guides.items.1",
-  "blogPage.sections.guides.items.2",
-  "blogPage.sections.guides.items.3",
-  "blogPage.sections.guides.items.4",
-  "blogPage.sections.guides.items.5",
+const articles = [
+  { key: "stepByStepProcess", href: "/blog/step-by-step-process" },
+  { key: "whyDatingAppsFail", href: "/blog/why-dating-apps-fail" },
+  { key: "familyInvolvement", href: "/blog/family-involvement" },
+  { key: "syariahSafeguards", href: "/blog/syariah-safeguards" },
+  { key: "howMeetingsAreSupervised", href: "/blog/how-meetings-are-supervised" },
 ];
 
 export function BlogPage() {
@@ -20,8 +19,8 @@ export function BlogPage() {
 
   return (
     <div className="flex flex-col gap-12 pb-20 pt-16">
-      <section className="container space-y-4 text-center">
-        <p className="text-xs font-semibold tracking-[0.3em] uppercase text-[#9B2242]">
+      <section className="container max-w-3xl space-y-4 text-center">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#9B2242]">
           {t("header.blog")}
         </p>
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
@@ -32,30 +31,42 @@ export function BlogPage() {
         </p>
       </section>
 
-      <section className="container space-y-8">
-        <h2 className="text-2xl font-semibold text-[#0b3a86]">{t("blogPage.sections.guides.title")}</h2>
+      <section className="container">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {guideKeys.map((key) => {
-            const title = t(`${key}.title`);
-            const desc = t(`${key}.desc`);
-            return (
-            <article key={title} className="rounded-2xl border border-[#e6eaf5] bg-white p-6 shadow-sm hover:shadow-md transition-shadow duration-200">
-              <h3 className="text-lg font-semibold text-[#0b3a86]">{title}</h3>
-              <p className="mt-2 text-sm text-[#4a4f63] leading-relaxed">{desc}</p>
+          {articles.map((article) => (
+            <article
+              key={article.key}
+              className="flex h-full flex-col justify-between rounded-2xl border border-[#e6eaf5] bg-white p-6 shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md"
+            >
+              <div className="space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9B2242]">
+                  {t(`blogArticle.${article.key}.tag`)}
+                </p>
+                <h2 className="text-xl font-semibold leading-tight text-[#0b3a86]">
+                  {t(`blogArticle.${article.key}.title`)}
+                </h2>
+                <p className="text-sm leading-relaxed text-[#4a4f63]">
+                  {t(`blogArticle.${article.key}.subtitle`)}
+                </p>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <Button asChild size="sm" className="bg-[#0b3a86] text-white hover:bg-[#0a357a]">
+                  <Link href={article.href}>{t("blogPage.sections.article.cta")}</Link>
+                </Button>
+                <Button
+                  asChild
+                  size="sm"
+                  variant="outline"
+                  className="border-[#9B2242] text-[#9B2242] hover:bg-[#9B2242]/5"
+                >
+                  <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                    {t("blogPage.sections.article.secondaryCta")}
+                  </Link>
+                </Button>
+              </div>
             </article>
-            );
-          })}
+          ))}
         </div>
-      </section>
-
-      <section className="container flex flex-col items-center gap-4 rounded-3xl bg-gradient-to-r from-[#9B2242] to-[#0b3a86] px-8 py-10 text-center text-white shadow-lg">
-        <h3 className="text-2xl font-semibold">{t("blogPage.sections.cta.title")}</h3>
-        <p className="max-w-2xl text-white/85">{t("blogPage.sections.cta.subtitle")}</p>
-        <Button asChild size="lg" className="bg-white text-[#9B2242] hover:bg-white/90">
-          <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
-            {t("blogPage.sections.cta.button")}
-          </Link>
-        </Button>
       </section>
     </div>
   );
