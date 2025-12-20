@@ -7,24 +7,28 @@ import { cn } from '@/lib/utils';
 
 type ParallaxHeroProps = {
   imageUrls: (string | StaticImageData)[];
+  imageAlts?: (string | undefined)[];
   children?: React.ReactNode;
   className?: string;
   overlayClassName?: string;
   contentClassName?: string;
   baseImageClassName?: string;
   imageQuality?: number;
+  baseImageSizes?: string;
 };
 
 const MotionImage = motion.create(Image);
 
 export function ParallaxHero({
   imageUrls,
+  imageAlts,
   children,
   className,
   overlayClassName,
   contentClassName,
   baseImageClassName,
   imageQuality,
+  baseImageSizes,
 }: ParallaxHeroProps) {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -52,19 +56,20 @@ export function ParallaxHero({
         {imageUrls[0] ? (
           <MotionImage
             src={imageUrls[0]}
-            alt=""
+            alt={imageAlts?.[0] ?? "Jodohmu offline ta'aruf matchmaking hero"}
             fill
             priority
             className={baseImageClasses}
             style={{ y: y1 }}
             quality={imageQuality}
+            sizes={baseImageSizes ?? "100vw"}
           />
         ) : null}
         {/* Layer 2 */}
         {imageUrls[1] ? (
           <MotionImage
             src={imageUrls[1]}
-            alt=""
+            alt={imageAlts?.[1] ?? "Couple illustration"}
             width={500}
             height={700}
             className="absolute top-1/4 left-10 object-cover rounded-lg shadow-2xl opacity-80"
@@ -76,7 +81,7 @@ export function ParallaxHero({
         {imageUrls[2] ? (
           <MotionImage
             src={imageUrls[2]}
-            alt=""
+            alt={imageAlts?.[2] ?? "Matching journey illustration"}
             width={400}
             height={500}
             className="absolute bottom-10 right-10 object-cover rounded-lg shadow-2xl opacity-90"

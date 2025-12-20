@@ -135,11 +135,13 @@ export default function Home() {
       <main className="flex-1">
         <ParallaxHero
           imageUrls={[heroSectionImage]}
+          imageAlts={["Couple consulting with Jodohmu matchmaker"]}
           baseImageClassName="object-cover"
           overlayClassName="bg-gradient-to-b from-[#0b3a86]/25 via-[#9B2242]/15 to-transparent"
           contentClassName="flex h-full items-center"
           className="h-auto min-h-[70vh] lg:min-h-[80vh]"
-          imageQuality={100}
+          imageQuality={85}
+          baseImageSizes="100vw"
         >
           <div className="container grid items-center gap-12 px-4 py-24 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:py-32">
             <motion.div
@@ -412,7 +414,6 @@ export default function Home() {
                   alt="Indonesian bride smiling"
                   fill
                   className="rounded-[24px] object-cover"
-                  priority
                 />
               </div>
             </motion.div>
@@ -448,7 +449,6 @@ export default function Home() {
                   alt="Indonesian groom smiling"
                   fill
                   className="rounded-[24px] object-cover"
-                  priority
                 />
               </div>
             </motion.div>
