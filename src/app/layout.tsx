@@ -59,6 +59,11 @@ export const metadata: Metadata = {
       "Offline, faith-aligned matchmaking and ta'aruf facilitation for serious singles in Indonesia.",
     images: [`${siteUrl}/favicon.ico`],
   },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

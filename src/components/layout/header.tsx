@@ -40,6 +40,12 @@ export function Header() {
           <Image src={LogoIcon} alt="Jodohmu" className="h-20 w-auto" priority />
         </Link>
         <nav className="ml-auto flex items-center gap-2 sm:gap-4">
+          <Link href="/blog" className="text-sm font-semibold text-[#0b3a86] hover:text-[#9B2242] transition-colors">
+            {t("header.blog")}
+          </Link>
+          <Link href="/faq" className="text-sm font-semibold text-[#0b3a86] hover:text-[#9B2242] transition-colors">
+            {t("header.faq")}
+          </Link>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button

@@ -25,7 +25,9 @@
   "header": {
     "language": "Bahasa",
     "dashboard": "Dashboard",
-    "logout": "Keluar"
+    "logout": "Keluar",
+    "blog": "Blog",
+    "faq": "FAQ"
   },
   "homepage": {
     "hero": {
@@ -580,6 +582,90 @@
       "rights": "Hak cipta dilindungi",
       "crafted": "Dibuat dengan",
       "andFaith": "dan iman"
+    }
+  }
+  ,
+  "blogPage": {
+    "hero": {
+      "title": "Wawasan Siap Nikah untuk Pencari Ta'aruf Serius",
+      "subtitle": "Panduan perjodohan offline, ta'aruf halal, penyaringan keluarga, dan praktik terbaik di Indonesia untuk bantu Anda menemukan pasangan hidup."
+    },
+    "sections": {
+      "guides": {
+        "title": "Panduan Unggulan",
+        "items": [
+          {
+            "title": "Panduan ta'aruf offline",
+            "desc": "Alur pertemuan offline langkah demi langkah dengan pendamping, venue yang santun, dan pelibatan keluarga untuk perkenalan halal."
+          },
+          {
+            "title": "Melibatkan keluarga & imam",
+            "desc": "Cara menyelaraskan ekspektasi lebih awal dengan orang tua dan pembimbing agama agar proses ta'aruf tenang dan yakin."
+          },
+          {
+            "title": "Keamanan & penyaringan",
+            "desc": "Tips penyaringan praktis bagi kandidat serius siap nikah di berbagai kota Indonesia."
+          },
+          {
+            "title": "Komunikasi halal",
+            "desc": "Berkomunikasi dan bertemu dengan adab, menjaga batasan, serta memperjelas niat untuk menikah."
+          },
+          {
+            "title": "Venue kota-ke-kota",
+            "desc": "Rekomendasi venue santun di berbagai kota Indonesia untuk pertemuan terawasi atau bersama keluarga."
+          },
+          {
+            "title": "Checklist menuju khitbah",
+            "desc": "Checklist singkat untuk melangkah dari perkenalan hingga khitbah dengan jelas dan percaya diri."
+          }
+        ]
+      },
+      "cta": {
+        "title": "Butuh pendampingan terkurasi?",
+        "subtitle": "Ngobrol dengan matchmaker kami untuk perjalanan halal-first yang terarah.",
+        "button": "Chat di WhatsApp"
+      }
+    }
+  },
+  "faqPage": {
+    "hero": {
+      "title": "FAQ: Perjodohan Offline & Ta'aruf bersama Jodohmu",
+      "subtitle": "Jawaban ringkas untuk lajang siap nikah di seluruh Indonesia yang mencari perkenalan halal."
+    },
+    "items": [
+      {
+        "q": "Apa beda Jodohmu dengan aplikasi dating?",
+        "a": "Kami fokus pada perkenalan offline yang halal, panduan ta'aruf, dan penyaringan ramah keluarga bagi kandidat siap nikah."
+      },
+      {
+        "q": "Apakah bisa libatkan keluarga atau imam?",
+        "a": "Bisa. Kami menyambut orang tua atau pembimbing agama dan dapat menyiapkan venue yang santun serta terawasi."
+      },
+      {
+        "q": "Apakah melayani banyak kota di Indonesia?",
+        "a": "Kami memfasilitasi perkenalan di berbagai kota besar dan menyesuaikan kecocokan dengan wilayah serta preferensi Anda, termasuk rekomendasi venue santun."
+      },
+      {
+        "q": "Apakah komunitasnya disaring?",
+        "a": "Kandidat disaring untuk keseriusan, niat menikah, keselarasan iman dan nilai, serta kesiapan melibatkan keluarga."
+      },
+      {
+        "q": "Bagaimana jika saya baru di ta'aruf?",
+        "a": "Tim kami membimbing etika, batas aman, dan langkah berikutnya agar setiap pertemuan terasa jelas dan terhormat, dengan opsi pendamping."
+      },
+      {
+        "q": "Bisakah bantu sampai khitbah?",
+        "a": "Bisa. Kami membimbing dari perkenalan hingga khitbah dengan tindak lanjut terstruktur dan penyelarasan keluarga."
+      },
+      {
+        "q": "Bagaimana biaya layanan?",
+        "a": "Kami menyediakan paket transparan untuk perkenalan terkurasi dan ta'aruf terarah; hubungi tim kami untuk pilihan terbaru."
+      }
+    ],
+    "cta": {
+      "title": "Masih ada pertanyaan?",
+      "subtitle": "Bicara langsung dengan matchmaker kami untuk rencana yang dipersonalisasi.",
+      "button": "Chat di WhatsApp"
     }
   }
 }

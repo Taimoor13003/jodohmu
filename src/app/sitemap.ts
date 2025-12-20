@@ -9,11 +9,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/terms",
     "/register",
     "/login",
+    "/blog",
+    "/faq",
     "/id",
     "/id/privacy",
     "/id/terms",
     "/id/register",
     "/id/login",
+    "/id/blog",
+    "/id/faq",
   ];
 
   return routes.map((route) => ({

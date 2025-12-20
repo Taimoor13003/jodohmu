@@ -25,7 +25,9 @@
   "header": {
     "language": "Language",
     "dashboard": "Dashboard",
-    "logout": "Log out"
+    "logout": "Log out",
+    "blog": "Blog",
+    "faq": "FAQ"
   },
   "homepage": {
     "hero": {
@@ -586,6 +588,90 @@
       "rights": "All rights reserved",
       "crafted": "Crafted with",
       "andFaith": "and faith"
+    }
+  }
+  ,
+  "blogPage": {
+    "hero": {
+      "title": "Marriage-Ready Insights for Serious Ta'aruf Seekers",
+      "subtitle": "Guides on offline matchmaking, halal ta'aruf, family-friendly vetting, and Indonesia-focused best practices to help you find a spouse."
+    },
+    "sections": {
+      "guides": {
+        "title": "Featured Guides",
+        "items": [
+          {
+            "title": "Offline ta'aruf playbook",
+            "desc": "Step-by-step offline meeting flow with chaperones, respectful venues, and family involvement for halal introductions."
+          },
+          {
+            "title": "Family & imam engagement",
+            "desc": "How to align expectations early with parents and religious advisors for a calm, confident ta'aruf process."
+          },
+          {
+            "title": "Safety & vetting",
+            "desc": "Practical screening tips for serious, marriage-intent candidates across Indonesian cities."
+          },
+          {
+            "title": "Halal communication",
+            "desc": "Message and meet respectfully while keeping boundaries and intentions clear for marriage."
+          },
+          {
+            "title": "City-by-city venues",
+            "desc": "Recommended respectful venues across Indonesia for supervised or family-inclusive meetings."
+          },
+          {
+            "title": "Ready-for-proposal checklist",
+            "desc": "A concise checklist to move from introductions to khitbah with clarity and confidence."
+          }
+        ]
+      },
+      "cta": {
+        "title": "Want curated help?",
+        "subtitle": "Talk to our matchmakers for a guided, halal-first journey.",
+        "button": "Chat on WhatsApp"
+      }
+    }
+  },
+  "faqPage": {
+    "hero": {
+      "title": "FAQ: Offline Marriage Matching & Ta'aruf with Jodohmu",
+      "subtitle": "Straight answers for sincere, marriage-focused singles across Indonesia seeking halal introductions."
+    },
+    "items": [
+      {
+        "q": "How is Jodohmu different from dating apps?",
+        "a": "We focus on offline, halal introductions, ta'aruf guidance, and family-friendly vetting for marriage-intent candidates."
+      },
+      {
+        "q": "Can you involve family or an imam?",
+        "a": "Yes. We welcome parents or religious advisors and can host meetings in respectful, supervised venues."
+      },
+      {
+        "q": "Do you serve multiple cities in Indonesia?",
+        "a": "We facilitate introductions across major cities and tailor matches to your region and preferences, including respectful venue recommendations."
+      },
+      {
+        "q": "Is the community vetted?",
+        "a": "Candidates are screened for seriousness, intent to marry, alignment with faith and values, and readiness for family involvement."
+      },
+      {
+        "q": "What if I'm new to ta'aruf?",
+        "a": "Our team coaches you on etiquette, boundaries, and next steps so every meeting feels respectful and clear, with options for chaperones."
+      },
+      {
+        "q": "Can you help with proposal (khitbah)?",
+        "a": "Yes. We guide you from introductions through khitbah with structured follow-ups and family alignment."
+      },
+      {
+        "q": "How do payments work?",
+        "a": "We offer transparent packages for vetted introductions and guided ta'aruf; talk to our team for the latest options."
+      }
+    ],
+    "cta": {
+      "title": "Still have questions?",
+      "subtitle": "Talk directly with our matchmakers for a personalized plan.",
+      "button": "Chat on WhatsApp"
     }
   }
 }
