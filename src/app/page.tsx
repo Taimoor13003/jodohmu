@@ -140,8 +140,8 @@ export default function Home() {
           overlayClassName="bg-gradient-to-b from-[#0b3a86]/25 via-[#9B2242]/15 to-transparent"
           contentClassName="flex h-full items-center"
           className="h-auto min-h-[70vh] lg:min-h-[80vh]"
-          imageQuality={85}
-          baseImageSizes="100vw"
+          imageQuality={75}
+          baseImageSizes="(min-width: 1024px) 1200px, 100vw"
         >
           <div className="container grid items-center gap-12 px-4 py-24 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:py-32">
             <motion.div
