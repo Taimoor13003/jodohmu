@@ -39,11 +39,17 @@ export function Header() {
         <Link className="flex items-center justify-center" href="/">
           <Image src={LogoIcon} alt="Jodohmu" className="h-20 w-auto" priority />
         </Link>
-        <nav className="ml-auto flex items-center gap-2 sm:gap-4">
-          <Link href="/blog" className="text-sm font-semibold text-[#0b3a86] hover:text-[#9B2242] transition-colors">
+        <nav className="ml-auto flex items-center gap-2 sm:gap-3">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#0b3a86]/15 bg-white/80 px-3 py-2 text-sm font-semibold text-[#0b3a86] shadow-sm shadow-[#0b3a86]/10 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#9B2242]/40 hover:text-[#9B2242] hover:shadow-md hover:shadow-[#9B2242]/15"
+          >
             {t("header.blog")}
           </Link>
-          <Link href="/faq" className="text-sm font-semibold text-[#0b3a86] hover:text-[#9B2242] transition-colors">
+          <Link
+            href="/faq"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#0b3a86]/15 bg-white/80 px-3 py-2 text-sm font-semibold text-[#0b3a86] shadow-sm shadow-[#0b3a86]/10 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#9B2242]/40 hover:text-[#9B2242] hover:shadow-md hover:shadow-[#9B2242]/15"
+          >
             {t("header.faq")}
           </Link>
           <DropdownMenu>
