@@ -35,5 +35,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <ArticleDetail articleKey="blogArticle.stepByStepProcess" />;
+  return <ArticleDetail articleKey="blogArticle.stepByStepProcess" slug="/blog/step-by-step-process" />;
 }

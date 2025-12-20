@@ -1,9 +1,11 @@
 'use client';
 
 import Link from "next/link";
+import Script from "next/script";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
 const whatsappHref = "https://wa.me/6281122210303";
 const pointKeys = ["0", "1", "2", "3"];
 const stepKeys = ["0", "1", "2", "3", "4"];
@@ -12,13 +14,49 @@ const benefitKeys = ["0", "1", "2"];
 
 type ArticleDetailProps = {
   articleKey: string;
+  slug: string;
 };
 
-export function ArticleDetail({ articleKey }: ArticleDetailProps) {
-  const { t } = useLanguage();
+export function ArticleDetail({ articleKey, slug }: ArticleDetailProps) {
+  const { t, lang } = useLanguage();
+  const articleUrl = `${siteUrl}${slug}`;
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: t(`${articleKey}.title`),
+    description: t(`${articleKey}.subtitle`),
+    inLanguage: lang,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": articleUrl,
+    },
+    url: articleUrl,
+    articleSection: t(`${articleKey}.tag`),
+    publisher: {
+      "@type": "Organization",
+      name: "Jodohmu",
+      url: siteUrl,
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteUrl}/favicon.ico`,
+      },
+    },
+    author: {
+      "@type": "Organization",
+      name: "Jodohmu",
+      url: siteUrl,
+    },
+    image: [`${siteUrl}/favicon.ico`],
+  };
 
   return (
     <div className="pb-24 pt-16">
+      <Script
+        id={`ld-json-${articleKey}`}
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <section className="container max-w-5xl">
         <div className="relative overflow-hidden rounded-3xl border border-[#e6eaf5] bg-gradient-to-br from-[#fef6f9] via-white to-[#eaf1ff] px-8 py-12 shadow-sm sm:px-12">
           <div className="absolute inset-0 pointer-events-none" aria-hidden />
@@ -54,21 +92,24 @@ export function ArticleDetail({ articleKey }: ArticleDetailProps) {
       </section>
 
       <section className="container mx-auto mt-12 max-w-5xl space-y-8">
-        <div className="rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
+        <section className="rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
           <h2 className="text-2xl font-semibold text-[#0b3a86]">{t(`${articleKey}.whyTitle`)}</h2>
           <p className="mt-2 text-sm font-medium uppercase tracking-[0.2em] text-[#9B2242]">
             {t(`${articleKey}.heroBadge`)}
           </p>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <ul className="mt-6 grid gap-4 md:grid-cols-2">
             {pointKeys.map((idx) => (
-              <div key={idx} className="rounded-xl border border-[#eef1fa] bg-[#f9fbff] px-4 py-3 text-[#3d425a] shadow-[0_6px_18px_-10px_rgba(11,58,134,0.35)]">
+              <li
+                key={idx}
+                className="rounded-xl border border-[#eef1fa] bg-[#f9fbff] px-4 py-3 text-[#3d425a] shadow-[0_6px_18px_-10px_rgba(11,58,134,0.35)] list-none"
+              >
                 {t(`${articleKey}.points.${idx}`)}
-              </div>
+              </li>
             ))}
-          </div>
-        </div>
+          </ul>
+        </section>
 
-        <div className="rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
+        <section className="rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-2xl font-semibold text-[#0b3a86]">{t(`${articleKey}.flowTitle`)}</h2>
@@ -78,19 +119,19 @@ export function ArticleDetail({ articleKey }: ArticleDetailProps) {
               {t(`${articleKey}.heroBadge`)}
             </span>
           </div>
-          <div className="mt-6 space-y-4">
+          <ol className="mt-6 space-y-4">
             {stepKeys.map((idx, i) => (
-              <div
+              <li
                 key={idx}
-                className="flex gap-4 rounded-xl border border-[#eef1fa] bg-[#fdfdff] p-4 shadow-[0_6px_18px_-12px_rgba(0,0,0,0.3)]"
+                className="flex gap-4 rounded-xl border border-[#eef1fa] bg-[#fdfdff] p-4 shadow-[0_6px_18px_-12px_rgba(0,0,0,0.3)] list-decimal list-inside"
               >
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0b3a86] text-lg font-semibold text-white">
                   {i + 1}
                 </div>
                 <p className="flex-1 text-[#3d425a] leading-relaxed">{t(`${articleKey}.steps.${idx}`)}</p>
-              </div>
+              </li>
             ))}
-          </div>
+          </ol>
           <div className="mt-6 grid gap-4 lg:grid-cols-[2fr,1fr]">
             <p className="rounded-2xl bg-[#0b3a86] px-5 py-4 text-white shadow-lg">{t(`${articleKey}.scenario`)}</p>
             <div className="relative h-full min-h-[200px] overflow-hidden rounded-2xl border border-[#e6eaf5] bg-gradient-to-br from-[#fef3f8] via-white to-[#eaf1ff]">
@@ -100,20 +141,20 @@ export function ArticleDetail({ articleKey }: ArticleDetailProps) {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
-          <div className="rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
+          <section className="rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
             <h2 className="text-2xl font-semibold text-[#0b3a86]">{t(`${articleKey}.whatWeHandleTitle`)}</h2>
-            <div className="mt-5 space-y-3">
+            <ul className="mt-5 space-y-3">
               {handleKeys.map((idx) => (
-                <div key={idx} className="flex items-start gap-3 rounded-xl border border-[#eef1fa] bg-[#f9fbff] px-4 py-3">
+                <li key={idx} className="flex items-start gap-3 rounded-xl border border-[#eef1fa] bg-[#f9fbff] px-4 py-3 list-none">
                   <div className="mt-1 h-2 w-2 rounded-full bg-[#9B2242]" />
                   <p className="text-[#3d425a] leading-relaxed">{t(`${articleKey}.whatWeHandle.${idx}`)}</p>
-                </div>
+                </li>
               ))}
-            </div>
-          </div>
+            </ul>
+          </section>
           <div className="rounded-2xl border border-[#0b3a86]/10 bg-gradient-to-br from-[#0b3a86] via-[#113f8f] to-[#9B2242] p-6 text-white shadow-lg">
             <h3 className="text-lg font-semibold">{t(`${articleKey}.facilitationTitle`)}</h3>
             <p className="mt-3 text-white/90 leading-relaxed">{t(`${articleKey}.facilitationBody`)}</p>
@@ -123,7 +164,7 @@ export function ArticleDetail({ articleKey }: ArticleDetailProps) {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
+        <section className="rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="text-2xl font-semibold text-[#0b3a86]">{t(`${articleKey}.benefitsTitle`)}</h2>
@@ -133,15 +174,18 @@ export function ArticleDetail({ articleKey }: ArticleDetailProps) {
               Guided & family-ready
             </div>
           </div>
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <ul className="mt-6 grid gap-4 md:grid-cols-3">
             {benefitKeys.map((idx) => (
-              <div key={idx} className="h-full rounded-xl border border-[#eef1fa] bg-[#fdfdff] p-4 shadow-[0_6px_18px_-12px_rgba(0,0,0,0.25)]">
-                <h4 className="text-lg font-semibold text-[#0b3a86]">{t(`${articleKey}.benefits.${idx}.title`)}</h4>
+              <li
+                key={idx}
+                className="h-full rounded-xl border border-[#eef1fa] bg-[#fdfdff] p-4 shadow-[0_6px_18px_-12px_rgba(0,0,0,0.25)] list-none"
+              >
+                <h3 className="text-lg font-semibold text-[#0b3a86]">{t(`${articleKey}.benefits.${idx}.title`)}</h3>
                 <p className="mt-2 text-sm text-[#3d425a] leading-relaxed">{t(`${articleKey}.benefits.${idx}.desc`)}</p>
-              </div>
+              </li>
             ))}
-          </div>
-        </div>
+          </ul>
+        </section>
 
         <div className="rounded-3xl border border-[#e6eaf5] bg-gradient-to-r from-[#0b3a86] to-[#9B2242] px-8 py-10 text-white shadow-lg">
           <div className="flex flex-col gap-4 text-left md:flex-row md:items-center md:justify-between">

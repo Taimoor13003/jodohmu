@@ -35,5 +35,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <ArticleDetail articleKey="blogArticle.whyDatingAppsFail" />;
+  return <ArticleDetail articleKey="blogArticle.whyDatingAppsFail" slug="/blog/why-dating-apps-fail" />;
 }

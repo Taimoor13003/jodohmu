@@ -35,5 +35,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <ArticleDetail articleKey="blogArticle.familyInvolvement" />;
+  return <ArticleDetail articleKey="blogArticle.familyInvolvement" slug="/blog/family-involvement" />;
 }

@@ -35,5 +35,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <ArticleDetail articleKey="blogArticle.howMeetingsAreSupervised" />;
+  return <ArticleDetail articleKey="blogArticle.howMeetingsAreSupervised" slug="/blog/how-meetings-are-supervised" />;
 }
