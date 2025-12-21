@@ -20,10 +20,12 @@ export default function DashboardPage() {
       <div className="mt-8">
         {role === "candidate" && (
           <div>
-            <h2 className="text-xl font-semibold">Your Profile</h2>
-            <p>This is where you&apos;ll create and manage your profile.</p>
+            <h2 className="text-xl font-semibold">Need to update your details?</h2>
+            <p>Message our team and we&apos;ll update your profile for you.</p>
             <Button asChild className="mt-4">
-              <Link href="/profile/create">Create Profile</Link>
+              <Link href="https://wa.me/6281122210303" target="_blank" rel="noopener noreferrer">
+                Chat Jodohmu on WhatsApp
+              </Link>
             </Button>
           </div>
         )}

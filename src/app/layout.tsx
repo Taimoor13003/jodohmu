@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     siteName: "Jodohmu",
     images: [
       {
-        url: `${siteUrl}/favicon.ico`,
+        url: `${siteUrl}/favicon.svg`,
         width: 256,
         height: 256,
         alt: "Jodohmu logo",
@@ -66,12 +66,14 @@ export const metadata: Metadata = {
     title: "Jodohmu | Offline Marriage Matching & Ta'aruf Facilitation",
     description:
       "Offline, faith-aligned matchmaking and ta'aruf facilitation for serious singles in Indonesia.",
-    images: [`${siteUrl}/favicon.ico`],
+    images: [`${siteUrl}/favicon.svg`],
   },
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.svg", rel: "shortcut icon", type: "image/svg+xml" },
+    ],
+    apple: { url: "/favicon.svg" },
   },
 };
 

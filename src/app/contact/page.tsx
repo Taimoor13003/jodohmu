@@ -10,7 +10,11 @@ import { motion } from "framer-motion";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name is required"),
-  phone: z.string().min(6, "Phone number is required"),
+  phone: z
+    .string()
+    .min(6, "Phone number is required")
+    .regex(/^[0-9+()\\s-]+$/, "Use digits only (you can include +, space, or dashes)"),
+  email: z.string().email("Enter a valid email").optional().or(z.literal("")),
   city: z.string().min(2, "City name is required"),
 });
 
@@ -98,11 +102,26 @@ export default function ContactPage() {
               <label className="block text-sm font-semibold text-[#0b3a86]">Phone Number</label>
               <Input
                 {...register("phone")}
+                type="tel"
+                inputMode="tel"
+                pattern="[0-9+()\\s-]*"
                 placeholder="Enter your phone number"
                 className="mt-2 h-12 rounded-xl border-[#0b3a86]/20 bg-white/70"
               />
               {errors.phone && (
                 <p className="mt-1 text-sm text-[#9B2242]">{errors.phone.message}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-[#0b3a86]">Email (optional)</label>
+              <Input
+                {...register("email")}
+                placeholder="Enter your email (optional)"
+                className="mt-2 h-12 rounded-xl border-[#0b3a86]/20 bg-white/70"
+              />
+              {errors.email && (
+                <p className="mt-1 text-sm text-[#9B2242]">{errors.email.message}</p>
               )}
             </div>
 

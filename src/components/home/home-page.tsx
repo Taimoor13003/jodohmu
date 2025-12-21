@@ -185,7 +185,9 @@ export default function HomePage() {
                     size="lg"
                     className="rounded-full bg-white px-10 py-6 text-lg font-semibold text-[#9B2242] shadow-[0_14px_28px_rgba(0,0,0,0.25)] transition-all duration-300 hover:bg-white/90"
                   >
-                    <Link href="/register">{t("homepage.hero.cta")}</Link>
+                    <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                      {t("homepage.hero.cta")}
+                    </Link>
                   </Button>
                   <Button
                     asChild
@@ -365,7 +367,9 @@ export default function HomePage() {
                     size="lg"
                     className="rounded-full bg-gradient-to-r from-[#9B2242] to-[#c24977] px-8 py-6 text-sm font-semibold text-white shadow-lg shadow-[#9B2242]/30 transition-all duration-300 hover:shadow-[#9B2242]/40"
                   >
-                    <Link href="/register">{t("homepage.features.storyCta")}</Link>
+                    <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                      {t("homepage.features.storyCta")}
+                    </Link>
                   </Button>
                   <p className="text-xs text-[#6a3952]/70 max-w-[260px]">
                     {t("homepage.features.storyFootnote")}
@@ -629,7 +633,9 @@ export default function HomePage() {
               whileTap={{ scale: 0.95 }}
             >
               <Button asChild size="lg" className="bg-white text-[#9B2242] hover:bg-white/90 rounded-full px-10 py-7 text-lg font-semibold shadow-2xl hover:shadow-white/25 transition-all duration-300 border border-white/20">
-                <Link href="/register">{t("homepage.cta.button")}</Link>
+                <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                  {t("homepage.cta.button")}
+                </Link>
               </Button>
             </motion.div>
           </motion.div>

@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 const {
   SMTP_HOST,
@@ -32,7 +34,7 @@ export async function POST(request: Request) {
     ensureEnv();
 
     const body = await request.json();
-    const { name, phone, city } = body ?? {};
+    const { name, phone, city, email } = body ?? {};
 
     if (!name || !phone || !city) {
       return NextResponse.json({ error: "Name, phone, and city are required." }, { status: 400 });
@@ -55,13 +57,22 @@ export async function POST(request: Request) {
       from,
       to,
       subject: "New contact inquiry",
-      text: `New contact submission:\nName: ${name}\nPhone: ${phone}\nCity: ${city}`,
+      text: `New contact submission:\nName: ${name}\nPhone: ${phone}\nCity: ${city}\nEmail: ${email || "Not provided"}`,
       html: `
         <h2>New contact submission</h2>
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Phone:</strong> ${phone}</p>
         <p><strong>City:</strong> ${city}</p>
+        <p><strong>Email:</strong> ${email || "Not provided"}</p>
       `,
+    });
+
+    await addDoc(collection(db, "contact_form_entries"), {
+      name,
+      phone,
+      city,
+      email: email || null,
+      createdAt: serverTimestamp(),
     });
 
     return NextResponse.json({ success: true });
