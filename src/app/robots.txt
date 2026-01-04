@@ -1,3 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /dashboard
+Disallow: /profiles
+Disallow: /profile
+Disallow: /admin
+Disallow: /api
 Sitemap: https://jodohmu.com/sitemap.xml
