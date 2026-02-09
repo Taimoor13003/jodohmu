@@ -5,4 +5,9 @@ Disallow: /profiles
 Disallow: /profile
 Disallow: /admin
 Disallow: /api
+Disallow: /id/dashboard
+Disallow: /id/profiles
+Disallow: /id/profile
+Disallow: /id/admin
+Disallow: /id/api
 Sitemap: https://jodohmu.com/sitemap.xml

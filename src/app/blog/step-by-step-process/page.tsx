@@ -34,10 +34,6 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: `${siteUrl}/blog/step-by-step-process`,
-    languages: {
-      en: `${siteUrl}/blog/step-by-step-process`,
-      id: `${siteUrl}/blog/step-by-step-process`,
-    },
   },
 };
 

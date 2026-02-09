@@ -34,10 +34,6 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: `${siteUrl}/blog/how-meetings-are-supervised`,
-    languages: {
-      en: `${siteUrl}/blog/how-meetings-are-supervised`,
-      id: `${siteUrl}/blog/how-meetings-are-supervised`,
-    },
   },
 };
 

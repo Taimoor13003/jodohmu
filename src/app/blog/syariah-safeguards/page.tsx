@@ -34,10 +34,6 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: `${siteUrl}/blog/syariah-safeguards`,
-    languages: {
-      en: `${siteUrl}/blog/syariah-safeguards`,
-      id: `${siteUrl}/blog/syariah-safeguards`,
-    },
   },
 };
 

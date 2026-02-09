@@ -258,13 +258,18 @@
     "badge": "Selamat datang kembali",
     "title": "Masuk untuk melanjutkan perjalanan Anda",
     "subtitle": "Nikmati matchmaking premium, profil terkurasi, dan pendampingan khusus untuk komitmen yang serius.",
-    "button": "Lanjutkan dengan Google",
-    "buttonLoading": "Membuka Google...",
+    "emailLabel": "Alamat email",
+    "emailPlaceholder": "Masukkan email",
+    "passwordLabel": "Kata sandi",
+    "passwordPlaceholder": "Masukkan kata sandi",
+    "error": "Email atau kata sandi salah. Coba lagi.",
+    "button": "Masuk",
+    "buttonLoading": "Sedang masuk...",
     "back": "Kembali ke beranda",
     "features": {
-      "security": "Data Anda tetap pribadi dan terlindungi",
-      "matches": "Temui kandidat serius yang sudah diseleksi",
-      "support": "Matchmaker profesional mendampingi setiap langkah"
+      "security": "Data Anda aman dan terlindungi",
+      "matches": "Bertemu kandidat serius yang terkurasi",
+      "support": "Pendampingan matchmaker di setiap langkah"
     }
   },
   "privacy": {

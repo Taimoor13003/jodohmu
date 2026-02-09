@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Jodohmu hero background</title>
+  <desc id="desc">Gradient background with soft circles for Jodohmu hero</desc>
+  <defs>
+    <linearGradient id="g" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#9B2242" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#0b3a86" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#g)" />
+  <circle cx="320" cy="240" r="220" fill="#ffffff" opacity="0.08" />
+  <circle cx="1250" cy="180" r="260" fill="#ffffff" opacity="0.06" />
+  <circle cx="800" cy="640" r="300" fill="#ffffff" opacity="0.05" />
+</svg>

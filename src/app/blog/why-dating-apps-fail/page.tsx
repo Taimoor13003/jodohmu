@@ -34,10 +34,6 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: `${siteUrl}/blog/why-dating-apps-fail`,
-    languages: {
-      en: `${siteUrl}/blog/why-dating-apps-fail`,
-      id: `${siteUrl}/blog/why-dating-apps-fail`,
-    },
   },
 };
 

@@ -29,10 +29,6 @@ export const generateMetadata = (): Metadata => {
     },
     alternates: {
       canonical: `${siteUrl}/id/blog`,
-      languages: {
-        en: `${siteUrl}/blog`,
-        id: `${siteUrl}/id/blog`,
-      },
     },
   };
 };

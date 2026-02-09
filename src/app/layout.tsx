@@ -38,10 +38,6 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: siteUrl,
-    languages: {
-      en: `${siteUrl}/`,
-      id: `${siteUrl}/id`,
-    },
   },
   openGraph: {
     type: "website",
@@ -82,21 +78,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const hrefLangs = [
-    { lang: "en", href: `${siteUrl}/` },
-    { lang: "id", href: `${siteUrl}/id` },
-  ];
-
   return (
     <html lang="en" className={`${playfair.variable} ${nunito.variable}`}>
       <head>
-        {hrefLangs.map(({ lang, href }) => (
-          <link key={lang} rel="alternate" hrefLang={lang} href={href} />
-        ))}
-        <link rel="alternate" hrefLang="x-default" href={siteUrl} />
-        <link rel="preload" href="/fonts/nunito-latin-400.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/fonts/playfair-latin-700.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" as="image" href="/hero/jodohmu-hero.jpg" />
+        <link rel="preload" as="image" href="/hero/jodohmu-hero.svg" />
       </head>
       <body>
         <LanguageProvider>

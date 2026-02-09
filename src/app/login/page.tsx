@@ -1,9 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { auth } from "@/lib/firebase";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import Link from "next/link";
@@ -14,15 +15,20 @@ export default function LoginPage() {
   const router = useRouter();
   const { t } = useLanguage();
   const [isPending, setIsPending] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
-  const handleGoogleSignIn = async () => {
-    const provider = new GoogleAuthProvider();
+  const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
     try {
       setIsPending(true);
-      await signInWithPopup(auth, provider);
-      router.push("/");
+      await signInWithEmailAndPassword(auth, email, password);
+      router.push("/dashboard");
     } catch (error) {
-      console.error("Error signing in with Google: ", error);
+      console.error("Error signing in with email/password: ", error);
+      setError(t("login.error"));
     } finally {
       setIsPending(false);
     }
@@ -93,13 +99,47 @@ export default function LoginPage() {
                 </p>
               </div>
 
-              <Button
-                onClick={handleGoogleSignIn}
-                disabled={isPending}
-                className="w-full rounded-full bg-gradient-to-r from-[#9B2242] to-[#0b3a86] py-6 text-base font-semibold shadow-lg transition duration-300 hover:from-[#861b37] hover:to-[#0a3377] disabled:opacity-80"
-              >
-                {isPending ? t("login.buttonLoading") : t("login.button")}
-              </Button>
+              <form onSubmit={handleEmailLogin} className="space-y-4">
+                <div className="text-left space-y-2">
+                  <label className="text-sm font-semibold text-[#0b3a86]" htmlFor="email">
+                    {t("login.emailLabel")}
+                  </label>
+                  <Input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder={t("login.emailPlaceholder")}
+                    className="h-12 rounded-xl border-[#0b3a86]/20 bg-white/80"
+                  />
+                </div>
+                <div className="text-left space-y-2">
+                  <label className="text-sm font-semibold text-[#0b3a86]" htmlFor="password">
+                    {t("login.passwordLabel")}
+                  </label>
+                  <Input
+                    id="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder={t("login.passwordPlaceholder")}
+                    className="h-12 rounded-xl border-[#0b3a86]/20 bg-white/80"
+                  />
+                </div>
+                {error && <p className="text-sm font-semibold text-[#9B2242]">{error}</p>}
+
+                <Button
+                  type="submit"
+                  disabled={isPending}
+                  className="w-full rounded-full bg-gradient-to-r from-[#9B2242] to-[#0b3a86] py-6 text-base font-semibold shadow-lg transition duration-300 hover:from-[#861b37] hover:to-[#0a3377] disabled:opacity-80"
+                >
+                  {isPending ? t("login.buttonLoading") : t("login.button")}
+                </Button>
+              </form>
 
               <p className="text-center text-sm text-muted-foreground">
                 <Link href="/" className="font-semibold text-[#9B2242] transition hover:text-[#7f1b36]">

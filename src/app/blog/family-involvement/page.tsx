@@ -34,10 +34,6 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: `${siteUrl}/blog/family-involvement`,
-    languages: {
-      en: `${siteUrl}/blog/family-involvement`,
-      id: `${siteUrl}/blog/family-involvement`,
-    },
   },
 };
 
