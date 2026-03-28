@@ -36,9 +36,6 @@ export const metadata: Metadata = {
       follow: true,
     },
   },
-  alternates: {
-    canonical: siteUrl,
-  },
   openGraph: {
     type: "website",
     url: siteUrl,

@@ -15,8 +15,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/contact" },
     { path: "/privacy" },
     { path: "/terms" },
-    { path: "/register" },
-    { path: "/login" },
     // Indonesian-language blog landing (currently only localized blog page)
     { path: "/id/blog" },
   ];
