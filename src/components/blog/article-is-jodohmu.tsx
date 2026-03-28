@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
-const whatsappHref = "https://wa.me/6281122210303";
+const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
 const pointKeys = ["0", "1", "2", "3"];
 const stepKeys = ["0", "1", "2", "3", "4"];
 const handleKeys = ["0", "1", "2", "3"];
@@ -67,7 +67,7 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
     { href: "/blog/how-meetings-are-supervised", label: "How Jodohmu supervises offline meetings" },
     { href: "/blog/syariah-safeguards", label: "Syariah safeguards in every ta'aruf" },
     { href: "/faq", label: "See frequently asked questions" },
-    { href: "https://wa.me/6281122210303", label: "Chat Jodohmu via WhatsApp", external: true },
+    { href: "https://forms.gle/WUSTC71ZrpbvSXso6", label: "Open Jodohmu Google Form", external: true },
   ];
 
   return (
@@ -106,7 +106,7 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
               <p className="text-base text-[#2d3150]">{t(`${articleKey}.heroLead`)}</p>
               <div className="flex flex-wrap gap-3 pt-2">
                 <Button asChild size="lg" className="bg-[#0b3a86] text-white hover:bg-[#0a357a]">
-                  <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                  <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
                     {t(`${articleKey}.ctaPrimary`)}
                   </Link>
                 </Button>
@@ -252,7 +252,7 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
             </div>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg" className="bg-white text-[#0b3a86] hover:bg-white/90">
-                <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
                   {t(`${articleKey}.ctaPrimary`)}
                 </Link>
               </Button>

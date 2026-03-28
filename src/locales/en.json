@@ -161,8 +161,8 @@
       "us": "Contact Us"
     },
     "whatsappCta": {
-      "caption": "Want personal guidance? Chat directly with our team on WhatsApp.",
-      "button": "Chat on WhatsApp",
+      "caption": "Want personal guidance? Fill out our Google Form and our team will follow up.",
+      "button": "Open Google Form",
       "prefill": "Hello JodohMu, I'd love to consult with your team."
     },
     "testimonials": {
@@ -182,7 +182,7 @@
     "cta": {
       "title": "Ready to Find 'The One'?",
       "description": "Your search for a meaningful, lasting partnership starts here. Let us be your guide on the beautiful journey to marriage.",
-      "button": "Chat on WhatsApp"
+      "button": "Open Google Form"
     }
   },
   "register": {
@@ -607,7 +607,7 @@
         "title": "Featured guide",
         "desc": "Explore how Jodohmu runs offline, supervised, marriage-focused meetings with vetted candidates and transparent steps.",
         "cta": "Read the full guide",
-        "secondaryCta": "Ask via WhatsApp"
+        "secondaryCta": "Open Google Form"
       },
       "guides": {
         "title": "Featured Guides",
@@ -641,7 +641,7 @@
       "cta": {
         "title": "Want curated help?",
         "subtitle": "Talk to our matchmakers for a guided, halal-first journey.",
-        "button": "Chat on WhatsApp"
+        "button": "Open Google Form"
       }
     }
   },
@@ -976,7 +976,7 @@
     "cta": {
       "title": "Still have questions?",
       "subtitle": "Talk directly with our matchmakers for a personalized plan.",
-      "button": "Chat on WhatsApp"
+      "button": "Open Google Form"
     }
   }
 }

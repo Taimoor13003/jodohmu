@@ -104,10 +104,8 @@ export default function HomePage() {
     t("homepage.meetings.promises.family")
   ];
 
-  const whatsappHref = `https://wa.me/6281122210303?text=${encodeURIComponent(
-    t("homepage.whatsappCta.prefill")
-  )}`;
-  const whatsappButtonLabel = t("homepage.whatsappCta.button");
+  const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
+  const contactFormButtonLabel = "Open Google Form";
 
   const testimonials = [
     {
@@ -185,7 +183,7 @@ export default function HomePage() {
                     size="lg"
                     className="rounded-full bg-white px-10 py-6 text-lg font-semibold text-[#9B2242] shadow-[0_14px_28px_rgba(0,0,0,0.25)] transition-all duration-300 hover:bg-white/90"
                   >
-                    <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                    <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
                       {t("homepage.hero.cta")}
                     </Link>
                   </Button>
@@ -367,7 +365,7 @@ export default function HomePage() {
                     size="lg"
                     className="rounded-full bg-gradient-to-r from-[#9B2242] to-[#c24977] px-8 py-6 text-sm font-semibold text-white shadow-lg shadow-[#9B2242]/30 transition-all duration-300 hover:shadow-[#9B2242]/40"
                   >
-                    <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                    <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
                       {t("homepage.features.storyCta")}
                     </Link>
                   </Button>
@@ -633,7 +631,7 @@ export default function HomePage() {
               whileTap={{ scale: 0.95 }}
             >
               <Button asChild size="lg" className="bg-white text-[#9B2242] hover:bg-white/90 rounded-full px-10 py-7 text-lg font-semibold shadow-2xl hover:shadow-white/25 transition-all duration-300 border border-white/20">
-                <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
                   {t("homepage.cta.button")}
                 </Link>
               </Button>
@@ -642,11 +640,11 @@ export default function HomePage() {
         </AnimatedSection>
       </main>
       <a
-        href={whatsappHref}
+        href={contactFormHref}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label={whatsappButtonLabel}
-        className="group fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-3 text-white shadow-[0_16px_36px_rgba(37,211,102,0.35)] transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#20c25c] hover:shadow-[0_20px_48px_rgba(37,211,102,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#25D366]"
+        aria-label={contactFormButtonLabel}
+        className="group fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-[#0b3a86] px-4 py-3 text-white shadow-[0_16px_36px_rgba(11,58,134,0.35)] transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#0a357a] hover:shadow-[0_20px_48px_rgba(11,58,134,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b3a86]"
       >
         <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white transition-all duration-300 group-hover:bg-white/20 group-hover:shadow-inner">
           <svg
@@ -655,10 +653,10 @@ export default function HomePage() {
             fill="currentColor"
             className="h-5 w-5"
           >
-            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.16 5.335 5.495 0 12.05 0c3.181.002 6.167 1.24 8.413 3.488 2.245 2.248 3.487 5.235 3.487 8.413.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.439-9.892-9.892-9.892-5.452 0-9.887 4.434-9.889 9.889-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.743-.986zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01s-.521.074-.794.372c-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+            <path d="M4 3h11l5 5v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm10 1.5V9h4.5L14 4.5zM7 12h10v1.5H7V12zm0 3.5h10V17H7v-1.5z" />
           </svg>
         </span>
-        <span className="text-sm font-semibold leading-tight">{whatsappButtonLabel}</span>
+        <span className="text-sm font-semibold leading-tight">{contactFormButtonLabel}</span>
       </a>
     </div>
   );

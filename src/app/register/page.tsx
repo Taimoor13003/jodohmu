@@ -34,7 +34,7 @@ export default function RegisterPage() {
               size="lg"
               className="bg-white text-[#0b3a86] hover:bg-white/90 shadow-lg"
             >
-              <Link href="https://wa.me/6281122210303" target="_blank" rel="noopener noreferrer">
+              <Link href="https://forms.gle/WUSTC71ZrpbvSXso6" target="_blank" rel="noopener noreferrer">
                 {t("register.guard.cta")}
               </Link>
             </Button>

@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { ShieldCheck, Users, Sparkles, HeartHandshake, ArrowRight } from "lucide-react";
 
+const supportFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
+
 export default function DashboardPage() {
   const { user, role } = useAuth();
 
@@ -42,8 +44,8 @@ export default function DashboardPage() {
   const candidateActions = (
     <ActionLink
       title="Update my details"
-      description="Message our team and we’ll adjust your profile."
-      href="https://wa.me/6281122210303"
+      description="Fill out our Google Form and we’ll adjust your profile."
+      href={supportFormHref}
       external
       icon={<HeartHandshake className="h-5 w-5" />}
     />
@@ -104,10 +106,10 @@ export default function DashboardPage() {
               <CardTitle className="text-xl text-[#0b3a86]">Need help?</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <p>Chat our team if you need updates, approvals, or guidance.</p>
+              <p>Send your request through our Google Form for updates, approvals, or guidance.</p>
               <Button asChild variant="outline" className="w-full">
-                <Link href="https://wa.me/6281122210303" target="_blank" rel="noopener noreferrer">
-                  Chat on WhatsApp
+                <Link href={supportFormHref} target="_blank" rel="noopener noreferrer">
+                  Open Google Form
                 </Link>
               </Button>
               <Button asChild className="w-full bg-gradient-to-r from-[#9B2242] to-[#0b3a86] text-white">

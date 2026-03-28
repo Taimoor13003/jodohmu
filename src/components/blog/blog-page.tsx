@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 
-const whatsappHref = "https://wa.me/6281122210303";
+const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
 
 const articles = [
   { key: "stepByStepProcess", href: "/blog/step-by-step-process" },
@@ -59,7 +59,7 @@ export function BlogPage() {
                   variant="outline"
                   className="border-[#9B2242] text-[#9B2242] hover:bg-[#9B2242]/5"
                 >
-                  <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                  <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
                     {t("blogPage.sections.article.secondaryCta")}
                   </Link>
                 </Button>

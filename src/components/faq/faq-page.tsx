@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
 
-const whatsappHref = "https://wa.me/6281122210303";
+const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
 
 const faqKeys = [
   "faqPage.items.0",
@@ -130,7 +130,7 @@ export function FaqPage() {
             </ul>
           </div>
           <Button asChild size="lg" className="bg-white text-[#0b3a86] hover:bg-white/90">
-            <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+            <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
               {t("faqPage.cta.button")}
             </Link>
           </Button>

@@ -601,7 +601,7 @@
         "title": "Apakah Jodohmu hanya untuk Muslim?",
         "desc": "Tidak. Kami mencocokkan Anda sesuai harapan dan nilai yang ingin Anda jaga. Jika Anda Kristen, kami bisa hadirkan pastor atau tokoh Kristen terhormat untuk memandu pertemuan—membingkai obrolan tentang iman, kesiapan keluarga, dan langkah nyata menuju pernikahan.",
         "cta": "Baca penjelasan lengkap",
-        "secondaryCta": "Tanya via WhatsApp"
+        "secondaryCta": "Buka Google Form"
       },
       "guides": {
         "title": "Panduan Unggulan",
@@ -639,7 +639,7 @@
       "cta": {
         "title": "Butuh pendampingan terkurasi?",
         "subtitle": "Ngobrol dengan matchmaker kami untuk perjalanan halal-first yang terarah.",
-        "button": "Chat di WhatsApp"
+        "button": "Buka Google Form"
       }
     }
   },
@@ -699,7 +699,7 @@
       "pricingBody": "Paket transparan meliputi screening, penjadwalan, venue, dan kehadiran fasilitator. Jika merasa cocok, kami pandu sesi berikutnya atau langkah lamaran tanpa biaya kejutan.",
       "ctaTitle": "Siap bergerak ke pernikahan?",
       "ctaBody": "Kami pandu dari perkenalan sampai komitmen. Ingin jadwalkan sesi dengan fasilitator (termasuk pastor untuk klien Kristen) dan tahu rincian biaya secara transparan?",
-      "ctaPrimary": "Chat via WhatsApp",
+      "ctaPrimary": "Buka Google Form",
       "ctaSecondary": "Kembali ke blog utama"
     },
     "stepByStepProcess": {
@@ -1032,7 +1032,7 @@
     "cta": {
       "title": "Masih ada pertanyaan?",
       "subtitle": "Bicara langsung dengan matchmaker kami untuk rencana yang dipersonalisasi.",
-      "button": "Chat di WhatsApp"
+      "button": "Buka Google Form"
     }
   }
 }
