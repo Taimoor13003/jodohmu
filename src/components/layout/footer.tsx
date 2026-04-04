@@ -11,7 +11,6 @@ export function Footer() {
   const year = new Date().getFullYear();
   const phoneDisplay = t("footer.connect.phone");
   const phoneHref = phoneDisplay.replace(/\s+/g, "");
-  const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
 
   return (
     <footer className="w-full bg-white text-brand-blue">
@@ -49,19 +48,6 @@ export function Footer() {
               <a href={`tel:${phoneHref}`} className="flex items-center gap-3 hover:text-brand-rose transition-colors">
                 <Phone className="h-5 w-5" />
                 <span>{phoneDisplay}</span>
-              </a>
-              <a href={contactFormHref} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:text-brand-rose transition-colors">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="h-5 w-5"
-                >
-                  <path d="M4 3h11l5 5v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm10 1.5V9h4.5L14 4.5zM7 12h10v1.5H7V12zm0 3.5h10V17H7v-1.5z" />
-                </svg>
-                <span>Google Form</span>
               </a>
             </div>
           </div>

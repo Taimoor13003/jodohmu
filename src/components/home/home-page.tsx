@@ -105,7 +105,7 @@ export default function HomePage() {
   ];
 
   const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
-  const contactFormButtonLabel = "Open Google Form";
+  const contactFormButtonLabel = t("register.guard.cta");
 
   const testimonials = [
     {

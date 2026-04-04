@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { ShieldCheck, Users, Sparkles, HeartHandshake, ArrowRight } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 const supportFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
 
 export default function DashboardPage() {
   const { user, role } = useAuth();
+  const { t } = useLanguage();
 
   if (!user) {
     return <div className="flex min-h-screen items-center justify-center text-lg">Loading...</div>;
@@ -101,20 +103,20 @@ export default function DashboardPage() {
           <Card className="border-0 bg-white/90 shadow-xl">
             <CardHeader>
               <div className="flex items-center gap-2 text-sm font-semibold text-[#0b3a86]">
-                <ShieldCheck className="h-4 w-4" /> Support
+                <ShieldCheck className="h-4 w-4" /> {t("dashboard.support.badge")}
               </div>
-              <CardTitle className="text-xl text-[#0b3a86]">Need help?</CardTitle>
+              <CardTitle className="text-xl text-[#0b3a86]">{t("dashboard.support.title")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 text-sm text-muted-foreground">
-              <p>Send your request through our Google Form for updates, approvals, or guidance.</p>
+              <p>{t("dashboard.support.description")}</p>
               <Button asChild variant="outline" className="w-full">
                 <Link href={supportFormHref} target="_blank" rel="noopener noreferrer">
-                  Open Google Form
+                  {t("dashboard.support.openForm")}
                 </Link>
               </Button>
               <Button asChild className="w-full bg-gradient-to-r from-[#9B2242] to-[#0b3a86] text-white">
                 <Link href="/faq">
-                  Visit FAQ
+                  {t("dashboard.support.visitFaq")}
                 </Link>
               </Button>
             </CardContent>
