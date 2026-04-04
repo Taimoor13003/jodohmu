@@ -9,3 +9,4 @@ src/jodohmu-production-firebase-adminsdk-fbsvc-5afcd47399.json
 src/*adminsdk*.json
 src/*service*account*.json
 src/* copy.json
+src/fb.json
