@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LogoIcon from "@/assets/jodohmu-logo.png";
-import { Globe, ArrowRight, Menu, X } from "lucide-react";
+import { Globe, Menu, X } from "lucide-react";
 
 export function Header() {
   const { user } = useAuth();
@@ -124,14 +124,7 @@ export function Header() {
                 <DropdownMenuItem onClick={handleLogout}>{t("header.logout")}</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
-            <Button asChild className="bg-gradient-to-r from-[#9B2242] to-[#0b3a86] text-white rounded-full px-6 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
-              <Link href="/login">
-                <span>{t("common.login")}</span>
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          )}
+          ) : null}
         </nav>
 
         <div className="ml-auto flex items-center gap-2 sm:hidden">
@@ -221,18 +214,7 @@ export function Header() {
                   {t("header.logout")}
                 </Button>
               </div>
-            ) : (
-              <Button
-                asChild
-                className="w-full bg-gradient-to-r from-[#9B2242] to-[#0b3a86] text-white rounded-xl px-4 py-3 text-base font-semibold shadow-md hover:shadow-lg transition-shadow duration-200"
-                onClick={() => setIsMobileOpen(false)}
-              >
-                <Link href="/login">
-                  <span>{t("common.login")}</span>
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            )}
+            ) : null}
           </nav>
         ) : null}
       </div>

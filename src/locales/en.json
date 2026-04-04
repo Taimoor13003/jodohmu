@@ -39,6 +39,10 @@
     }
   },
   "homepage": {
+    "about": {
+      "title": "About Us",
+      "description": "Jodohmu was born from the belief that every Muslim deserves to find a life partner in a dignified way. We are a trusted offline ta'aruf partner—not an algorithm, but real people who genuinely care about your journey toward a blessed marriage."
+    },
     "hero": {
       "badge": "SERIOUS MATCHMAKING",
       "title": "Offline Marriage Matchmaking & Ta'aruf in Indonesia",

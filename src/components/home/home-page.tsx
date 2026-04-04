@@ -3,12 +3,10 @@
 import React from 'react';
 import Image from 'next/image';
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent } from "@/components/ui/card";
 import { AnimatedSection } from "@/components/layout/animated-section";
 import { ParallaxHero } from "@/components/layout/parallax-hero";
 import { useLanguage } from "@/context/LanguageContext";
-import { Heart, Users, Star, Calendar, Quote, ShieldCheck, Handshake, Sparkles, HeartHandshake, MessageCircle, CheckCircle2 } from "lucide-react";
+import { Heart, Users, Star, Calendar, ShieldCheck, Handshake, Sparkles, HeartHandshake, MessageCircle, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { motion } from 'framer-motion';
 import heroSectionImage from "@/assets/jodoh-mu-hero-section.png";
@@ -105,26 +103,6 @@ export default function HomePage() {
   ];
 
   const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
-  const contactFormButtonLabel = t("register.guard.cta");
-
-  const testimonials = [
-    {
-      quote: t("homepage.testimonials.stories.miraGuide.quote"),
-      name: t("homepage.testimonials.stories.miraGuide.name"),
-      accentColor: "#9B2242",
-      avatar: "https://placehold.co/200x200/fff7f9/9B2242?text=M",
-      fallback: "MG",
-      delay: 0,
-    },
-    {
-      quote: t("homepage.testimonials.stories.bimaAssistant.quote"),
-      name: t("homepage.testimonials.stories.bimaAssistant.name"),
-      accentColor: "#0b3a86",
-      avatar: "https://placehold.co/200x200/f1f4ff/0b3a86?text=B",
-      fallback: "BA",
-      delay: 0.1,
-    },
-  ];
 
   const heroTagline = t("homepage.hero.tagline");
 
@@ -155,6 +133,14 @@ export default function HomePage() {
                 className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.45em] text-white"
               >
                 {t("homepage.hero.badge")}
+              </motion.span>
+              <motion.span
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.25, ease: "easeOut" }}
+                className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.45em] text-white opacity-60"
+              >
+                Berbasis di Bandung, Indonesia
               </motion.span>
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}
@@ -206,7 +192,7 @@ export default function HomePage() {
               className="hidden justify-end lg:flex"
             >
               <div className="max-w-md rounded-[32px] border border-white/25 bg-white/10 p-6 text-left text-white shadow-2xl backdrop-blur-lg">
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.4em] text-white">
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.45em] text-white">
                   {primaryStory.badge}
                 </span>
                 <p className="mt-4 text-2xl font-semibold leading-snug">
@@ -332,7 +318,7 @@ export default function HomePage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.45em] text-white">
+                  <span className="inline-block rounded-full bg-white/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.45em] text-white">
                     {primaryStory.badge}
                   </span>
                   <h3 className="mt-4 font-serif text-2xl font-semibold leading-tight">
@@ -427,12 +413,6 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="order-first space-y-6 text-center lg:order-none lg:text-left"
             >
-              <span className="inline-flex items-center justify-center gap-2 rounded-full border border-[#9B2242]/20 bg-gradient-to-r from-[#9B2242]/10 to-[#0b3a86]/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#9B2242]">
-                {t("homepage.philosophy.badge")}
-              </span>
-              <h2 className="text-4xl font-serif font-bold tracking-tighter sm:text-5xl bg-gradient-to-r from-foreground via-[#9B2242] to-foreground bg-clip-text text-transparent">
-                {t("homepage.philosophy.heading")}
-              </h2>
               <p className="mx-auto max-w-2xl text-muted-foreground md:text-xl/relaxed leading-relaxed lg:mx-0">
                 {t("homepage.philosophy.description")}
               </p>
@@ -555,55 +535,34 @@ export default function HomePage() {
           </div>
         </AnimatedSection>
 
-        <AnimatedSection className="w-full py-20 md:py-28 lg:py-36">
-          <motion.div 
+        <AnimatedSection className="relative w-full overflow-hidden py-20 md:py-28 lg:py-36">
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-[#9B2242]/10 blur-3xl" />
+            <div className="absolute -bottom-24 left-10 h-80 w-80 rounded-full bg-[#0b3a86]/10 blur-3xl" />
+            <div className="absolute top-1/3 right-10 h-64 w-64 rounded-full bg-[#9B2242]/10 blur-3xl" />
+          </div>
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="container text-center"
+            className="container relative"
           >
-            <h2 className="font-serif text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl bg-gradient-to-r from-foreground via-[#9B2242] to-foreground bg-clip-text text-transparent">{t("homepage.testimonials.title")}</h2>
-            <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl mt-4 leading-relaxed">{t("homepage.testimonials.subtitle")}</p>
+            <div className="mx-auto max-w-5xl rounded-3xl border border-[#0b3a86]/10 bg-white/80 p-8 shadow-xl shadow-[#0b3a86]/10 backdrop-blur sm:p-12">
+              <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+                <span className="inline-flex items-center gap-2 rounded-full border border-[#9B2242]/15 bg-[#9B2242]/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-[#9B2242]">
+                  {t("homepage.about.title")}
+                </span>
+                <h2 className="mt-6 font-serif text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl bg-gradient-to-r from-foreground via-[#9B2242] to-foreground bg-clip-text text-transparent">
+                  {t("homepage.about.title")}
+                </h2>
+                <div className="mt-6 h-px w-24 bg-gradient-to-r from-transparent via-[#9B2242]/50 to-transparent" />
+                <p className="mt-8 text-base leading-relaxed text-muted-foreground sm:text-lg md:text-xl">
+                  {t("homepage.about.description")}
+                </p>
+              </div>
+            </div>
           </motion.div>
-          <div className="mx-auto grid max-w-4xl gap-8 py-12 lg:grid-cols-2">
-            {testimonials.map(({ quote, name, accentColor, avatar, fallback, delay }) => (
-              <motion.div
-                key={name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay }}
-                whileHover={{ y: -5, scale: 1.02 }}
-              >
-                <Card className="border-0 shadow-2xl bg-gradient-to-br from-card via-card to-[#9B2242]/5 hover:from-[#9B2242]/10 hover:via-card hover:to-[#0b3a86]/10 transition-all duration-300">
-                  <CardContent className="p-8 flex flex-col items-center text-center relative">
-                    <motion.div 
-                      initial={{ opacity: 0, scale: 0 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: 0.2 }}
-                      className="absolute top-4 left-4"
-                      style={{ color: `${accentColor}33` }}
-                    >
-                      <Quote className="w-12 h-12" />
-                    </motion.div>
-                    <Avatar className="w-24 h-24 mb-4 border-4 shadow-lg" style={{ borderColor: `${accentColor}33` }}>
-                      <AvatarImage src={avatar} />
-                      <AvatarFallback>{fallback}</AvatarFallback>
-                    </Avatar>
-                    <p className="text-lg italic text-muted-foreground leading-relaxed relative z-10">{`"${quote}"`}</p>
-                    <div className="flex items-center gap-1 mt-4">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4" style={{ color: accentColor, fill: accentColor }} />
-                      ))}
-                    </div>
-                    <p className="font-semibold mt-4 text-xl text-foreground">- {name}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
         </AnimatedSection>
 
         <AnimatedSection className="w-full py-20 md:py-28 lg:py-32 bg-gradient-to-br from-[#9B2242] via-[#9B2242]/90 to-[#0b3a86] text-white relative overflow-hidden">
@@ -639,25 +598,6 @@ export default function HomePage() {
           </motion.div>
         </AnimatedSection>
       </main>
-      <a
-        href={contactFormHref}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={contactFormButtonLabel}
-        className="group fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-[#0b3a86] px-4 py-3 text-white shadow-[0_16px_36px_rgba(11,58,134,0.35)] transition-all duration-300 hover:-translate-y-1.5 hover:bg-[#0a357a] hover:shadow-[0_20px_48px_rgba(11,58,134,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b3a86]"
-      >
-        <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white transition-all duration-300 group-hover:bg-white/20 group-hover:shadow-inner">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="h-5 w-5"
-          >
-            <path d="M4 3h11l5 5v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm10 1.5V9h4.5L14 4.5zM7 12h10v1.5H7V12zm0 3.5h10V17H7v-1.5z" />
-          </svg>
-        </span>
-        <span className="text-sm font-semibold leading-tight">{contactFormButtonLabel}</span>
-      </a>
     </div>
   );
 }

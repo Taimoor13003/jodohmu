@@ -67,7 +67,7 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
     { href: "/blog/how-meetings-are-supervised", label: "How Jodohmu supervises offline meetings" },
     { href: "/blog/syariah-safeguards", label: "Syariah safeguards in every ta'aruf" },
     { href: "/faq", label: "See frequently asked questions" },
-    { href: "https://forms.gle/WUSTC71ZrpbvSXso6", label: "Open Jodohmu Google Form", external: true },
+    { href: "https://forms.gle/WUSTC71ZrpbvSXso6", label: "Register now", external: true },
   ];
 
   return (

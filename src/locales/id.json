@@ -39,6 +39,10 @@
     }
   },
   "homepage": {
+    "about": {
+      "title": "Tentang Kami",
+      "description": "Jodohmu lahir dari keyakinan bahwa setiap Muslim berhak menemukan pasangan hidup dengan cara yang bermartabat. Kami hadir sebagai mitra ta'aruf offline yang terpercaya — bukan algoritma, tapi manusia yang benar-benar peduli pada perjalanan Anda menuju pernikahan yang barakah."
+    },
     "hero": {
       "badge": "PENCARIAN JODOH SERIUS",
       "title": "Perjodohan Offline & Ta'aruf Serius di Indonesia",
@@ -709,6 +713,7 @@
       "ctaTitle": "Siap bergerak ke pernikahan?",
       "ctaBody": "Kami pandu dari perkenalan sampai komitmen. Ingin jadwalkan sesi dengan fasilitator (termasuk pastor untuk klien Kristen) dan tahu rincian biaya secara transparan?",
       "ctaPrimary": "Daftar sekarang",
+
 
       "ctaSecondary": "Kembali ke blog utama"
     },
