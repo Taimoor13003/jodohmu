@@ -953,12 +953,25 @@
     }
   },
   "pricingPage": {
+    "discount": {
+      "badge": "May Exclusive — Limited Seats",
+      "headline": "50% OFF All Packages",
+      "sub": "This offer expires May 31. Don't let the right person slip by.",
+      "cta": "Claim 50% Off Now",
+      "urgency": "Seats filling fast — register today"
+    },
+    "trust": {
+      "couples": "100+ Couples Matched",
+      "location": "Bandung-Based Team",
+      "supervised": "100% Supervised",
+      "human": "Real Human Matchmakers"
+    },
     "hero": {
-      "badge": "Transparent Pricing",
-      "title": "Invest in a Dignified Path to Marriage",
-      "subtitle": "No algorithms. No endless swiping. Real human matchmaking — curated, supervised, and blessed.",
-      "cta": "Register Now",
-      "ctaSecondary": "Talk to Us"
+      "badge": "Transparent Pricing · No Hidden Costs",
+      "title": "One Decision. A Lifetime of Barakah.",
+      "subtitle": "Every package gives you curated candidates, supervised meetings, and a real team that cares. Not an app. Not an algorithm. Us.",
+      "cta": "Register Now — 50% Off in May",
+      "ctaSecondary": "Ask a Question"
     },
     "registration": {
       "badge": "Step 1 — Everyone Pays This First",
@@ -985,8 +998,9 @@
       "goldNote": "Private · referral only",
       "items": {
         "basic": {
-          "name": "Sidiq Basic",
+          "name": "Basic",
           "price": "Rp 2.5 jt",
+          "discountedPrice": "Rp 1.25 jt",
           "afterReg": "Rp 2 jt",
           "features": [
             "60-minute intake interview",
@@ -1003,8 +1017,9 @@
           ]
         },
         "standard": {
-          "name": "Sidiq Standard",
+          "name": "Standard",
           "price": "Rp 5.5 jt",
+          "discountedPrice": "Rp 2.75 jt",
           "afterReg": "Rp 5 jt",
           "features": [
             "In-depth 90-minute intake",
@@ -1021,8 +1036,9 @@
           ]
         },
         "silver": {
-          "name": "Sidiq VIP Silver",
+          "name": "VIP Silver",
           "price": "Rp 15 jt",
+          "discountedPrice": "Rp 7.5 jt",
           "afterReg": "Rp 14.5 jt",
           "features": [
             "Multi-session in-depth intake",
@@ -1040,8 +1056,9 @@
           ]
         },
         "gold": {
-          "name": "Sidiq VIP Gold",
+          "name": "VIP Gold",
           "price": "Rp 30–40 jt",
+          "discountedPrice": "Rp 15–20 jt",
           "afterReg": "",
           "features": [
             "All Silver services",

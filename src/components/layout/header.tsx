@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,17 @@ export function Header() {
   const { user } = useAuth();
   const { lang, setLang, t } = useLanguage();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const pathname = usePathname();
+
+  const navLinkClass = (href: string) =>
+    pathname === href
+      ? "inline-flex items-center gap-1.5 rounded-full border border-[#9B2242]/40 bg-[#9B2242]/10 px-3 py-2 text-sm font-semibold text-[#9B2242] shadow-sm shadow-[#9B2242]/15 transition-all duration-200"
+      : "inline-flex items-center gap-1.5 rounded-full border border-[#0b3a86]/15 bg-white/80 px-3 py-2 text-sm font-semibold text-[#0b3a86] shadow-sm shadow-[#0b3a86]/10 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#9B2242]/40 hover:text-[#9B2242] hover:shadow-md hover:shadow-[#9B2242]/15";
+
+  const mobileNavLinkClass = (href: string) =>
+    pathname === href
+      ? "rounded-xl border border-[#9B2242]/30 bg-[#9B2242]/8 px-4 py-3 text-sm font-semibold text-[#9B2242] transition-colors"
+      : "rounded-xl border border-[#0b3a86]/10 px-4 py-3 text-sm font-semibold text-[#0b3a86] hover:border-[#9B2242]/30 hover:text-[#9B2242] transition-colors";
 
   const handleLogout = async () => {
     try {
@@ -48,22 +60,13 @@ export function Header() {
           />
         </Link>
         <nav className="ml-auto hidden items-center gap-2 sm:gap-3 sm:flex" aria-label="Primary">
-          <Link
-            href="/blog"
-            className="inline-flex items-center gap-1.5 rounded-full border border-[#0b3a86]/15 bg-white/80 px-3 py-2 text-sm font-semibold text-[#0b3a86] shadow-sm shadow-[#0b3a86]/10 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#9B2242]/40 hover:text-[#9B2242] hover:shadow-md hover:shadow-[#9B2242]/15"
-          >
+          <Link href="/blog" className={navLinkClass("/blog")}>
             {t("header.blog")}
           </Link>
-          <Link
-            href="/pricing"
-            className="inline-flex items-center gap-1.5 rounded-full border border-[#9B2242]/20 bg-[#9B2242]/5 px-3 py-2 text-sm font-semibold text-[#9B2242] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#9B2242]/50 hover:bg-[#9B2242]/10 hover:shadow-md"
-          >
+          <Link href="/pricing" className={navLinkClass("/pricing")}>
             {t("header.pricing")}
           </Link>
-          <Link
-            href="/faq"
-            className="inline-flex items-center gap-1.5 rounded-full border border-[#0b3a86]/15 bg-white/80 px-3 py-2 text-sm font-semibold text-[#0b3a86] shadow-sm shadow-[#0b3a86]/10 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#9B2242]/40 hover:text-[#9B2242] hover:shadow-md hover:shadow-[#9B2242]/15"
-          >
+          <Link href="/faq" className={navLinkClass("/faq")}>
             {t("header.faq")}
           </Link>
           <DropdownMenu>
@@ -166,25 +169,13 @@ export function Header() {
             aria-label="Primary mobile"
           >
             <div className="flex flex-col gap-2">
-              <Link
-                href="/blog"
-                className="rounded-xl border border-[#0b3a86]/10 px-4 py-3 text-sm font-semibold text-[#0b3a86] hover:border-[#9B2242]/30 hover:text-[#9B2242] transition-colors"
-                onClick={() => setIsMobileOpen(false)}
-              >
+              <Link href="/blog" className={mobileNavLinkClass("/blog")} onClick={() => setIsMobileOpen(false)}>
                 {t("header.blog")}
               </Link>
-              <Link
-                href="/pricing"
-                className="rounded-xl border border-[#9B2242]/20 bg-[#9B2242]/5 px-4 py-3 text-sm font-semibold text-[#9B2242] hover:border-[#9B2242]/40 hover:bg-[#9B2242]/10 transition-colors"
-                onClick={() => setIsMobileOpen(false)}
-              >
+              <Link href="/pricing" className={mobileNavLinkClass("/pricing")} onClick={() => setIsMobileOpen(false)}>
                 {t("header.pricing")}
               </Link>
-              <Link
-                href="/faq"
-                className="rounded-xl border border-[#0b3a86]/10 px-4 py-3 text-sm font-semibold text-[#0b3a86] hover:border-[#9B2242]/30 hover:text-[#9B2242] transition-colors"
-                onClick={() => setIsMobileOpen(false)}
-              >
+              <Link href="/faq" className={mobileNavLinkClass("/faq")} onClick={() => setIsMobileOpen(false)}>
                 {t("header.faq")}
               </Link>
             </div>

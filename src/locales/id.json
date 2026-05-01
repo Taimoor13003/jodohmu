@@ -1011,12 +1011,25 @@
     }
   },
   "pricingPage": {
+    "discount": {
+      "badge": "Eksklusif Mei — Kursi Terbatas",
+      "headline": "Diskon 50% Semua Paket",
+      "sub": "Penawaran berakhir 31 Mei. Jangan biarkan jodoh yang tepat berlalu begitu saja.",
+      "cta": "Klaim Diskon 50% Sekarang",
+      "urgency": "Kursi cepat terisi — daftar hari ini"
+    },
+    "trust": {
+      "couples": "100+ Pasangan Berhasil",
+      "location": "Tim Berbasis Bandung",
+      "supervised": "100% Terawasi",
+      "human": "Mak Comblang Nyata"
+    },
     "hero": {
-      "badge": "Harga Transparan",
-      "title": "Investasi untuk Perjalanan Menuju Pernikahan yang Bermartabat",
-      "subtitle": "Tanpa algoritma. Tanpa scroll tanpa henti. Mak comblang nyata — terkurasi, terawasi, dan penuh berkah.",
-      "cta": "Daftar Sekarang",
-      "ctaSecondary": "Hubungi Kami"
+      "badge": "Harga Transparan · Tanpa Biaya Tersembunyi",
+      "title": "Satu Keputusan. Seumur Hidup Penuh Barakah.",
+      "subtitle": "Setiap paket memberi Anda kandidat terkurasi, pertemuan terawasi, dan tim nyata yang peduli. Bukan aplikasi. Bukan algoritma. Kami.",
+      "cta": "Daftar Sekarang — Diskon 50% di Mei",
+      "ctaSecondary": "Tanya Dulu"
     },
     "registration": {
       "badge": "Langkah 1 — Semua Bayar Ini Terlebih Dahulu",
@@ -1043,8 +1056,9 @@
       "goldNote": "Privat · hanya via referral",
       "items": {
         "basic": {
-          "name": "Sidiq Basic",
+          "name": "Basic",
           "price": "Rp 2,5 jt",
+          "discountedPrice": "Rp 1,25 jt",
           "afterReg": "Rp 2 jt",
           "features": [
             "Intake interview 60 menit",
@@ -1061,8 +1075,9 @@
           ]
         },
         "standard": {
-          "name": "Sidiq Standard",
+          "name": "Standard",
           "price": "Rp 5,5 jt",
+          "discountedPrice": "Rp 2,75 jt",
           "afterReg": "Rp 5 jt",
           "features": [
             "Intake mendalam 90 menit",
@@ -1079,8 +1094,9 @@
           ]
         },
         "silver": {
-          "name": "Sidiq VIP Silver",
+          "name": "VIP Silver",
           "price": "Rp 15 jt",
+          "discountedPrice": "Rp 7,5 jt",
           "afterReg": "Rp 14,5 jt",
           "features": [
             "Intake multi-sesi mendalam",
@@ -1098,8 +1114,9 @@
           ]
         },
         "gold": {
-          "name": "Sidiq VIP Gold",
+          "name": "VIP Gold",
           "price": "Rp 30–40 jt",
+          "discountedPrice": "Rp 15–20 jt",
           "afterReg": "",
           "features": [
             "Semua layanan Silver",
