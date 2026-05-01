@@ -55,6 +55,12 @@ export function Header() {
             {t("header.blog")}
           </Link>
           <Link
+            href="/pricing"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#9B2242]/20 bg-[#9B2242]/5 px-3 py-2 text-sm font-semibold text-[#9B2242] shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#9B2242]/50 hover:bg-[#9B2242]/10 hover:shadow-md"
+          >
+            {t("header.pricing")}
+          </Link>
+          <Link
             href="/faq"
             className="inline-flex items-center gap-1.5 rounded-full border border-[#0b3a86]/15 bg-white/80 px-3 py-2 text-sm font-semibold text-[#0b3a86] shadow-sm shadow-[#0b3a86]/10 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#9B2242]/40 hover:text-[#9B2242] hover:shadow-md hover:shadow-[#9B2242]/15"
           >
@@ -166,6 +172,13 @@ export function Header() {
                 onClick={() => setIsMobileOpen(false)}
               >
                 {t("header.blog")}
+              </Link>
+              <Link
+                href="/pricing"
+                className="rounded-xl border border-[#9B2242]/20 bg-[#9B2242]/5 px-4 py-3 text-sm font-semibold text-[#9B2242] hover:border-[#9B2242]/40 hover:bg-[#9B2242]/10 transition-colors"
+                onClick={() => setIsMobileOpen(false)}
+              >
+                {t("header.pricing")}
               </Link>
               <Link
                 href="/faq"

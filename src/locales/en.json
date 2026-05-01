@@ -27,7 +27,8 @@
     "dashboard": "Dashboard",
     "logout": "Log out",
     "blog": "Blog",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "pricing": "Pricing"
   },
   "dashboard": {
     "support": {
@@ -949,6 +950,154 @@
       "ctaBody": "Tell us your city and facilitator preference—we’ll schedule a supervised session with transparent fees.",
       "ctaPrimary": "Schedule supervision",
       "ctaSecondary": "Back to main blog"
+    }
+  },
+  "pricingPage": {
+    "hero": {
+      "badge": "Transparent Pricing",
+      "title": "Invest in a Dignified Path to Marriage",
+      "subtitle": "No algorithms. No endless swiping. Real human matchmaking — curated, supervised, and blessed.",
+      "cta": "Register Now",
+      "ctaSecondary": "Talk to Us"
+    },
+    "registration": {
+      "badge": "Step 1 — Everyone Pays This First",
+      "title": "Registration Fee",
+      "price": "Rp 500k",
+      "note": "one-time · non-refundable",
+      "desc": "Deducted from whichever package you choose · In-person only",
+      "hikmah": "This fee ensures every candidate on our platform is serious. Only those truly ready for marriage take this first step — protecting your time and heart."
+    },
+    "packages": {
+      "title": "Choose Your Path",
+      "subtitle": "Every package is designed with adab, transparency, and your marriage journey in mind.",
+      "popular": "Most Popular",
+      "vipSilver": "VIP Silver",
+      "vipGold": "VIP Gold",
+      "afterReg": "after registration",
+      "total": "Total",
+      "duration": {
+        "basic": "3 months active membership",
+        "standard": "6 months active membership",
+        "silver": "12 months · full priority",
+        "gold": "12 months · fully bespoke"
+      },
+      "goldNote": "Private · referral only",
+      "items": {
+        "basic": {
+          "name": "Sidiq Basic",
+          "price": "Rp 2.5 jt",
+          "afterReg": "Rp 2 jt",
+          "features": [
+            "60-minute intake interview",
+            "3 curated proposals",
+            "Anonymous profile shown first",
+            "1 facilitated ta'aruf meeting",
+            "ID card + social media check"
+          ],
+          "missing": [
+            "Psychological test",
+            "Work / salary verification",
+            "Imam at ta'aruf",
+            "Field background check"
+          ]
+        },
+        "standard": {
+          "name": "Sidiq Standard",
+          "price": "Rp 5.5 jt",
+          "afterReg": "Rp 5 jt",
+          "features": [
+            "In-depth 90-minute intake",
+            "5 curated proposals",
+            "Anonymous profile shown first",
+            "2 facilitated ta'aruf meetings",
+            "Psychology questionnaire (form)",
+            "ID + work + payslip verification",
+            "Imam at ta'aruf (optional)"
+          ],
+          "missing": [
+            "Clinical psychologist session",
+            "Field / neighbour check"
+          ]
+        },
+        "silver": {
+          "name": "Sidiq VIP Silver",
+          "price": "Rp 15 jt",
+          "afterReg": "Rp 14.5 jt",
+          "features": [
+            "Multi-session in-depth intake",
+            "8 curated proposals",
+            "Anonymous profile shown first",
+            "Unlimited ta'aruf meetings",
+            "1 clinical psychologist session",
+            "Document + bank + work check",
+            "Imam always present at ta'aruf",
+            "Guardian (wali) coordination",
+            "1 post-match coaching session"
+          ],
+          "missing": [
+            "Field / neighbour check"
+          ]
+        },
+        "gold": {
+          "name": "Sidiq VIP Gold",
+          "price": "Rp 30–40 jt",
+          "afterReg": "",
+          "features": [
+            "All Silver services",
+            "Unlimited proposals",
+            "2–3 clinical psychologist sessions",
+            "Field + neighbour + RT/RW check",
+            "Workplace & home verification",
+            "Family meeting facilitation",
+            "Handled directly by founder",
+            "5 post-match coaching sessions",
+            "+3 bonus months if no match",
+            "Full confidentiality guarantee"
+          ],
+          "missing": []
+        }
+      }
+    },
+    "upgrade": {
+      "title": "Upgrade Anytime — Pay Only the Difference",
+      "subtitle": "No need to start over. Upgrade your package and pay only the price difference.",
+      "hikmah": "We designed upgrades to feel fair — your investment carries forward. Your journey, your pace.",
+      "paths": [
+        { "from": "Basic", "to": "Standard", "diff": "+ Rp 3 jt" },
+        { "from": "Standard", "to": "VIP Silver", "diff": "+ Rp 9.5 jt" }
+      ]
+    },
+    "bonus": {
+      "badge": "Optional Success Bonus",
+      "title": "Bonus Keberhasilan",
+      "price": "Rp 500k – 2 jt",
+      "note": "based on package · voluntary",
+      "desc": "Given when a client proceeds to the khitbah stage · not mandatory · from the heart",
+      "hikmah": "We don't charge for success — we celebrate it together. This is a token of gratitude, entirely your choice."
+    },
+    "hikmah": {
+      "title": "Why We Price This Way",
+      "subtitle": "Every Rupiah reflects intention, not transaction",
+      "items": [
+        {
+          "title": "Dignity has a cost",
+          "desc": "The registration fee filters out curiosity-seekers. Only those serious about marriage take this step — protecting your time and heart."
+        },
+        {
+          "title": "Transparent from day one",
+          "desc": "No hidden costs. No surprise add-ons. You know exactly what you are investing before you commit to anything."
+        },
+        {
+          "title": "Human-led, not algorithmic",
+          "desc": "Unlike apps that charge monthly subscriptions to scroll through profiles, every Rupiah here funds real people doing real work for your future."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to Take the First Step?",
+      "subtitle": "Begin with registration — the same cost as a coffee date, but it could lead to a lifetime.",
+      "button": "Register Now"
     }
   },
   "faqPage": {

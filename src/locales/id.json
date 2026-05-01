@@ -27,7 +27,8 @@
     "dashboard": "Dashboard",
     "logout": "Keluar",
     "blog": "Blog",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "pricing": "Harga"
   },
   "dashboard": {
     "support": {
@@ -1007,6 +1008,154 @@
       "ctaBody": "Sebutkan kota dan preferensi fasilitator—kami jadwalkan sesi terawasi dengan biaya transparan.",
       "ctaPrimary": "Jadwalkan supervisi",
       "ctaSecondary": "Kembali ke blog utama"
+    }
+  },
+  "pricingPage": {
+    "hero": {
+      "badge": "Harga Transparan",
+      "title": "Investasi untuk Perjalanan Menuju Pernikahan yang Bermartabat",
+      "subtitle": "Tanpa algoritma. Tanpa scroll tanpa henti. Mak comblang nyata — terkurasi, terawasi, dan penuh berkah.",
+      "cta": "Daftar Sekarang",
+      "ctaSecondary": "Hubungi Kami"
+    },
+    "registration": {
+      "badge": "Langkah 1 — Semua Bayar Ini Terlebih Dahulu",
+      "title": "Biaya Registrasi",
+      "price": "Rp 500k",
+      "note": "sekali bayar · non-refundable",
+      "desc": "Dipotong dari paket manapun yang dipilih · Tatap muka saja",
+      "hikmah": "Biaya ini memastikan setiap kandidat di platform kami serius. Hanya yang benar-benar siap menikah yang mengambil langkah pertama ini — melindungi waktu dan hati Anda."
+    },
+    "packages": {
+      "title": "Pilih Paket Anda",
+      "subtitle": "Setiap paket dirancang dengan adab, transparansi, dan perjalanan pernikahan Anda di benak kami.",
+      "popular": "Paling Populer",
+      "vipSilver": "VIP Silver",
+      "vipGold": "VIP Gold",
+      "afterReg": "setelah registrasi",
+      "total": "Total",
+      "duration": {
+        "basic": "3 bulan keanggotaan aktif",
+        "standard": "6 bulan keanggotaan aktif",
+        "silver": "12 bulan · prioritas penuh",
+        "gold": "12 bulan · bespoke penuh"
+      },
+      "goldNote": "Privat · hanya via referral",
+      "items": {
+        "basic": {
+          "name": "Sidiq Basic",
+          "price": "Rp 2,5 jt",
+          "afterReg": "Rp 2 jt",
+          "features": [
+            "Intake interview 60 menit",
+            "3 proposal yang dikurasi",
+            "Profil anonim ditampilkan dulu",
+            "1 pertemuan ta'aruf terfasilitasi",
+            "Cek KTP + media sosial"
+          ],
+          "missing": [
+            "Tes psikologi",
+            "Verifikasi kerja / gaji",
+            "Imam di ta'aruf",
+            "Cek latar belakang lapangan"
+          ]
+        },
+        "standard": {
+          "name": "Sidiq Standard",
+          "price": "Rp 5,5 jt",
+          "afterReg": "Rp 5 jt",
+          "features": [
+            "Intake mendalam 90 menit",
+            "5 proposal yang dikurasi",
+            "Profil anonim ditampilkan dulu",
+            "2 pertemuan ta'aruf terfasilitasi",
+            "Kuesioner psikologi (form)",
+            "Verifikasi KTP + kerja + slip gaji",
+            "Imam di ta'aruf (opsional)"
+          ],
+          "missing": [
+            "Psikolog klinis",
+            "Cek lapangan / tetangga"
+          ]
+        },
+        "silver": {
+          "name": "Sidiq VIP Silver",
+          "price": "Rp 15 jt",
+          "afterReg": "Rp 14,5 jt",
+          "features": [
+            "Intake multi-sesi mendalam",
+            "8 proposal dikurasi",
+            "Profil anonim ditampilkan dulu",
+            "Ta'aruf tidak terbatas",
+            "1 sesi psikolog klinis",
+            "Cek dokumen + bank + kerja",
+            "Imam selalu hadir di ta'aruf",
+            "Koordinasi wali",
+            "1 sesi coaching pasca-match"
+          ],
+          "missing": [
+            "Cek lapangan / tetangga"
+          ]
+        },
+        "gold": {
+          "name": "Sidiq VIP Gold",
+          "price": "Rp 30–40 jt",
+          "afterReg": "",
+          "features": [
+            "Semua layanan Silver",
+            "Proposal tidak terbatas",
+            "2–3 sesi psikolog klinis",
+            "Cek lapangan + tetangga + RT/RW",
+            "Verifikasi tempat kerja & rumah",
+            "Fasilitasi pertemuan keluarga",
+            "Ditangani founder langsung",
+            "5 sesi coaching pasca-match",
+            "+3 bulan bonus jika tidak match",
+            "Jaminan kerahasiaan penuh"
+          ],
+          "missing": []
+        }
+      }
+    },
+    "upgrade": {
+      "title": "Upgrade Kapan Saja — Bayar Selisihnya Saja",
+      "subtitle": "Tidak perlu mulai dari nol. Upgrade paket dan bayar hanya selisih harganya.",
+      "hikmah": "Upgrade dirancang agar terasa adil — investasi Anda terbawa. Perjalanan Anda, kecepatan Anda.",
+      "paths": [
+        { "from": "Basic", "to": "Standard", "diff": "+ Rp 3 jt" },
+        { "from": "Standard", "to": "VIP Silver", "diff": "+ Rp 9,5 jt" }
+      ]
+    },
+    "bonus": {
+      "badge": "Bonus Opsional",
+      "title": "Bonus Keberhasilan",
+      "price": "Rp 500k – 2 jt",
+      "note": "sesuai paket · sukarela",
+      "desc": "Diberikan saat klien melanjutkan ke tahap khitbah · tidak wajib · dari hati",
+      "hikmah": "Kami tidak memungut biaya untuk keberhasilan — kami merayakannya bersama. Ini tanda syukur, sepenuhnya pilihan Anda."
+    },
+    "hikmah": {
+      "title": "Mengapa Kami Menetapkan Harga Seperti Ini",
+      "subtitle": "Setiap Rupiah mencerminkan niat, bukan transaksi",
+      "items": [
+        {
+          "title": "Martabat ada harganya",
+          "desc": "Biaya registrasi menyaring yang hanya iseng. Hanya yang serius menikah yang mengambil langkah ini — melindungi waktu dan hati Anda."
+        },
+        {
+          "title": "Transparan dari hari pertama",
+          "desc": "Tidak ada biaya tersembunyi. Tidak ada tambahan mengejutkan. Anda tahu persis apa yang diinvestasikan sebelum berkomitmen."
+        },
+        {
+          "title": "Dipimpin manusia, bukan algoritma",
+          "desc": "Tidak seperti aplikasi berlangganan bulanan untuk scroll profil, setiap Rupiah di sini membiayai manusia nyata yang bekerja untuk masa depan Anda."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Siap Mengambil Langkah Pertama?",
+      "subtitle": "Mulai dengan registrasi — biayanya setara secangkir kopi, tapi bisa berujung seumur hidup.",
+      "button": "Daftar Sekarang"
     }
   },
   "faqPage": {
