@@ -410,7 +410,7 @@
           },
           "phone": {
             "label": "Telepon:",
-            "value": "+6281327054561"
+            "value": "+6281122210303"
           },
           "location": {
             "label": "Lokasi:",
@@ -563,7 +563,7 @@
           },
           "phone": {
             "label": "Telepon:",
-            "value": "+6281327054561"
+            "value": "+6281122210303"
           },
           "location": {
             "label": "Lokasi:",
@@ -593,8 +593,8 @@
       "title": "Terhubung dengan Kami",
       "description": "Tetap dekat dengan komunitas JodohMu dan dapatkan kisah inspiratif, acara, serta tips yang kami kurasi untuk perjalanan Anda.",
       "email": "info@jodohmu.com",
-      "phone": "+6281327054561",
-      "whatsapp": "6281327054561"
+      "phone": "+6281122210303",
+      "whatsapp": "6281122210303"
     },
     "subfooter": {
       "copyright": "© {{year}} Jodohmu",
@@ -1013,16 +1013,16 @@
   "pricingPage": {
     "discount": {
       "badge": "Eksklusif Mei — Kursi Terbatas",
-      "headline": "Diskon 50% Semua Paket",
-      "sub": "Penawaran berakhir 31 Mei. Jangan biarkan jodoh yang tepat berlalu begitu saja.",
+      "headline": "🌙 Mei ini — harga perkenalan 50% untuk paket Pearl. Penawaran berakhir 31 Mei.",
+      "sub": "",
       "cta": "Klaim Diskon 50% Sekarang",
       "urgency": "Kursi cepat terisi — daftar hari ini"
     },
     "trust": {
-      "couples": "100+ Pasangan Berhasil",
+      "couples": "Berbasis di Bandung",
       "location": "Tim Berbasis Bandung",
       "supervised": "100% Terawasi",
-      "human": "Mak Comblang Nyata"
+      "human": "Tim Nyata · Proses Nyata"
     },
     "hero": {
       "badge": "Harga Transparan · Tanpa Biaya Tersembunyi",
@@ -1036,7 +1036,7 @@
       "title": "Biaya Registrasi",
       "price": "Rp 500k",
       "note": "sekali bayar · non-refundable",
-      "desc": "Dipotong dari paket manapun yang dipilih · Tatap muka saja",
+      "desc": "Dipotong penuh dari paket manapun yang Anda pilih — tidak ada biaya ganda.",
       "hikmah": "Biaya ini memastikan setiap kandidat di platform kami serius. Hanya yang benar-benar siap menikah yang mengambil langkah pertama ini — melindungi waktu dan hati Anda."
     },
     "packages": {
@@ -1131,6 +1131,52 @@
             "Jaminan kerahasiaan penuh"
           ],
           "missing": []
+        },
+        "awal": {
+          "name": "Pearl",
+          "price": "Rp 2 juta",
+          "discountedPrice": "Rp 1 juta",
+          "duration": "3 bulan · registrasi termasuk",
+          "features": [
+            "Interview intake 60 menit",
+            "3 kandidat yang dikurasi",
+            "Profil anonim ditampilkan lebih dulu",
+            "1 pertemuan ta'aruf terfasilitasi",
+            "Verifikasi KTP & media sosial",
+            "Biaya registrasi termasuk"
+          ]
+        },
+        "serius": {
+          "name": "Ruby",
+          "price": "Rp 5 juta",
+          "duration": "6 bulan · registrasi termasuk",
+          "features": [
+            "Intake mendalam 90 menit",
+            "5 kandidat yang dikurasi",
+            "Profil anonim ditampilkan lebih dulu",
+            "2 pertemuan ta'aruf terfasilitasi",
+            "Kuesioner psikologi",
+            "Verifikasi KTP, kerja & slip gaji",
+            "Imam hadir di ta'aruf (opsional)",
+            "Biaya registrasi termasuk"
+          ]
+        },
+        "istimewa": {
+          "name": "Diamond",
+          "price": "Rp 40 juta",
+          "duration": "12 bulan · sepenuhnya privat",
+          "referralOnly": "Privat · Hanya via Referral",
+          "features": [
+            "Semua layanan Ruby",
+            "Kandidat tidak terbatas",
+            "2\u20133 sesi psikolog klinis",
+            "Cek lapangan + tetangga + RT/RW",
+            "Verifikasi tempat kerja & rumah",
+            "Fasilitasi pertemuan keluarga",
+            "Ditangani founder langsung",
+            "5 sesi coaching pasca-match",
+            "Biaya registrasi termasuk"
+          ]
         }
       }
     },
@@ -1139,8 +1185,8 @@
       "subtitle": "Tidak perlu mulai dari nol. Upgrade paket dan bayar hanya selisih harganya.",
       "hikmah": "Upgrade dirancang agar terasa adil — investasi Anda terbawa. Perjalanan Anda, kecepatan Anda.",
       "paths": [
-        { "from": "Basic", "to": "Standard", "diff": "+ Rp 3 jt" },
-        { "from": "Standard", "to": "VIP Silver", "diff": "+ Rp 9,5 jt" }
+        { "from": "Pearl", "to": "Ruby", "diff": "+ Rp 3 jt" },
+        { "from": "Ruby", "to": "Diamond", "diff": "+ Rp 35 jt" }
       ]
     },
     "bonus": {
@@ -1171,7 +1217,7 @@
     },
     "cta": {
       "title": "Siap Mengambil Langkah Pertama?",
-      "subtitle": "Mulai dengan registrasi — biayanya setara secangkir kopi, tapi bisa berujung seumur hidup.",
+      "subtitle": "Mulai dengan satu langkah kecil — registrasi Rp 500k yang dipotong penuh dari paket Anda.",
       "button": "Daftar Sekarang"
     }
   },

@@ -75,7 +75,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const whatsappHref = `https://wa.me/6281327054561?text=${encodeURIComponent(
+  const whatsappHref = `https://wa.me/6281122210303?text=${encodeURIComponent(
     "Assalamualaikum, saya ingin konsultasi dengan tim Jodohmu."
   )}`;
 

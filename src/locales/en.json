@@ -600,7 +600,7 @@
       "description": "Stay close to the JodohMu community and never miss heartfelt success stories, events, and tips curated for your journey.",
       "email": "info@jodohmu.com",
       "phone": "+62 811 222 10303",
-      "whatsapp": "+62 811 222 10303"
+      "whatsapp": "6281122210303"
     },
     "subfooter": {
       "copyright": "© {{year}} Jodohmu",
@@ -955,16 +955,16 @@
   "pricingPage": {
     "discount": {
       "badge": "May Exclusive — Limited Seats",
-      "headline": "50% OFF All Packages",
-      "sub": "This offer expires May 31. Don't let the right person slip by.",
+      "headline": "🌙 This May — 50% introductory price for Pearl. Offer ends May 31.",
+      "sub": "",
       "cta": "Claim 50% Off Now",
       "urgency": "Seats filling fast — register today"
     },
     "trust": {
-      "couples": "100+ Couples Matched",
+      "couples": "Bandung-Based",
       "location": "Bandung-Based Team",
       "supervised": "100% Supervised",
-      "human": "Real Human Matchmakers"
+      "human": "Real Team · Real Process"
     },
     "hero": {
       "badge": "Transparent Pricing · No Hidden Costs",
@@ -978,7 +978,7 @@
       "title": "Registration Fee",
       "price": "Rp 500k",
       "note": "one-time · non-refundable",
-      "desc": "Deducted from whichever package you choose · In-person only",
+      "desc": "Fully deducted from whichever package you choose — no double charges.",
       "hikmah": "This fee ensures every candidate on our platform is serious. Only those truly ready for marriage take this first step — protecting your time and heart."
     },
     "packages": {
@@ -1073,6 +1073,52 @@
             "Full confidentiality guarantee"
           ],
           "missing": []
+        },
+        "awal": {
+          "name": "Pearl",
+          "price": "Rp 2 juta",
+          "discountedPrice": "Rp 1 juta",
+          "duration": "3 months · registration included",
+          "features": [
+            "60-minute intake interview",
+            "3 curated candidate proposals",
+            "Anonymous profile shown first",
+            "1 supervised ta'aruf meeting",
+            "ID & social media verification",
+            "Registration fee included"
+          ]
+        },
+        "serius": {
+          "name": "Ruby",
+          "price": "Rp 5 juta",
+          "duration": "6 months · registration included",
+          "features": [
+            "In-depth 90-minute intake",
+            "5 curated candidate proposals",
+            "Anonymous profile shown first",
+            "2 supervised ta'aruf meetings",
+            "Psychology questionnaire",
+            "ID, work & payslip verification",
+            "Imam present at ta'aruf (optional)",
+            "Registration fee included"
+          ]
+        },
+        "istimewa": {
+          "name": "Diamond",
+          "price": "Rp 40 juta",
+          "duration": "12 months · fully private",
+          "referralOnly": "Private · Referral Only",
+          "features": [
+            "All Ruby services",
+            "Unlimited candidate proposals",
+            "2\u20133 clinical psychologist sessions",
+            "Field + neighbour + RT/RW check",
+            "Workplace & home verification",
+            "Family meeting facilitation",
+            "Handled directly by founder",
+            "5 post-match coaching sessions",
+            "Registration fee included"
+          ]
         }
       }
     },
@@ -1081,8 +1127,8 @@
       "subtitle": "No need to start over. Upgrade your package and pay only the price difference.",
       "hikmah": "We designed upgrades to feel fair — your investment carries forward. Your journey, your pace.",
       "paths": [
-        { "from": "Basic", "to": "Standard", "diff": "+ Rp 3 jt" },
-        { "from": "Standard", "to": "VIP Silver", "diff": "+ Rp 9.5 jt" }
+        { "from": "Pearl", "to": "Ruby", "diff": "+ Rp 3 jt" },
+        { "from": "Ruby", "to": "Diamond", "diff": "+ Rp 35 jt" }
       ]
     },
     "bonus": {
@@ -1113,7 +1159,7 @@
     },
     "cta": {
       "title": "Ready to Take the First Step?",
-      "subtitle": "Begin with registration — the same cost as a coffee date, but it could lead to a lifetime.",
+      "subtitle": "Begin with one small step — a Rp 500k registration fully deducted from your chosen package.",
       "button": "Register Now"
     }
   },
