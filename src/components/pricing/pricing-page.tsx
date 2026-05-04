@@ -36,16 +36,16 @@ export function PricingPage() {
           MAY 50% DISCOUNT BANNER — UNMISSABLE
       ══════════════════════════════════════ */}
       <div className="sticky top-20 z-40 w-full bg-gradient-to-r from-orange-500 via-red-500 to-rose-600 shadow-lg shadow-red-500/30">
-        <div className="container flex flex-col items-center justify-between gap-2 py-3 sm:flex-row sm:gap-4">
-          <div className="flex items-center gap-3">
-            <span className="shrink-0 rounded-full bg-white/30 px-3 py-1 text-xs font-bold uppercase tracking-widest text-white">
+        <div className="container flex flex-col items-center justify-between gap-2 py-2.5 sm:flex-row sm:gap-4">
+          <div className="flex items-center gap-2">
+            <span className="hidden shrink-0 rounded-full bg-white/30 px-3 py-1 text-xs font-bold uppercase tracking-widest text-white sm:inline-flex">
               {t("pricingPage.discount.badge")}
             </span>
-            <p className="text-center text-base font-extrabold text-white sm:text-left sm:text-lg">
+            <p className="text-center text-xs font-bold leading-snug text-white sm:text-left sm:text-sm sm:font-extrabold">
               {t("pricingPage.discount.headline")}
             </p>
           </div>
-          <Button asChild size="sm" className="shrink-0 rounded-full bg-white px-5 font-bold text-red-600 shadow-md hover:bg-white/90">
+          <Button asChild size="sm" className="shrink-0 rounded-full bg-white px-4 py-1.5 text-xs font-bold text-red-600 shadow-md hover:bg-white/90 sm:px-5 sm:text-sm">
             <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
               {t("pricingPage.discount.cta")}
             </Link>
@@ -68,16 +68,16 @@ export function PricingPage() {
           <h1 className="mt-6 font-serif text-4xl font-bold leading-tight tracking-tighter text-[#0b3a86] sm:text-5xl md:text-6xl">
             {t("pricingPage.hero.title")}
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-[#3d425a]">
+          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-[#3d425a] sm:text-lg">
             {t("pricingPage.hero.subtitle")}
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Button asChild size="lg" className="rounded-full bg-[#9B2242] px-8 py-6 text-base font-bold text-white shadow-lg shadow-[#9B2242]/30 hover:bg-[#8a1e3b]">
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Button asChild size="lg" className="rounded-full bg-[#9B2242] px-6 py-5 text-sm font-bold text-white shadow-lg shadow-[#9B2242]/30 hover:bg-[#8a1e3b] sm:px-8 sm:py-6 sm:text-base">
               <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
                 {t("pricingPage.hero.cta")}
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="rounded-full border-[#0b3a86]/30 px-8 py-6 text-base font-semibold text-[#0b3a86] hover:bg-[#0b3a86]/5">
+            <Button asChild size="lg" variant="outline" className="rounded-full border-[#0b3a86]/30 px-6 py-5 text-sm font-semibold text-[#0b3a86] hover:bg-[#0b3a86]/5 sm:px-8 sm:py-6 sm:text-base">
               <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
                 {t("pricingPage.hero.ctaSecondary")}
               </Link>
@@ -108,7 +108,7 @@ export function PricingPage() {
           <div className="bg-gradient-to-r from-[#0b3a86] to-[#1a4fa0] px-8 py-4 sm:px-12">
             <span className="text-xs font-bold uppercase tracking-[0.35em] text-white/80">{t("pricingPage.registration.badge")}</span>
           </div>
-          <div className="bg-white px-8 py-8 sm:px-12">
+          <div className="bg-white px-4 py-6 sm:px-8 sm:py-8 md:px-12">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-3">
                 <h2 className="text-2xl font-bold text-[#0b3a86]">{t("pricingPage.registration.title")}</h2>
@@ -138,14 +138,14 @@ export function PricingPage() {
           </div>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-3">
+        <div className="grid gap-10 md:grid-cols-3">
           {packages.map((pkg) => {
             const { popular, discount, referralOnly, dark } = pkg;
 
             return (
               <div
                 key={pkg.key}
-                className={`relative flex flex-col rounded-3xl transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl p-6
+                className={`relative flex flex-col rounded-3xl transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl p-5 sm:p-6
                   ${discount ? "border border-[#d0d9f0] bg-gradient-to-br from-[#f0f4ff] to-white shadow-sm" : ""}
                   ${popular ? "border-2 border-[#9B2242] bg-gradient-to-br from-[#fff4f7] to-white shadow-lg shadow-[#9B2242]/15 md:-translate-y-3 md:scale-105" : ""}
                   ${dark ? "border border-[#c8860a]/40 bg-gradient-to-br from-[#1a0a00] to-[#2d1400] shadow-lg" : ""}
@@ -168,7 +168,7 @@ export function PricingPage() {
                 )}
 
                 {/* Name + duration */}
-                <div className="mb-4 mt-4">
+                <div className="mb-4 mt-6">
                   <h3 className={`text-2xl font-extrabold ${dark ? "text-[#ffd97a]" : "text-[#0b3a86]"}`}>
                     {t(`pricingPage.packages.items.${pkg.key}.name`)}
                   </h3>
@@ -183,7 +183,7 @@ export function PricingPage() {
                   {discount ? (
                     <>
                       <p className="text-xs font-semibold uppercase tracking-widest text-white/70">Harga Mei</p>
-                      <p className="text-4xl font-extrabold tracking-tight text-white">
+                      <p className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                         {t(`pricingPage.packages.items.${pkg.key}.discountedPrice`)}
                       </p>
                       <p className="mt-1 text-sm text-white/60 line-through">
@@ -191,7 +191,7 @@ export function PricingPage() {
                       </p>
                     </>
                   ) : (
-                    <p className="text-4xl font-extrabold tracking-tight text-white">
+                    <p className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                       {t(`pricingPage.packages.items.${pkg.key}.price`)}
                     </p>
                   )}
@@ -250,7 +250,7 @@ export function PricingPage() {
           </div>
           <div className="space-y-3">
             {Array.from({ length: upgradePathsCount }, (_, i) => (
-              <div key={i} className="flex items-center justify-between rounded-2xl border border-[#0b3a86]/10 bg-white px-5 py-4 shadow-sm">
+              <div key={i} className="flex flex-wrap items-center justify-between gap-y-2 rounded-2xl border border-[#0b3a86]/10 bg-white px-4 py-3 shadow-sm sm:px-5 sm:py-4">
                 <div className="flex flex-wrap items-center gap-2 text-sm font-semibold">
                   <span className="rounded-full bg-[#0b3a86]/10 px-3 py-1 text-[#0b3a86]">
                     {t(`pricingPage.upgrade.paths.${i}.from`)}
@@ -260,7 +260,7 @@ export function PricingPage() {
                     {t(`pricingPage.upgrade.paths.${i}.to`)}
                   </span>
                 </div>
-                <span className="text-xl font-extrabold text-[#9B2242]">
+                <span className="text-base font-extrabold text-[#9B2242] sm:text-xl">
                   {t(`pricingPage.upgrade.paths.${i}.diff`)}
                 </span>
               </div>
@@ -322,7 +322,7 @@ export function PricingPage() {
           BOTTOM CTA
       ══════════════════ */}
       <section className="container mt-20 max-w-5xl">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0b3a86] via-[#1e2e6b] to-[#9B2242] px-8 py-20 text-center text-white shadow-2xl shadow-[#0b3a86]/20 sm:px-16 sm:py-24">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#0b3a86] via-[#1e2e6b] to-[#9B2242] px-6 py-14 text-center text-white shadow-2xl shadow-[#0b3a86]/20 sm:px-12 sm:py-20 md:px-16 md:py-24">
           <div className="absolute inset-0 pointer-events-none">
             <div className="absolute -top-20 left-1/4 h-64 w-64 rounded-full bg-white/5 blur-3xl" />
             <div className="absolute -bottom-20 right-1/4 h-64 w-64 rounded-full bg-white/5 blur-3xl" />
@@ -331,15 +331,15 @@ export function PricingPage() {
             <span className="inline-flex items-center rounded-full bg-white/15 px-4 py-1 text-xs font-bold uppercase tracking-widest text-white/90">
               🔥 {t("pricingPage.discount.badge")}
             </span>
-            <h2 className="font-serif text-3xl font-bold sm:text-4xl">{t("pricingPage.cta.title")}</h2>
-            <p className="mx-auto max-w-xl text-white/85 text-lg leading-relaxed">{t("pricingPage.cta.subtitle")}</p>
-            <div className="flex flex-wrap justify-center gap-4 pt-2">
-              <Button asChild size="lg" className="rounded-full bg-white px-10 py-6 text-base font-extrabold text-[#9B2242] hover:bg-white/90 shadow-xl shadow-black/20">
+            <h2 className="font-serif text-2xl font-bold sm:text-3xl md:text-4xl">{t("pricingPage.cta.title")}</h2>
+            <p className="mx-auto max-w-xl text-white/85 text-base leading-relaxed sm:text-lg">{t("pricingPage.cta.subtitle")}</p>
+            <div className="flex flex-wrap justify-center gap-3 pt-2">
+              <Button asChild size="lg" className="rounded-full bg-white px-7 py-5 text-sm font-extrabold text-[#9B2242] hover:bg-white/90 shadow-xl shadow-black/20 sm:px-10 sm:py-6 sm:text-base">
                 <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
                   {t("pricingPage.cta.button")}
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="rounded-full border-2 border-white bg-white/10 px-8 py-6 text-base font-semibold text-white hover:bg-white/20">
+              <Button asChild size="lg" variant="outline" className="rounded-full border-2 border-white bg-white/10 px-6 py-5 text-sm font-semibold text-white hover:bg-white/20 sm:px-8 sm:py-6 sm:text-base">
                 <Link href="/faq">FAQ</Link>
               </Button>
             </div>
