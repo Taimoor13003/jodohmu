@@ -23,7 +23,6 @@ const packages: PkgConfig[] = [
 ];
 
 const hikmahCount = 3;
-const upgradePathsCount = 2;
 const trustKeys = ["couples", "supervised", "human"] as const;
 
 export function PricingPage() {
@@ -35,7 +34,7 @@ export function PricingPage() {
       {/* ══════════════════════════════════════
           MAY 50% DISCOUNT BANNER — UNMISSABLE
       ══════════════════════════════════════ */}
-      <div className="sticky top-20 z-40 w-full bg-gradient-to-r from-orange-500 via-red-500 to-rose-600 shadow-lg shadow-red-500/30">
+      <div className="w-full bg-gradient-to-r from-orange-500 via-red-500 to-rose-600 shadow-lg shadow-red-500/30">
         <div className="container flex flex-col items-center justify-between gap-2 py-2.5 sm:flex-row sm:gap-4">
           <div className="flex items-center gap-2">
             <span className="hidden shrink-0 rounded-full bg-white/30 px-3 py-1 text-xs font-bold uppercase tracking-widest text-white sm:inline-flex">
@@ -224,7 +223,7 @@ export function PricingPage() {
                     `}
                   >
                     <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
-                      {discount ? t("pricingPage.discount.cta") : t("pricingPage.hero.cta")}
+                      {discount ? t("pricingPage.discount.cta") : t("pricingPage.cta.button")}
                     </Link>
                   </Button>
                 )}
@@ -234,42 +233,53 @@ export function PricingPage() {
         </div>
       </section>
 
-      {/* ══════════════════
-          UPGRADE PATHS
-      ══════════════════ */}
+      {/* ══════════════════════════
+          SPECIAL PROMOS
+      ══════════════════════════ */}
       <section className="container mt-20 max-w-5xl">
-        <div className="rounded-3xl border border-[#0b3a86]/10 bg-gradient-to-br from-[#f5f8ff] to-white p-8 shadow-sm sm:p-10">
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-[#0b3a86]">{t("pricingPage.upgrade.title")}</h2>
-              <p className="mt-1 text-[#4a4f63]">{t("pricingPage.upgrade.subtitle")}</p>
-            </div>
-            <span className="shrink-0 rounded-full bg-[#0b3a86]/10 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[#0b3a86]">
-              Upgrade
-            </span>
-          </div>
-          <div className="space-y-3">
-            {Array.from({ length: upgradePathsCount }, (_, i) => (
-              <div key={i} className="flex flex-wrap items-center justify-between gap-y-2 rounded-2xl border border-[#0b3a86]/10 bg-white px-4 py-3 shadow-sm sm:px-5 sm:py-4">
-                <div className="flex flex-wrap items-center gap-2 text-sm font-semibold">
-                  <span className="rounded-full bg-[#0b3a86]/10 px-3 py-1 text-[#0b3a86]">
-                    {t(`pricingPage.upgrade.paths.${i}.from`)}
-                  </span>
-                  <span className="text-[#9B2242] font-bold">→</span>
-                  <span className="rounded-full bg-[#9B2242]/10 px-3 py-1 text-[#9B2242]">
-                    {t(`pricingPage.upgrade.paths.${i}.to`)}
-                  </span>
-                </div>
-                <span className="text-base font-extrabold text-[#9B2242] sm:text-xl">
-                  {t(`pricingPage.upgrade.paths.${i}.diff`)}
-                </span>
-              </div>
-            ))}
-          </div>
-          <blockquote className="mt-5 border-l-4 border-[#9B2242] bg-[#9B2242]/5 pl-4 pr-4 py-3 text-sm italic text-[#9B2242] rounded-r-xl">
-            {t("pricingPage.upgrade.hikmah")}
-          </blockquote>
+        <div className="mb-8 text-center">
+          <h2 className="font-serif text-2xl font-bold text-[#0b3a86] sm:text-3xl">{t("pricingPage.special.title")}</h2>
+          <p className="mx-auto mt-2 max-w-xl text-sm text-[#4a4f63] sm:text-base">{t("pricingPage.special.subtitle")}</p>
         </div>
+        <div className="grid gap-6 sm:grid-cols-2">
+          {/* Student promo */}
+          <div className="flex flex-col rounded-3xl border-2 border-[#0b3a86]/20 bg-gradient-to-br from-[#f0f4ff] to-white p-6 shadow-sm">
+            <span className="mb-3 inline-flex w-fit items-center rounded-full bg-[#0b3a86] px-3 py-1 text-xs font-bold uppercase tracking-widest text-white">
+              🎓 {t("pricingPage.special.student.badge")}
+            </span>
+            <div className="flex items-end gap-3 mb-3">
+              <p className="text-5xl font-extrabold text-[#0b3a86]">{t("pricingPage.special.student.discount")}</p>
+              <p className="mb-1.5 text-sm font-semibold text-[#4a4f63]">{t("pricingPage.special.student.title")}</p>
+            </div>
+            <p className="text-sm leading-relaxed text-[#2d3150]">{t("pricingPage.special.student.desc")}</p>
+            <p className="mt-3 text-xs text-[#4a4f63]">{t("pricingPage.special.student.note")}</p>
+            <Button asChild className="mt-5 w-full rounded-full bg-[#0b3a86] py-5 text-sm font-bold text-white hover:bg-[#0a357a]">
+              <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                {t("pricingPage.special.cta")}
+              </Link>
+            </Button>
+          </div>
+          {/* Widow/widower promo */}
+          <div className="flex flex-col rounded-3xl border-2 border-[#9B2242]/20 bg-gradient-to-br from-[#fff4f7] to-white p-6 shadow-sm">
+            <span className="mb-3 inline-flex w-fit items-center rounded-full bg-[#9B2242] px-3 py-1 text-xs font-bold uppercase tracking-widest text-white">
+              🤍 {t("pricingPage.special.widow.badge")}
+            </span>
+            <div className="flex items-end gap-3 mb-3">
+              <p className="text-5xl font-extrabold text-[#9B2242]">{t("pricingPage.special.widow.discount")}</p>
+              <p className="mb-1.5 text-sm font-semibold text-[#4a4f63]">{t("pricingPage.special.widow.title")}</p>
+            </div>
+            <p className="text-sm leading-relaxed text-[#2d3150]">{t("pricingPage.special.widow.desc")}</p>
+            <p className="mt-3 text-xs text-[#4a4f63]">{t("pricingPage.special.widow.note")}</p>
+            <Button asChild className="mt-5 w-full rounded-full bg-[#9B2242] py-5 text-sm font-bold text-white hover:bg-[#8a1e3b]">
+              <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                {t("pricingPage.special.cta")}
+              </Link>
+            </Button>
+          </div>
+        </div>
+        <blockquote className="mt-6 border-l-4 border-[#9B2242] bg-[#9B2242]/5 pl-4 pr-4 py-3 text-sm italic text-[#9B2242] rounded-r-xl">
+          {t("pricingPage.special.hikmah")}
+        </blockquote>
       </section>
 
       {/* ══════════════════════

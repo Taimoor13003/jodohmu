@@ -1134,8 +1134,8 @@
         },
         "awal": {
           "name": "Pearl",
-          "price": "Rp 2 juta",
-          "discountedPrice": "Rp 1 juta",
+          "price": "Rp 2,5 juta",
+          "discountedPrice": "Rp 1,25 juta",
           "duration": "3 bulan · registrasi termasuk",
           "features": [
             "Interview intake 60 menit",
@@ -1180,14 +1180,25 @@
         }
       }
     },
-    "upgrade": {
-      "title": "Upgrade Kapan Saja — Bayar Selisihnya Saja",
-      "subtitle": "Tidak perlu mulai dari nol. Upgrade paket dan bayar hanya selisih harganya.",
-      "hikmah": "Upgrade dirancang agar terasa adil — investasi Anda terbawa. Perjalanan Anda, kecepatan Anda.",
-      "paths": [
-        { "from": "Pearl", "to": "Ruby", "diff": "+ Rp 3 jt" },
-        { "from": "Ruby", "to": "Diamond", "diff": "+ Rp 35 jt" }
-      ]
+    "special": {
+      "title": "Promo Khusus · Untuk Kamu yang Berani Memulai",
+      "subtitle": "Kami percaya menikah adalah hak semua orang — bukan hanya yang mampu secara finansial.",
+      "student": {
+        "badge": "Khusus Mahasiswa",
+        "title": "Diskon Mahasiswa",
+        "discount": "50% OFF",
+        "desc": "Tunjukkan kartu mahasiswa aktif dan dapatkan diskon 50% untuk paket Pearl.",
+        "note": "Berlaku untuk paket Pearl · Stok terbatas · Verifikasi KTM diperlukan"
+      },
+      "widow": {
+        "badge": "Khusus Janda & Duda",
+        "title": "Harga Sahabat",
+        "discount": "25% OFF",
+        "desc": "Karena memulai kembali butuh keberanian lebih. Kami hadir untuk mendampingi perjalanan Anda.",
+        "note": "Berlaku untuk paket Pearl · Diskret & penuh empati · Verifikasi diperlukan"
+      },
+      "cta": "Hubungi Kami untuk Klaim",
+      "hikmah": "Setiap orang berhak atas jodoh yang baik — kami hanya ingin memastikan harga bukan halangan."
     },
     "bonus": {
       "badge": "Bonus Opsional",

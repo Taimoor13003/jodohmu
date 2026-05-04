@@ -1076,8 +1076,8 @@
         },
         "awal": {
           "name": "Pearl",
-          "price": "Rp 2 juta",
-          "discountedPrice": "Rp 1 juta",
+          "price": "Rp 2,5 juta",
+          "discountedPrice": "Rp 1,25 juta",
           "duration": "3 months · registration included",
           "features": [
             "60-minute intake interview",
@@ -1122,14 +1122,25 @@
         }
       }
     },
-    "upgrade": {
-      "title": "Upgrade Anytime — Pay Only the Difference",
-      "subtitle": "No need to start over. Upgrade your package and pay only the price difference.",
-      "hikmah": "We designed upgrades to feel fair — your investment carries forward. Your journey, your pace.",
-      "paths": [
-        { "from": "Pearl", "to": "Ruby", "diff": "+ Rp 3 jt" },
-        { "from": "Ruby", "to": "Diamond", "diff": "+ Rp 35 jt" }
-      ]
+    "special": {
+      "title": "Special Promos · For Those Who Deserve a Little More",
+      "subtitle": "We believe marriage is for everyone — not just those who can afford it comfortably.",
+      "student": {
+        "badge": "Students Only",
+        "title": "Student Discount",
+        "discount": "50% OFF",
+        "desc": "Show your active student ID and get 50% off the Pearl package.",
+        "note": "Pearl package only · Limited slots · Student ID verification required"
+      },
+      "widow": {
+        "badge": "Widows & Widowers",
+        "title": "Compassion Price",
+        "discount": "25% OFF",
+        "desc": "Starting over takes more courage. We are here to walk alongside you with care and discretion.",
+        "note": "Pearl package only · Discreet & empathetic · Verification required"
+      },
+      "cta": "Contact Us to Claim",
+      "hikmah": "Everyone deserves a good match — we just want to make sure price is never the barrier."
     },
     "bonus": {
       "badge": "Optional Success Bonus",
