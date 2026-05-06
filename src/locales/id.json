@@ -1273,5 +1273,110 @@
       "subtitle": "Bicara langsung dengan matchmaker kami untuk rencana yang dipersonalisasi.",
       "button": "Daftar sekarang"
     }
+  },
+  "careersPage": {
+    "hero": {
+      "eyebrow": "Karir di Jodohmu · Bandung, Indonesia",
+      "title": "Bangun sesuatu yang bermakna.",
+      "subtitle": "Kami sedang membangun tim yang benar-benar percaya dalam membantu Muslim menemukan pasangan hidup dengan bermartabat. Setiap peran di sini berdampak nyata pada kehidupan nyata."
+    },
+    "values": {
+      "0": { "title": "Kerja berbasis misi", "text": "Setiap klien yang menemukan pasangan melalui Jodohmu adalah kehidupan yang berubah. Pekerjaan Anda di sini memiliki makna lebih dari sekadar gaji." },
+      "1": { "title": "Kinerja dihargai", "text": "Kami percaya membayar orang berdasarkan hasil. Struktur komisi kami transparan, adil, dan dirancang untuk berkembang bersama Anda." },
+      "2": { "title": "Ruang untuk berkembang", "text": "Kami masih awal. Orang-orang yang bergabung sekarang akan membentuk bagaimana perusahaan ini tumbuh — dan mendapat imbalannya." }
+    },
+    "jobs": {
+      "title": "Posisi Terbuka",
+      "subtitle": "3 posisi tersedia",
+      "whatYouDo": "Yang Anda Lakukan",
+      "whatYouGet": "Yang Anda Dapatkan",
+      "whoYouAre": "Kriteria Anda",
+      "apply": "Lamar via WhatsApp →",
+      "items": {
+        "0": {
+          "title": "Appointment Setter",
+          "subtitle": "Pencari Klien & Penjadwal Konsultasi",
+          "tags": { "0": "Remote", "1": "Komisi Saja" },
+          "desc": "Anda menjangkau calon klien melalui jaringan, media sosial, atau komunitas, lalu mengundang mereka ke konsultasi gratis bersama tim kami. Setiap klien yang hadir dan memenuhi syarat, Anda dapat komisi. Sederhana, remote, dan sepenuhnya fleksibel.",
+          "do": {
+            "0": "Menjangkau calon klien via WhatsApp, Instagram, atau komunitas",
+            "1": "Melakukan percakapan hangat untuk memahami minat mereka",
+            "2": "Menjadwalkan konsultasi gratis bersama tim kami",
+            "3": "Mengkonfirmasi janji dan memastikan mereka hadir",
+            "4": "Tim kami menangani segalanya setelah itu"
+          },
+          "get": {
+            "0": "Rp 40.000 per konsultasi terkonfirmasi yang hadir",
+            "1": "Sepenuhnya remote — bekerja dari mana saja, kapan saja",
+            "2": "Tidak ada target, tidak ada tekanan",
+            "3": "Pembayaran mingguan",
+            "4": "Potensi Rp 1–6 juta per bulan tergantung usaha"
+          },
+          "are": {
+            "0": "Ramah, hangat, dan dipercaya di komunitas Anda",
+            "1": "Aktif di WhatsApp atau media sosial",
+            "2": "Mandiri dan termotivasi",
+            "3": "Muslim, memahami nilai perjodohan halal",
+            "4": "Lokasi mana saja di Indonesia — sepenuhnya remote"
+          }
+        },
+        "1": {
+          "title": "Sales Consultant",
+          "subtitle": "Konsultan Penjualan & Penutup Klien",
+          "tags": { "0": "Remote / Hybrid", "1": "Komisi Saja" },
+          "desc": "Anda bertemu calon klien secara langsung atau via call, menjelaskan layanan kami, memahami kebutuhan mereka, dan membimbing mereka untuk mendaftar. Anda adalah jembatan antara lead yang penasaran dan klien yang berkomitmen. Komisi tinggi, tidak ada batas.",
+          "do": {
+            "0": "Melakukan pertemuan konsultasi gratis dengan lead hangat",
+            "1": "Mendengarkan secara mendalam untuk memahami situasi dan tujuan mereka",
+            "2": "Mempresentasikan paket Jodohmu yang tepat sesuai kebutuhan mereka",
+            "3": "Menangani keberatan dengan empati dan kejujuran",
+            "4": "Membimbing klien untuk mendaftar dan melakukan pembayaran pertama"
+          },
+          "get": {
+            "0": "Komisi 10–15% per klien yang mendaftar",
+            "1": "Paket Pearl (Rp 2,5 jt) → Rp 250–375k per penutupan",
+            "2": "Paket Ruby (Rp 5 jt) → Rp 500–750k per penutupan",
+            "3": "Paket Diamond (Rp 40 jt) → Rp 4–6 juta per penutupan",
+            "4": "Tidak ada gaji pokok — tidak ada batas penghasilan"
+          },
+          "are": {
+            "0": "Percaya diri, hangat, dan benar-benar empatik",
+            "1": "Berpengalaman dalam penjualan, konseling, atau peran yang berhubungan dengan klien",
+            "2": "Memahami nilai pernikahan Islam secara mendalam",
+            "3": "Dapat berbicara dengan pria dan wanita secara profesional",
+            "4": "Berbasis di Bandung atau bersedia bertemu klien di sana"
+          }
+        },
+        "2": {
+          "title": "Operations Assistant",
+          "subtitle": "Asisten Operasional & Penanganan Klien",
+          "tags": { "0": "Bandung", "1": "Part-time → Full-time" },
+          "desc": "Ini adalah peran inti tim kami. Anda menangani komunikasi WhatsApp dengan klien terdaftar, membantu proses pencocokan, mengelola database klien, dan membuat konten media sosial harian. Dimulai part-time — menjadi full-time onsite dalam 3 bulan seiring bisnis berkembang.",
+          "do": {
+            "0": "Menangani komunikasi WhatsApp dengan klien terdaftar",
+            "1": "Membantu dalam kurasi dan pengusulan kandidat pasangan",
+            "2": "Mengelola dan memperbarui database klien setiap hari",
+            "3": "Membuat dan memposting konten media sosial (skrip disediakan)",
+            "4": "Mengkoordinasikan jadwal pertemuan ta'aruf",
+            "5": "Membantu pendiri dalam operasi sehari-hari"
+          },
+          "get": {
+            "0": "Rp 1,6–2 juta per bulan (part-time) untuk memulai",
+            "1": "Gaji full-time ditinjau pada bulan ke-3 berdasarkan kinerja",
+            "2": "Komisi per klien yang berhasil dijodohkan",
+            "3": "Jam part-time fleksibel di awal",
+            "4": "Menjadi bagian dari membangun sesuatu yang bermakna dari awal"
+          },
+          "are": {
+            "0": "Muslimah, berbasis di Bandung — wajib",
+            "1": "Hangat, empatik, dan sangat dapat dipercaya",
+            "2": "Nyaman dengan teknologi — WhatsApp, Instagram, Google Sheets",
+            "3": "Bahasa Inggris fungsional untuk berkomunikasi dengan pendiri",
+            "4": "Memahami nilai pernikahan Islam dan proses ta'aruf",
+            "5": "Idealnya sudah menikah — memahami perjalanan secara pribadi"
+          }
+        }
+      }
+    }
   }
 }

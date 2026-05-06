@@ -1215,5 +1215,110 @@
       "subtitle": "Talk directly with our matchmakers for a personalized plan.",
       "button": "Register now"
     }
+  },
+  "careersPage": {
+    "hero": {
+      "eyebrow": "Careers at Jodohmu · Bandung, Indonesia",
+      "title": "Build something that matters.",
+      "subtitle": "We are growing a team of people who genuinely believe in helping Muslims find their life partner with dignity. Every role here has real impact on real people's lives."
+    },
+    "values": {
+      "0": { "title": "Mission-driven work", "text": "Every client who finds their spouse through Jodohmu is a life changed. Your work here has meaning beyond a paycheck." },
+      "1": { "title": "Performance rewarded", "text": "We believe in paying people for results. Our commission structure is transparent, fair, and designed to grow with you." },
+      "2": { "title": "Room to grow", "text": "We are early. The people who join now will shape how this company grows — and be rewarded for it." }
+    },
+    "jobs": {
+      "title": "Open Positions",
+      "subtitle": "3 roles available",
+      "whatYouDo": "What You Do",
+      "whatYouGet": "What You Get",
+      "whoYouAre": "Who You Are",
+      "apply": "Apply via WhatsApp →",
+      "items": {
+        "0": {
+          "title": "Appointment Setter",
+          "subtitle": "Pencari Klien & Penjadwal Konsultasi",
+          "tags": { "0": "Remote", "1": "Commission Only" },
+          "desc": "You reach out to potential clients — through your network, social media, or community — and invite them to a free consultation with our team. Once they show up and qualify as a genuine lead, you earn. Simple, remote, and entirely flexible.",
+          "do": {
+            "0": "Reach out to potential clients via WhatsApp, Instagram, or community groups",
+            "1": "Have warm friendly conversations to understand their interest",
+            "2": "Book them in for a free consultation with our team",
+            "3": "Confirm their appointment and ensure they show up",
+            "4": "Our team handles everything after"
+          },
+          "get": {
+            "0": "Rp 40,000 per confirmed consultation that shows up",
+            "1": "Fully remote — work from anywhere, any time",
+            "2": "No targets, no pressure",
+            "3": "Weekly payout",
+            "4": "Potential Rp 1–6 juta per month depending on effort"
+          },
+          "are": {
+            "0": "Friendly, warm, and trusted in your community",
+            "1": "Active on WhatsApp or social media",
+            "2": "Self-motivated",
+            "3": "Muslim, understands the value of halal matchmaking",
+            "4": "Any location in Indonesia — fully remote"
+          }
+        },
+        "1": {
+          "title": "Sales Consultant",
+          "subtitle": "Konsultan Penjualan & Penutup Klien",
+          "tags": { "0": "Remote / Hybrid", "1": "Commission Only" },
+          "desc": "You meet with potential clients — in person or via call — explain our service, understand their needs, and guide them to register. You are the bridge between a curious lead and a committed client. High commission, no cap.",
+          "do": {
+            "0": "Conduct free consultation meetings with warm leads",
+            "1": "Listen deeply to understand their situation and goals",
+            "2": "Present the right Jodohmu package for their needs",
+            "3": "Handle objections with empathy and honesty",
+            "4": "Guide clients to register and make their first payment"
+          },
+          "get": {
+            "0": "10–15% commission per client registered",
+            "1": "Pearl package (Rp 2,5 jt) → Rp 250–375k per close",
+            "2": "Ruby package (Rp 5 jt) → Rp 500–750k per close",
+            "3": "Diamond package (Rp 40 jt) → Rp 4–6 juta per close",
+            "4": "No base salary — no ceiling on earnings"
+          },
+          "are": {
+            "0": "Confident, warm, and genuinely empathetic",
+            "1": "Experience in sales, counseling, or client-facing roles",
+            "2": "Understands Islamic marriage values deeply",
+            "3": "Can speak with both men and women professionally",
+            "4": "Based in Bandung or willing to meet clients there"
+          }
+        },
+        "2": {
+          "title": "Operations Assistant",
+          "subtitle": "Asisten Operasional & Penanganan Klien",
+          "tags": { "0": "Bandung", "1": "Part-time → Full-time" },
+          "desc": "This is our core team role. You handle WhatsApp communication with registered clients, assist in the matching process, manage our client database, and create daily social media content. Starting part-time — becomes full-time onsite within 3 months as the business grows.",
+          "do": {
+            "0": "Handle WhatsApp communication with registered clients",
+            "1": "Assist in curating and proposing match candidates",
+            "2": "Manage and update client database daily",
+            "3": "Create and post social media content (scripts provided)",
+            "4": "Coordinate ta'aruf meeting schedules",
+            "5": "Assist founder in day-to-day operations"
+          },
+          "get": {
+            "0": "Rp 1.6–2 juta per month part-time to start",
+            "1": "Full-time salary reviewed at 3 months based on performance",
+            "2": "Commission per client successfully matched",
+            "3": "Flexible part-time hours initially",
+            "4": "Be part of building something meaningful from the ground up"
+          },
+          "are": {
+            "0": "Muslim woman, based in Bandung — required",
+            "1": "Warm, empathetic, and deeply trustworthy",
+            "2": "Comfortable with technology — WhatsApp, Instagram, Google Sheets",
+            "3": "Functional English to communicate with founder",
+            "4": "Understands Islamic marriage values and ta'aruf process",
+            "5": "Ideally married — understands the journey personally"
+          }
+        }
+      }
+    }
   }
 }
