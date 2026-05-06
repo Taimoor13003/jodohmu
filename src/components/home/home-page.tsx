@@ -565,6 +565,21 @@ export default function HomePage() {
           </motion.div>
         </AnimatedSection>
 
+        {/* ── Hiring strip ── */}
+        <div className="w-full border-y border-[#0b3a86]/10 bg-[#f5f8ff] py-3">
+          <div className="container flex flex-wrap items-center justify-center gap-3 text-center sm:justify-between">
+            <p className="text-sm font-semibold text-[#0b3a86]">
+              🌙 We are hiring — 3 open positions
+            </p>
+            <Link
+              href="/careers"
+              className="shrink-0 rounded-full border border-[#0b3a86]/30 bg-white px-4 py-1.5 text-xs font-bold text-[#0b3a86] shadow-sm transition-colors hover:border-[#9B2242]/40 hover:text-[#9B2242]"
+            >
+              View Roles →
+            </Link>
+          </div>
+        </div>
+
         <AnimatedSection className="w-full py-20 md:py-28 lg:py-32 bg-gradient-to-br from-[#9B2242] via-[#9B2242]/90 to-[#0b3a86] text-white relative overflow-hidden">
           <div className="absolute inset-0">
             <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>

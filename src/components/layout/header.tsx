@@ -69,6 +69,9 @@ export function Header() {
           <Link href="/faq" className={navLinkClass("/faq")}>
             {t("header.faq")}
           </Link>
+          <Link href="/careers" className={navLinkClass("/careers")}>
+            {t("header.careers")}
+          </Link>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -177,6 +180,9 @@ export function Header() {
               </Link>
               <Link href="/faq" className={mobileNavLinkClass("/faq")} onClick={() => setIsMobileOpen(false)}>
                 {t("header.faq")}
+              </Link>
+              <Link href="/careers" className={mobileNavLinkClass("/careers")} onClick={() => setIsMobileOpen(false)}>
+                {t("header.careers")}
               </Link>
             </div>
             <div className="grid grid-cols-2 gap-2">
