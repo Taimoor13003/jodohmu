@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image, { type StaticImageData } from 'next/image';
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 type ParallaxHeroProps = {
@@ -36,7 +36,11 @@ export function ParallaxHero({
     offset: ['start start', 'end start'],
   });
 
-  const y1 = useTransform(scrollYProgress, [0, 1], ['-10%', '20%']);
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => { setHydrated(true); }, []);
+
+  const y1 = useTransform(scrollYProgress, [0, 1], ['0%', '40%']);
+  const scale1 = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
   const y2 = useTransform(scrollYProgress, [0, 1], ['5%', '-15%']);
   const y3 = useTransform(scrollYProgress, [0, 1], ['-20%', '5%']);
   const baseImageClasses = baseImageClassName ?? 'object-cover opacity-50';
@@ -52,9 +56,22 @@ export function ParallaxHero({
       className={cn('relative w-full h-screen overflow-hidden', className)}
     >
       <div className="absolute inset-0">
-        {/* Base layer — plain Image for fast LCP, motion.div parent for parallax */}
+        {/* Base layer — Image renders instantly for LCP; motion.div wraps after hydration for parallax */}
         {imageUrls[0] ? (
-          <motion.div className="absolute inset-0" style={{ y: y1 }}>
+          hydrated ? (
+            <motion.div className="absolute inset-0" style={{ y: y1, scale: scale1 }}>
+              <Image
+                src={imageUrls[0]}
+                alt={imageAlts?.[0] ?? "Jodohmu offline ta'aruf matchmaking hero"}
+                fill
+                priority
+                fetchPriority="high"
+                className={baseImageClasses}
+                quality={imageQuality}
+                sizes={baseImageSizes ?? "100vw"}
+              />
+            </motion.div>
+          ) : (
             <Image
               src={imageUrls[0]}
               alt={imageAlts?.[0] ?? "Jodohmu offline ta'aruf matchmaking hero"}
@@ -65,7 +82,7 @@ export function ParallaxHero({
               quality={imageQuality}
               sizes={baseImageSizes ?? "100vw"}
             />
-          </motion.div>
+          )
         ) : null}
         {/* Layer 2 */}
         {imageUrls[1] ? (

@@ -9,8 +9,8 @@ import { LanguageProvider } from "@/context/LanguageContext";
 
 const GA_MEASUREMENT_ID = "G-8XHZM9P9F3";
 
-const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
-const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" });
+const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair", display: "swap" });
+const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito", display: "swap" });
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
 
 export const metadata: Metadata = {
