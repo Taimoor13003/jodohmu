@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Nunito } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { AuthProvider } from "@/context/AuthContext";
 import { LanguageProvider } from "@/context/LanguageContext";
+
+const GA_MEASUREMENT_ID = "G-8XHZM9P9F3";
 
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
 const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito" });
@@ -34,6 +37,13 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
+    },
+  },
+  alternates: {
+    canonical: siteUrl,
+    languages: {
+      "en": siteUrl,
+      "id": `${siteUrl}/id`,
     },
   },
   openGraph: {
@@ -83,6 +93,21 @@ export default function RootLayout({
     <html lang="en" className={`${playfair.variable} ${nunito.variable}`}>
       <head>
         <link rel="preload" as="image" href="/hero/jodohmu-hero.svg" />
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}', {
+              page_path: window.location.pathname,
+              send_page_view: true,
+            });
+          `}
+        </Script>
       </head>
       <body>
         <LanguageProvider>
