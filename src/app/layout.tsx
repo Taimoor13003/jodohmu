@@ -15,17 +15,23 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Jodohmu | Offline Marriage Matching & Ta'aruf Facilitation in Indonesia",
+  title: {
+    default: "Jodohmu — Jasa Perjodohan Offline & Ta'aruf Serius di Indonesia",
+    template: "%s | Jodohmu",
+  },
   description:
-    "Jodohmu connects serious singles through offline, faith-aligned marriage matching and ta'aruf facilitation across Indonesia. Get guided introductions, family-friendly vetting, and personalized matching.",
+    "Jasa perjodohan offline yang halal dengan fasilitasi ta'aruf, penyaringan keluarga, dan perkenalan terarah bagi lajang siap nikah di seluruh Indonesia.",
   keywords: [
     "Jodohmu",
     "jasa perjodohan offline",
     "ta'aruf",
-    "pendampingan pernikahan",
+    "cari jodoh serius",
     "perjodohan halal",
-    "offline marriage matching",
-    "serious matchmaking Indonesia",
+    "matchmaking Indonesia",
+    "pendampingan pernikahan",
+    "nikah offline",
+    "cari pasangan halal",
+    "marriage matchmaking Indonesia",
   ],
   verification: {
     google: "zoe-2544eLiXzE6RJLS4dfDl3qU6sxqs6kGXKPUEa24",
@@ -49,9 +55,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "Jodohmu | Offline Marriage Matching & Ta'aruf Facilitation in Indonesia",
+    title: "Jodohmu — Jasa Perjodohan Offline & Ta'aruf di Indonesia",
     description:
-      "Offline, faith-aligned matchmaking and ta'aruf facilitation for serious singles in Indonesia. Guided introductions, safety-first process, and family-friendly vetting.",
+      "Jasa perjodohan offline yang halal dengan fasilitasi ta'aruf, penyaringan keluarga, dan perkenalan terarah bagi lajang siap nikah di Indonesia.",
     siteName: "Jodohmu",
     images: [
       {
@@ -61,14 +67,14 @@ export const metadata: Metadata = {
         alt: "Jodohmu logo",
       },
     ],
-    locale: "en_ID",
-    alternateLocale: ["id_ID"],
+    locale: "id_ID",
+    alternateLocale: ["en_US"],
   },
   twitter: {
     card: "summary",
-    title: "Jodohmu | Offline Marriage Matching & Ta'aruf Facilitation",
+    title: "Jodohmu — Perjodohan Offline & Ta'aruf di Indonesia",
     description:
-      "Offline, faith-aligned matchmaking and ta'aruf facilitation for serious singles in Indonesia.",
+      "Jasa perjodohan offline yang halal dengan fasilitasi ta'aruf untuk lajang siap nikah di Indonesia.",
     images: [`${siteUrl}/favicon.svg`],
   },
   icons: {
@@ -90,7 +96,7 @@ export default function RootLayout({
   )}`;
 
   return (
-    <html lang="en" className={`${playfair.variable} ${nunito.variable}`}>
+    <html lang="id" className={`${playfair.variable} ${nunito.variable}`}>
       <body>
         <LanguageProvider>
           <AuthProvider>

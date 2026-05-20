@@ -6,31 +6,26 @@ const ogImage = `${siteUrl}/og/step-by-step-process.svg`;
 const datePublished = "2024-11-20";
 const dateModified = "2025-01-20";
 
-const titleEn = "Offline ta'aruf step-by-step | How Jodohmu guides you to marriage";
-const titleId = "Alur ta'aruf offline langkah demi langkah | Panduan Jodohmu menuju pernikahan";
-const descEn =
-  "From intake to proposal: curated candidates, pre-call, vetted meetings, facilitators, and transparent follow-ups—offline and marriage-focused.";
-const descId =
-  "Dari intake hingga lamaran: kandidat terkurasi, pre-call, pertemuan terverifikasi, fasilitator, dan tindak lanjut transparan—offline dan fokus nikah.";
-const mergedDescription = `${descEn} ${descId}`;
-
 export const metadata: Metadata = {
-  title: `${titleEn} | ${titleId}`,
-  description: mergedDescription,
+  title: "Alur Ta'aruf Offline Langkah demi Langkah — Panduan Jodohmu",
+  description:
+    "Dari intake hingga lamaran: kandidat terkurasi, pre-call, pertemuan terverifikasi, fasilitator, dan tindak lanjut transparan—offline dan fokus nikah.",
   openGraph: {
-    title: titleEn,
-    description: mergedDescription,
+    title: "Alur Ta'aruf Offline Langkah demi Langkah — Panduan Jodohmu",
+    description:
+      "Kandidat terkurasi, pre-call, pertemuan terverifikasi, fasilitator, dan tindak lanjut transparan—offline dan fokus nikah.",
     url: `${siteUrl}/blog/step-by-step-process`,
     type: "article",
-    images: [{ url: ogImage, alt: "Step-by-step ta'aruf - Jodohmu", width: 1200, height: 630 }],
+    images: [{ url: ogImage, alt: "Alur ta'aruf langkah demi langkah - Jodohmu", width: 1200, height: 630 }],
     publishedTime: datePublished,
     modifiedTime: dateModified,
   },
   twitter: {
     card: "summary",
-    title: titleEn,
-    description: mergedDescription,
-    images: [{ url: ogImage, alt: "Step-by-step ta'aruf - Jodohmu" }],
+    title: "Alur Ta'aruf Offline — Jodohmu",
+    description:
+      "Dari intake hingga lamaran: panduan lengkap ta'aruf offline dari Jodohmu.",
+    images: [{ url: ogImage, alt: "Alur ta'aruf langkah demi langkah - Jodohmu" }],
   },
   alternates: {
     canonical: `${siteUrl}/blog/step-by-step-process`,

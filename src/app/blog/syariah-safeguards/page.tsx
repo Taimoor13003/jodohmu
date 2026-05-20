@@ -6,31 +6,26 @@ const ogImage = `${siteUrl}/og/syariah-safeguards.svg`;
 const datePublished = "2024-11-22";
 const dateModified = "2025-01-20";
 
-const titleEn = "Syariah safeguards in offline ta'aruf | How Jodohmu keeps boundaries";
-const titleId = "Penjagaan syariah dalam ta'aruf offline | Cara Jodohmu jaga batasan";
-const descEn =
-  "Chaperones, facilitators, vetted venues, and structured agendas to honor syariah while moving toward marriage.";
-const descId =
-  "Pendamping, fasilitator, venue terpilih, dan agenda terstruktur untuk menjaga syariah sambil bergerak menuju pernikahan.";
-const mergedDescription = `${descEn} ${descId}`;
-
 export const metadata: Metadata = {
-  title: `${titleEn} | ${titleId}`,
-  description: mergedDescription,
+  title: "Penjagaan Syariah dalam Ta'aruf Offline — Cara Jodohmu Jaga Batasan",
+  description:
+    "Pendamping, fasilitator, venue terpilih, dan agenda terstruktur untuk menjaga syariah sambil bergerak menuju pernikahan.",
   openGraph: {
-    title: titleEn,
-    description: mergedDescription,
+    title: "Penjagaan Syariah dalam Ta'aruf Offline — Jodohmu",
+    description:
+      "Pendamping, fasilitator, venue terpilih, dan agenda terstruktur untuk menjaga syariah sambil bergerak menuju pernikahan.",
     url: `${siteUrl}/blog/syariah-safeguards`,
     type: "article",
-    images: [{ url: ogImage, alt: "Syariah safeguards in ta'aruf - Jodohmu", width: 1200, height: 630 }],
+    images: [{ url: ogImage, alt: "Penjagaan syariah ta'aruf - Jodohmu", width: 1200, height: 630 }],
     publishedTime: datePublished,
     modifiedTime: dateModified,
   },
   twitter: {
     card: "summary",
-    title: titleEn,
-    description: mergedDescription,
-    images: [{ url: ogImage, alt: "Syariah safeguards in ta'aruf - Jodohmu" }],
+    title: "Penjagaan Syariah Ta'aruf — Jodohmu",
+    description:
+      "Fasilitator dan agenda terstruktur untuk menjaga syariah dalam ta'aruf offline.",
+    images: [{ url: ogImage, alt: "Penjagaan syariah ta'aruf - Jodohmu" }],
   },
   alternates: {
     canonical: `${siteUrl}/blog/syariah-safeguards`,

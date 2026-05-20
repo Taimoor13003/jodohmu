@@ -6,31 +6,26 @@ const ogImage = `${siteUrl}/og/how-meetings-are-supervised.svg`;
 const datePublished = "2024-11-28";
 const dateModified = "2025-01-20";
 
-const titleEn = "How Jodohmu supervises offline meetings | Safety, respect, and clarity";
-const titleId = "Cara Jodohmu mengawasi pertemuan offline | Aman, hormat, dan jelas";
-const descEn =
-  "See the supervision model: facilitators/chaperones, vetted venues, agendas, and post-meeting summaries to keep you safe and decisive.";
-const descId =
-  "Model supervisi kami: fasilitator/pendamping, venue terkurasi, agenda, dan ringkasan pasca pertemuan agar Anda aman dan tegas.";
-const mergedDescription = `${descEn} ${descId}`;
-
 export const metadata: Metadata = {
-  title: `${titleEn} | ${titleId}`,
-  description: mergedDescription,
+  title: "Cara Jodohmu Mengawasi Pertemuan Offline — Aman, Hormat & Jelas",
+  description:
+    "Model supervisi kami: fasilitator/pendamping, venue terkurasi, agenda, dan ringkasan pasca pertemuan agar Anda aman dan tegas.",
   openGraph: {
-    title: titleEn,
-    description: mergedDescription,
+    title: "Cara Jodohmu Mengawasi Pertemuan Offline — Aman & Hormat",
+    description:
+      "Fasilitator/pendamping, venue terkurasi, agenda, dan ringkasan pasca pertemuan agar Anda aman dan tegas.",
     url: `${siteUrl}/blog/how-meetings-are-supervised`,
     type: "article",
-    images: [{ url: ogImage, alt: "Supervised meetings by Jodohmu", width: 1200, height: 630 }],
+    images: [{ url: ogImage, alt: "Pengawasan pertemuan offline Jodohmu", width: 1200, height: 630 }],
     publishedTime: datePublished,
     modifiedTime: dateModified,
   },
   twitter: {
     card: "summary",
-    title: titleEn,
-    description: mergedDescription,
-    images: [{ url: ogImage, alt: "Supervised meetings by Jodohmu" }],
+    title: "Pengawasan Pertemuan Offline — Jodohmu",
+    description:
+      "Fasilitator, venue terkurasi, dan agenda terstruktur untuk pertemuan ta'aruf yang aman.",
+    images: [{ url: ogImage, alt: "Pengawasan pertemuan offline Jodohmu" }],
   },
   alternates: {
     canonical: `${siteUrl}/blog/how-meetings-are-supervised`,

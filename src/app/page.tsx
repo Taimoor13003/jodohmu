@@ -3,34 +3,26 @@ import HomePage from "@/components/home/home-page";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
 
-export const generateMetadata = (): Metadata => {
-  const titleEn = "Jodohmu | Offline Marriage Matchmaking & Ta'aruf in Indonesia";
-  const titleId = "Jodohmu | Perjodohan Offline & Ta'aruf Serius di Indonesia";
-  const descriptionEn =
-    "Offline, faith-aligned marriage matchmaking with ta'aruf facilitation, family-friendly vetting, and guided introductions for serious singles across Indonesia.";
-  const descriptionId =
-    "Perjodohan offline yang halal dengan fasilitasi ta'aruf, penyaringan keluarga, dan perkenalan terarah bagi lajang siap nikah di seluruh Indonesia.";
-
-  const mergedDescription = `${descriptionEn} ${descriptionId}`;
-
-  return {
-    title: `${titleEn} | ${titleId}`,
-    description: mergedDescription,
-    openGraph: {
-      title: titleEn,
-      description: mergedDescription,
-      url: siteUrl,
-      type: "website",
-    },
-    twitter: {
-      card: "summary",
-      title: titleEn,
-      description: mergedDescription,
-    },
-    alternates: {
-      canonical: siteUrl,
-    },
-  };
+export const metadata: Metadata = {
+  title: "Jodohmu — Jasa Perjodohan Offline & Ta'aruf Serius di Indonesia",
+  description:
+    "Perjodohan offline yang halal dengan fasilitasi ta'aruf, penyaringan keluarga, dan perkenalan terarah bagi lajang siap nikah di seluruh Indonesia. Offline marriage matchmaking for serious singles.",
+  openGraph: {
+    title: "Jodohmu — Jasa Perjodohan Offline & Ta'aruf Serius di Indonesia",
+    description:
+      "Perjodohan offline yang halal dengan fasilitasi ta'aruf, penyaringan keluarga, dan perkenalan terarah bagi lajang siap nikah di seluruh Indonesia.",
+    url: siteUrl,
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Jodohmu — Jasa Perjodohan & Ta'aruf Offline di Indonesia",
+    description:
+      "Perjodohan offline yang halal dengan fasilitasi ta'aruf untuk lajang siap nikah di Indonesia.",
+  },
+  alternates: {
+    canonical: siteUrl,
+  },
 };
 
 export default function Page() {

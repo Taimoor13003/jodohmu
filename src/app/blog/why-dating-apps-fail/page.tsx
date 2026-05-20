@@ -6,31 +6,26 @@ const ogImage = `${siteUrl}/og/why-dating-apps-fail.svg`;
 const datePublished = "2024-12-01";
 const dateModified = "2025-01-20";
 
-const titleEn = "Why dating apps fail for marriage seekers | Offline, vetted alternative";
-const titleId = "Kenapa dating app gagal untuk yang serius nikah | Alternatif offline terkurasi";
-const descEn =
-  "Apps reward swipes, not marriage. See how Jodohmu replaces endless chatting with vetted, offline, facilitator-guided meetings.";
-const descId =
-  "Aplikasi mengejar swipe, bukan nikah. Lihat bagaimana Jodohmu mengganti chat tanpa akhir dengan pertemuan offline terkurasi dan difasilitasi.";
-const mergedDescription = `${descEn} ${descId}`;
-
 export const metadata: Metadata = {
-  title: `${titleEn} | ${titleId}`,
-  description: mergedDescription,
+  title: "Kenapa Dating App Gagal untuk yang Serius Nikah — Alternatif Offline",
+  description:
+    "Aplikasi mengejar swipe, bukan nikah. Lihat bagaimana Jodohmu mengganti chat tanpa akhir dengan pertemuan offline terkurasi dan difasilitasi.",
   openGraph: {
-    title: titleEn,
-    description: mergedDescription,
+    title: "Kenapa Dating App Gagal untuk yang Serius Nikah — Jodohmu",
+    description:
+      "Jodohmu mengganti chat tanpa akhir dengan pertemuan offline terkurasi dan difasilitasi.",
     url: `${siteUrl}/blog/why-dating-apps-fail`,
     type: "article",
-    images: [{ url: ogImage, alt: "Why dating apps fail - Jodohmu", width: 1200, height: 630 }],
+    images: [{ url: ogImage, alt: "Kenapa dating app gagal - Jodohmu", width: 1200, height: 630 }],
     publishedTime: datePublished,
     modifiedTime: dateModified,
   },
   twitter: {
     card: "summary",
-    title: titleEn,
-    description: mergedDescription,
-    images: [{ url: ogImage, alt: "Why dating apps fail - Jodohmu" }],
+    title: "Kenapa Dating App Gagal — Jodohmu",
+    description:
+      "Aplikasi mengejar swipe, bukan nikah. Jodohmu punya alternatif offline yang lebih efektif.",
+    images: [{ url: ogImage, alt: "Kenapa dating app gagal - Jodohmu" }],
   },
   alternates: {
     canonical: `${siteUrl}/blog/why-dating-apps-fail`,

@@ -10,7 +10,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/blog", priority: 0.8, changeFrequency: "weekly" },
     { path: "/blog/family-involvement" },
     { path: "/blog/how-meetings-are-supervised" },
-    { path: "/blog/is-jodohmu-only-for-muslims" },
     { path: "/blog/step-by-step-process" },
     { path: "/blog/syariah-safeguards" },
     { path: "/blog/why-dating-apps-fail" },
