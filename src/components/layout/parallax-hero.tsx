@@ -41,6 +41,8 @@ export function ParallaxHero({
 
   const y1 = useTransform(scrollYProgress, [0, 1], ['0%', '40%']);
   const scale1 = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
+  const yText = useTransform(scrollYProgress, [0, 1], ['0%', '-30%']);
+  const opacityText = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const y2 = useTransform(scrollYProgress, [0, 1], ['5%', '-15%']);
   const y3 = useTransform(scrollYProgress, [0, 1], ['-20%', '5%']);
   const baseImageClasses = baseImageClassName ?? 'object-cover opacity-50';
@@ -112,7 +114,7 @@ export function ParallaxHero({
 
       <div className={cn('absolute inset-0', overlayClasses)} />
 
-      <div className={contentClasses}>{children}</div>
+      <motion.div className={contentClasses} style={{ y: yText, opacity: opacityText }}>{children}</motion.div>
     </section>
   );
 }
