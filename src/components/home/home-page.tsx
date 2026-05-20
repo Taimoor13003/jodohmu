@@ -312,7 +312,7 @@ export default function HomePage() {
                   src={primaryStory.image}
                   alt={primaryStory.title}
                   fill
-                  priority
+                  loading="lazy"
                   className="object-cover"
                   sizes="(min-width: 1024px) 40vw, 90vw"
                 />
@@ -401,7 +401,9 @@ export default function HomePage() {
                   src={indoBrideImage}
                   alt="Indonesian bride smiling"
                   fill
+                  loading="lazy"
                   className="rounded-[24px] object-cover"
+                  sizes="(min-width: 1024px) 320px, 0px"
                 />
               </div>
             </motion.div>
@@ -430,7 +432,9 @@ export default function HomePage() {
                   src={indoGroomImage}
                   alt="Indonesian groom smiling"
                   fill
+                  loading="lazy"
                   className="rounded-[24px] object-cover"
+                  sizes="(min-width: 1024px) 320px, 0px"
                 />
               </div>
             </motion.div>
@@ -447,7 +451,9 @@ export default function HomePage() {
                   src={indoBrideImage}
                   alt="Indonesian bride smiling"
                   fill
+                  loading="lazy"
                   className="rounded-[20px] object-cover"
+                  sizes="(max-width: 1023px) 384px, 0px"
                 />
               </div>
               <div className="relative h-64 w-full max-w-sm overflow-hidden rounded-[28px] border border-[#dce6ff]/40 bg-white/70 p-4 shadow-[0_20px_60px_rgba(15,23,42,0.15)]">
@@ -455,7 +461,9 @@ export default function HomePage() {
                   src={indoGroomImage}
                   alt="Indonesian groom smiling"
                   fill
+                  loading="lazy"
                   className="rounded-[20px] object-cover"
+                  sizes="(max-width: 1023px) 384px, 0px"
                 />
               </div>
             </motion.div>

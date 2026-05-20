@@ -52,18 +52,20 @@ export function ParallaxHero({
       className={cn('relative w-full h-screen overflow-hidden', className)}
     >
       <div className="absolute inset-0">
-        {/* Base layer */}
+        {/* Base layer — plain Image for fast LCP, motion.div parent for parallax */}
         {imageUrls[0] ? (
-          <MotionImage
-            src={imageUrls[0]}
-            alt={imageAlts?.[0] ?? "Jodohmu offline ta'aruf matchmaking hero"}
-            fill
-            priority
-            className={baseImageClasses}
-            style={{ y: y1 }}
-            quality={imageQuality}
-            sizes={baseImageSizes ?? "100vw"}
-          />
+          <motion.div className="absolute inset-0" style={{ y: y1 }}>
+            <Image
+              src={imageUrls[0]}
+              alt={imageAlts?.[0] ?? "Jodohmu offline ta'aruf matchmaking hero"}
+              fill
+              priority
+              fetchPriority="high"
+              className={baseImageClasses}
+              quality={imageQuality}
+              sizes={baseImageSizes ?? "100vw"}
+            />
+          </motion.div>
         ) : null}
         {/* Layer 2 */}
         {imageUrls[1] ? (
