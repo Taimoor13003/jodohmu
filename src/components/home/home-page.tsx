@@ -9,6 +9,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { Heart, Users, Star, Calendar, ShieldCheck, Handshake, Sparkles, HeartHandshake, MessageCircle, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { motion } from 'framer-motion';
+import { analytics } from "@/lib/analytics";
 import heroSectionImage from "@/assets/jodoh-mu-hero-section.png";
 import indoBrideImage from "@/assets/indo-bride.png";
 import indoGroomImage from "@/assets/indo-groom.png";
@@ -169,7 +170,7 @@ export default function HomePage() {
                     size="lg"
                     className="rounded-full bg-white px-10 py-6 text-lg font-semibold text-[#9B2242] shadow-[0_14px_28px_rgba(0,0,0,0.25)] transition-all duration-300 hover:bg-white/90"
                   >
-                    <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
+                    <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick('hero_register', 'home')}>
                       {t("homepage.hero.cta")}
                     </Link>
                   </Button>
@@ -179,7 +180,7 @@ export default function HomePage() {
                     size="lg"
                     className="rounded-full border-white/70 bg-white/10 px-10 py-6 text-lg font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white/20"
                   >
-                    <Link href="/contact">{t("homepage.hero.secondaryCta")}</Link>
+                    <Link href="/contact" onClick={() => analytics.ctaClick('hero_contact', 'home')}>{t("homepage.hero.secondaryCta")}</Link>
                   </Button>
                 </div>
               </motion.div>
@@ -351,7 +352,7 @@ export default function HomePage() {
                     size="lg"
                     className="rounded-full bg-gradient-to-r from-[#9B2242] to-[#c24977] px-8 py-6 text-sm font-semibold text-white shadow-lg shadow-[#9B2242]/30 transition-all duration-300 hover:shadow-[#9B2242]/40"
                   >
-                    <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
+                    <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick('story_register', 'home')}>
                       {t("homepage.features.storyCta")}
                     </Link>
                   </Button>
@@ -613,7 +614,7 @@ export default function HomePage() {
               whileTap={{ scale: 0.95 }}
             >
               <Button asChild size="lg" className="bg-white text-[#9B2242] hover:bg-white/90 rounded-full px-10 py-7 text-lg font-semibold shadow-2xl hover:shadow-white/25 transition-all duration-300 border border-white/20">
-                <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
+                <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick('bottom_cta', 'home')}>
                   {t("homepage.cta.button")}
                 </Link>
               </Button>

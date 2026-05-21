@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
+import { analytics } from "@/lib/analytics";
 
 const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
 const whatsappHref = "https://wa.me/6281122210303";
@@ -45,7 +46,7 @@ export function PricingPage() {
             </p>
           </div>
           <Button asChild size="sm" className="shrink-0 rounded-full bg-white px-4 py-1.5 text-xs font-bold text-red-600 shadow-md hover:bg-white/90 sm:px-5 sm:text-sm">
-            <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
+            <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick('discount_banner', 'pricing')}>
               {t("pricingPage.discount.cta")}
             </Link>
           </Button>
@@ -72,12 +73,12 @@ export function PricingPage() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg" className="rounded-full bg-[#9B2242] px-6 py-5 text-sm font-bold text-white shadow-lg shadow-[#9B2242]/30 hover:bg-[#8a1e3b] sm:px-8 sm:py-6 sm:text-base">
-              <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
+              <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick('hero_register', 'pricing')}>
                 {t("pricingPage.hero.cta")}
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-full border-[#0b3a86]/30 px-6 py-5 text-sm font-semibold text-[#0b3a86] hover:bg-[#0b3a86]/5 sm:px-8 sm:py-6 sm:text-base">
-              <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+              <Link href={whatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.whatsappClick('pricing_hero')}>
                 {t("pricingPage.hero.ctaSecondary")}
               </Link>
             </Button>
@@ -222,7 +223,7 @@ export function PricingPage() {
                       ${popular ? "bg-[#9B2242] text-white shadow-md hover:bg-[#8a1e3b]" : "bg-[#0b3a86] text-white hover:bg-[#0a357a]"}
                     `}
                   >
-                    <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
+                    <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick(`package_${pkg.key}`, 'pricing')}>
                       {discount ? t("pricingPage.discount.cta") : t("pricingPage.cta.button")}
                     </Link>
                   </Button>
@@ -254,7 +255,7 @@ export function PricingPage() {
             <p className="text-sm leading-relaxed text-[#2d3150]">{t("pricingPage.special.student.desc")}</p>
             <p className="mt-3 text-xs text-[#4a4f63]">{t("pricingPage.special.student.note")}</p>
             <Button asChild className="mt-5 w-full rounded-full bg-[#0b3a86] py-5 text-sm font-bold text-white hover:bg-[#0a357a]">
-              <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+              <Link href={whatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.whatsappClick('pricing_student')}>
                 {t("pricingPage.special.cta")}
               </Link>
             </Button>
@@ -271,7 +272,7 @@ export function PricingPage() {
             <p className="text-sm leading-relaxed text-[#2d3150]">{t("pricingPage.special.widow.desc")}</p>
             <p className="mt-3 text-xs text-[#4a4f63]">{t("pricingPage.special.widow.note")}</p>
             <Button asChild className="mt-5 w-full rounded-full bg-[#9B2242] py-5 text-sm font-bold text-white hover:bg-[#8a1e3b]">
-              <Link href={whatsappHref} target="_blank" rel="noopener noreferrer">
+              <Link href={whatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.whatsappClick('pricing_widow')}>
                 {t("pricingPage.special.cta")}
               </Link>
             </Button>
@@ -345,7 +346,7 @@ export function PricingPage() {
             <p className="mx-auto max-w-xl text-white/85 text-base leading-relaxed sm:text-lg">{t("pricingPage.cta.subtitle")}</p>
             <div className="flex flex-wrap justify-center gap-3 pt-2">
               <Button asChild size="lg" className="rounded-full bg-white px-7 py-5 text-sm font-extrabold text-[#9B2242] hover:bg-white/90 shadow-xl shadow-black/20 sm:px-10 sm:py-6 sm:text-base">
-                <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
+                <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick('bottom_cta', 'pricing')}>
                   {t("pricingPage.cta.button")}
                 </Link>
               </Button>

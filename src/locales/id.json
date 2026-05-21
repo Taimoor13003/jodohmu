@@ -1009,6 +1009,168 @@
       "ctaBody": "Sebutkan kota dan preferensi fasilitator—kami jadwalkan sesi terawasi dengan biaya transparan.",
       "ctaPrimary": "Jadwalkan supervisi",
       "ctaSecondary": "Kembali ke blog utama"
+    },
+    "cariJodohSerius": {
+      "tag": "Cari jodoh serius",
+      "title": "Cara cari jodoh serius di Indonesia tanpa buang waktu",
+      "subtitle": "Panduan lengkap bagi lajang yang ingin menikah: kenapa perjodohan offline lebih cepat dan aman dibanding cari sendiri.",
+      "heroBadge": "Panduan lengkap",
+      "heroLead": "Anda serius ingin menikah tapi bingung mulai dari mana? Jodohmu bantu dari intake hingga lamaran—semua offline, terverifikasi, dan difasilitasi.",
+      "whyTitle": "Kenapa cari jodoh sendiri sering gagal",
+      "flowTitle": "Cara Jodohmu bantu Anda cari jodoh serius",
+      "flowIntro": "Proses terstruktur dari hari pertama hingga keputusan akhir.",
+      "points": [
+        "Lingkaran sosial terbatas membuat pilihan menipis.",
+        "Dating app penuh profil palsu dan orang tidak serius.",
+        "Tanpa pendamping, perkenalan sering canggung dan tanpa arah.",
+        "Keluarga khawatir karena tidak ada transparansi proses."
+      ],
+      "steps": [
+        "Intake interview: kami pahami kriteria, nilai, dan harapan Anda.",
+        "Kurasi kandidat: tim kami pilihkan dari database terverifikasi.",
+        "Pre-call: brief singkat sebelum pertemuan agar Anda siap.",
+        "Ta'aruf terfasilitasi: pertemuan offline dengan pendamping.",
+        "Evaluasi & langkah lanjut: keputusan bersama setelah refleksi."
+      ],
+      "scenario": "Bayangkan: Anda daftar hari Senin, Kamis sudah dapat profil kandidat, dan Sabtu bertemu di lounge privat dengan fasilitator. Dalam 2 minggu, Anda sudah tahu apakah ada kecocokan—tanpa drama, tanpa ghosting.",
+      "whatWeHandleTitle": "Yang Jodohmu tangani untuk Anda",
+      "whatWeHandle": [
+        "Verifikasi identitas, pekerjaan, dan latar belakang kandidat.",
+        "Penjadwalan pertemuan di venue yang aman dan nyaman.",
+        "Fasilitator profesional hadir di setiap ta'aruf.",
+        "Tindak lanjut tertulis agar tidak ada yang bingung."
+      ],
+      "benefitsTitle": "Keuntungan cari jodoh lewat Jodohmu",
+      "benefits": [
+        {
+          "title": "Hemat waktu",
+          "desc": "Tidak perlu swipe ratusan profil—kami kurasi kandidat yang benar-benar cocok."
+        },
+        {
+          "title": "Aman dan terverifikasi",
+          "desc": "Setiap kandidat dicek KTP, pekerjaan, dan media sosial sebelum diperkenalkan."
+        },
+        {
+          "title": "Didampingi profesional",
+          "desc": "Fasilitator menjaga pertemuan tetap santun, terarah, dan fokus nikah."
+        }
+      ],
+      "facilitationTitle": "Perkenalan terarah, bukan sekedar kenalan",
+      "facilitationBody": "Setiap pertemuan punya agenda: perkenalan → nilai & visi → ekspektasi → langkah lanjut. Fasilitator memastikan percakapan tidak melenceng dan kedua pihak merasa nyaman.",
+      "pricingTitle": "Investasi untuk masa depan, bukan biaya",
+      "pricingBody": "Paket mulai dari Rp 1,25 jt (diskon 50% di Mei). Transparansi penuh—tidak ada biaya tersembunyi.",
+      "ctaTitle": "Siap cari jodoh serius?",
+      "ctaBody": "Daftar sekarang dan tim kami akan hubungi Anda dalam 24 jam untuk intake interview.",
+      "ctaPrimary": "Daftar sekarang",
+      "ctaSecondary": "Kembali ke blog utama"
+    },
+    "perjodohanHalalVsDatingApp": {
+      "tag": "Perjodohan halal",
+      "title": "Perjodohan halal vs dating app: mana yang lebih efektif?",
+      "subtitle": "Perbandingan jujur antara perjodohan offline yang halal dan dating app untuk lajang Muslim yang serius menikah.",
+      "heroBadge": "Perbandingan jujur",
+      "heroLead": "Dating app menjanjikan kemudahan, tapi berapa banyak yang benar-benar berakhir di pelaminan? Kami bandingkan fakta, bukan janji.",
+      "whyTitle": "Kenapa dating app kurang cocok untuk yang serius nikah",
+      "flowTitle": "Bagaimana perjodohan halal bekerja",
+      "flowIntro": "Proses yang dirancang untuk pernikahan, bukan sekadar perkenalan.",
+      "points": [
+        "Dating app mengutamakan penampilan—bukan kesiapan nikah.",
+        "Chat tanpa akhir jarang berujung pada komitmen nyata.",
+        "Profil palsu dan catfishing membuang waktu berharga.",
+        "Tidak ada keterlibatan keluarga = keberatan muncul belakangan."
+      ],
+      "steps": [
+        "Skrining niat: Jodohmu pastikan semua kandidat siap nikah.",
+        "Verifikasi identitas: KTP, pekerjaan, dan referensi dicek.",
+        "Kurasi manual: tim pilihkan berdasarkan kecocokan nilai, bukan algoritma.",
+        "Pertemuan berpendamping: ta'aruf offline dengan fasilitator.",
+        "Keputusan bersama: evaluasi terstruktur, bukan ghosting."
+      ],
+      "scenario": "Di dating app, Anda swipe 200 profil dan chat 20 orang selama 3 bulan—hasilnya nihil. Di Jodohmu, Anda bertemu 2-3 kandidat terverifikasi dalam sebulan, semua difasilitasi dan serius nikah.",
+      "whatWeHandleTitle": "Keunggulan perjodohan halal Jodohmu",
+      "whatWeHandle": [
+        "Semua kandidat sudah diverifikasi niat nikah dan identitasnya.",
+        "Pertemuan selalu didampingi fasilitator atau chaperone.",
+        "Keluarga bisa dilibatkan sejak awal tanpa canggung.",
+        "Proses transparan dengan timeline yang jelas."
+      ],
+      "benefitsTitle": "Fakta: perjodohan halal vs dating app",
+      "benefits": [
+        {
+          "title": "Niat terverifikasi",
+          "desc": "100% kandidat Jodohmu sudah diwawancara dan dikonfirmasi siap nikah. Di dating app? Tidak ada jaminan."
+        },
+        {
+          "title": "Pertemuan nyata",
+          "desc": "Ta'aruf offline dengan pendamping, bukan chat tanpa akhir yang tidak kemana-mana."
+        },
+        {
+          "title": "Keluarga selaras",
+          "desc": "Orang tua bisa terlibat dari awal—sesuatu yang tidak mungkin di dating app."
+        }
+      ],
+      "facilitationTitle": "Proses yang menghormati syariah",
+      "facilitationBody": "Setiap pertemuan dijaga batasannya: pendamping hadir, venue santun, agenda terstruktur. Tidak ada pertemuan berdua tanpa pengawasan.",
+      "pricingTitle": "Investasi yang masuk akal",
+      "pricingBody": "Berapa biaya 6 bulan di dating app premium? Dengan budget serupa, Anda dapat kandidat terverifikasi dan proses terfasilitasi di Jodohmu.",
+      "ctaTitle": "Pilih jalan yang lebih serius",
+      "ctaBody": "Tinggalkan dating app. Daftar di Jodohmu dan temui kandidat terverifikasi minggu ini.",
+      "ctaPrimary": "Daftar sekarang",
+      "ctaSecondary": "Kembali ke blog utama"
+    },
+    "tipsTaarufPertama": {
+      "tag": "Tips ta'aruf",
+      "title": "Tips ta'aruf pertama kali: persiapan lengkap agar lancar",
+      "subtitle": "Mau ta'aruf tapi gugup? Panduan praktis dari Jodohmu agar pertemuan pertama Anda berkesan, santun, dan produktif.",
+      "heroBadge": "Panduan praktis",
+      "heroLead": "Ta'aruf pertama kali memang menegangkan. Tapi dengan persiapan yang tepat, Anda bisa tampil percaya diri dan membuat kesan yang baik.",
+      "whyTitle": "Kenapa persiapan ta'aruf itu penting",
+      "flowTitle": "Checklist sebelum ta'aruf pertama",
+      "flowIntro": "5 langkah persiapan agar ta'aruf Anda berjalan lancar.",
+      "points": [
+        "Ta'aruf yang tidak dipersiapkan sering berakhir canggung.",
+        "Pertanyaan yang salah bisa membuat kesan buruk.",
+        "Penampilan yang tidak tepat mengurangi kepercayaan diri.",
+        "Tanpa agenda, pertemuan sering tidak produktif."
+      ],
+      "steps": [
+        "Niatkan: pastikan Anda datang dengan niat serius mencari pasangan hidup.",
+        "Siapkan pertanyaan: visi keluarga, peran suami-istri, rencana keuangan, ibadah.",
+        "Pilih pakaian rapi dan santun: bersih, sopan, dan sesuai situasi.",
+        "Datang tepat waktu: tunjukkan bahwa Anda menghargai waktu mereka.",
+        "Jaga adab: dengarkan lebih banyak, jangan mendominasi percakapan."
+      ],
+      "scenario": "Bayangkan: Anda tiba 10 menit lebih awal, berpakaian rapi, fasilitator menyambut Anda. Perkenalan dimulai, Anda bertanya tentang visi keluarga, dan lawan bicara terkesan dengan kesiapan Anda. 45 menit berlalu, dan Anda pulang dengan kejelasan—bukan kebingungan.",
+      "whatWeHandleTitle": "Bagaimana Jodohmu bantu ta'aruf pertama Anda",
+      "whatWeHandle": [
+        "Brief sebelum pertemuan: kami ceritakan profil singkat pasangan.",
+        "Fasilitator membuka percakapan agar tidak canggung.",
+        "Agenda terstruktur agar semua topik penting terbahas.",
+        "Follow-up tertulis setelah pertemuan agar keputusan lebih mudah."
+      ],
+      "benefitsTitle": "Manfaat ta'aruf yang terpersiapkan",
+      "benefits": [
+        {
+          "title": "Lebih percaya diri",
+          "desc": "Anda tahu apa yang akan terjadi dan apa yang harus ditanyakan."
+        },
+        {
+          "title": "Kesan pertama yang baik",
+          "desc": "Penampilan rapi dan sikap tenang membuat Anda lebih menarik."
+        },
+        {
+          "title": "Keputusan lebih cepat",
+          "desc": "Pertemuan yang produktif menghasilkan kejelasan, bukan kebingungan."
+        }
+      ],
+      "facilitationTitle": "Fasilitator: teman, bukan pengganggu",
+      "facilitationBody": "Fasilitator Jodohmu bukan pengawas galak. Mereka di sana untuk membuka percakapan, menjaga tempo, dan memastikan kedua pihak nyaman. Anggap mereka MC yang membuat acara berjalan lancar.",
+      "pricingTitle": "Ta'aruf terfasilitasi sudah termasuk dalam paket",
+      "pricingBody": "Setiap paket Jodohmu sudah mencakup minimal 1 pertemuan ta'aruf terfasilitasi. Tidak ada biaya tambahan untuk fasilitator.",
+      "ctaTitle": "Siap ta'aruf pertama Anda?",
+      "ctaBody": "Daftar di Jodohmu dan kami persiapkan semuanya—dari kandidat hingga venue.",
+      "ctaPrimary": "Daftar sekarang",
+      "ctaSecondary": "Kembali ke blog utama"
     }
   },
   "pricingPage": {

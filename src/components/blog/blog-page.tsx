@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
 
 const articles = [
+  { key: "cariJodohSerius", href: "/blog/cari-jodoh-serius" },
+  { key: "perjodohanHalalVsDatingApp", href: "/blog/perjodohan-halal-vs-dating-app" },
+  { key: "tipsTaarufPertama", href: "/blog/tips-taaruf-pertama" },
   { key: "stepByStepProcess", href: "/blog/step-by-step-process" },
   { key: "whyDatingAppsFail", href: "/blog/why-dating-apps-fail" },
   { key: "familyInvolvement", href: "/blog/family-involvement" },

@@ -951,6 +951,168 @@
       "ctaBody": "Tell us your city and facilitator preference—we’ll schedule a supervised session with transparent fees.",
       "ctaPrimary": "Schedule supervision",
       "ctaSecondary": "Back to main blog"
+    },
+    "cariJodohSerius": {
+      "tag": "Finding a serious match",
+      "title": "How to find a serious marriage partner in Indonesia",
+      "subtitle": "A complete guide for singles ready to marry: why offline matchmaking is faster and safer than searching on your own.",
+      "heroBadge": "Complete guide",
+      "heroLead": "Serious about marriage but don't know where to start? Jodohmu helps from intake to proposal—all offline, verified, and facilitated.",
+      "whyTitle": "Why searching for a partner on your own often fails",
+      "flowTitle": "How Jodohmu helps you find a serious match",
+      "flowIntro": "A structured process from day one to final decision.",
+      "points": [
+        "Limited social circles mean fewer options.",
+        "Dating apps are full of fake profiles and non-serious users.",
+        "Without a facilitator, introductions are often awkward and aimless.",
+        "Families worry because there's no transparency in the process."
+      ],
+      "steps": [
+        "Intake interview: we understand your criteria, values, and expectations.",
+        "Candidate curation: our team selects from a verified database.",
+        "Pre-call: a brief before the meeting so you're prepared.",
+        "Facilitated ta'aruf: an offline meeting with a chaperone.",
+        "Evaluation & next steps: a joint decision after reflection."
+      ],
+      "scenario": "Imagine: you register on Monday, receive a candidate profile by Thursday, and meet at a private lounge with a facilitator on Saturday. Within 2 weeks, you know if there's a match—no drama, no ghosting.",
+      "whatWeHandleTitle": "What Jodohmu handles for you",
+      "whatWeHandle": [
+        "Verification of identity, employment, and candidate background.",
+        "Scheduling meetings at safe, comfortable venues.",
+        "A professional facilitator present at every ta'aruf.",
+        "Written follow-up so nothing is left unclear."
+      ],
+      "benefitsTitle": "Benefits of finding a match through Jodohmu",
+      "benefits": [
+        {
+          "title": "Save time",
+          "desc": "No swiping through hundreds of profiles—we curate candidates who truly match."
+        },
+        {
+          "title": "Safe and verified",
+          "desc": "Every candidate is checked: ID, employment, and social media before introduction."
+        },
+        {
+          "title": "Professionally accompanied",
+          "desc": "A facilitator ensures meetings stay respectful, focused, and marriage-oriented."
+        }
+      ],
+      "facilitationTitle": "Guided introductions, not casual meet-ups",
+      "facilitationBody": "Every meeting has an agenda: introduction → values & vision → expectations → next steps. The facilitator ensures the conversation stays on track and both parties feel comfortable.",
+      "pricingTitle": "An investment in your future, not an expense",
+      "pricingBody": "Packages start from Rp 1.25M (50% off in May). Full transparency—no hidden fees.",
+      "ctaTitle": "Ready to find a serious match?",
+      "ctaBody": "Register now and our team will contact you within 24 hours for an intake interview.",
+      "ctaPrimary": "Register now",
+      "ctaSecondary": "Back to main blog"
+    },
+    "perjodohanHalalVsDatingApp": {
+      "tag": "Halal matchmaking",
+      "title": "Halal matchmaking vs dating apps: which is more effective?",
+      "subtitle": "An honest comparison between offline halal matchmaking and dating apps for Muslim singles serious about marriage.",
+      "heroBadge": "Honest comparison",
+      "heroLead": "Dating apps promise convenience, but how many actually end at the altar? We compare facts, not promises.",
+      "whyTitle": "Why dating apps aren't ideal for serious marriage seekers",
+      "flowTitle": "How halal matchmaking works",
+      "flowIntro": "A process designed for marriage, not just introductions.",
+      "points": [
+        "Dating apps prioritize appearance—not marriage readiness.",
+        "Endless chatting rarely leads to real commitment.",
+        "Fake profiles and catfishing waste precious time.",
+        "No family involvement means objections surface later."
+      ],
+      "steps": [
+        "Intent screening: Jodohmu ensures all candidates are marriage-ready.",
+        "Identity verification: ID, employment, and references are checked.",
+        "Manual curation: the team selects based on value compatibility, not algorithms.",
+        "Chaperoned meetings: offline ta'aruf with a facilitator.",
+        "Joint decision: structured evaluation, not ghosting."
+      ],
+      "scenario": "On a dating app, you swipe 200 profiles and chat with 20 people over 3 months—result: nothing. At Jodohmu, you meet 2-3 verified candidates in a month, all facilitated and serious about marriage.",
+      "whatWeHandleTitle": "Advantages of Jodohmu's halal matchmaking",
+      "whatWeHandle": [
+        "All candidates have verified marriage intent and identity.",
+        "Meetings always include a facilitator or chaperone.",
+        "Family can be involved from the start without awkwardness.",
+        "A transparent process with a clear timeline."
+      ],
+      "benefitsTitle": "Facts: halal matchmaking vs dating apps",
+      "benefits": [
+        {
+          "title": "Verified intent",
+          "desc": "100% of Jodohmu candidates are interviewed and confirmed marriage-ready. On dating apps? No guarantees."
+        },
+        {
+          "title": "Real meetings",
+          "desc": "Offline ta'aruf with a chaperone, not endless chats that go nowhere."
+        },
+        {
+          "title": "Family aligned",
+          "desc": "Parents can be involved from the start—something impossible on dating apps."
+        }
+      ],
+      "facilitationTitle": "A process that honors syariah",
+      "facilitationBody": "Every meeting has boundaries: a chaperone present, a respectful venue, a structured agenda. No unsupervised one-on-one meetings.",
+      "pricingTitle": "A sensible investment",
+      "pricingBody": "How much does 6 months on a premium dating app cost? For a similar budget, you get verified candidates and a facilitated process at Jodohmu.",
+      "ctaTitle": "Choose the more serious path",
+      "ctaBody": "Leave dating apps behind. Register at Jodohmu and meet verified candidates this week.",
+      "ctaPrimary": "Register now",
+      "ctaSecondary": "Back to main blog"
+    },
+    "tipsTaarufPertama": {
+      "tag": "Ta'aruf tips",
+      "title": "First ta'aruf tips: complete preparation guide",
+      "subtitle": "Nervous about your first ta'aruf? A practical guide from Jodohmu to make your first meeting memorable, respectful, and productive.",
+      "heroBadge": "Practical guide",
+      "heroLead": "Your first ta'aruf can be nerve-wracking. But with the right preparation, you can show up confident and make a great impression.",
+      "whyTitle": "Why ta'aruf preparation matters",
+      "flowTitle": "Checklist before your first ta'aruf",
+      "flowIntro": "5 preparation steps for a smooth ta'aruf.",
+      "points": [
+        "An unprepared ta'aruf often ends up awkward.",
+        "Wrong questions can leave a bad impression.",
+        "Inappropriate attire reduces confidence.",
+        "Without an agenda, meetings are often unproductive."
+      ],
+      "steps": [
+        "Set your intention: come with a sincere desire to find a life partner.",
+        "Prepare questions: family vision, husband-wife roles, finances, worship.",
+        "Choose neat, modest clothing: clean, appropriate, and fitting the occasion.",
+        "Arrive on time: show you respect their time.",
+        "Maintain adab: listen more, don't dominate the conversation."
+      ],
+      "scenario": "Imagine: you arrive 10 minutes early, neatly dressed, and the facilitator greets you. The introduction begins, you ask about family vision, and your counterpart is impressed by your readiness. 45 minutes pass, and you leave with clarity—not confusion.",
+      "whatWeHandleTitle": "How Jodohmu helps with your first ta'aruf",
+      "whatWeHandle": [
+        "Pre-meeting brief: we share a short profile of your counterpart.",
+        "The facilitator opens the conversation so it's not awkward.",
+        "A structured agenda ensures all important topics are covered.",
+        "Written follow-up after the meeting for easier decision-making."
+      ],
+      "benefitsTitle": "Benefits of a well-prepared ta'aruf",
+      "benefits": [
+        {
+          "title": "More confident",
+          "desc": "You know what to expect and what to ask."
+        },
+        {
+          "title": "Great first impression",
+          "desc": "Neat appearance and calm demeanor make you more attractive."
+        },
+        {
+          "title": "Faster decisions",
+          "desc": "A productive meeting yields clarity, not confusion."
+        }
+      ],
+      "facilitationTitle": "Facilitators: friends, not enforcers",
+      "facilitationBody": "Jodohmu's facilitators aren't stern supervisors. They're there to open conversation, set the pace, and ensure both parties are comfortable. Think of them as an MC keeping the event running smoothly.",
+      "pricingTitle": "Facilitated ta'aruf included in every package",
+      "pricingBody": "Every Jodohmu package includes at least 1 facilitated ta'aruf meeting. No extra charge for the facilitator.",
+      "ctaTitle": "Ready for your first ta'aruf?",
+      "ctaBody": "Register at Jodohmu and we'll prepare everything—from candidates to venues.",
+      "ctaPrimary": "Register now",
+      "ctaSecondary": "Back to main blog"
     }
   },
   "pricingPage": {

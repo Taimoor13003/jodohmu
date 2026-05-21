@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
+import { analytics } from "@/lib/analytics";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -51,6 +52,7 @@ export default function ContactPage() {
 
       setStatus("success");
       setMessage("Thanks! We will reach out shortly.");
+      analytics.formSubmit("contact");
       reset();
     } catch (error) {
       setStatus("error");
