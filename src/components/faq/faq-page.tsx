@@ -7,7 +7,7 @@ import { ChevronDown } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
 
 const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
 

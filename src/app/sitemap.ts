@@ -1,34 +1,43 @@
 import { MetadataRoute } from "next";
+import { blogPosts } from "@/lib/blog-posts";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
+
+type Route = {
+  path: string;
+  priority?: number;
+  changeFrequency?: MetadataRoute.Sitemap[number]["changeFrequency"];
+  lastModified?: string | Date;
+};
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes: { path: string; priority?: number; changeFrequency?: MetadataRoute.Sitemap[number]["changeFrequency"] }[] = [
-    { path: "/", priority: 1, changeFrequency: "weekly" },
-    { path: "/pricing", priority: 0.9, changeFrequency: "monthly" },
-    { path: "/careers", priority: 0.7, changeFrequency: "monthly" },
-    { path: "/blog", priority: 0.8, changeFrequency: "weekly" },
-    { path: "/blog/family-involvement" },
-    { path: "/blog/how-meetings-are-supervised" },
-    { path: "/blog/step-by-step-process" },
-    { path: "/blog/syariah-safeguards" },
-    { path: "/blog/why-dating-apps-fail" },
-    { path: "/blog/cari-jodoh-serius", priority: 0.8, changeFrequency: "monthly" },
-    { path: "/blog/perjodohan-halal-vs-dating-app", priority: 0.8, changeFrequency: "monthly" },
-    { path: "/blog/tips-taaruf-pertama", priority: 0.8, changeFrequency: "monthly" },
-    { path: "/faq", priority: 0.7 },
-    { path: "/contact", priority: 0.7 },
-    { path: "/privacy" },
-    { path: "/terms" },
-    { path: "/id/blog", priority: 0.7, changeFrequency: "weekly" },
+  const now = new Date();
+
+  const staticRoutes: Route[] = [
+    { path: "/", priority: 1, changeFrequency: "weekly", lastModified: now },
+    { path: "/pricing", priority: 0.9, changeFrequency: "monthly", lastModified: now },
+    { path: "/careers", priority: 0.7, changeFrequency: "monthly", lastModified: now },
+    { path: "/blog", priority: 0.8, changeFrequency: "weekly", lastModified: now },
+    { path: "/faq", priority: 0.7, lastModified: now },
+    { path: "/contact", priority: 0.7, lastModified: now },
+    { path: "/privacy", lastModified: now },
+    { path: "/terms", lastModified: now },
+    { path: "/id/blog", priority: 0.7, changeFrequency: "weekly", lastModified: now },
   ];
 
-  const lastModified = new Date();
-
-  return routes.map(({ path, priority = 0.6, changeFrequency = "monthly" }) => ({
-    url: `${siteUrl}${path}`,
-    lastModified,
-    changeFrequency,
-    priority,
+  const articleRoutes: Route[] = blogPosts.map((post) => ({
+    path: post.slug,
+    priority: 0.8,
+    changeFrequency: "monthly",
+    lastModified: new Date(post.dateModified),
   }));
+
+  return [...staticRoutes, ...articleRoutes].map(
+    ({ path, priority = 0.6, changeFrequency = "monthly", lastModified = now }) => ({
+      url: `${siteUrl}${path}`,
+      lastModified,
+      changeFrequency,
+      priority,
+    })
+  );
 }

@@ -4,8 +4,9 @@ import Link from "next/link";
 import Script from "next/script";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
+import { getRelatedPosts } from "@/lib/blog-posts";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
 const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
 const pointKeys = ["0", "1", "2", "3"];
 const stepKeys = ["0", "1", "2", "3", "4"];
@@ -64,10 +65,13 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
   };
 
   const relatedLinks = [
-    { href: "/blog/how-meetings-are-supervised", label: "How Jodohmu supervises offline meetings" },
-    { href: "/blog/syariah-safeguards", label: "Syariah safeguards in every ta'aruf" },
-    { href: "/faq", label: "See frequently asked questions" },
-    { href: "https://forms.gle/WUSTC71ZrpbvSXso6", label: "Register now", external: true },
+    ...getRelatedPosts(slug).map((post) => ({
+      href: post.slug,
+      label: t(`${post.articleKey}.title`),
+      external: false,
+    })),
+    { href: "/faq", label: t("blogArticle.related.faq"), external: false },
+    { href: contactFormHref, label: t("blogArticle.related.register"), external: true },
   ];
 
   return (

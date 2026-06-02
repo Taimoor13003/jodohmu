@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PricingPage } from "@/components/pricing/pricing-page";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
 
 export const metadata: Metadata = {
   title: "Harga Jodohmu — Paket Perjodohan Offline & Ta'aruf di Indonesia",

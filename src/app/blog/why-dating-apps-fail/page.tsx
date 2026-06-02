@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ArticleDetail } from "@/components/blog/article-is-jodohmu";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
 const ogImage = `${siteUrl}/og/why-dating-apps-fail.svg`;
 const datePublished = "2024-12-01";
 const dateModified = "2025-01-20";

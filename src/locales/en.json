@@ -661,6 +661,10 @@
     }
   },
   "blogArticle": {
+    "related": {
+      "faq": "See frequently asked questions",
+      "register": "Register now"
+    },
     "stepByStepProcess": {
       "metaTitle": "Offline ta'aruf step-by-step | How Jodohmu guides you to marriage",
       "metaDescription": "From intake to proposal: curated candidates, pre-call, vetted meetings, facilitators, and transparent follow-ups—offline and marriage-focused.",

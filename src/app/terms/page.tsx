@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { TermsContent } from "./terms-content";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
 
 export const metadata: Metadata = {
   title: "Terms and Conditions - Jodohmu",

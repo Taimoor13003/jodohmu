@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import HomePage from "@/components/home/home-page";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
 
 export const metadata: Metadata = {
   title: "Jodohmu — Jasa Perjodohan Offline & Ta'aruf Serius di Indonesia",

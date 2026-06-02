@@ -1,0 +1,16 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Why dating apps fail - Jodohmu</title>
+  <desc id="desc">Branded cover image for Jodohmu article about why dating apps fail</desc>
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b3a86" />
+      <stop offset="100%" stop-color="#9B2242" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grad)" />
+  <rect x="60" y="60" width="1080" height="510" rx="32" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.35)" />
+  <text x="100" y="240" font-family="'Nunito', 'Helvetica Neue', Arial" font-size="72" font-weight="700" fill="#ffffff">Why dating apps fail</text>
+  <text x="100" y="320" font-family="'Nunito', 'Helvetica Neue', Arial" font-size="42" font-weight="600" fill="#fdf2f8">Curated, offline, supervised by Jodohmu</text>
+  <text x="100" y="400" font-family="'Nunito', 'Helvetica Neue', Arial" font-size="32" font-weight="500" fill="#e0e7ff">Offline marriage-focused matches • Guided meetings</text>
+  <text x="100" y="480" font-family="'Nunito', 'Helvetica Neue', Arial" font-size="28" font-weight="600" fill="#fff">Jodohmu.com</text>
+</svg>

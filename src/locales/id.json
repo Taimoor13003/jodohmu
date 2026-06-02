@@ -659,6 +659,10 @@
     }
   },
   "blogArticle": {
+    "related": {
+      "faq": "Lihat pertanyaan yang sering diajukan",
+      "register": "Daftar sekarang"
+    },
     "isJodohmuOnlyForMuslims": {
       "metaTitle": "Apakah Jodohmu hanya untuk Muslim? | Cara kami mencocokkan niat dan fasilitasi pertemuan",
       "metaDescription": "Tidak. Jodohmu mencocokkan sesuai niat dan nilai Anda. Untuk klien Kristen, kami dapat hadirkan pastor atau fasilitator terhormat, venue tenang, dan alur jelas menuju pernikahan.",

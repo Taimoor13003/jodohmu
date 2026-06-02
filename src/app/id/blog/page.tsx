@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { BlogPage } from "@/components/blog/blog-page";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://jodohmu.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
 
 export const generateMetadata = (): Metadata => {
   const titleId = "Blog Jodohmu | Panduan Ta'aruf & Perjodohan Offline";
