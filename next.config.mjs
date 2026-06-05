@@ -16,6 +16,18 @@ const nextConfig = {
       }
     ],
   },
+  async redirects() {
+    return [
+      // Canonical host: permanently (308) send non-www -> www so Google
+      // consolidates all signals on https://www.jodohmu.com
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "jodohmu.com" }],
+        destination: "https://www.jodohmu.com/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
