@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import Image, { type StaticImageData } from 'next/image';
 import React, { useRef, useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -37,7 +37,23 @@ export function ParallaxHero({
   });
 
   const [hydrated, setHydrated] = useState(false);
-  useEffect(() => { setHydrated(true); }, []);
+  // Only run the scroll-linked parallax on larger, pointer-precise screens.
+  // On phones, continuously transforming/scaling the large hero image fights
+  // the browser's native scroll thread and stutters — so we render a static
+  // image there for smooth scrolling. We also respect reduced-motion.
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    setHydrated(true);
+    const mq = window.matchMedia('(min-width: 1024px)');
+    const update = () => setIsLargeScreen(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  const enableParallax = hydrated && isLargeScreen && !prefersReducedMotion;
 
   const y1 = useTransform(scrollYProgress, [0, 1], ['0%', '40%']);
   const scale1 = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
@@ -60,8 +76,8 @@ export function ParallaxHero({
       <div className="absolute inset-0">
         {/* Base layer — Image renders instantly for LCP; motion.div wraps after hydration for parallax */}
         {imageUrls[0] ? (
-          hydrated ? (
-            <motion.div className="absolute inset-0" style={{ y: y1, scale: scale1 }}>
+          enableParallax ? (
+            <motion.div className="absolute inset-0" style={{ y: y1, scale: scale1, willChange: 'transform' }}>
               <Image
                 src={imageUrls[0]}
                 alt={imageAlts?.[0] ?? "Jodohmu offline ta'aruf matchmaking hero"}
@@ -114,7 +130,11 @@ export function ParallaxHero({
 
       <div className={cn('absolute inset-0', overlayClasses)} />
 
-      <motion.div className={contentClasses} style={{ y: yText, opacity: opacityText }}>{children}</motion.div>
+      {enableParallax ? (
+        <motion.div className={contentClasses} style={{ y: yText, opacity: opacityText, willChange: 'transform, opacity' }}>{children}</motion.div>
+      ) : (
+        <div className={contentClasses}>{children}</div>
+      )}
     </section>
   );
 }
