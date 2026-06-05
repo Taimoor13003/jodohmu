@@ -1062,7 +1062,7 @@
       "facilitationTitle": "Perkenalan terarah, bukan sekedar kenalan",
       "facilitationBody": "Setiap pertemuan punya agenda: perkenalan → nilai & visi → ekspektasi → langkah lanjut. Fasilitator memastikan percakapan tidak melenceng dan kedua pihak merasa nyaman.",
       "pricingTitle": "Investasi untuk masa depan, bukan biaya",
-      "pricingBody": "Paket mulai dari Rp 1,25 jt (diskon 50% di Mei). Transparansi penuh—tidak ada biaya tersembunyi.",
+      "pricingBody": "Paket mulai dari Rp 1,25 jt (diskon 50% di Juni). Transparansi penuh—tidak ada biaya tersembunyi.",
       "ctaTitle": "Siap cari jodoh serius?",
       "ctaBody": "Daftar sekarang dan tim kami akan hubungi Anda dalam 24 jam untuk intake interview.",
       "ctaPrimary": "Daftar sekarang",
@@ -1179,8 +1179,8 @@
   },
   "pricingPage": {
     "discount": {
-      "badge": "Eksklusif Mei — Kursi Terbatas",
-      "headline": "🌙 Mei ini — harga perkenalan 50% untuk paket Pearl. Penawaran berakhir 31 Mei.",
+      "badge": "Eksklusif Juni — Kursi Terbatas",
+      "headline": "🌙 Juni ini — harga perkenalan 50% untuk paket Pearl & Ruby. Penawaran berakhir 30 Juni.",
       "sub": "",
       "cta": "Klaim Diskon 50% Sekarang",
       "urgency": "Kursi cepat terisi — daftar hari ini"
@@ -1195,7 +1195,7 @@
       "badge": "Harga Transparan · Tanpa Biaya Tersembunyi",
       "title": "Satu Keputusan. Seumur Hidup Penuh Barakah.",
       "subtitle": "Setiap paket memberi Anda kandidat terkurasi, pertemuan terawasi, dan tim nyata yang peduli. Bukan aplikasi. Bukan algoritma. Kami.",
-      "cta": "Daftar Sekarang — Diskon 50% di Mei",
+      "cta": "Daftar Sekarang — Diskon 50% di Juni",
       "ctaSecondary": "Tanya Dulu"
     },
     "registration": {
@@ -1315,15 +1315,19 @@
         },
         "serius": {
           "name": "Ruby",
-          "price": "Rp 5 juta",
+          "price": "Rp 15 juta",
+          "discountedPrice": "Rp 7,5 juta",
           "duration": "6 bulan · registrasi termasuk",
           "features": [
+            "Semua layanan Pearl",
             "Intake mendalam 90 menit",
             "5 kandidat yang dikurasi",
             "Profil anonim ditampilkan lebih dulu",
             "2 pertemuan ta'aruf terfasilitasi",
-            "Kuesioner psikologi",
+            "Tes psikologi klinis",
             "Verifikasi KTP, kerja & slip gaji",
+            "Cek latar belakang",
+            "Fasilitasi pertemuan keluarga",
             "Imam hadir di ta'aruf (opsional)",
             "Biaya registrasi termasuk"
           ]
@@ -1339,7 +1343,6 @@
             "2\u20133 sesi psikolog klinis",
             "Cek lapangan + tetangga + RT/RW",
             "Verifikasi tempat kerja & rumah",
-            "Fasilitasi pertemuan keluarga",
             "Ditangani founder langsung",
             "5 sesi coaching pasca-match",
             "Biaya registrasi termasuk"

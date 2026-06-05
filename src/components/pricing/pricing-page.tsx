@@ -19,8 +19,8 @@ type PkgConfig = {
 
 const packages: PkgConfig[] = [
   { key: "awal",      featuresCount: 6, discount: true },
-  { key: "serius",    featuresCount: 8, popular: true },
-  { key: "istimewa",  featuresCount: 9, referralOnly: true, dark: true },
+  { key: "serius",    featuresCount: 11, discount: true, popular: true },
+  { key: "istimewa",  featuresCount: 8, referralOnly: true, dark: true },
 ];
 
 const hikmahCount = 3;
@@ -35,17 +35,17 @@ export function PricingPage() {
       {/* ══════════════════════════════════════
           MAY 50% DISCOUNT BANNER — UNMISSABLE
       ══════════════════════════════════════ */}
-      <div className="w-full bg-gradient-to-r from-orange-500 via-red-500 to-rose-600 shadow-lg shadow-red-500/30">
+      <div className="w-full bg-gradient-to-r from-[#9B2242] via-[#7a1d52] to-[#0b3a86] shadow-lg shadow-[#9B2242]/30">
         <div className="container flex flex-col items-center justify-between gap-2 py-2.5 sm:flex-row sm:gap-4">
           <div className="flex items-center gap-2">
-            <span className="hidden shrink-0 rounded-full bg-white/30 px-3 py-1 text-xs font-bold uppercase tracking-widest text-white sm:inline-flex">
+            <span className="hidden shrink-0 rounded-full bg-white/25 px-3 py-1 text-xs font-bold uppercase tracking-widest text-white sm:inline-flex">
               {t("pricingPage.discount.badge")}
             </span>
             <p className="text-center text-xs font-bold leading-snug text-white sm:text-left sm:text-sm sm:font-extrabold">
               {t("pricingPage.discount.headline")}
             </p>
           </div>
-          <Button asChild size="sm" className="shrink-0 rounded-full bg-white px-4 py-1.5 text-xs font-bold text-red-600 shadow-md hover:bg-white/90 sm:px-5 sm:text-sm">
+          <Button asChild size="sm" className="shrink-0 rounded-full bg-white px-4 py-1.5 text-xs font-bold text-[#9B2242] shadow-md hover:bg-white/90 sm:px-5 sm:text-sm">
             <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick('discount_banner', 'pricing')}>
               {t("pricingPage.discount.cta")}
             </Link>
@@ -138,71 +138,101 @@ export function PricingPage() {
           </div>
         </div>
 
-        <div className="grid gap-10 md:grid-cols-3">
+        <div className="grid gap-8 md:gap-6 md:grid-cols-3 md:items-stretch pt-6">
           {packages.map((pkg) => {
             const { popular, discount, referralOnly, dark } = pkg;
+            const showBadge = discount || (popular && !dark);
 
             return (
               <div
                 key={pkg.key}
-                className={`relative flex flex-col rounded-3xl transition-transform duration-200 hover:-translate-y-1 hover:shadow-xl p-5 sm:p-6
-                  ${discount ? "border border-[#d0d9f0] bg-gradient-to-br from-[#f0f4ff] to-white shadow-sm" : ""}
-                  ${popular ? "border-2 border-[#9B2242] bg-gradient-to-br from-[#fff4f7] to-white shadow-lg shadow-[#9B2242]/15 md:-translate-y-3 md:scale-105" : ""}
-                  ${dark ? "border border-[#c8860a]/40 bg-gradient-to-br from-[#1a0a00] to-[#2d1400] shadow-lg" : ""}
-                `}
+                className={`relative flex flex-col rounded-3xl p-7 sm:p-8 transition-all duration-300 ${
+                  dark
+                    ? "bg-gradient-to-br from-[#1a0a00] via-[#221000] to-[#2d1400] border border-[#c8860a]/30 shadow-2xl shadow-[#c8860a]/10 hover:-translate-y-1"
+                    : popular
+                      ? "bg-white border border-[#9B2242]/25 shadow-2xl shadow-[#9B2242]/15 md:-translate-y-3 md:scale-[1.03] hover:md:-translate-y-4"
+                      : "bg-white border border-[#e7e9f1] shadow-lg shadow-slate-200/40 hover:-translate-y-1 hover:shadow-xl"
+                }`}
               >
                 {/* Top badge */}
-                {popular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                    <span className="inline-flex items-center rounded-full bg-[#9B2242] px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white shadow-md">
-                      {t("pricingPage.packages.popular")}
-                    </span>
-                  </div>
-                )}
-                {discount && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-orange-500 to-red-500 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white shadow-md">
-                      🔥 50% OFF — Mei
+                {showBadge && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-white shadow-lg ${
+                        discount
+                          ? "bg-gradient-to-r from-[#9B2242] to-[#0b3a86] shadow-[#9B2242]/30"
+                          : "bg-[#9B2242] shadow-[#9B2242]/30"
+                      }`}
+                    >
+                      {discount ? "🔥 50% OFF — Juni" : t("pricingPage.packages.popular")}
                     </span>
                   </div>
                 )}
 
                 {/* Name + duration */}
-                <div className="mb-4 mt-6">
-                  <h3 className={`text-2xl font-extrabold ${dark ? "text-[#ffd97a]" : "text-[#0b3a86]"}`}>
+                <div className="mt-3 mb-6">
+                  <h3
+                    className={`font-serif text-3xl font-bold tracking-tight sm:text-[2rem] ${
+                      dark ? "text-[#ffd97a]" : "text-[#0b3a86]"
+                    }`}
+                  >
                     {t(`pricingPage.packages.items.${pkg.key}.name`)}
                   </h3>
-                  <p className={`mt-1 text-xs font-semibold ${dark ? "text-white/55" : "text-[#4a4f63]"}`}>
+                  <p className={`mt-1.5 text-sm ${dark ? "text-white/60" : "text-[#6b7180]"}`}>
                     {t(`pricingPage.packages.items.${pkg.key}.duration`)}
                   </p>
                 </div>
 
-                {/* Price block */}
-                <div className={`rounded-2xl mb-5 px-4 py-5 text-center
-                  ${popular ? "bg-[#9B2242]" : dark ? "bg-gradient-to-br from-[#b7791f] to-[#c8860a]" : "bg-[#0b3a86]"}`}>
+                {/* Price */}
+                <div
+                  className={`mb-7 pb-6 border-b ${
+                    dark ? "border-[#c8860a]/20" : "border-dashed border-[#e7e9f1]"
+                  }`}
+                >
                   {discount ? (
-                    <>
-                      <p className="text-xs font-semibold uppercase tracking-widest text-white/70">Harga Mei</p>
-                      <p className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                    <div className="flex items-baseline gap-3 flex-wrap">
+                      <span
+                        className={`text-[2.75rem] font-extrabold leading-none tracking-tight sm:text-5xl ${
+                          dark ? "text-[#ffd97a]" : popular ? "text-[#9B2242]" : "text-[#0b3a86]"
+                        }`}
+                      >
                         {t(`pricingPage.packages.items.${pkg.key}.discountedPrice`)}
-                      </p>
-                      <p className="mt-1 text-sm text-white/60 line-through">
+                      </span>
+                      <span
+                        className={`text-base font-medium line-through ${
+                          dark ? "text-white/40" : "text-[#9ca3af]"
+                        }`}
+                      >
                         {t(`pricingPage.packages.items.${pkg.key}.price`)}
-                      </p>
-                    </>
+                      </span>
+                    </div>
                   ) : (
-                    <p className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                    <span
+                      className={`text-[2.75rem] font-extrabold leading-none tracking-tight sm:text-5xl ${
+                        dark ? "text-[#ffd97a]" : "text-[#0b3a86]"
+                      }`}
+                    >
                       {t(`pricingPage.packages.items.${pkg.key}.price`)}
-                    </p>
+                    </span>
                   )}
                 </div>
 
                 {/* Features */}
-                <ul className="flex-1 space-y-2.5 mb-6">
+                <ul className="flex-1 space-y-3 mb-7">
                   {Array.from({ length: pkg.featuresCount }, (_, i) => (
-                    <li key={i} className="flex items-start gap-2.5">
-                      <span className="mt-0.5 shrink-0 text-emerald-500">✓</span>
-                      <span className={`text-sm leading-snug ${dark ? "text-white/85" : "text-[#2d3150]"}`}>
+                    <li key={i} className="flex items-start gap-3">
+                      <span
+                        className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${
+                          dark
+                            ? "bg-[#c8860a]/20 text-[#c8860a]"
+                            : popular
+                              ? "bg-[#9B2242] text-white"
+                              : "bg-[#0b3a86]/10 text-[#0b3a86]"
+                        }`}
+                      >
+                        ✓
+                      </span>
+                      <span className={`text-sm leading-relaxed ${dark ? "text-white/85" : "text-[#3d425a]"}`}>
                         {t(`pricingPage.packages.items.${pkg.key}.features.${i}`)}
                       </span>
                     </li>
@@ -211,7 +241,7 @@ export function PricingPage() {
 
                 {/* CTA or Referral-only label */}
                 {referralOnly ? (
-                  <div className="rounded-2xl border border-[#c8860a]/40 bg-[#c8860a]/10 px-4 py-3 text-center">
+                  <div className="rounded-2xl border border-[#c8860a]/40 bg-[#c8860a]/10 px-4 py-3.5 text-center">
                     <p className="text-sm font-bold text-[#c8860a]">
                       {t(`pricingPage.packages.items.${pkg.key}.referralOnly`)}
                     </p>
@@ -219,11 +249,18 @@ export function PricingPage() {
                 ) : (
                   <Button
                     asChild
-                    className={`w-full rounded-full py-5 font-bold text-sm
-                      ${popular ? "bg-[#9B2242] text-white shadow-md hover:bg-[#8a1e3b]" : "bg-[#0b3a86] text-white hover:bg-[#0a357a]"}
-                    `}
+                    className={`w-full rounded-full py-6 font-bold text-sm shadow-md transition-transform hover:scale-[1.02] ${
+                      popular
+                        ? "bg-[#9B2242] text-white shadow-[#9B2242]/25 hover:bg-[#8a1e3b]"
+                        : "bg-[#0b3a86] text-white shadow-[#0b3a86]/20 hover:bg-[#0a357a]"
+                    }`}
                   >
-                    <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick(`package_${pkg.key}`, 'pricing')}>
+                    <Link
+                      href={contactFormHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => analytics.ctaClick(`package_${pkg.key}`, 'pricing')}
+                    >
                       {discount ? t("pricingPage.discount.cta") : t("pricingPage.cta.button")}
                     </Link>
                   </Button>

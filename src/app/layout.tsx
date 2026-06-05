@@ -46,9 +46,10 @@ export const metadata: Metadata = {
       follow: true,
     },
   },
-  alternates: {
-    canonical: siteUrl,
-  },
+  // NOTE: Do NOT set a global `alternates.canonical` here. In the App Router,
+  // child pages inherit it, which would point every page's canonical at the
+  // homepage and make Google treat them as duplicates (deindexing them).
+  // Each page sets its own self-referential canonical instead.
   openGraph: {
     type: "website",
     url: siteUrl,
