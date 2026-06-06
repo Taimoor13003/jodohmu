@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { adminDb } from "@/lib/firebase-admin";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function POST(request: Request) {
   try {
@@ -13,14 +13,14 @@ export async function POST(request: Request) {
     }
 
     // Save to Firestore first — lead is captured even if email fails
-    await addDoc(collection(db, "contact_form_entries"), {
+    await adminDb().collection("contact_form_entries").add({
       name,
       phone,
       city,
       email: email || null,
       gender: gender || null,
       age: age ?? null,
-      createdAt: serverTimestamp(),
+      createdAt: FieldValue.serverTimestamp(),
     });
 
     // Best-effort email notification via Gmail SMTP
