@@ -74,3 +74,30 @@
     @apply bg-background text-foreground;
   }
 }
+
+.reg-card-gradient-border {
+  position: relative;
+  border-radius: 28px;
+  background: linear-gradient(160deg, rgba(170,210,235,0.15) 0%, rgba(225,185,210,0.12) 100%);
+}
+
+.reg-card-gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  padding: 3px;
+  background: linear-gradient(
+    135deg,
+    #4a9fe8 0%,
+    #d45a8a 22%,
+    #4a9fe8 44%,
+    #d45a8a 66%,
+    #4a9fe8 88%,
+    #d45a8a 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}

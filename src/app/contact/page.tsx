@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { analytics } from "@/lib/analytics";
+import { toast } from "sonner";
 
 const COUNTRY_CODES = [
   { code: "+62", flag: "🇮🇩", label: "ID", maxDigits: 12 },
@@ -30,16 +31,16 @@ function formatWithDashes(digits: string, max: number): string {
 }
 
 const contactSchema = z.object({
-  name: z.string().min(2, "Name is required"),
+  name: z.string().min(2, { message: "Name is required" }),
   countryCode: z.string().min(1),
-  phoneNumber: z.string().min(4, "Phone number is required"),
+  phoneNumber: z.string().min(4, { message: "Phone number is required" }),
   email: z.string().email({ message: "Enter a valid email" }).optional().or(z.literal("")),
-  city: z.string().min(2, "City name is required"),
+  city: z.string().min(2, { message: "City name is required" }),
   gender: z.enum(["male", "female", ""]).optional(),
   age: z
     .string()
     .optional()
-    .refine((v) => !v || (Number(v) >= 18 && Number(v) <= 80), "Age must be between 18 and 80"),
+    .refine((v) => !v || (Number(v) >= 18 && Number(v) <= 80), { message: "Age must be between 18 and 80" }),
 });
 
 type ContactFormData = z.infer<typeof contactSchema>;
@@ -58,8 +59,6 @@ export default function ContactPage() {
   });
 
   const [isSubmitting, setSubmitting] = useState(false);
-  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
-  const [message, setMessage] = useState<string | null>(null);
   const [displayPhone, setDisplayPhone] = useState("");
 
   const selectedCode = watch("countryCode");
@@ -81,8 +80,6 @@ export default function ContactPage() {
 
   const onSubmit = async (data: ContactFormData) => {
     setSubmitting(true);
-    setStatus("idle");
-    setMessage(null);
     try {
       const phone = `${data.countryCode}${data.phoneNumber}`;
       const response = await fetch("/api/contact", {
@@ -103,14 +100,18 @@ export default function ContactPage() {
         throw new Error(error || "Failed to send message");
       }
 
-      setStatus("success");
-      setMessage("Thanks! We will reach out shortly.");
+      toast.success("Message sent!", {
+        description: "Thank you! Our team will reach out to you shortly.",
+        duration: 5000,
+      });
       analytics.formSubmit("contact");
-      reset();
+      reset({ countryCode: "+62", phoneNumber: "", name: "", city: "", email: "", gender: "", age: "" });
       setDisplayPhone("");
     } catch (error) {
-      setStatus("error");
-      setMessage(error instanceof Error ? error.message : "Something went wrong.");
+      toast.error("Something went wrong", {
+        description: error instanceof Error ? error.message : "Please try again or WhatsApp us directly.",
+        duration: 6000,
+      });
     } finally {
       setSubmitting(false);
     }
@@ -232,11 +233,6 @@ export default function ContactPage() {
               {isSubmitting ? "Sending…" : "Submit"}
             </Button>
 
-            {message && (
-              <p className={`text-center text-sm font-semibold ${status === "success" ? "text-[#0b3a86]" : "text-[#9B2242]"}`}>
-                {message}
-              </p>
-            )}
           </form>
         </motion.div>
       </div>

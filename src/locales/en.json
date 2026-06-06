@@ -1125,6 +1125,7 @@
       "headline": "🌙 This June — 50% introductory price for Pearl & Ruby. Offer ends June 30.",
       "sub": "",
       "cta": "Claim 50% Off Now",
+      "ctaNoDiscount": "Get Started",
       "urgency": "Seats filling fast — register today"
     },
     "trust": {
@@ -1134,9 +1135,20 @@
       "human": "Real Team · Real Process"
     },
     "hero": {
-      "badge": "Transparent Pricing · No Hidden Costs",
-      "title": "One Decision. A Lifetime of Barakah.",
-      "subtitle": "Every package gives you curated candidates, supervised meetings, and a real team that cares. Not an app. Not an algorithm. Us.",
+      "badge": "Muslim Matchmaking, Reimagined",
+      "titleLine1": "One Decision.",
+      "titleLine2": "A Lifetime of Barakah.",
+      "subtitleLine1": "At Jodohmu, we don't just help you find a match.",
+      "subtitleLine2": "We help you build a future filled with",
+      "subtitleWords": "love, mercy, and barakah.",
+      "trust": {
+        "0": { "title": "100% Halal", "desc": "Faith-focused matchmaking" },
+        "1": { "title": "Verified Profiles", "desc": "Authentic members, serious intentions" },
+        "2": { "title": "Privacy First", "desc": "Your privacy is our priority" }
+      },
+      "socialCount": "1+",
+      "socialTitle": "Registered Members",
+      "socialDesc": "Real people. Real love. Real journeys.",
       "cta": "Register Now — 50% Off in June",
       "ctaSecondary": "Ask a Question"
     },
@@ -1146,11 +1158,23 @@
       "price": "Rp 500k",
       "note": "one-time · non-refundable",
       "desc": "Fully deducted from whichever package you choose — no double charges.",
-      "hikmah": "This fee ensures every candidate on our platform is serious. Only those truly ready for marriage take this first step — protecting your time and heart."
+      "hikmah": "This fee ensures every candidate on our platform is serious. Only those truly ready for marriage take this first step — protecting your time and heart.",
+      "cardSubtitle": "One-time fee to access all",
+      "cardSubtitleHighlight": "premium features",
+      "cardFeatures": {
+        "0": "Curated candidate matching",
+        "1": "Supervised in-person meetings",
+        "2": "Dedicated matchmaker support",
+        "3": "Family-friendly process",
+        "4": "Full confidentiality guaranteed"
+      },
+      "cardCta": "Start Your Journey",
+      "cardFooter": "Secure Payment · 100% Safe & Halal"
     },
     "packages": {
-      "title": "Choose Your Path",
-      "subtitle": "Every package is designed with adab, transparency, and your marriage journey in mind.",
+      "title": "Choose Your Package",
+      "titleHighlight": "Package",
+      "subtitle": "Find the best package for your love journey. Because every heart is precious, and every effort is worth fighting for.",
       "popular": "Most Popular",
       "vipSilver": "VIP Silver",
       "vipGold": "VIP Gold",
@@ -1163,6 +1187,7 @@
         "gold": "12 months · fully bespoke"
       },
       "goldNote": "Private · referral only",
+      "footerNote": "*Terms & conditions apply. Match guarantee applies as per Jodohmu's service terms.",
       "items": {
         "basic": {
           "name": "Basic",
@@ -1278,11 +1303,10 @@
           "name": "Diamond",
           "price": "Rp 40 juta",
           "duration": "12 months · fully private",
-          "referralOnly": "Private · Referral Only",
           "features": [
             "All Ruby services",
             "Unlimited candidate proposals",
-            "2\u20133 clinical psychologist sessions",
+            "2–3 clinical psychologist sessions",
             "Field + neighbour + RT/RW check",
             "Workplace & home verification",
             "Handled directly by founder",
@@ -1293,20 +1317,20 @@
       }
     },
     "special": {
-      "title": "Special Promos · For Those Who Deserve a Little More",
+      "title": "Special Promos",
       "subtitle": "We believe marriage is for everyone — not just those who can afford it comfortably.",
       "student": {
         "badge": "Students Only",
-        "title": "Student Discount",
-        "discount": "50% OFF",
-        "desc": "Show your active student ID and get 50% off the Pearl package.",
+        "title": "Student & University Discount",
+        "discount": "10% OFF",
+        "desc": "Get an additional 10% discount for active students and university students.",
         "note": "Pearl package only · Limited slots · Student ID verification required"
       },
       "widow": {
-        "badge": "Widows & Widowers",
-        "title": "Compassion Price",
-        "discount": "25% OFF",
-        "desc": "Starting over takes more courage. We are here to walk alongside you with care and discretion.",
+        "badge": "Re-marriage",
+        "title": "Re-marriage Discount",
+        "discount": "10% OFF",
+        "desc": "Get an additional 10% discount for members who have been previously married.",
         "note": "Pearl package only · Discreet & empathetic · Verification required"
       },
       "cta": "Contact Us to Claim",

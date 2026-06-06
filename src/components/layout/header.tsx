@@ -140,21 +140,40 @@ export function Header() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2 sm:hidden">
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={`Language: ${lang.toUpperCase()}`}
-            className="relative h-12 w-12 rounded-full text-[#0b3a86] border border-[#0b3a86]/30 hover:bg-[#f1f5ff]"
-            onClick={() => setIsMobileOpen(false)}
-          >
-            <Globe className="h-7 w-7" />
-            <span
-              className="absolute -top-1 -right-1 rounded-full px-1.5 py-0.5 text-[11px] leading-none font-semibold text-white shadow"
-              style={{ backgroundColor: badgeBg }}
-            >
-              {lang.toUpperCase()}
-            </span>
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={`Language: ${lang.toUpperCase()}`}
+                className="relative h-12 w-12 rounded-full text-[#0b3a86] border border-[#0b3a86]/30 hover:bg-[#f1f5ff]"
+              >
+                <Globe className="h-7 w-7" />
+                <span
+                  className="absolute -top-1 -right-1 rounded-full px-1.5 py-0.5 text-[11px] leading-none font-semibold text-white shadow"
+                  style={{ backgroundColor: badgeBg }}
+                >
+                  {lang.toUpperCase()}
+                </span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="min-w-[200px] border" style={{ borderColor: "#0b3a8626" }}>
+              <DropdownMenuLabel>{t("header.language")}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={() => setLang("id")}
+                className={lang === "id" ? "bg-[#9B2242]/10 text-[#9B2242]" : undefined}
+              >
+                {lang === "id" ? "✓ " : ""}Bahasa Indonesia
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setLang("en")}
+                className={lang === "en" ? "bg-[#0b3a86]/10 text-[#0b3a86]" : undefined}
+              >
+                {lang === "en" ? "✓ " : ""}English
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <Button
             variant="ghost"
             size="icon"

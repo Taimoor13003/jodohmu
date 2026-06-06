@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Nunito } from "next/font/google";
+import { Playfair_Display, Nunito, Roboto } from "next/font/google";
 import Script from "next/script";
+import { Toaster } from "sonner";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -12,6 +13,7 @@ const GA_MEASUREMENT_ID = "G-8XHZM9P9F3";
 
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair", display: "swap" });
 const nunito = Nunito({ subsets: ["latin"], variable: "--font-nunito", display: "swap" });
+const roboto = Roboto({ subsets: ["latin"], variable: "--font-roboto", weight: ["400", "500", "700"], display: "swap" });
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
 
 export const metadata: Metadata = {
@@ -94,7 +96,7 @@ export default function RootLayout({
   )}`;
 
   return (
-    <html lang="id" className={`${playfair.variable} ${nunito.variable}`}>
+    <html lang="id" className={`${playfair.variable} ${nunito.variable} ${roboto.variable}`}>
       <body>
         <LanguageProvider>
           <AuthProvider>
@@ -106,6 +108,7 @@ export default function RootLayout({
             <WhatsAppFab href={whatsappHref} />
           </AuthProvider>
         </LanguageProvider>
+        <Toaster richColors position="top-center" />
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"

@@ -1183,6 +1183,7 @@
       "headline": "🌙 Juni ini — harga perkenalan 50% untuk paket Pearl & Ruby. Penawaran berakhir 30 Juni.",
       "sub": "",
       "cta": "Klaim Diskon 50% Sekarang",
+      "ctaNoDiscount": "Mulai Sekarang",
       "urgency": "Kursi cepat terisi — daftar hari ini"
     },
     "trust": {
@@ -1192,9 +1193,20 @@
       "human": "Tim Nyata · Proses Nyata"
     },
     "hero": {
-      "badge": "Harga Transparan · Tanpa Biaya Tersembunyi",
-      "title": "Satu Keputusan. Seumur Hidup Penuh Barakah.",
-      "subtitle": "Setiap paket memberi Anda kandidat terkurasi, pertemuan terawasi, dan tim nyata yang peduli. Bukan aplikasi. Bukan algoritma. Kami.",
+      "badge": "Perjodohan Islami, Direinvensi",
+      "titleLine1": "Satu Keputusan.",
+      "titleLine2": "Seumur Hidup Penuh Barakah.",
+      "subtitleLine1": "Di Jodohmu, kami tidak hanya membantu Anda menemukan pasangan.",
+      "subtitleLine2": "Kami membantu Anda membangun masa depan yang penuh",
+      "subtitleWords": "cinta, kasih sayang, dan barakah.",
+      "trust": {
+        "0": { "title": "100% Halal", "desc": "Perjodohan berbasis iman" },
+        "1": { "title": "Profil Terverifikasi", "desc": "Anggota autentik, niat serius" },
+        "2": { "title": "Privasi Utama", "desc": "Privasi Anda adalah prioritas kami" }
+      },
+      "socialCount": "1+",
+      "socialTitle": "Anggota Terdaftar",
+      "socialDesc": "Orang nyata. Cinta nyata. Perjalanan nyata.",
       "cta": "Daftar Sekarang — Diskon 50% di Juni",
       "ctaSecondary": "Tanya Dulu"
     },
@@ -1204,11 +1216,23 @@
       "price": "Rp 500k",
       "note": "sekali bayar · non-refundable",
       "desc": "Dipotong penuh dari paket manapun yang Anda pilih — tidak ada biaya ganda.",
-      "hikmah": "Biaya ini memastikan setiap kandidat di platform kami serius. Hanya yang benar-benar siap menikah yang mengambil langkah pertama ini — melindungi waktu dan hati Anda."
+      "hikmah": "Biaya ini memastikan setiap kandidat di platform kami serius. Hanya yang benar-benar siap menikah yang mengambil langkah pertama ini — melindungi waktu dan hati Anda.",
+      "cardSubtitle": "Biaya sekali bayar untuk akses semua",
+      "cardSubtitleHighlight": "fitur premium",
+      "cardFeatures": {
+        "0": "Pencocokan kandidat terkurasi",
+        "1": "Pertemuan tatap muka terawasi",
+        "2": "Dukungan matchmaker dedikasi",
+        "3": "Proses ramah keluarga",
+        "4": "Kerahasiaan penuh terjamin"
+      },
+      "cardCta": "Mulai Perjalanan Anda",
+      "cardFooter": "Pembayaran Aman · 100% Halal"
     },
     "packages": {
       "title": "Pilih Paket Anda",
-      "subtitle": "Setiap paket dirancang dengan adab, transparansi, dan perjalanan pernikahan Anda di benak kami.",
+      "titleHighlight": "Paket",
+      "subtitle": "Temukan paket terbaik untuk perjalanan cinta Anda. Karena setiap hati berharga, dan setiap usaha layak diperjuangkan.",
       "popular": "Paling Populer",
       "vipSilver": "VIP Silver",
       "vipGold": "VIP Gold",
@@ -1221,6 +1245,7 @@
         "gold": "12 bulan · bespoke penuh"
       },
       "goldNote": "Privat · hanya via referral",
+      "footerNote": "*Syarat & ketentuan berlaku. Garansi match berlaku sesuai dengan ketentuan layanan Jodohmu.",
       "items": {
         "basic": {
           "name": "Basic",
@@ -1336,11 +1361,10 @@
           "name": "Diamond",
           "price": "Rp 40 juta",
           "duration": "12 bulan · sepenuhnya privat",
-          "referralOnly": "Privat · Hanya via Referral",
           "features": [
             "Semua layanan Ruby",
             "Kandidat tidak terbatas",
-            "2\u20133 sesi psikolog klinis",
+            "2–3 sesi psikolog klinis",
             "Cek lapangan + tetangga + RT/RW",
             "Verifikasi tempat kerja & rumah",
             "Ditangani founder langsung",
@@ -1351,20 +1375,20 @@
       }
     },
     "special": {
-      "title": "Promo Khusus · Untuk Kamu yang Berani Memulai",
+      "title": "Promo Khusus",
       "subtitle": "Kami percaya menikah adalah hak semua orang — bukan hanya yang mampu secara finansial.",
       "student": {
-        "badge": "Khusus Mahasiswa",
-        "title": "Diskon Mahasiswa",
-        "discount": "50% OFF",
-        "desc": "Tunjukkan kartu mahasiswa aktif dan dapatkan diskon 50% untuk paket Pearl.",
+        "badge": "Khusus Pelajar",
+        "title": "Diskon Pelajar / Mahasiswa",
+        "discount": "10% OFF",
+        "desc": "Dapatkan diskon tambahan 10% untuk pelajar dan mahasiswa aktif.",
         "note": "Berlaku untuk paket Pearl · Stok terbatas · Verifikasi KTM diperlukan"
       },
       "widow": {
-        "badge": "Khusus Janda & Duda",
-        "title": "Harga Sahabat",
-        "discount": "25% OFF",
-        "desc": "Karena memulai kembali butuh keberanian lebih. Kami hadir untuk mendampingi perjalanan Anda.",
+        "badge": "Re-marriage",
+        "title": "Diskon Re-marriage",
+        "discount": "10% OFF",
+        "desc": "Dapatkan diskon tambahan 10% untuk member yang pernah menikah.",
         "note": "Berlaku untuk paket Pearl · Diskret & penuh empati · Verifikasi diperlukan"
       },
       "cta": "Hubungi Kami untuk Klaim",
