@@ -9,14 +9,37 @@ import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { analytics } from "@/lib/analytics";
 
+const COUNTRY_CODES = [
+  { code: "+62", flag: "🇮🇩", label: "ID", maxDigits: 12 },
+  { code: "+60", flag: "🇲🇾", label: "MY", maxDigits: 11 },
+  { code: "+65", flag: "🇸🇬", label: "SG", maxDigits: 8  },
+  { code: "+92", flag: "🇵🇰", label: "PK", maxDigits: 10 },
+  { code: "+966", flag: "🇸🇦", label: "SA", maxDigits: 9  },
+  { code: "+971", flag: "🇦🇪", label: "AE", maxDigits: 9  },
+  { code: "+44", flag: "🇬🇧", label: "UK", maxDigits: 10 },
+  { code: "+1",  flag: "🇺🇸", label: "US", maxDigits: 10 },
+  { code: "+61", flag: "🇦🇺", label: "AU", maxDigits: 9  },
+];
+
+// Auto-formats digits into XXX-XXXX-XXXX style with dashes
+function formatWithDashes(digits: string, max: number): string {
+  const d = digits.slice(0, max);
+  if (d.length <= 4) return d;
+  if (d.length <= 8) return `${d.slice(0, 4)}-${d.slice(4)}`;
+  return `${d.slice(0, 4)}-${d.slice(4, 8)}-${d.slice(8)}`;
+}
+
 const contactSchema = z.object({
   name: z.string().min(2, "Name is required"),
-  phone: z
-    .string()
-    .min(6, "Phone number is required")
-    .regex(/^[0-9+()\\s-]+$/, "Use digits only (you can include +, space, or dashes)"),
-  email: z.string().email("Enter a valid email").optional().or(z.literal("")),
+  countryCode: z.string().min(1),
+  phoneNumber: z.string().min(4, "Phone number is required"),
+  email: z.string().email({ message: "Enter a valid email" }).optional().or(z.literal("")),
   city: z.string().min(2, "City name is required"),
+  gender: z.enum(["male", "female", ""]).optional(),
+  age: z
+    .string()
+    .optional()
+    .refine((v) => !v || (Number(v) >= 18 && Number(v) <= 80), "Age must be between 18 and 80"),
 });
 
 type ContactFormData = z.infer<typeof contactSchema>;
@@ -27,22 +50,52 @@ export default function ContactPage() {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
+    setValue,
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactSchema),
+    defaultValues: { countryCode: "+62", phoneNumber: "" },
   });
+
   const [isSubmitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [message, setMessage] = useState<string | null>(null);
+  const [displayPhone, setDisplayPhone] = useState("");
+
+  const selectedCode = watch("countryCode");
+  const maxDigits = COUNTRY_CODES.find((c) => c.code === selectedCode)?.maxDigits ?? 12;
+
+  const handlePhoneInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digits = e.target.value.replace(/\D/g, "").slice(0, maxDigits);
+    const formatted = formatWithDashes(digits, maxDigits);
+    setDisplayPhone(formatted);
+    setValue("phoneNumber", digits, { shouldValidate: true });
+  };
+
+  const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setValue("countryCode", e.target.value);
+    // Reset phone when country changes since max length may differ
+    setDisplayPhone("");
+    setValue("phoneNumber", "");
+  };
 
   const onSubmit = async (data: ContactFormData) => {
     setSubmitting(true);
     setStatus("idle");
     setMessage(null);
     try {
+      const phone = `${data.countryCode}${data.phoneNumber}`;
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          name: data.name,
+          phone,
+          city: data.city,
+          email: data.email || undefined,
+          gender: data.gender || undefined,
+          age: data.age ? Number(data.age) : undefined,
+        }),
       });
 
       if (!response.ok) {
@@ -54,6 +107,7 @@ export default function ContactPage() {
       setMessage("Thanks! We will reach out shortly.");
       analytics.formSubmit("contact");
       reset();
+      setDisplayPhone("");
     } catch (error) {
       setStatus("error");
       setMessage(error instanceof Error ? error.message : "Something went wrong.");
@@ -61,6 +115,9 @@ export default function ContactPage() {
       setSubmitting(false);
     }
   };
+
+  const inputCls = "mt-2 h-12 rounded-xl border-[#0b3a86]/20 bg-white/70";
+  const selectCls = "mt-2 h-12 w-full rounded-xl border border-[#0b3a86]/20 bg-white/70 px-3 text-sm text-[#0b3a86] focus:outline-none focus:ring-2 focus:ring-[#9B2242]/30";
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-[#fbe4ef] via-white to-[#e6f0ff] py-20">
@@ -88,55 +145,83 @@ export default function ContactPage() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="mt-10 space-y-6">
+
+            {/* Name */}
             <div>
               <label className="block text-sm font-semibold text-[#0b3a86]">Full Name</label>
-              <Input
-                {...register("name")}
-                placeholder="Enter your full name"
-                className="mt-2 h-12 rounded-xl border-[#0b3a86]/20 bg-white/70"
-              />
-              {errors.name && (
-                <p className="mt-1 text-sm text-[#9B2242]">{errors.name.message}</p>
-              )}
+              <Input {...register("name")} placeholder="Enter your full name" className={inputCls} />
+              {errors.name && <p className="mt-1 text-sm text-[#9B2242]">{errors.name.message}</p>}
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-[#0b3a86]">Phone Number</label>
-              <Input
-                {...register("phone")}
-                type="tel"
-                inputMode="tel"
-                pattern="[0-9+()\\s-]*"
-                placeholder="Enter your phone number"
-                className="mt-2 h-12 rounded-xl border-[#0b3a86]/20 bg-white/70"
-              />
-              {errors.phone && (
-                <p className="mt-1 text-sm text-[#9B2242]">{errors.phone.message}</p>
-              )}
+            {/* Phone + City */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-[#0b3a86]">Phone Number</label>
+                <div className="mt-2 flex gap-2">
+                  <select
+                    {...register("countryCode")}
+                    onChange={handleCountryChange}
+                    className="h-12 rounded-xl border border-[#0b3a86]/20 bg-white/70 px-2 text-sm text-[#0b3a86] focus:outline-none focus:ring-2 focus:ring-[#9B2242]/30"
+                  >
+                    {COUNTRY_CODES.map(({ code, flag }) => (
+                      <option key={code} value={code}>{flag} {code}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="tel"
+                    inputMode="numeric"
+                    value={displayPhone}
+                    onChange={handlePhoneInput}
+                    placeholder="8123-4567-890"
+                    className="h-12 flex-1 rounded-xl border border-[#0b3a86]/20 bg-white/70 px-3 text-sm text-[#0b3a86] placeholder:text-[#0b3a86]/40 focus:outline-none focus:ring-2 focus:ring-[#9B2242]/30"
+                  />
+                </div>
+                {errors.phoneNumber && <p className="mt-1 text-sm text-[#9B2242]">{errors.phoneNumber.message}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-[#0b3a86]">City</label>
+                <Input {...register("city")} placeholder="e.g. Jakarta" className={inputCls} />
+                {errors.city && <p className="mt-1 text-sm text-[#9B2242]">{errors.city.message}</p>}
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-[#0b3a86]">Email (optional)</label>
-              <Input
-                {...register("email")}
-                placeholder="Enter your email (optional)"
-                className="mt-2 h-12 rounded-xl border-[#0b3a86]/20 bg-white/70"
-              />
-              {errors.email && (
-                <p className="mt-1 text-sm text-[#9B2242]">{errors.email.message}</p>
-              )}
+            {/* Gender + Age */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-[#0b3a86]">
+                  Gender <span className="font-normal text-[#0b3a86]/50">(optional)</span>
+                </label>
+                <select {...register("gender")} className={selectCls}>
+                  <option value="">Prefer not to say</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-[#0b3a86]">
+                  Age <span className="font-normal text-[#0b3a86]/50">(optional)</span>
+                </label>
+                <Input
+                  {...register("age")}
+                  type="number"
+                  inputMode="numeric"
+                  min={18}
+                  max={80}
+                  placeholder="e.g. 27"
+                  className={inputCls}
+                />
+                {errors.age && <p className="mt-1 text-sm text-[#9B2242]">{errors.age.message}</p>}
+              </div>
             </div>
 
+            {/* Email */}
             <div>
-              <label className="block text-sm font-semibold text-[#0b3a86]">City</label>
-              <Input
-                {...register("city")}
-                placeholder="Which city are you based in?"
-                className="mt-2 h-12 rounded-xl border-[#0b3a86]/20 bg-white/70"
-              />
-              {errors.city && (
-                <p className="mt-1 text-sm text-[#9B2242]">{errors.city.message}</p>
-              )}
+              <label className="block text-sm font-semibold text-[#0b3a86]">
+                Email <span className="font-normal text-[#0b3a86]/50">(optional)</span>
+              </label>
+              <Input {...register("email")} placeholder="Enter your email (optional)" className={inputCls} />
+              {errors.email && <p className="mt-1 text-sm text-[#9B2242]">{errors.email.message}</p>}
             </div>
 
             <Button
@@ -148,11 +233,7 @@ export default function ContactPage() {
             </Button>
 
             {message && (
-              <p
-                className={`text-center text-sm font-semibold ${
-                  status === "success" ? "text-[#0b3a86]" : "text-[#9B2242]"
-                }`}
-              >
+              <p className={`text-center text-sm font-semibold ${status === "success" ? "text-[#0b3a86]" : "text-[#9B2242]"}`}>
                 {message}
               </p>
             )}
