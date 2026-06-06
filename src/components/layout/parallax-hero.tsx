@@ -37,10 +37,11 @@ export function ParallaxHero({
   });
 
   const [hydrated, setHydrated] = useState(false);
-  // Only run the scroll-linked parallax on larger, pointer-precise screens.
-  // On phones, continuously transforming/scaling the large hero image fights
-  // the browser's native scroll thread and stutters — so we render a static
-  // image there for smooth scrolling. We also respect reduced-motion.
+  // Keep the parallax feel on every device, but make it smooth on phones.
+  // The jank comes from continuously *scaling* the large hero image (the GPU
+  // re-rasterizes it each frame). A translate-only parallax is GPU-composited
+  // and stays smooth, so on phones we keep the vertical movement and drop the
+  // scale; desktops keep the full zoom + move. Reduced-motion disables it.
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
@@ -53,9 +54,10 @@ export function ParallaxHero({
     return () => mq.removeEventListener('change', update);
   }, []);
 
-  const enableParallax = hydrated && isLargeScreen && !prefersReducedMotion;
+  const enableParallax = hydrated && !prefersReducedMotion;
 
-  const y1 = useTransform(scrollYProgress, [0, 1], ['0%', '40%']);
+  // Lighter vertical travel on phones keeps the effect subtle and smooth.
+  const y1 = useTransform(scrollYProgress, [0, 1], ['0%', isLargeScreen ? '40%' : '20%']);
   const scale1 = useTransform(scrollYProgress, [0, 1], [1, 1.15]);
   const yText = useTransform(scrollYProgress, [0, 1], ['0%', '-30%']);
   const opacityText = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
@@ -77,7 +79,10 @@ export function ParallaxHero({
         {/* Base layer — Image renders instantly for LCP; motion.div wraps after hydration for parallax */}
         {imageUrls[0] ? (
           enableParallax ? (
-            <motion.div className="absolute inset-0" style={{ y: y1, scale: scale1, willChange: 'transform' }}>
+            <motion.div
+              className="absolute inset-0"
+              style={isLargeScreen ? { y: y1, scale: scale1, willChange: 'transform' } : { y: y1, willChange: 'transform' }}
+            >
               <Image
                 src={imageUrls[0]}
                 alt={imageAlts?.[0] ?? "Jodohmu offline ta'aruf matchmaking hero"}
