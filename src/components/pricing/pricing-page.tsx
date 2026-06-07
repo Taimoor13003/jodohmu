@@ -27,9 +27,9 @@ const gemImage: Record<string, string> = {
 };
 
 const packages: PkgConfig[] = [
-  { key: "awal",      featuresCount: 6,  months: 3,  discount: true },
+  { key: "awal",      featuresCount: 7,  months: 3,  discount: true },
   { key: "serius",    featuresCount: 11, months: 6,  discount: true, popular: true },
-  { key: "istimewa",  featuresCount: 8,  months: 12 },
+  { key: "istimewa",  featuresCount: 13, months: 12 },
 ];
 
 
@@ -300,6 +300,13 @@ export function PricingPage() {
                     {t(`pricingPage.packages.items.${pkg.key}.name`)}
                   </h3>
 
+                  {/* Tagline */}
+                  {t(`pricingPage.packages.items.${pkg.key}.tagline`) && (
+                    <p className="mt-1 text-center text-[13px] italic text-[#b85470]/80">
+                      {t(`pricingPage.packages.items.${pkg.key}.tagline`)}
+                    </p>
+                  )}
+
                   {/* Duration pill */}
                   <div className="mt-2 flex justify-center">
                     <span className={`rounded-full px-3 py-0.5 text-xs font-semibold ${
@@ -438,6 +445,25 @@ export function PricingPage() {
             <p className="mt-6 text-center text-xs font-medium text-[#5a4f56]">
               {t("pricingPage.packages.footerNote")}
             </p>
+
+            {/* International callout */}
+            <div className="mt-10 flex flex-col items-center justify-between gap-4 rounded-2xl border border-[#1630a0]/20 bg-[#0b1535]/5 px-7 py-5 sm:flex-row">
+              <div className="flex items-center gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#0b1535] text-white text-lg">
+                  ✈️
+                </div>
+                <div>
+                  <p className="font-bold text-[#0b1535]">Based outside Indonesia?</p>
+                  <p className="text-sm text-[#5a4f56]">We have dedicated international packages in English — Safar & Amanah — for Muslims abroad seeking an Indonesian spouse.</p>
+                </div>
+              </div>
+              <Link
+                href="/pricing/international"
+                className="shrink-0 rounded-full bg-[#0b1535] px-6 py-2.5 text-sm font-bold text-white transition hover:bg-[#1630a0]"
+              >
+                View International Pricing →
+              </Link>
+            </div>
           </div>
 
         </div>

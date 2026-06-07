@@ -1062,7 +1062,7 @@
       "facilitationTitle": "Perkenalan terarah, bukan sekedar kenalan",
       "facilitationBody": "Setiap pertemuan punya agenda: perkenalan → nilai & visi → ekspektasi → langkah lanjut. Fasilitator memastikan percakapan tidak melenceng dan kedua pihak merasa nyaman.",
       "pricingTitle": "Investasi untuk masa depan, bukan biaya",
-      "pricingBody": "Paket mulai dari Rp 1,25 jt (diskon 50% di Juni). Transparansi penuh—tidak ada biaya tersembunyi.",
+      "pricingBody": "Paket mulai dari Rp 1,25 jt (harga perkenalan 50%). Transparansi penuh—tidak ada biaya tersembunyi.",
       "ctaTitle": "Siap cari jodoh serius?",
       "ctaBody": "Daftar sekarang dan tim kami akan hubungi Anda dalam 24 jam untuk intake interview.",
       "ctaPrimary": "Daftar sekarang",
@@ -1179,8 +1179,8 @@
   },
   "pricingPage": {
     "discount": {
-      "badge": "Eksklusif Juni — Kursi Terbatas",
-      "headline": "🌙 Juni ini — harga perkenalan 50% untuk paket Pearl & Ruby. Penawaran berakhir 30 Juni.",
+      "badge": "Kursi Terbatas — Harga Perkenalan 50%",
+      "headline": "🌙 Harga perkenalan 50% untuk paket Pearl & Ruby — kursi terbatas.",
       "sub": "",
       "cta": "Klaim Diskon 50% Sekarang",
       "ctaNoDiscount": "Mulai Sekarang",
@@ -1207,7 +1207,7 @@
       "socialCount": "1+",
       "socialTitle": "Anggota Terdaftar",
       "socialDesc": "Orang nyata. Cinta nyata. Perjalanan nyata.",
-      "cta": "Daftar Sekarang — Diskon 50% di Juni",
+      "cta": "Daftar Sekarang — Diskon 50%",
       "ctaSecondary": "Tanya Dulu"
     },
     "registration": {
@@ -1326,50 +1326,59 @@
         },
         "awal": {
           "name": "Pearl",
+          "tagline": "Langkah pertamamu menuju pernikahan yang berkah",
           "price": "Rp 2,5 juta",
           "discountedPrice": "Rp 1,25 juta",
           "duration": "3 bulan · registrasi termasuk",
           "features": [
-            "Interview intake 60 menit",
-            "3 kandidat yang dikurasi",
-            "Profil anonim ditampilkan lebih dulu",
-            "1 pertemuan ta'aruf terfasilitasi",
+            "Sesi wawancara mendalam 60 menit",
+            "Profil Anda dibangun, diverifikasi & dikelola oleh tim kami",
+            "2–3 profil kandidat baru dikirimkan setiap minggu",
+            "Penyesuaian berkelanjutan berdasarkan masukan Anda",
+            "1 sesi ta'aruf online terfasilitasi",
             "Verifikasi KTP & media sosial",
-            "Biaya registrasi termasuk"
+            "Biaya pendaftaran sudah termasuk"
           ]
         },
         "serius": {
           "name": "Ruby",
+          "tagline": "Serius, terstruktur, dan ditangani dengan penuh perhatian",
           "price": "Rp 15 juta",
           "discountedPrice": "Rp 7,5 juta",
           "duration": "6 bulan · registrasi termasuk",
           "features": [
-            "Semua layanan Pearl",
-            "Intake mendalam 90 menit",
-            "5 kandidat yang dikurasi",
-            "Profil anonim ditampilkan lebih dulu",
-            "2 pertemuan ta'aruf terfasilitasi",
-            "Tes psikologi klinis",
-            "Verifikasi KTP, kerja & slip gaji",
-            "Cek latar belakang",
-            "Fasilitasi pertemuan keluarga",
-            "Imam hadir di ta'aruf (opsional)",
-            "Biaya registrasi termasuk"
+            "Sesi wawancara mendalam 60 menit",
+            "Profil Anda dibangun, diverifikasi & dikelola oleh tim kami",
+            "Verifikasi KTP, tempat kerja & slip gaji",
+            "Background check menyeluruh",
+            "1 tes psikologi klinis",
+            "5–7 profil kandidat baru dikirimkan setiap minggu",
+            "Penyesuaian berkelanjutan berdasarkan masukan Anda",
+            "3 sesi ta'aruf online terfasilitasi",
+            "Kehadiran imam saat ta'aruf (opsional)",
+            "1 fasilitasi pertemuan keluarga",
+            "Biaya pendaftaran sudah termasuk"
           ]
         },
         "istimewa": {
           "name": "Diamond",
+          "tagline": "Pengalaman ta'aruf paling menyeluruh dan terpercaya",
           "price": "Rp 40 juta",
           "duration": "12 bulan · sepenuhnya privat",
           "features": [
-            "Semua layanan Ruby",
-            "Kandidat tidak terbatas",
-            "2–3 sesi psikolog klinis",
-            "Cek lapangan + tetangga + RT/RW",
-            "Verifikasi tempat kerja & rumah",
-            "Ditangani founder langsung",
-            "5 sesi coaching pasca-match",
-            "Biaya registrasi termasuk"
+            "Sesi wawancara mendalam 60 menit",
+            "Profil Anda dibangun, diverifikasi & dikelola oleh tim kami",
+            "Verifikasi KTP, tempat kerja & slip gaji",
+            "3 background check menyeluruh",
+            "3 sesi psikologi klinis",
+            "5–7 profil kandidat baru dikirimkan setiap minggu",
+            "Penyesuaian berkelanjutan berdasarkan masukan Anda",
+            "10 sesi ta'aruf online terfasilitasi",
+            "Kehadiran imam saat ta'aruf (opsional)",
+            "3 fasilitasi pertemuan keluarga",
+            "Pendamping pribadi & bimbingan sepanjang proses",
+            "Ditangani langsung oleh founder",
+            "Biaya pendaftaran sudah termasuk"
           ]
         }
       }

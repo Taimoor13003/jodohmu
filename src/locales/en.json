@@ -1004,7 +1004,7 @@
       "facilitationTitle": "Guided introductions, not casual meet-ups",
       "facilitationBody": "Every meeting has an agenda: introduction → values & vision → expectations → next steps. The facilitator ensures the conversation stays on track and both parties feel comfortable.",
       "pricingTitle": "An investment in your future, not an expense",
-      "pricingBody": "Packages start from Rp 1.25M (50% off in June). Full transparency—no hidden fees.",
+      "pricingBody": "Packages start from Rp 1.25M (50% introductory price). Full transparency—no hidden fees.",
       "ctaTitle": "Ready to find a serious match?",
       "ctaBody": "Register now and our team will contact you within 24 hours for an intake interview.",
       "ctaPrimary": "Register now",
@@ -1121,8 +1121,8 @@
   },
   "pricingPage": {
     "discount": {
-      "badge": "June Exclusive — Limited Seats",
-      "headline": "🌙 This June — 50% introductory price for Pearl & Ruby. Offer ends June 30.",
+      "badge": "Limited Seats — 50% Introductory Price",
+      "headline": "🌙 50% introductory price for Pearl & Ruby — limited seats available.",
       "sub": "",
       "cta": "Claim 50% Off Now",
       "ctaNoDiscount": "Get Started",
@@ -1149,7 +1149,7 @@
       "socialCount": "1+",
       "socialTitle": "Registered Members",
       "socialDesc": "Real people. Real love. Real journeys.",
-      "cta": "Register Now — 50% Off in June",
+      "cta": "Register Now — 50% Off",
       "ctaSecondary": "Ask a Question"
     },
     "registration": {
@@ -1268,49 +1268,58 @@
         },
         "awal": {
           "name": "Pearl",
+          "tagline": "Your first step toward a blessed marriage",
           "price": "Rp 2,5 juta",
           "discountedPrice": "Rp 1,25 juta",
           "duration": "3 months · registration included",
           "features": [
-            "60-minute intake interview",
-            "3 curated candidate proposals",
-            "Anonymous profile shown first",
-            "1 supervised ta'aruf meeting",
+            "60-minute in-depth intake interview",
+            "Your profile built, verified & locked by our team",
+            "2–3 new matched candidate profiles every week",
+            "Ongoing refinements based on your feedback",
+            "1 facilitated online ta'aruf session",
             "ID & social media verification",
             "Registration fee included"
           ]
         },
         "serius": {
           "name": "Ruby",
+          "tagline": "Serious, structured, and handled with care",
           "price": "Rp 15 juta",
           "discountedPrice": "Rp 7,5 juta",
           "duration": "6 months · registration included",
           "features": [
-            "All Pearl services",
-            "In-depth 90-minute intake",
-            "5 curated candidate proposals",
-            "Anonymous profile shown first",
-            "2 supervised ta'aruf meetings",
-            "Clinical psychology test",
-            "ID, work & payslip verification",
-            "Background check",
-            "Family gathering facilitation",
+            "60-minute in-depth intake interview",
+            "Your profile built, verified & locked by our team",
+            "ID, workplace & payslip verification",
+            "Comprehensive background check",
+            "1 clinical psychology assessment",
+            "5–7 new matched candidate profiles every week",
+            "Ongoing refinements based on your feedback",
+            "3 facilitated online ta'aruf sessions",
             "Imam present at ta'aruf (optional)",
+            "1 family gathering facilitation",
             "Registration fee included"
           ]
         },
         "istimewa": {
           "name": "Diamond",
+          "tagline": "The most thorough and trusted ta'aruf experience",
           "price": "Rp 40 juta",
           "duration": "12 months · fully private",
           "features": [
-            "All Ruby services",
-            "Unlimited candidate proposals",
-            "2–3 clinical psychologist sessions",
-            "Field + neighbour + RT/RW check",
-            "Workplace & home verification",
-            "Handled directly by founder",
-            "5 post-match coaching sessions",
+            "60-minute in-depth intake interview",
+            "Your profile built, verified & locked by our team",
+            "ID, workplace & payslip verification",
+            "3 comprehensive background checks",
+            "3 clinical psychology sessions",
+            "5–7 new matched candidate profiles every week",
+            "Ongoing refinements based on your feedback",
+            "10 facilitated online ta'aruf sessions",
+            "Imam present at ta'aruf (optional)",
+            "3 family gathering facilitations",
+            "Dedicated personal facilitator & guidance throughout",
+            "Handled directly by the founder",
             "Registration fee included"
           ]
         }
