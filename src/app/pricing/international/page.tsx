@@ -167,7 +167,7 @@ export default function InternationalPricingPage() {
             the right way.
           </p>
           <p className="mx-auto mt-3 max-w-2xl text-lg leading-relaxed text-white/70">
-            Jodohmu's international service was built for exactly this. Not a
+            Jodohmu&apos;s international service was built for exactly this. Not a
             dating app. Not a listing site. A fully facilitated, human-led
             journey — from first introduction to meeting in Indonesia.
           </p>
@@ -369,7 +369,7 @@ export default function InternationalPricingPage() {
 
           {/* Assessment fee note */}
           <p className="mt-8 text-center text-sm text-white/40">
-            Not sure which package is right for you? Message us on WhatsApp — we're happy to help you decide.
+            Not sure which package is right for you? Message us on WhatsApp — we&apos;re happy to help you decide.
           </p>
         </div>
       </section>
@@ -463,7 +463,7 @@ export default function InternationalPricingPage() {
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-lg leading-relaxed text-[#5a4a5a]">
             Send us a message on WhatsApp. Tell us a little about yourself and
-            what you are looking for. No pressure, no rush — just an honest conversation about your hopes and what you're looking for.
+            what you are looking for. No pressure, no rush — just an honest conversation about your hopes and what you&apos;re looking for.
           </p>
 
           <a
