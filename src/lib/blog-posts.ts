@@ -54,6 +54,24 @@ export const blogPosts: BlogPost[] = [
     datePublished: "2024-11-22",
     dateModified: "2025-01-20",
   },
+  {
+    slug: "/blog/does-jodohmu-guarantee-a-match",
+    articleKey: "blogArticle.doesJodohmuGuaranteeMatch",
+    datePublished: "2026-06-07",
+    dateModified: "2026-06-07",
+  },
+  {
+    slug: "/blog/what-makes-taaruf-different-from-dating",
+    articleKey: "blogArticle.whatMakesTaarufDifferent",
+    datePublished: "2026-06-07",
+    dateModified: "2026-06-07",
+  },
+  {
+    slug: "/blog/how-we-verify-every-candidate",
+    articleKey: "blogArticle.howWeVerifyEveryCandidate",
+    datePublished: "2026-06-07",
+    dateModified: "2026-06-07",
+  },
 ];
 
 export const getRelatedPosts = (currentSlug: string, count = 3): BlogPost[] => {

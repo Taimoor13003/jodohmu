@@ -15,6 +15,9 @@ const articles = [
   { key: "familyInvolvement", href: "/blog/family-involvement" },
   { key: "syariahSafeguards", href: "/blog/syariah-safeguards" },
   { key: "howMeetingsAreSupervised", href: "/blog/how-meetings-are-supervised" },
+  { key: "doesJodohmuGuaranteeMatch", href: "/blog/does-jodohmu-guarantee-a-match" },
+  { key: "whatMakesTaarufDifferent", href: "/blog/what-makes-taaruf-different-from-dating" },
+  { key: "howWeVerifyEveryCandidate", href: "/blog/how-we-verify-every-candidate" },
 ];
 
 export function BlogPage() {

@@ -1117,6 +1117,180 @@
       "ctaBody": "Register at Jodohmu and we'll prepare everything—from candidates to venues.",
       "ctaPrimary": "Register now",
       "ctaSecondary": "Back to main blog"
+    },
+    "doesJodohmuGuaranteeMatch": {
+      "metaTitle": "Does Jodohmu Guarantee a Match? | Honest Expectations",
+      "metaDescription": "What Jodohmu actually commits to — and what no matchmaker in the world can promise. An honest answer to the question every serious client asks.",
+      "ogTitle": "Does Jodohmu Guarantee a Match?",
+      "ogDescription": "An honest, warm answer to the question every serious client asks before signing up.",
+      "tag": "Honest Matchmaking",
+      "title": "Does Jodohmu Guarantee a Match?",
+      "subtitle": "The honest answer — and why our honesty is exactly what makes us trustworthy.",
+      "heroBadge": "Expectations & trust",
+      "heroLead": "Every serious client asks this before they pay. Here's our complete, honest answer — no sugarcoating, no false promises.",
+      "whyTitle": "What we actually commit to",
+      "flowTitle": "The three outcomes clients worry about",
+      "flowIntro": "And how we handle each one with care and honesty.",
+      "points": [
+        "A rigorous, human-guided process — not an algorithm.",
+        "Verified candidates who are serious about marriage.",
+        "A facilitator present at every introduction.",
+        "Honest communication with you throughout your journey."
+      ],
+      "steps": [
+        "No match found within your window — We keep searching and communicating openly. We'd rather offer an extension than go quiet on you.",
+        "Rejected by a candidate you liked — This is not our failure, or yours. Compatibility is between two people. We introduce; we don't force.",
+        "You don't find anyone suitable — We'll be honest if your expectations need revisiting. Honest feedback is part of the service.",
+        "Your package window expires — Every service is delivered within your window. We give our full effort from day one.",
+        "You feel uncertain at any point — Our door is always open. Talk to us — we'd rather hear your concern early."
+      ],
+      "scenario": "Think of us like a trusted family friend who knows many people — we make the best introduction we can with genuine care. But whether two hearts connect is not ours to decide. That part belongs to you, and to something greater than us.",
+      "whatWeHandleTitle": "What we protect you from",
+      "whatWeHandle": [
+        "Fake profiles — every candidate is ID-verified before you ever see their name.",
+        "Time-wasters — our intake filters for serious intent, not curiosity.",
+        "Unsafe meetings — a facilitator is present at every introduction.",
+        "Silence — you receive regular updates and honest feedback throughout your journey."
+      ],
+      "benefitsTitle": "What to measure us by",
+      "benefits": [
+        {
+          "title": "Quality of introductions",
+          "desc": "Every candidate we present is verified, serious, and genuinely suited to what you're looking for."
+        },
+        {
+          "title": "Honesty throughout",
+          "desc": "We tell you the truth — even when it's not what you want to hear. That honesty is what protects your time and your heart."
+        },
+        {
+          "title": "Care in every step",
+          "desc": "From your intake interview to your final meeting, you are treated with full respect and seriousness."
+        }
+      ],
+      "facilitationTitle": "A note on marriage and effort",
+      "facilitationBody": "Marriage is ultimately between two people and shaped by forces beyond any matchmaker's control. Our responsibility — and yours — is to give this process our sincere best effort. Jodohmu is that effort, made structured and serious. What we promise is not an outcome. We promise dedication.",
+      "pricingTitle": "One important acknowledgement before you begin",
+      "pricingBody": "Every client confirms before payment: Jodohmu provides a professional matchmaking and facilitation service. We do not guarantee a match, engagement, or marriage. We commit to delivering our full process with care, honesty, and seriousness.",
+      "ctaTitle": "If you're serious about finding the right person the right way",
+      "ctaBody": "We'd love to talk. Reach out on WhatsApp — no pressure, no rush. Just an honest conversation about what you're looking for.",
+      "ctaPrimary": "Message us on WhatsApp",
+      "ctaSecondary": "Back to blog"
+    },
+    "whatMakesTaarufDifferent": {
+      "metaTitle": "What Makes Ta'aruf Different From Dating? | Jodohmu",
+      "metaDescription": "Ta'aruf isn't dating with rules. It's a completely different approach to meeting a potential spouse — structured, purposeful, and dignified. Here's how it works.",
+      "ogTitle": "What Makes Ta'aruf Different From Dating?",
+      "ogDescription": "Ta'aruf and dating look similar from the outside. Inside, they're completely different — and that difference matters.",
+      "tag": "Understanding Ta'aruf",
+      "title": "What Makes a Ta'aruf Different From Dating?",
+      "subtitle": "It's not dating with more rules. It's a fundamentally different way of meeting a life partner — purposeful from the very first conversation.",
+      "heroBadge": "Ta'aruf explained",
+      "heroLead": "If you've heard the word ta'aruf but aren't quite sure what it means — or how it's different from regular dating — this is for you.",
+      "whyTitle": "Why the difference matters",
+      "flowTitle": "How a ta'aruf works at Jodohmu",
+      "flowIntro": "Step by step — from first introduction to a clear decision.",
+      "points": [
+        "Dating is open-ended. Ta'aruf begins with a clear intention — marriage.",
+        "Dating is private. Ta'aruf involves family and a neutral facilitator.",
+        "Dating has no structure or timeline. Ta'aruf has a defined process with clear next steps.",
+        "Dating often leads to emotional entanglement before serious decisions. Ta'aruf protects both hearts by keeping things structured until there is real commitment."
+      ],
+      "steps": [
+        "Intake & profile building — we get to know you properly before any introduction is made.",
+        "Candidate matching — you're presented with verified profiles suited to your values and goals.",
+        "First facilitated session — a structured conversation with a facilitator present. Family may join.",
+        "Follow-up sessions — further conversations if both parties wish to continue. Always supervised.",
+        "Decision — a clear yes or no, with no pressure and full respect for both sides."
+      ],
+      "scenario": "In a typical dating scenario, two people meet, chat for months, develop feelings, and then discover they want completely different things. In ta'aruf, the important questions come first — so no one wastes their time or their heart.",
+      "whatWeHandleTitle": "What makes Jodohmu's ta'aruf different",
+      "whatWeHandle": [
+        "Every candidate is verified before introduction — no fake profiles, no wasted meetings.",
+        "A facilitator is present at every session — keeping things respectful and purposeful.",
+        "Family involvement is welcomed and structured — not awkward or forced.",
+        "You always know where you stand — we give honest feedback after every session."
+      ],
+      "benefitsTitle": "Why people choose this path",
+      "benefits": [
+        {
+          "title": "Clarity from day one",
+          "desc": "Everyone in the process is here for marriage. There is no ambiguity about intentions."
+        },
+        {
+          "title": "Protection for your heart",
+          "desc": "Structured introductions mean you don't invest emotionally before knowing if someone is genuinely compatible."
+        },
+        {
+          "title": "Open to all serious clients",
+          "desc": "You don't need to be Muslim to value this process. If you respect sincerity, family, and dignity — ta'aruf is for you."
+        }
+      ],
+      "facilitationTitle": "Not just for one culture or religion",
+      "facilitationBody": "Ta'aruf is rooted in Islamic tradition, but its values — purpose, dignity, family involvement, honest communication — resonate far beyond any single religion. Anyone who wants to find a partner seriously and respectfully will feel at home in this process.",
+      "pricingTitle": "What's included in every Jodohmu package",
+      "pricingBody": "Every package includes facilitated introduction sessions, a dedicated facilitator, and verified candidate profiles. No hidden costs — you know exactly what you're investing in before you begin.",
+      "ctaTitle": "Ready to experience the difference?",
+      "ctaBody": "If this way of finding a partner resonates with you, we'd love to welcome you. Message us on WhatsApp and let's have a conversation.",
+      "ctaPrimary": "Message us on WhatsApp",
+      "ctaSecondary": "Back to blog"
+    },
+    "howWeVerifyEveryCandidate": {
+      "metaTitle": "How We Verify Every Candidate Before You Meet Them | Jodohmu",
+      "metaDescription": "No fake profiles. No hidden pasts. Every candidate on Jodohmu is personally screened, ID-verified, and vetted for serious intent before any introduction is made.",
+      "ogTitle": "How We Verify Every Candidate Before You Meet Them",
+      "ogDescription": "Our full verification process — what we check, why we check it, and how it protects you.",
+      "tag": "Safety & Verification",
+      "title": "How We Verify Every Candidate Before You Meet Them",
+      "subtitle": "No fake profiles. No guessing. Every person you're introduced to has been personally assessed by our team.",
+      "heroBadge": "Verified & trusted",
+      "heroLead": "The fear of being matched with someone dishonest is real. Here's exactly what we do to make sure that never happens.",
+      "whyTitle": "Why verification matters so much",
+      "flowTitle": "Our verification process — step by step",
+      "flowIntro": "What we check before any introduction is ever made.",
+      "points": [
+        "Fake profiles are common on apps — we have zero tolerance for them.",
+        "Serious intent cannot be assumed — we screen for it explicitly.",
+        "A background without verification is just a story — we cross-check facts.",
+        "Your time and heart deserve protection — that is why we verify before you meet, not after."
+      ],
+      "steps": [
+        "ID verification — government-issued ID is confirmed before the profile is ever activated.",
+        "Employment & social media check — we cross-reference what candidates tell us against what we can verify.",
+        "Video call assessment — a member of our team speaks with every candidate directly. We read people, not just forms.",
+        "Psychology assessment — included for Ruby and Diamond package clients.",
+        "Intent check — we ask directly about readiness, expectations, and family situation. Unclear or dishonest answers disqualify."
+      ],
+      "scenario": "When you receive a candidate profile from us, you are not looking at a stranger's self-reported bio. You are looking at a profile our team has verified, spoken with, and assessed as genuine and serious about marriage.",
+      "whatWeHandleTitle": "What we check — and why",
+      "whatWeHandle": [
+        "Identity — confirmed by government ID, not just a profile photo.",
+        "Background — employment, family situation, and social media cross-referenced.",
+        "Intent — direct conversation about marriage readiness, not assumed from a form.",
+        "Character — assessed through a personal interview by our team, not filtered by an algorithm."
+      ],
+      "benefitsTitle": "What this means for you",
+      "benefits": [
+        {
+          "title": "No fake profiles",
+          "desc": "Every candidate is a real, verified person. You will never be introduced to someone our team hasn't personally assessed."
+        },
+        {
+          "title": "No time-wasters",
+          "desc": "Our intake filters out the curious and the uncommitted. You only meet people who are genuinely ready for marriage."
+        },
+        {
+          "title": "Peace of mind",
+          "desc": "You walk into every introduction knowing the person across from you is real, verified, and serious."
+        }
+      ],
+      "facilitationTitle": "Verification is just the beginning",
+      "facilitationBody": "Verification tells us someone is real and serious. Our matching process tells us whether they're right for you. We combine both — so every introduction we make is not just safe, but meaningful.",
+      "pricingTitle": "Included in every package",
+      "pricingBody": "ID and social media verification is standard across all packages. Ruby and Diamond clients also receive workplace verification, comprehensive background checks, and clinical psychology assessments.",
+      "ctaTitle": "Meet someone real. Meet someone ready.",
+      "ctaBody": "Every person we introduce you to has been personally verified by our team. If that's the standard you're looking for, we'd love to talk.",
+      "ctaPrimary": "Message us on WhatsApp",
+      "ctaSecondary": "Back to blog"
     }
   },
   "pricingPage": {

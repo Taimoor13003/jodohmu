@@ -1175,6 +1175,180 @@
       "ctaBody": "Daftar di Jodohmu dan kami persiapkan semuanya—dari kandidat hingga venue.",
       "ctaPrimary": "Daftar sekarang",
       "ctaSecondary": "Kembali ke blog utama"
+    },
+    "doesJodohmuGuaranteeMatch": {
+      "metaTitle": "Apakah Jodohmu Menjamin Kecocokan? | Ekspektasi Jujur",
+      "metaDescription": "Apa yang benar-benar Jodohmu janjikan — dan apa yang tidak bisa dijanjikan siapapun. Jawaban jujur untuk pertanyaan yang selalu ditanyakan calon klien.",
+      "ogTitle": "Apakah Jodohmu Menjamin Kecocokan?",
+      "ogDescription": "Jawaban jujur dan hangat untuk pertanyaan yang selalu ditanyakan sebelum mendaftar.",
+      "tag": "Kejujuran Kami",
+      "title": "Apakah Jodohmu Menjamin Kecocokan?",
+      "subtitle": "Jawaban jujur kami — dan mengapa kejujuran itu justru yang membuat kami bisa dipercaya.",
+      "heroBadge": "Ekspektasi & kepercayaan",
+      "heroLead": "Setiap calon klien yang serius menanyakan ini sebelum mendaftar. Ini jawaban lengkap dan jujur kami — tanpa janji palsu.",
+      "whyTitle": "Apa yang benar-benar kami janjikan",
+      "flowTitle": "Tiga situasi yang dikhawatirkan klien",
+      "flowIntro": "Dan bagaimana kami menghadapi masing-masing dengan jujur dan penuh perhatian.",
+      "points": [
+        "Proses yang terstruktur dan dipandu manusia nyata — bukan algoritma.",
+        "Kandidat yang sudah diverifikasi dan serius menikah.",
+        "Fasilitator hadir di setiap perkenalan.",
+        "Komunikasi jujur sepanjang perjalanan Anda bersama kami."
+      ],
+      "steps": [
+        "Tidak ada kecocokan dalam periode paket — Kami terus mencari dan berkomunikasi terbuka. Kami lebih memilih menawarkan perpanjangan daripada diam.",
+        "Ditolak oleh kandidat yang Anda sukai — Ini bukan kegagalan kami atau Anda. Kecocokan adalah urusan dua hati. Kami memfasilitasi, bukan memaksakan.",
+        "Tidak ada yang cocok dari kandidat yang tersedia — Kami akan jujur jika ekspektasi Anda perlu ditinjau. Masukan jujur adalah bagian dari layanan.",
+        "Periode paket habis — Setiap layanan sudah kami berikan sepenuhnya dalam periode paket Anda. Kami memberi yang terbaik sejak hari pertama.",
+        "Anda merasa tidak yakin di tengah proses — Pintu kami selalu terbuka. Ceritakan pada kami — lebih baik kami tahu lebih awal."
+      ],
+      "scenario": "Bayangkan kami seperti teman keluarga terpercaya yang kenal banyak orang — kami memperkenalkan dengan sepenuh hati. Tapi apakah dua hati itu cocok, bukan kami yang menentukan. Itu urusan Anda berdua, dan yang di atas.",
+      "whatWeHandleTitle": "Apa yang kami lindungi untuk Anda",
+      "whatWeHandle": [
+        "Profil palsu — setiap kandidat diverifikasi KTP sebelum nama mereka Anda lihat.",
+        "Orang yang tidak serius — proses intake kami menyaring yang serius dari yang sekadar penasaran.",
+        "Pertemuan yang tidak aman — fasilitator selalu hadir di setiap perkenalan.",
+        "Kebisuan — Anda menerima update rutin dan masukan jujur sepanjang perjalanan."
+      ],
+      "benefitsTitle": "Ukur kami dari ini",
+      "benefits": [
+        {
+          "title": "Kualitas perkenalan",
+          "desc": "Setiap kandidat yang kami hadirkan sudah terverifikasi, serius, dan benar-benar sesuai dengan yang Anda cari."
+        },
+        {
+          "title": "Kejujuran sepanjang proses",
+          "desc": "Kami menyampaikan kebenaran — bahkan yang mungkin tidak ingin Anda dengar. Kejujuran itulah yang melindungi waktu dan hati Anda."
+        },
+        {
+          "title": "Perhatian di setiap langkah",
+          "desc": "Dari wawancara awal hingga pertemuan terakhir, Anda diperlakukan dengan penuh hormat dan keseriusan."
+        }
+      ],
+      "facilitationTitle": "Soal pernikahan dan ikhtiar",
+      "facilitationBody": "Pernikahan pada akhirnya ada di tangan Allah. Tanggung jawab kita — Anda dan kami — adalah ikhtiar: memberikan usaha terbaik dengan sungguh-sungguh. Jodohmu adalah ikhtiar itu, dibuat terstruktur dan serius. Yang kami janjikan bukan hasilnya. Kami menjanjikan kesungguhan.",
+      "pricingTitle": "Satu hal yang perlu Anda pahami sebelum mulai",
+      "pricingBody": "Setiap klien mengonfirmasi sebelum pembayaran: Jodohmu menyediakan layanan perjodohan dan fasilitasi profesional. Kami tidak menjamin kecocokan, lamaran, atau pernikahan. Kami berkomitmen menjalankan seluruh proses dengan sungguh-sungguh, jujur, dan penuh perhatian.",
+      "ctaTitle": "Jika Anda serius mencari orang yang tepat dengan cara yang benar",
+      "ctaBody": "Kami ingin mengobrol. Hubungi kami di WhatsApp — tanpa tekanan, tanpa terburu-buru. Hanya percakapan jujur tentang yang Anda cari.",
+      "ctaPrimary": "Hubungi kami di WhatsApp",
+      "ctaSecondary": "Kembali ke blog"
+    },
+    "whatMakesTaarufDifferent": {
+      "metaTitle": "Apa Bedanya Ta'aruf dengan Pacaran? | Jodohmu",
+      "metaDescription": "Ta'aruf bukan pacaran beraturan. Ini adalah pendekatan yang benar-benar berbeda untuk menemukan pasangan hidup — terstruktur, bertujuan, dan bermartabat.",
+      "ogTitle": "Apa Bedanya Ta'aruf dengan Pacaran?",
+      "ogDescription": "Ta'aruf dan pacaran terlihat mirip dari luar. Di dalamnya, keduanya sangat berbeda.",
+      "tag": "Memahami Ta'aruf",
+      "title": "Apa yang Membedakan Ta'aruf dari Pacaran?",
+      "subtitle": "Ini bukan pacaran dengan aturan lebih ketat. Ini cara yang benar-benar berbeda untuk menemukan pasangan hidup — bertujuan sejak percakapan pertama.",
+      "heroBadge": "Ta'aruf dijelaskan",
+      "heroLead": "Jika Anda pernah mendengar kata ta'aruf tapi belum tahu persis apa artinya — atau bedanya dengan pacaran biasa — ini untuk Anda.",
+      "whyTitle": "Mengapa perbedaan ini penting",
+      "flowTitle": "Bagaimana ta'aruf di Jodohmu berjalan",
+      "flowIntro": "Langkah demi langkah — dari perkenalan pertama hingga keputusan yang jelas.",
+      "points": [
+        "Pacaran tidak punya tujuan pasti. Ta'aruf dimulai dengan niat yang jelas — menikah.",
+        "Pacaran bersifat pribadi. Ta'aruf melibatkan keluarga dan fasilitator netral.",
+        "Pacaran tidak punya struktur. Ta'aruf memiliki proses yang jelas dengan langkah-langkah nyata.",
+        "Pacaran sering menimbulkan keterikatan emosional sebelum keputusan serius. Ta'aruf melindungi dua hati dengan menjaga semuanya terstruktur sampai ada komitmen nyata."
+      ],
+      "steps": [
+        "Intake & pembuatan profil — kami mengenal Anda dengan baik sebelum perkenalan apapun dilakukan.",
+        "Pencocokan kandidat — Anda menerima profil terverifikasi yang sesuai dengan nilai dan tujuan Anda.",
+        "Sesi pertama terfasilitasi — percakapan terstruktur dengan fasilitator hadir. Keluarga bisa ikut.",
+        "Sesi lanjutan — percakapan berikutnya jika kedua pihak ingin melanjutkan. Selalu dengan pendamping.",
+        "Keputusan — ya atau tidak yang jelas, tanpa tekanan dan dengan penghormatan penuh dari kedua sisi."
+      ],
+      "scenario": "Dalam pacaran biasa, dua orang bertemu, chat berbulan-bulan, tumbuh perasaan, lalu baru sadar mereka ingin hal yang sangat berbeda. Dalam ta'aruf, pertanyaan-pertanyaan penting diajukan lebih dulu — sehingga tidak ada yang membuang waktu atau hatinya.",
+      "whatWeHandleTitle": "Yang membuat ta'aruf Jodohmu berbeda",
+      "whatWeHandle": [
+        "Setiap kandidat diverifikasi sebelum perkenalan — tidak ada profil palsu, tidak ada pertemuan sia-sia.",
+        "Fasilitator hadir di setiap sesi — menjaga semuanya tetap saling menghormati dan terarah.",
+        "Keterlibatan keluarga disambut dan distrukturkan — tidak canggung atau dipaksakan.",
+        "Anda selalu tahu posisi Anda — kami memberikan masukan jujur setelah setiap sesi."
+      ],
+      "benefitsTitle": "Mengapa banyak yang memilih jalan ini",
+      "benefits": [
+        {
+          "title": "Kejelasan sejak awal",
+          "desc": "Semua yang masuk dalam proses ini hadir untuk tujuan menikah. Tidak ada keraguan soal niat."
+        },
+        {
+          "title": "Perlindungan untuk hati",
+          "desc": "Perkenalan yang terstruktur berarti Anda tidak berinvestasi secara emosional sebelum tahu apakah seseorang benar-benar cocok."
+        },
+        {
+          "title": "Terbuka untuk semua yang serius",
+          "desc": "Anda tidak harus Muslim untuk menghargai proses ini. Jika Anda menghormati ketulusan, keluarga, dan martabat — ta'aruf cocok untuk Anda."
+        }
+      ],
+      "facilitationTitle": "Bukan hanya untuk satu budaya atau agama",
+      "facilitationBody": "Ta'aruf berakar pada tradisi Islam, tapi nilai-nilainya — tujuan, martabat, keterlibatan keluarga, komunikasi jujur — jauh melampaui satu agama. Siapapun yang ingin menemukan pasangan dengan serius dan bermartabat akan merasa nyaman dalam proses ini.",
+      "pricingTitle": "Yang termasuk dalam setiap paket Jodohmu",
+      "pricingBody": "Setiap paket mencakup sesi perkenalan terfasilitasi, fasilitator khusus, dan profil kandidat terverifikasi. Tidak ada biaya tersembunyi — Anda tahu persis investasi Anda sebelum mulai.",
+      "ctaTitle": "Siap merasakan perbedaannya?",
+      "ctaBody": "Jika cara menemukan pasangan seperti ini terasa tepat untuk Anda, kami dengan senang hati menyambut Anda. Hubungi kami di WhatsApp.",
+      "ctaPrimary": "Hubungi kami di WhatsApp",
+      "ctaSecondary": "Kembali ke blog"
+    },
+    "howWeVerifyEveryCandidate": {
+      "metaTitle": "Bagaimana Kami Memverifikasi Setiap Kandidat Sebelum Anda Bertemu | Jodohmu",
+      "metaDescription": "Tidak ada profil palsu. Tidak ada masa lalu tersembunyi. Setiap kandidat Jodohmu diverifikasi secara pribadi sebelum perkenalan apapun dilakukan.",
+      "ogTitle": "Bagaimana Kami Memverifikasi Setiap Kandidat Sebelum Anda Bertemu",
+      "ogDescription": "Proses verifikasi kami — apa yang kami periksa, mengapa, dan bagaimana itu melindungi Anda.",
+      "tag": "Keamanan & Verifikasi",
+      "title": "Bagaimana Kami Memverifikasi Setiap Kandidat Sebelum Anda Bertemu",
+      "subtitle": "Tidak ada profil palsu. Tidak ada dugaan. Setiap orang yang Anda temui telah dinilai langsung oleh tim kami.",
+      "heroBadge": "Terverifikasi & terpercaya",
+      "heroLead": "Rasa takut dipertemukan dengan orang yang tidak jujur itu nyata. Ini tepatnya yang kami lakukan untuk memastikan hal itu tidak pernah terjadi.",
+      "whyTitle": "Mengapa verifikasi sangat penting",
+      "flowTitle": "Proses verifikasi kami — langkah demi langkah",
+      "flowIntro": "Apa yang kami periksa sebelum perkenalan apapun dilakukan.",
+      "points": [
+        "Profil palsu marak di aplikasi — kami tidak mentoleransinya sama sekali.",
+        "Niat serius tidak bisa diasumsikan — kami menyaringnya secara eksplisit.",
+        "Latar belakang tanpa verifikasi hanya cerita — kami mengecek faktanya.",
+        "Waktu dan hati Anda layak dilindungi — itulah mengapa kami verifikasi sebelum Anda bertemu, bukan sesudah."
+      ],
+      "steps": [
+        "Verifikasi KTP — identitas resmi dikonfirmasi sebelum profil aktif.",
+        "Pemeriksaan pekerjaan & media sosial — kami mencocokkan yang kandidat ceritakan dengan yang bisa kami verifikasi.",
+        "Penilaian via video call — anggota tim kami berbicara langsung dengan setiap kandidat. Kami membaca orangnya, bukan hanya formulirnya.",
+        "Tes psikologi — termasuk untuk klien paket Ruby dan Diamond.",
+        "Pemeriksaan niat — kami bertanya langsung soal kesiapan menikah, ekspektasi, dan situasi keluarga. Jawaban yang tidak jelas atau tidak jujur = tidak lolos."
+      ],
+      "scenario": "Ketika Anda menerima profil kandidat dari kami, Anda tidak sedang melihat bio yang ditulis sendiri oleh orang asing. Anda melihat profil yang sudah diverifikasi, sudah kami ajak bicara, dan sudah kami nilai sebagai orang yang sungguh-sungguh dan serius menikah.",
+      "whatWeHandleTitle": "Apa yang kami periksa — dan mengapa",
+      "whatWeHandle": [
+        "Identitas — dikonfirmasi melalui KTP, bukan sekadar foto profil.",
+        "Latar belakang — pekerjaan, situasi keluarga, dan media sosial disilangkan.",
+        "Niat — percakapan langsung soal kesiapan menikah, bukan asumsi dari formulir.",
+        "Karakter — dinilai melalui wawancara pribadi oleh tim kami, bukan disaring algoritma."
+      ],
+      "benefitsTitle": "Artinya apa untuk Anda",
+      "benefits": [
+        {
+          "title": "Tidak ada profil palsu",
+          "desc": "Setiap kandidat adalah orang nyata yang sudah terverifikasi. Anda tidak akan pernah diperkenalkan ke seseorang yang belum kami nilai langsung."
+        },
+        {
+          "title": "Tidak ada yang buang-buang waktu",
+          "desc": "Proses intake kami menyaring yang penasaran dan tidak serius. Anda hanya bertemu orang yang benar-benar siap menikah."
+        },
+        {
+          "title": "Ketenangan pikiran",
+          "desc": "Anda masuk ke setiap perkenalan dengan tahu bahwa orang di hadapan Anda nyata, terverifikasi, dan serius."
+        }
+      ],
+      "facilitationTitle": "Verifikasi hanya awalnya",
+      "facilitationBody": "Verifikasi memberitahu kami bahwa seseorang nyata dan serius. Proses pencocokan kami memberitahu apakah mereka cocok untuk Anda. Kami menggabungkan keduanya — sehingga setiap perkenalan yang kami buat tidak hanya aman, tapi juga bermakna.",
+      "pricingTitle": "Termasuk dalam setiap paket",
+      "pricingBody": "Verifikasi KTP dan media sosial adalah standar di semua paket. Klien Ruby dan Diamond juga mendapatkan verifikasi tempat kerja, pemeriksaan latar belakang menyeluruh, dan penilaian psikologi klinis.",
+      "ctaTitle": "Temui seseorang yang nyata. Yang siap.",
+      "ctaBody": "Setiap orang yang kami perkenalkan kepada Anda telah diverifikasi langsung oleh tim kami. Jika itu standar yang Anda cari, kami ingin mengobrol.",
+      "ctaPrimary": "Hubungi kami di WhatsApp",
+      "ctaSecondary": "Kembali ke blog"
     }
   },
   "pricingPage": {
