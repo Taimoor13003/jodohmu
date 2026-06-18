@@ -24,6 +24,7 @@
   },
   "header": {
     "language": "Language",
+    "login": "Login",
     "dashboard": "Dashboard",
     "logout": "Log out",
     "blog": "Blog",

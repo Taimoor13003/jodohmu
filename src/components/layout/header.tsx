@@ -136,7 +136,11 @@ export function Header() {
                 <DropdownMenuItem onClick={handleLogout}>{t("header.logout")}</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : null}
+          ) : (
+            <Link href="/login" className={navLinkClass("/login")}>
+              {t("header.login")}
+            </Link>
+          )}
         </nav>
 
         <div className="ml-auto flex items-center gap-2 sm:hidden">
@@ -243,7 +247,15 @@ export function Header() {
                   {t("header.logout")}
                 </Button>
               </div>
-            ) : null}
+            ) : (
+              <Link
+                href="/login"
+                className={mobileNavLinkClass("/login")}
+                onClick={() => setIsMobileOpen(false)}
+              >
+                {t("header.login")}
+              </Link>
+            )}
           </nav>
         ) : null}
       </div>

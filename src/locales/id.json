@@ -24,6 +24,7 @@
   },
   "header": {
     "language": "Bahasa",
+    "login": "Masuk",
     "dashboard": "Dashboard",
     "logout": "Keluar",
     "blog": "Blog",

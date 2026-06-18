@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Partnership Program — Jodohmu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink:   #e8147a;
+      --navy:   #1630a0;
+      --ink:    #1a1330;
+      --muted:  #6a6480;
+      --border: rgba(26,19,48,0.1);
+      --bg-alt: #f8f7fc;
+      --bg-card:#f1effb;
+    }
+
+    html, body { width:100vw; height:100vh; overflow:hidden; font-family:'Inter',sans-serif; color:var(--ink); }
+
+    /* ── Deck ── */
+    .deck { width:100vw; height:100vh; position:relative; background:#0e0a20; }
+
+    /* ── Slides — true fullscreen ── */
+    .slide {
+      position: absolute; inset: 0;
+      display: none; flex-direction: column;
+      overflow: hidden;
+    }
+    .slide.active { display: flex; animation: fadein .45s ease both; }
+    .slide.prev   { display: flex; animation: fadeout .45s ease both; }
+    @keyframes fadein  { from { opacity:0; transform:translateX(30px) } to { opacity:1; transform:none } }
+    @keyframes fadeout { from { opacity:1; transform:none } to { opacity:0; transform:translateX(-30px) } }
+
+    /* ── Light slides ── */
+    .slide-light { background: #ffffff; }
+    .slide-alt   { background: var(--bg-alt); }
+
+    /* ── Dark slides ── */
+    .slide-dark { background: var(--ink); }
+    .slide-dark .glow-a {
+      position:absolute; width:640px; height:640px; border-radius:50%;
+      background:radial-gradient(circle, rgba(232,20,122,.22) 0%, transparent 70%);
+      top:-200px; right:-120px; pointer-events:none; z-index:0;
+    }
+    .slide-dark .glow-b {
+      position:absolute; width:540px; height:540px; border-radius:50%;
+      background:radial-gradient(circle, rgba(22,48,160,.25) 0%, transparent 70%);
+      bottom:-180px; left:-120px; pointer-events:none; z-index:0;
+    }
+    /* Extra pink for cover/closing */
+    .slide-dark.rich .glow-a {
+      background:radial-gradient(circle, rgba(232,20,122,.35) 0%, transparent 65%);
+      width:780px; height:780px;
+    }
+    .slide-dark.rich .glow-b {
+      background:radial-gradient(circle, rgba(22,48,160,.3) 0%, transparent 65%);
+      width:680px; height:680px;
+    }
+    .slide-dark > * { position:relative; z-index:2; }
+
+    /* ── Topbar ── */
+    .topbar {
+      height: 58px; flex-shrink:0;
+      display:flex; align-items:center; padding:0 52px;
+    }
+    .topbar-light { border-bottom: 1px solid var(--border); }
+    .topbar-dark-line { border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .topbar-logo { height: 30px; width: auto; }
+    .topbar-logo-inv { height: 30px; width: auto; filter: brightness(0) invert(1); }
+    .topbar-tag { margin-left:auto; font-size:10px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); }
+    .topbar-tag-d { margin-left:auto; font-size:10px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,.3); }
+
+    /* ── Layout ── */
+    .body    { flex:1; display:flex; overflow:hidden; }
+    .col-l   { display:flex; flex-direction:column; justify-content:center; }
+    .col-r   { display:flex; flex-direction:column; justify-content:center; }
+    .vline   { width:1px; background:var(--border); flex-shrink:0; }
+    .vline-d { width:1px; background:rgba(255,255,255,0.08); flex-shrink:0; }
+    .pad     { padding: 44px 52px; }
+    .pad-lg  { padding: 60px 88px; }
+
+    /* ── Type ── */
+    .tag {
+      display:flex; align-items:center; gap:10px;
+      font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+      color:var(--pink); margin-bottom:14px;
+    }
+    .tag::before { content:''; width:20px; height:2px; background:linear-gradient(90deg,var(--pink),#ff8bc8); border-radius:2px; }
+    .tag-w { color:#fff; }
+    .tag-w::before { background:linear-gradient(90deg,var(--pink),#ff8bc8); }
+
+    h1 { font-family:'Fraunces',serif; font-size:clamp(38px,5.5vw,72px); font-weight:900; line-height:1.0; letter-spacing:-.03em; }
+    h2 { font-family:'Fraunces',serif; font-size:clamp(24px,3.2vw,44px); font-weight:700; line-height:1.15; letter-spacing:-.02em; }
+    h3 { font-family:'Fraunces',serif; font-size:clamp(17px,2.1vw,28px); font-weight:600; line-height:1.2; }
+
+    .sub   { font-size:clamp(13px,1.3vw,17px); color:var(--muted); line-height:1.7; margin-top:12px; }
+    .sub-w { color:rgba(255,255,255,.55); }
+    p { font-size:clamp(11.5px,1.05vw,14px); line-height:1.7; color:var(--muted); }
+    p strong { color:var(--ink); font-weight:600; }
+    .txt-w { color:rgba(255,255,255,.62); }
+    .txt-w strong { color:#fff; }
+
+    .rule { width:40px; height:3px; border-radius:2px; background:linear-gradient(90deg,var(--pink),#ff8bc8); margin:18px 0; }
+
+    /* ── Cards (light slides) ── */
+    .card { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:16px 18px; }
+    .card-pink { background:#fce8f2; border:1px solid rgba(232,20,122,0.18); border-radius:14px; padding:16px 18px; }
+    /* Cards (dark slides) */
+    .card-d { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.09); border-radius:14px; padding:16px 18px; }
+    .card-d-pink { background:rgba(232,20,122,0.1); border:1px solid rgba(232,20,122,0.22); border-radius:14px; padding:16px 18px; }
+
+    /* ── Slide num ── */
+    .snum { position:absolute; bottom:22px; right:40px; font-size:11px; color:var(--muted); letter-spacing:.06em; z-index:10; }
+    .snum-d { color:rgba(255,255,255,.25); }
+
+    /* ═══════════ S1 — Cover ═══════════ */
+    .s1-inner { flex:1; display:flex; }
+    .s1-left  { flex:1; display:flex; flex-direction:column; justify-content:center; padding:52px 88px; }
+    .s1-right { width:380px; flex-shrink:0; display:flex; align-items:center; justify-content:center; padding:40px; }
+    .s1-logo-wrap { background:#fff; border-radius:28px; padding:32px 36px; box-shadow:0 28px 70px rgba(232,20,122,.18), 0 0 0 1px rgba(255,255,255,.08); }
+    .s1-logo  { width: min(240px, 60vw); height:auto; display:block; }
+    .s1-big   { font-family:'Fraunces',serif; font-size:clamp(46px,6.5vw,82px); font-weight:900; color:#fff; line-height:1.0; letter-spacing:-.03em; }
+    .s1-big em { color:var(--pink); font-style:normal; }
+    .s1-sub   { font-size:clamp(14px,1.4vw,18px); color:rgba(255,255,255,.5); margin-top:16px; line-height:1.65; max-width:500px; }
+    .s1-chips { display:flex; gap:11px; margin-top:32px; flex-wrap:wrap; }
+    .s1-chip  { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius:12px; padding:12px 18px; }
+    .s1-chip-lbl { font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.3); }
+    .s1-chip-val { font-size:13px; font-weight:600; color:#fff; margin-top:4px; line-height:1.3; }
+
+    /* ═══════════ S2 — Problem ═══════════ */
+    .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px; }
+    .stat-card { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:16px; }
+    .stat-num  { font-family:'Fraunces',serif; font-size:clamp(28px,4.2vw,48px); font-weight:900; color:var(--pink); line-height:1; }
+    .stat-txt  { font-size:11px; color:var(--muted); margin-top:5px; line-height:1.45; }
+    .stat-card.accent { background:#fce8f2; border-color:rgba(232,20,122,.18); }
+    .stat-card.accent .stat-num { font-size:16px; margin-top:2px; color:#c0105f; }
+    .stat-card.accent .stat-txt { color:#7a2050; }
+
+    .prob-row { display:flex; align-items:flex-start; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+    .prob-row:last-child { border:none; }
+    .prob-ico  { width:36px; height:36px; border-radius:10px; background:#fce8f2; border:1px solid rgba(232,20,122,.18); display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+    .prob-title { font-size:13px; font-weight:700; color:var(--ink); margin-bottom:2px; }
+
+    /* ═══════════ S3 — Solution ═══════════ */
+    .step { display:flex; gap:12px; margin-bottom:16px; }
+    .step-n { width:28px; height:28px; border-radius:50%; background:var(--pink); color:white; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; }
+    .step-body strong { display:block; font-size:13px; color:var(--ink); font-weight:700; margin-bottom:2px; }
+
+    .diff-row { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+    .diff-row:last-child { border:none; }
+    .diff-ico  { width:36px; height:36px; border-radius:10px; background:var(--bg-card); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+    .diff-body strong { display:block; font-size:13px; color:var(--ink); font-weight:700; margin-bottom:2px; }
+
+    /* ═══════════ S4 — Who we need ═══════════ */
+    .partner-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:10px; }
+    .partner-card { background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:20px; }
+    .partner-icon { font-size:28px; margin-bottom:10px; }
+    .partner-title { font-size:14px; font-weight:700; color:var(--ink); margin-bottom:5px; }
+    .partner-sub   { font-size:12px; color:var(--muted); line-height:1.55; }
+    .partner-tag   { display:inline-flex; margin-top:10px; font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--pink); }
+
+    /* ═══════════ S5 — Join Mission ═══════════ */
+    .join-header { padding:32px 60px 20px; flex-shrink:0; text-align:center; }
+    .join-grid { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:16px; padding:0 44px; flex:1; align-content:center; }
+    .join-card { background:#fff; border:1px solid var(--border); border-radius:18px; padding:22px 20px; display:flex; flex-direction:column; }
+    .join-icon { font-size:30px; margin-bottom:12px; }
+    .join-title { font-size:14px; font-weight:700; color:var(--ink); margin-bottom:6px; line-height:1.3; }
+    .join-desc  { font-size:12px; color:var(--muted); line-height:1.6; flex:1; }
+    .join-cta   { margin:18px 44px 24px; background:linear-gradient(135deg,rgba(232,20,122,.08),rgba(22,48,160,.06)); border:1px solid rgba(232,20,122,.18); border-radius:14px; padding:16px 28px; display:flex; align-items:center; justify-content:space-between; gap:20px; flex-shrink:0; }
+    .join-cta-text { font-size:14px; font-weight:600; color:var(--ink); line-height:1.4; }
+    .join-cta-earn { font-size:13px; font-weight:700; color:var(--pink); white-space:nowrap; }
+
+    /* ═══════════ S6 — Commission ═══════════ */
+    .big-pct   { font-family:'Fraunces',serif; font-size:clamp(96px,14vw,140px); font-weight:900; color:var(--pink); line-height:.88; }
+    .big-label { font-size:clamp(13px,1.5vw,17px); color:var(--muted); margin-top:10px; line-height:1.6; }
+    .check-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+    .chk { color:var(--pink); font-size:16px; font-weight:700; flex-shrink:0; }
+
+    /* ═══════════ S7 — Flow ═══════════ */
+    #s7 .flow-header { border-bottom:1px solid var(--border); padding:28px 52px 22px; flex-shrink:0; }
+    .flow-body { flex:1; display:grid; grid-template-columns:repeat(5,1fr); gap:16px; padding:24px 44px; align-content:center; position:relative; }
+    /* connecting line behind cards */
+    .flow-body::before { content:''; position:absolute; top:calc(24px + 40px); left:calc(44px + 9%); right:calc(44px + 9%); height:2px; background:linear-gradient(90deg,var(--pink),#ff8bc8,var(--pink)); opacity:.25; z-index:0; }
+    .flow-card { background:#fff; border:1px solid var(--border); border-radius:18px; padding:22px 18px 20px; display:flex; flex-direction:column; align-items:flex-start; position:relative; z-index:1; box-shadow:0 4px 20px rgba(26,19,48,.06); }
+    .fc-num { font-family:'Fraunces',serif; font-size:44px; font-weight:900; color:var(--pink); line-height:1; margin-bottom:8px; opacity:.18; position:absolute; top:12px; right:16px; }
+    .fc-icon { font-size:28px; margin-bottom:10px; }
+    .fc-title { font-size:13px; font-weight:700; color:var(--ink); margin-bottom:5px; line-height:1.3; }
+    .fc-desc  { font-size:11.5px; color:var(--muted); line-height:1.55; }
+    .flow-note { margin:0 44px 24px; background:#fce8f2; border:1px solid rgba(232,20,122,.18); border-radius:14px; padding:14px 22px; display:flex; align-items:center; gap:14px; flex-shrink:0; }
+    .flow-note p { font-size:12.5px; color:#7a2050; font-weight:500; line-height:1.5; }
+
+    /* ═══════════ S8 — Closing ═══════════ */
+    .s8-inner { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:44px 80px; }
+    .s8-quote { font-family:'Fraunces',serif; font-size:clamp(22px,3.2vw,40px); font-weight:700; color:#fff; max-width:640px; line-height:1.25; margin-bottom:32px; letter-spacing:-.02em; }
+    .s8-quote em { color:var(--pink); font-style:normal; }
+    .s8-steps { display:flex; gap:13px; margin-bottom:30px; flex-wrap:wrap; justify-content:center; }
+    .s8-step  { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1); border-radius:14px; padding:14px 20px; display:flex; align-items:center; gap:11px; min-width:185px; }
+    .s8-step-n { width:26px; height:26px; border-radius:50%; background:var(--pink); color:white; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .s8-step p { font-size:12px; color:rgba(255,255,255,.55); text-align:left; line-height:1.4; }
+    .s8-contact { display:flex; gap:26px; align-items:center; background:rgba(232,20,122,.1); border:1px solid rgba(232,20,122,.24); border-radius:14px; padding:15px 32px; flex-wrap:wrap; justify-content:center; }
+    .s8-contact-item { display:flex; align-items:center; gap:9px; }
+    .c-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--pink); display:block; }
+    .c-val   { font-size:14px; color:#fff; font-weight:600; }
+    .s8-vsep { width:1px; height:34px; background:rgba(255,255,255,.1); }
+
+    /* ── Navigation ── */
+    #nav {
+      position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
+      display:flex; align-items:center; gap:10px;
+      background:rgba(26,19,48,.92); backdrop-filter:blur(18px);
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:99px; padding:7px 14px;
+      z-index:100;
+    }
+    .nav-btn { width:32px; height:32px; border-radius:50%; border:1px solid rgba(255,255,255,.12); background:transparent; color:rgba(255,255,255,.6); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+    .nav-btn:hover:not(:disabled) { background:var(--pink); color:white; border-color:var(--pink); }
+    .nav-btn:disabled { opacity:.2; cursor:default; }
+    .nav-dots { display:flex; gap:6px; padding:0 4px; }
+    .nav-dot  { width:6px; height:6px; border-radius:99px; background:rgba(255,255,255,.2); border:none; cursor:pointer; transition:all .25s; }
+    .nav-dot.active { background:var(--pink); width:20px; }
+    #counter { font-size:11px; color:rgba(255,255,255,.28); min-width:34px; text-align:center; }
+
+  </style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- ══ S1 — Cover ══ -->
+  <div class="slide slide-dark rich active" id="s1">
+    <div class="glow-a"></div><div class="glow-b"></div>
+    <div class="topbar topbar-dark-line" style="padding:0 52px;">
+      <span class="topbar-tag-d">PARTNERSHIP DECK · CONFIDENTIAL</span>
+    </div>
+    <div class="s1-inner">
+      <div class="s1-left">
+        <div class="tag tag-w">Strategic Partnership Program</div>
+        <div class="s1-big">Let's Help<br />Indonesia <em>Marry</em><br />The Right Way.</div>
+        <div class="s1-sub">We are building the infrastructure for dignified, guided marriage across Indonesia. We can't do this alone — and neither can you. Let's build it together.</div>
+        <div class="s1-chips">
+          <div class="s1-chip">
+            <div class="s1-chip-lbl">Based in</div>
+            <div class="s1-chip-val">Indonesia</div>
+          </div>
+          <div class="s1-chip">
+            <div class="s1-chip-lbl">Our Mission</div>
+            <div class="s1-chip-val">To help every person find a spouse with guidance, dignity, and structure</div>
+          </div>
+          <div class="s1-chip">
+            <div class="s1-chip-lbl">Who we need</div>
+            <div class="s1-chip-val">Organizations, community leaders & institutions with reach</div>
+          </div>
+        </div>
+      </div>
+      <div class="s1-right">
+        <div class="s1-logo-wrap">
+          <img class="s1-logo" src="/jodohmu-logo.png" alt="Jodohmu logo" />
+        </div>
+      </div>
+    </div>
+    <span class="snum snum-d">01 / 08</span>
+  </div>
+
+  <!-- ══ S2 — The Problem ══ -->
+  <div class="slide slide-light" id="s2">
+    <div class="topbar topbar-light">
+      <img class="topbar-logo" src="/jodohmu-logo.png" alt="Jodohmu" />
+      <span class="topbar-tag">THE PROBLEM</span>
+    </div>
+    <div class="body">
+      <div class="col-l pad" style="flex:0 0 44%; border-right:1px solid var(--border);">
+        <div class="tag">A growing crisis</div>
+        <h2>The marriage crisis is real — and it's getting worse.</h2>
+        <div class="rule"></div>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-num">516K</div>
+            <div class="stat-txt">Divorces recorded in Indonesia in 2023 — a national record</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">↑63%</div>
+            <div class="stat-txt">Rise in the average age of first marriage since 2010</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">1 in 3</div>
+            <div class="stat-txt">Adults over 28 don't know where to start finding a serious partner</div>
+          </div>
+          <div class="stat-card accent">
+            <div class="stat-num">Real harm</div>
+            <div class="stat-txt">Broken families, single parents, and social instability are on the rise</div>
+          </div>
+        </div>
+      </div>
+      <div class="vline"></div>
+      <div class="col-r pad" style="flex:1;">
+        <div class="tag">What we keep seeing</div>
+        <h3 style="margin-bottom:6px;">The system is failing the people who need it most.</h3>
+        <div class="prob-row">
+          <div class="prob-ico">📱</div>
+          <div><div class="prob-title">Casual apps are not built for serious people</div><p>Most platforms reward engagement, not commitment. Serious individuals waste years and emotional energy with no results.</p></div>
+        </div>
+        <div class="prob-row">
+          <div class="prob-ico">🔗</div>
+          <div><div class="prob-title">Informal referrals go nowhere</div><p>Friends and family want to help — but without structure, referrals turn into awkward dead ends. There's no process, no follow-through.</p></div>
+        </div>
+        <div class="prob-row">
+          <div class="prob-ico">🏛️</div>
+          <div><div class="prob-title">Organizations have reach — but no trusted partner</div><p>Community leaders, institutions, and organizations know who needs help. They just have nowhere credible to send them.</p></div>
+        </div>
+        <div class="prob-row">
+          <div class="prob-ico">💔</div>
+          <div><div class="prob-title">Unguided introductions cause more harm than good</div><p>Without facilitation, expectations go unmanaged, families are excluded, and people get hurt — emotionally and socially.</p></div>
+        </div>
+      </div>
+    </div>
+    <span class="snum">02 / 08</span>
+  </div>
+
+  <!-- ══ S3 — Our Response ══ -->
+  <div class="slide slide-alt" id="s3">
+    <div class="topbar topbar-light">
+      <img class="topbar-logo" src="/jodohmu-logo.png" alt="Jodohmu" />
+      <span class="topbar-tag">OUR RESPONSE</span>
+    </div>
+    <div class="body">
+      <div class="col-l pad" style="flex:0 0 42%; border-right:1px solid var(--border);">
+        <div class="tag">How Jodohmu works</div>
+        <h3 style="margin-bottom:6px;">Not an app. Not a platform.<br />A human-led system for serious people.</h3>
+        <div class="rule"></div>
+        <div class="step"><div class="step-n">1</div><div class="step-body"><strong>In-Depth Interview</strong><p>Every person goes through a thorough session — personality, values, background, family, and life goals.</p></div></div>
+        <div class="step"><div class="step-n">2</div><div class="step-body"><strong>Identity & Background Check</strong><p>We verify documents and references before anyone enters our system. No anonymity.</p></div></div>
+        <div class="step"><div class="step-n">3</div><div class="step-body"><strong>Thoughtful, Human Matching</strong><p>Our team matches people based on genuine compatibility — not swiping, not algorithms.</p></div></div>
+        <div class="step"><div class="step-n">4</div><div class="step-body"><strong>Facilitated Introduction</strong><p>Meetings are guided, structured, and fully within ethical boundaries. Always.</p></div></div>
+        <div class="step"><div class="step-n">5</div><div class="step-body"><strong>Family Involvement from Day One</strong><p>We bring families into the process early — not as a formality, but as a foundation.</p></div></div>
+      </div>
+      <div class="vline"></div>
+      <div class="col-r pad" style="flex:1;">
+        <div class="tag">Why we're different</div>
+        <h3 style="margin-bottom:6px;">Dignity by design.<br />Not a dating service.</h3>
+        <div class="diff-row"><div class="diff-ico">🔒</div><div class="diff-body"><strong>No public profiles</strong><p>Candidate information is only shared with relevant, vetted matches. Never publicly listed or sold.</p></div></div>
+        <div class="diff-row"><div class="diff-ico">🤝</div><div class="diff-body"><strong>Real people, not bots</strong><p>A dedicated team member handles every case. We know each person by name and story.</p></div></div>
+        <div class="diff-row"><div class="diff-ico">👨‍👩‍👧</div><div class="diff-body"><strong>Family is central, not optional</strong><p>We work with families from the start — creating accountability and trust in the process.</p></div></div>
+        <div class="diff-row"><div class="diff-ico">🎯</div><div class="diff-body"><strong>Only serious applicants accepted</strong><p>We screen for genuine readiness and intent. If someone isn't ready to commit, they don't enter.</p></div></div>
+        <div class="diff-row"><div class="diff-ico">📋</div><div class="diff-body"><strong>Every step is documented</strong><p>Full transparency for families, partners, and participants. Nothing is left to guesswork.</p></div></div>
+      </div>
+    </div>
+    <span class="snum">03 / 08</span>
+  </div>
+
+  <!-- ══ S4 — Who we need ══ -->
+  <div class="slide slide-light" id="s4">
+    <div class="topbar topbar-light">
+      <img class="topbar-logo" src="/jodohmu-logo.png" alt="Jodohmu" />
+      <span class="topbar-tag">WHO WE'RE LOOKING FOR</span>
+    </div>
+    <div class="body" style="flex-direction:column;">
+      <div class="pad" style="padding-bottom:16px;">
+        <div class="tag">Our ideal partners</div>
+        <h2 style="font-size:clamp(20px,2.8vw,38px);">We need people with reach.<br />People who care about their community.</h2>
+        <p style="margin-top:8px; max-width:680px;">This is a societal problem — and it needs a societal solution. Jodohmu is the system. We need you to be the bridge to the people who need it.</p>
+      </div>
+      <div class="pad" style="padding-top:0; flex:1;">
+        <div class="partner-grid" style="height:100%; align-content:start;">
+          <div class="partner-card">
+            <div class="partner-icon">🕌</div>
+            <div class="partner-title">Religious Institutions & Ustadz</div>
+            <div class="partner-sub">You already have the trust of your community. You see who is struggling to find a spouse the right way. Direct them to a system that will honor that trust.</div>
+            <span class="partner-tag">Refer → Earn → Impact</span>
+          </div>
+          <div class="partner-card">
+            <div class="partner-icon">🏢</div>
+            <div class="partner-title">Community Organizations & NGOs</div>
+            <div class="partner-sub">Organizations with young adult members, family programs, or social impact missions — your network is exactly where people who need Jodohmu are found.</div>
+            <span class="partner-tag">Institutional Partnership</span>
+          </div>
+          <div class="partner-card">
+            <div class="partner-icon">📣</div>
+            <div class="partner-title">Social Leaders & Influencers</div>
+            <div class="partner-sub">You have a voice and an audience that trusts your recommendations. Help us reach people who would never find us on their own — and make a real difference.</div>
+            <span class="partner-tag">Awareness · Outreach</span>
+          </div>
+          <div class="partner-card">
+            <div class="partner-icon">🎓</div>
+            <div class="partner-title">Educational & Professional Institutions</div>
+            <div class="partner-sub">Alumni networks, campus organizations, and professional communities often carry members who are ready for marriage but don't know where to turn.</div>
+            <span class="partner-tag">Alumni · Professional Networks</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <span class="snum">04 / 08</span>
+  </div>
+
+  <!-- ══ S5 — Join the Mission ══ -->
+  <div class="slide slide-alt" id="s5">
+    <div class="topbar topbar-light">
+      <img class="topbar-logo" src="/jodohmu-logo.png" alt="Jodohmu" />
+      <span class="topbar-tag">JOIN THE MISSION</span>
+    </div>
+    <div class="join-header">
+      <div class="tag" style="justify-content:center;">We can't do this alone</div>
+      <h2 style="font-size:clamp(20px,2.8vw,38px);">If you have reach, influence, or a community<br />that trusts you — <em style="color:var(--pink); font-style:normal;">we need you.</em></h2>
+      <p style="margin-top:8px; max-width:660px; margin-inline:auto; color:var(--muted);">You don't need to be a matchmaker. You just need to know people who are struggling to find a good spouse the right way — and care enough to point them to a system that will help them.</p>
+    </div>
+    <div class="join-grid">
+      <div class="join-card">
+        <div class="join-icon">🕌</div>
+        <div class="join-title">Religious Leaders & Ustadz</div>
+        <div class="join-desc">Your community already trusts your guidance. When you see someone who needs help, direct them to a system that upholds the values you stand for.</div>
+      </div>
+      <div class="join-card">
+        <div class="join-icon">🏢</div>
+        <div class="join-title">Organizers & Institutions</div>
+        <div class="join-desc">Your members, beneficiaries, and participants include people facing this problem right now. You have access that no app or platform ever will.</div>
+      </div>
+      <div class="join-card">
+        <div class="join-icon">📣</div>
+        <div class="join-title">Influential Voices</div>
+        <div class="join-desc">People listen to you. A single genuine recommendation from you reaches those who would never find Jodohmu on their own. That is rare and powerful.</div>
+      </div>
+      <div class="join-card">
+        <div class="join-icon">🤲</div>
+        <div class="join-title">Anyone Who Cares</div>
+        <div class="join-desc">If you know even one person who is genuinely ready for marriage and doesn't know where to turn — that is enough. Refer them, and we handle the rest.</div>
+      </div>
+    </div>
+    <div class="join-cta">
+      <div class="join-cta-text">One simple action: refer someone to Jodohmu. Our team does everything else.<br /><span style="font-size:12px; font-weight:400; color:var(--muted);">No paperwork. No technical requirements. Just a name and a message.</span></div>
+      <div class="join-cta-earn">Earn 20% per<br />successful referral</div>
+    </div>
+    <span class="snum">05 / 08</span>
+  </div>
+
+  <!-- ══ S6 — Commission ══ -->
+  <div class="slide slide-light" id="s6">
+    <div class="topbar topbar-light">
+      <img class="topbar-logo" src="/jodohmu-logo.png" alt="Jodohmu" />
+      <span class="topbar-tag">COMMISSION STRUCTURE</span>
+    </div>
+    <div class="body">
+      <div class="col-l pad" style="flex:0 0 50%; border-right:1px solid var(--border); background:var(--bg-alt);">
+        <div class="tag">What you earn</div>
+        <div class="big-pct">20%</div>
+        <div class="big-label">of the service fee for every person you refer<br />who becomes an active Jodohmu client.</div>
+        <div class="rule" style="margin:24px 0;"></div>
+        <div class="check-row"><span class="chk">✓</span><span style="font-size:13px; color:var(--muted);">Zero cost to you — ever</span></div>
+        <div class="check-row"><span class="chk">✓</span><span style="font-size:13px; color:var(--muted);">No technical work or follow-up needed from your side</span></div>
+        <div class="check-row"><span class="chk">✓</span><span style="font-size:13px; color:var(--muted);">Every referral permanently logged under your name</span></div>
+        <div class="check-row"><span class="chk">✓</span><span style="font-size:13px; color:var(--muted);">Paid after client completes one active month</span></div>
+        <div class="check-row"><span class="chk">✓</span><span style="font-size:13px; color:var(--muted);">Monthly transparency reports sent to all partners</span></div>
+        <div class="check-row"><span class="chk">✓</span><span style="font-size:13px; color:var(--muted);">No cap — refer as many people as you can help</span></div>
+      </div>
+      <div class="vline"></div>
+      <div class="col-r pad" style="flex:1; gap:12px; display:flex; flex-direction:column; justify-content:center;">
+        <div class="tag">How it works</div>
+        <h3>Details that matter</h3>
+        <div class="card" style="margin-top:8px;">
+          <strong style="display:block; margin-bottom:3px; color:var(--ink);">When is it calculated?</strong>
+          <p>From the moment your referral registers and becomes an active client. It is locked to your name permanently.</p>
+        </div>
+        <div class="card">
+          <strong style="display:block; margin-bottom:3px; color:var(--ink);">When is it paid?</strong>
+          <p>After the client completes one active month — ensuring we reward genuine, quality introductions, not just sign-ups.</p>
+        </div>
+        <div class="card">
+          <strong style="display:block; margin-bottom:3px; color:var(--ink);">How is it tracked?</strong>
+          <p>Your name is attached to every referral in our system. Monthly reports show your referrals, status, and earnings.</p>
+        </div>
+        <div class="card-pink">
+          <p style="color:#7a2050; font-style:italic; line-height:1.65;">"We want this to feel like a partnership between people who care — not a business transaction. The commission is our way of honouring your effort and trust."</p>
+        </div>
+      </div>
+    </div>
+    <span class="snum">06 / 08</span>
+  </div>
+
+  <!-- ══ S7 — How it works ══ -->
+  <div class="slide slide-alt" id="s7">
+    <div class="topbar topbar-light">
+      <img class="topbar-logo" src="/jodohmu-logo.png" alt="Jodohmu" />
+      <span class="topbar-tag">HOW REFERRALS WORK</span>
+    </div>
+    <div class="flow-header">
+      <div class="tag">Five steps — that's all</div>
+      <h2 style="font-size:clamp(20px,2.8vw,36px);">As simple as sharing a name.</h2>
+      <p style="margin-top:5px;">You make the connection. Jodohmu handles the rest — with care, professionalism, and full respect for everyone involved.</p>
+    </div>
+    <div class="flow-body">
+      <div class="flow-card"><div class="fc-num">1</div><div class="fc-icon">🙋</div><div class="fc-title">Identify Someone</div><div class="fc-desc">You know someone in your circle who is genuinely ready for marriage and needs the right guidance.</div></div>
+      <div class="flow-card"><div class="fc-num">2</div><div class="fc-icon">📲</div><div class="fc-title">Send Us Their Name</div><div class="fc-desc">Share their name and WhatsApp number with our team. That's the only step you need to take.</div></div>
+      <div class="flow-card"><div class="fc-num">3</div><div class="fc-icon">📞</div><div class="fc-title">We Reach Out</div><div class="fc-desc">Jodohmu contacts them with full respect, mentions your name, and begins the intake process.</div></div>
+      <div class="flow-card"><div class="fc-num">4</div><div class="fc-icon">📋</div><div class="fc-title">Permanently Logged</div><div class="fc-desc">Your referral is recorded under your name in our system — permanently. No one else can claim it.</div></div>
+      <div class="flow-card"><div class="fc-num">5</div><div class="fc-icon">💰</div><div class="fc-title">You Earn 20%</div><div class="fc-desc">Once the person becomes an active client for one month, your commission is processed and paid.</div></div>
+    </div>
+    <div class="flow-note">
+      <span style="font-size:20px;">🤝</span>
+      <p>Your name is mentioned with full respect every time we reach out to your referral. We protect your relationship with them — always.</p>
+    </div>
+    <span class="snum">07 / 08</span>
+  </div>
+
+  <!-- ══ S8 — Closing ══ -->
+  <div class="slide slide-dark rich" id="s8">
+    <div class="glow-a"></div><div class="glow-b"></div>
+    <div class="topbar topbar-dark-line"></div>
+    <div class="s8-inner">
+      <div class="s8-quote">The problem is too big for one organization.<br />It takes a <em>village</em> — leaders, institutions,<br />and communities — coming together.</div>
+      <div class="s8-steps">
+        <div class="s8-step"><div class="s8-step-n">1</div><p>A short conversation with our team — no pressure, no obligation</p></div>
+        <div class="s8-step"><div class="s8-step-n">2</div><p>Sign a transparent, official partnership agreement</p></div>
+        <div class="s8-step"><div class="s8-step-n">3</div><p>Start connecting people in your network to a process they can trust</p></div>
+      </div>
+      <div class="s8-contact">
+        <div class="s8-contact-item"><span style="font-size:19px;">📱</span><div><span class="c-label">WhatsApp</span><span class="c-val">0811-2221-0303</span></div></div>
+        <div class="s8-vsep"></div>
+        <div class="s8-contact-item"><span style="font-size:19px;">🌐</span><div><span class="c-label">Website</span><span class="c-val">jodohmu.com</span></div></div>
+        <div class="s8-vsep"></div>
+        <div class="s8-contact-item"><span style="font-size:19px;">📸</span><div><span class="c-label">Instagram</span><span class="c-val">@jodohmu_official</span></div></div>
+      </div>
+      <p style="margin-top:24px; font-size:12px; color:rgba(255,255,255,.25);">Together, we can give people the dignified path to marriage they deserve.</p>
+    </div>
+    <span class="snum snum-d">08 / 08</span>
+  </div>
+
+</div><!-- end deck -->
+
+<div id="nav">
+  <button class="nav-btn" id="prev-btn" onclick="go(-1)" disabled>‹</button>
+  <div class="nav-dots" id="dots"></div>
+  <span id="counter">1 / 8</span>
+  <button class="nav-btn" id="next-btn" onclick="go(1)">›</button>
+</div>
+
+<script>
+  const TOTAL = 8;
+  let cur = 0, animating = false;
+  const slides  = document.querySelectorAll('.slide');
+  const dotsEl  = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('button');
+    d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(n) {
+    if (animating || n === cur) return;
+    animating = true;
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('prev');
+    const prevIdx = cur;
+    cur = n;
+    slides[cur].classList.add('active');
+    counter.textContent = `${cur + 1} / ${TOTAL}`;
+    prevBtn.disabled = cur === 0;
+    nextBtn.disabled = cur === TOTAL - 1;
+    document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+    setTimeout(() => { slides[prevIdx].classList.remove('prev'); animating = false; }, 460);
+  }
+
+  function go(dir) { const n = cur + dir; if (n >= 0 && n < TOTAL) goTo(n); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); go(1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    { e.preventDefault(); go(-1); }
+  });
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+  document.addEventListener('touchend',   e => { const d = tx - e.changedTouches[0].clientX; if (Math.abs(d) > 50) go(d > 0 ? 1 : -1); });
+</script>
+</body>
+</html>

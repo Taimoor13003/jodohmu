@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kerja Sama Strategis — Jodohmu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink: #e8147a;
+      --pink-light: #f5d0e5;
+      --pink-dark: #b80f61;
+      --navy: #1630a0;
+      --navy-light: #e8ecfa;
+      --navy-dark: #0e1f70;
+      --white: #ffffff;
+      --gray: #f4f5f9;
+      --text: #1a1a2e;
+      --muted: #6b7280;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      font-family: 'Roboto', sans-serif;
+      background: #0e1020;
+      overflow: hidden;
+    }
+
+    /* ── Deck container ── */
+    #deck {
+      position: relative;
+      width: 100vw; height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Slides ── */
+    .slide {
+      position: absolute;
+      width: min(1280px, 95vw);
+      height: min(720px, 95vh);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+      opacity: 0;
+      transform: translateX(60px) scale(0.97);
+      pointer-events: none;
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      pointer-events: all;
+    }
+    .slide.prev {
+      opacity: 0;
+      transform: translateX(-60px) scale(0.97);
+    }
+
+    /* ── Common layout helpers ── */
+    .slide-inner {
+      width: 100%; height: 100%;
+      display: flex;
+      position: relative;
+    }
+
+    .col-left {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 64px 56px;
+    }
+    .col-right {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 64px 56px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding: 6px 14px; border-radius: 99px;
+      margin-bottom: 18px;
+    }
+    .badge-pink { background: var(--pink); color: #fff; }
+    .badge-navy { background: var(--navy); color: #fff; }
+    .badge-white { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+    .badge-outline { background: transparent; color: var(--navy); border: 1.5px solid var(--navy); }
+
+    h1.display {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.15;
+      color: var(--white);
+    }
+    h2.section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 3vw, 38px);
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+    .subtitle {
+      font-size: clamp(14px, 1.4vw, 18px);
+      font-weight: 400;
+      line-height: 1.65;
+      opacity: .85;
+      margin-top: 16px;
+    }
+    p { font-size: clamp(13px, 1.2vw, 16px); line-height: 1.7; }
+
+    .divider {
+      width: 48px; height: 4px; border-radius: 2px;
+      margin: 20px 0;
+    }
+
+    /* ── Slide 1 — Cover ── */
+    #s1 { background: linear-gradient(135deg, var(--navy-dark) 0%, #1e2f8a 50%, #2d1060 100%); }
+    #s1 .col-left { flex: 0 0 58%; }
+    #s1 .col-right {
+      flex: 0 0 42%;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .cover-logo-ring {
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      border: 2px solid rgba(232,20,122,0.3);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .cover-logo-ring::before {
+      content: '';
+      position: absolute; inset: 12px;
+      border-radius: 50%;
+      border: 1px solid rgba(232,20,122,0.2);
+    }
+    .cover-logo-inner {
+      width: 160px; height: 160px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink) 0%, var(--pink-dark) 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 60px rgba(232,20,122,0.35);
+    }
+    .cover-logo-inner span {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px; font-weight: 700;
+      color: white; letter-spacing: -1px;
+    }
+    #s1 .cover-slide-num {
+      position: absolute; bottom: 32px; right: 32px;
+      font-size: 12px; color: rgba(255,255,255,0.3);
+      letter-spacing: .1em;
+    }
+    .cover-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(232,20,122,0.15);
+      border: 1px solid rgba(232,20,122,0.3);
+      border-radius: 99px;
+      padding: 6px 14px;
+      font-size: 12px; font-weight: 600;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 24px;
+    }
+    .cover-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pink); }
+
+    /* ── Slide 2 — Problem ── */
+    #s2 { background: var(--white); }
+    #s2 .col-left { flex: 0 0 45%; background: var(--navy); }
+    #s2 .col-right { flex: 0 0 55%; padding: 56px 52px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; }
+    .stat-box {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .stat-num {
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 900;
+      color: var(--pink);
+      line-height: 1;
+    }
+    .stat-label { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 6px; line-height: 1.4; }
+    .problem-point {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0; border-bottom: 1px solid #f0f0f5;
+    }
+    .problem-point:last-child { border-bottom: none; }
+    .point-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      background: #fff0f6; display: flex; align-items: center;
+      justify-content: center; font-size: 16px; shrink: 0; flex-shrink: 0;
+    }
+    .point-text strong { display: block; font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .point-text span { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Slide 3 — Why different ── */
+    #s3 { background: #fafafa; }
+    #s3 .top-bar { height: 6px; background: linear-gradient(90deg, var(--pink) 0%, var(--navy) 100%); }
+    #s3 .slide-inner { flex-direction: column; }
+    #s3 .slide-body { display: flex; flex: 1; }
+    #s3 .col-left { flex: 0 0 40%; background: var(--navy-light); padding: 48px; justify-content: flex-start; padding-top: 48px; }
+    #s3 .col-right { flex: 0 0 60%; padding: 48px 56px; }
+    .step-list { list-style: none; margin-top: 16px; }
+    .step-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      margin-bottom: 18px;
+    }
+    .step-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--navy); color: white;
+      font-size: 13px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .step-content strong { display: block; font-size: 14px; font-weight: 700; color: var(--navy); }
+    .step-content span { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .diff-card {
+      background: white; border: 1px solid #e8eaf6;
+      border-radius: 12px; padding: 18px 20px;
+      margin-bottom: 12px;
+      display: flex; align-items: flex-start; gap: 14px;
+    }
+    .diff-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: var(--navy-light); display: flex; align-items: center;
+      justify-content: center; font-size: 18px; flex-shrink: 0;
+    }
+    .diff-content strong { display: block; font-size: 14px; font-weight: 700; color: var(--text); }
+    .diff-content span { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Slide 4 — Partnership roles ── */
+    #s4 { background: var(--white); }
+    #s4 .slide-inner { flex-direction: column; }
+    #s4 .slide-header { padding: 40px 56px 24px; }
+    #s4 .roles-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; padding: 0 56px 40px; flex: 1; }
+    .role-card {
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+      display: flex; flex-direction: column;
+    }
+    .role-card-top {
+      padding: 28px 24px 20px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .role-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      font-size: 14px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+    }
+    .role-title { font-size: 17px; font-weight: 700; }
+    .role-sub { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; opacity: .6; }
+    .role-card-body { padding: 0 24px 24px; flex: 1; }
+    .role-card-body p { font-size: 13px; color: var(--muted); line-height: 1.65; }
+    .role-pill {
+      display: inline-block; margin-top: 14px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: .08em; padding: 5px 12px;
+      border-radius: 99px;
+    }
+    .card-pink .role-card-top { background: linear-gradient(135deg, #fff0f6, #ffe0ee); }
+    .card-pink .role-num { background: var(--pink); }
+    .card-pink .role-title { color: var(--pink-dark); }
+    .card-pink .role-pill { background: var(--pink); color: white; }
+    .card-navy .role-card-top { background: linear-gradient(135deg, var(--navy-light), #d0d9f5); }
+    .card-navy .role-num { background: var(--navy); }
+    .card-navy .role-title { color: var(--navy-dark); }
+    .card-navy .role-pill { background: var(--navy); color: white; }
+    .card-purple .role-card-top { background: linear-gradient(135deg, #f3f0ff, #e8e0f8); }
+    .card-purple .role-num { background: #6c3ec6; }
+    .card-purple .role-title { color: #4a1f9e; }
+    .card-purple .role-pill { background: #6c3ec6; color: white; }
+
+    /* ── Slide 5 — Commission ── */
+    #s5 { background: var(--navy); }
+    #s5 .col-left { flex: 0 0 52%; padding: 64px; }
+    #s5 .col-right { flex: 0 0 48%; padding: 48px; display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+    .commission-number {
+      font-size: clamp(80px, 10vw, 120px);
+      font-weight: 900;
+      color: var(--pink);
+      line-height: 1;
+    }
+    .commission-unit { font-size: clamp(32px, 4vw, 48px); font-weight: 700; color: white; margin-top: -8px; }
+    .comm-detail {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .comm-detail strong { display: block; font-size: 14px; font-weight: 700; color: white; margin-bottom: 4px; }
+    .comm-detail span { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+    .check-list { list-style: none; margin-top: 4px; }
+    .check-list li {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14px; color: rgba(255,255,255,0.85);
+      margin-bottom: 12px;
+    }
+    .check-list .check { color: var(--pink); font-size: 18px; font-weight: 700; }
+
+    /* ── Slide 6 — How referrals work ── */
+    #s6 { background: #fafafa; }
+    #s6 .slide-inner { flex-direction: column; }
+    #s6 .slide-header { padding: 40px 56px 20px; border-bottom: 1px solid #eee; }
+    #s6 .flow-body { display: flex; align-items: center; justify-content: center; gap: 0; padding: 36px 48px; flex: 1; }
+    .flow-step {
+      flex: 1;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 0 16px;
+    }
+    .flow-icon {
+      width: 72px; height: 72px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      margin-bottom: 14px;
+      position: relative;
+    }
+    .flow-icon-1 { background: #fff0f6; border: 2px solid var(--pink); }
+    .flow-icon-2 { background: var(--navy-light); border: 2px solid var(--navy); }
+    .flow-icon-3 { background: #f0fff4; border: 2px solid #22c55e; }
+    .flow-icon-4 { background: #fff9e6; border: 2px solid #f59e0b; }
+    .flow-icon-5 { background: #fdf2ff; border: 2px solid #a855f7; }
+    .flow-step-num {
+      position: absolute; top: -6px; right: -6px;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--pink); color: white;
+      font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .flow-label { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .flow-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+    .flow-arrow {
+      font-size: 20px; color: #d1d5db;
+      flex-shrink: 0; margin-bottom: 48px;
+    }
+    .flow-note {
+      margin: 0 56px 32px;
+      background: linear-gradient(135deg, #fff0f6, #e8ecfa);
+      border-radius: 12px;
+      padding: 16px 24px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .flow-note-icon { font-size: 22px; }
+    .flow-note p { font-size: 13px; color: var(--navy); font-weight: 500; line-height: 1.5; }
+
+    /* ── Slide 7 — Speaker ── */
+    #s7 { background: var(--white); }
+    #s7 .col-left { flex: 0 0 50%; background: linear-gradient(160deg, var(--navy-dark) 0%, #1e3aad 100%); padding: 64px; }
+    #s7 .col-right { flex: 0 0 50%; padding: 56px 52px; }
+    .speaker-topic {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .speaker-topic-icon { font-size: 20px; }
+    .speaker-topic-text { font-size: 14px; color: rgba(255,255,255,0.9); font-weight: 500; }
+    .benefit-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 0; border-bottom: 1px solid #f0f0f5;
+    }
+    .benefit-item:last-child { border-bottom: none; }
+    .benefit-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink); flex-shrink: 0; margin-top: 6px; }
+    .benefit-text strong { display: block; font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .benefit-text span { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Slide 8 — Closing ── */
+    #s8 { background: linear-gradient(135deg, var(--navy-dark) 0%, #1e2f8a 40%, #3d1280 100%); }
+    #s8 .slide-inner { flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px; gap: 0; }
+    .closing-logo {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--pink) 0%, var(--pink-dark) 100%);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      box-shadow: 0 0 40px rgba(232,20,122,0.4);
+    }
+    .closing-logo span { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: white; }
+    .closing-quote {
+      max-width: 580px;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 2.8vw, 34px);
+      color: white;
+      line-height: 1.35;
+      margin-bottom: 32px;
+    }
+    .closing-steps {
+      display: flex; gap: 16px; margin-bottom: 40px; flex-wrap: wrap; justify-content: center;
+    }
+    .closing-step {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 18px 24px;
+      display: flex; align-items: center; gap: 10px;
+      min-width: 200px;
+    }
+    .closing-step-num {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--pink); color: white;
+      font-size: 13px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .closing-step p { font-size: 13px; color: rgba(255,255,255,0.85); font-weight: 500; text-align: left; }
+    .contact-box {
+      background: rgba(232,20,122,0.15);
+      border: 1px solid rgba(232,20,122,0.3);
+      border-radius: 12px;
+      padding: 16px 32px;
+      display: flex; gap: 32px; align-items: center;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .contact-item { font-size: 14px; color: rgba(255,255,255,0.85); display: flex; align-items: center; gap: 8px; }
+    .contact-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--pink); display: block; }
+
+    /* ── Navigation ── */
+    #nav {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 12px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 99px;
+      padding: 8px 12px;
+      z-index: 100;
+    }
+    .nav-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: none; cursor: pointer;
+      background: rgba(255,255,255,0.15);
+      color: white; font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .nav-btn:hover { background: rgba(232,20,122,0.6); }
+    .nav-btn:disabled { opacity: .3; cursor: default; }
+    .nav-dots { display: flex; gap: 6px; align-items: center; padding: 0 4px; }
+    .nav-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      cursor: pointer; transition: all .2s;
+      border: none;
+    }
+    .nav-dot.active { background: var(--pink); width: 20px; border-radius: 4px; }
+    #slide-counter { font-size: 12px; color: rgba(255,255,255,0.5); padding: 0 4px; min-width: 36px; text-align: center; }
+
+    /* ── Fullscreen button ── */
+    #fs-btn {
+      position: fixed; top: 20px; right: 20px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.7);
+      font-size: 12px; font-weight: 600;
+      padding: 8px 14px; cursor: pointer;
+      letter-spacing: .05em;
+      z-index: 100;
+      transition: background .2s;
+    }
+    #fs-btn:hover { background: rgba(255,255,255,0.18); }
+  </style>
+</head>
+<body>
+
+<div id="deck">
+
+  <!-- ── Slide 1 — Cover ── -->
+  <div class="slide active" id="s1">
+    <div class="slide-inner">
+      <div class="col-left" style="flex: 0 0 58%;">
+        <div class="cover-tag"><span class="cover-dot"></span> Program Kemitraan</div>
+        <h1 class="display">Kerja Sama Strategis<br /><span style="color: var(--pink);">Jodohmu</span></h1>
+        <p class="subtitle" style="color: rgba(255,255,255,0.7); max-width: 460px;">
+          Membantu Ummat Menemukan Jodoh<br />dengan Cara yang Terhormat
+        </p>
+        <div style="margin-top: 36px; display: flex; gap: 12px; flex-wrap: wrap;">
+          <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 12px 20px;">
+            <div style="font-size: 11px; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: .1em; text-transform: uppercase;">Berbasis di</div>
+            <div style="font-size: 14px; font-weight: 600; color: white; margin-top: 3px;">Bandung, Indonesia</div>
+          </div>
+          <div style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 12px 20px;">
+            <div style="font-size: 11px; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: .1em; text-transform: uppercase;">Model</div>
+            <div style="font-size: 14px; font-weight: 600; color: white; margin-top: 3px;">Offline · Ta'aruf Terstruktur</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-right" style="flex: 0 0 42%; align-items: center; justify-content: center;">
+        <div class="cover-logo-ring">
+          <div class="cover-logo-inner"><span>J</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 28px; left: 56px; font-size: 12px; color: rgba(255,255,255,0.25); letter-spacing: .08em;">jodohmu.com · Dokumen Rahasia Mitra</div>
+  </div>
+
+  <!-- ── Slide 2 — Problem ── -->
+  <div class="slide" id="s2">
+    <div class="slide-inner">
+      <div class="col-left" style="flex: 0 0 42%; background: var(--navy); padding: 56px 48px;">
+        <div class="badge badge-pink">Urgensi</div>
+        <h2 class="section-title" style="color: white;">Krisis Pernikahan<br />di Tengah Ummat</h2>
+        <div class="divider" style="background: var(--pink);"></div>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-num">516K</div>
+            <div class="stat-label">Kasus perceraian di Indonesia (2023)</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">↑63%</div>
+            <div class="stat-label">Peningkatan usia pernikahan pertama sejak 2010</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">1 of 3</div>
+            <div class="stat-label">Lajang di atas 28 tahun tidak tahu cara mencari pasangan halal</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-num">Zina</div>
+            <div class="stat-label">Risiko nyata dari pencarian pasangan yang tidak terstruktur</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-right" style="flex: 0 0 58%; padding: 52px;">
+        <div class="badge badge-outline">Masalah yang Kita Hadapi</div>
+        <h2 class="section-title" style="color: var(--text);">Mengapa Ini Penting<br />bagi Ummat?</h2>
+        <div class="problem-point">
+          <div class="point-icon">🕌</div>
+          <div class="point-text">
+            <strong>Pernikahan semakin tertunda</strong>
+            <span>Kaum muda terhambat rasa malu, kebingungan, dan kurangnya jalan yang jelas dan terhormat untuk mencari pasangan.</span>
+          </div>
+        </div>
+        <div class="problem-point">
+          <div class="point-icon">📱</div>
+          <div class="point-text">
+            <strong>Aplikasi kencan bukan solusi</strong>
+            <span>Platform digital seringkali membuka pintu hubungan tidak sehat — bukan pernikahan yang diridhai Allah.</span>
+          </div>
+        </div>
+        <div class="problem-point">
+          <div class="point-icon">💔</div>
+          <div class="point-text">
+            <strong>Perjodohan tanpa panduan</strong>
+            <span>Banyak yang kecewa karena proses ta'aruf yang tidak difasilitasi dengan baik, tanpa verifikasi atau pendampingan.</span>
+          </div>
+        </div>
+        <div class="problem-point">
+          <div class="point-icon">🛡️</div>
+          <div class="point-text">
+            <strong>Ustadz & pemimpin komunitas tidak punya wadah</strong>
+            <span>Banyak yang ingin membantu anggota jama'ahnya menikah — tapi tidak ada sistem yang bisa dipercaya untuk diandalkan.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Slide 3 — Why different ── -->
+  <div class="slide" id="s3">
+    <div class="slide-inner" style="flex-direction: column;">
+      <div class="top-bar"></div>
+      <div class="slide-body" style="display: flex; flex: 1;">
+        <div class="col-left" style="flex: 0 0 40%; background: var(--navy-light); padding: 48px; justify-content: flex-start;">
+          <div class="badge badge-navy">Proses Kami</div>
+          <h2 class="section-title" style="color: var(--navy-dark);">Bagaimana<br />Jodohmu Bekerja</h2>
+          <div class="divider" style="background: var(--navy);"></div>
+          <ul class="step-list">
+            <li class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <strong>Wawancara Mendalam</strong>
+                <span>Setiap kandidat melalui sesi tanya jawab mendalam — kepribadian, nilai, visi pernikahan, latar belakang keluarga.</span>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <strong>Verifikasi Identitas</strong>
+                <span>KTP, referensi, dan latar belakang diverifikasi sebelum kandidat masuk ke pool.</span>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <strong>Kurasi Kecocokan</strong>
+                <span>Tim kami mencocokkan berdasarkan kompatibilitas nyata — bukan algoritma semata.</span>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                <strong>Perkenalan Terfasilitasi</strong>
+                <span>Pertemuan didampingi tim atau imam — dalam batas syar'i yang terjaga.</span>
+              </div>
+            </li>
+            <li class="step-item">
+              <div class="step-num">5</div>
+              <div class="step-content">
+                <strong>Keterlibatan Keluarga</strong>
+                <span>Keluarga dilibatkan sejak awal — bukan di akhir — untuk menghindari kejutan.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="col-right" style="flex: 0 0 60%; padding: 48px 52px;">
+          <div class="badge badge-pink">Bukan Aplikasi. Bukan Casual.</div>
+          <h2 class="section-title" style="color: var(--text);">Yang Membedakan Jodohmu</h2>
+          <div class="diff-card">
+            <div class="diff-icon">🔒</div>
+            <div class="diff-content">
+              <strong>Privasi & Kehormatan Terlindungi</strong>
+              <span>Profil tidak ditampilkan publik. Data hanya dibagikan kepada kecocokan yang telah disetujui kandidat.</span>
+            </div>
+          </div>
+          <div class="diff-card">
+            <div class="diff-icon">🧕</div>
+            <div class="diff-content">
+              <strong>Proses Sesuai Nilai Islam</strong>
+              <span>Tidak ada chat bebas antar kandidat. Setiap komunikasi melalui fasilitator tim Jodohmu.</span>
+            </div>
+          </div>
+          <div class="diff-card">
+            <div class="diff-icon">👨‍👩‍👧</div>
+            <div class="diff-content">
+              <strong>Keluarga Dilibatkan Sejak Awal</strong>
+              <span>Orang tua atau wali selalu dikomunikasikan — menjaga proses tetap amanah dan terbuka.</span>
+            </div>
+          </div>
+          <div class="diff-card">
+            <div class="diff-icon">🎯</div>
+            <div class="diff-content">
+              <strong>Niat Serius = Syarat Utama</strong>
+              <span>Kami hanya menerima kandidat yang sungguh-sungguh ingin menikah — bukan yang sekadar "mencoba-coba."</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Slide 4 — Partnership roles ── -->
+  <div class="slide" id="s4">
+    <div class="slide-inner" style="flex-direction: column;">
+      <div class="slide-header">
+        <div class="badge badge-pink">Kemitraan</div>
+        <h2 class="section-title" style="color: var(--text);">Tiga Peran yang Bisa Anda Ambil</h2>
+        <p style="color: var(--muted); max-width: 600px;">Peran-peran ini bisa diambil secara individual, atau dikombinasikan sesuai kapasitas dan kenyamanan Anda.</p>
+      </div>
+      <div class="roles-grid">
+        <div class="role-card card-pink">
+          <div class="role-card-top">
+            <div class="role-num">1</div>
+            <div>
+              <div class="role-sub">Peran Utama</div>
+              <div class="role-title">Mitra Rujukan</div>
+            </div>
+          </div>
+          <div class="role-card-body">
+            <p>Anda mengenal jama'ah atau anggota komunitas yang serius ingin menikah. Cukup kenalkan mereka kepada Jodohmu — tim kami menangani seluruh prosesnya.</p>
+            <p style="margin-top: 10px;">Tidak diperlukan keterlibatan teknis apapun. Cukup kepercayaan dan niat baik Anda.</p>
+            <span class="role-pill">Referral & Komisi</span>
+          </div>
+        </div>
+        <div class="role-card card-navy">
+          <div class="role-card-top">
+            <div class="role-num">2</div>
+            <div>
+              <div class="role-sub">Peran Spiritual</div>
+              <div class="role-title">Konsultan</div>
+            </div>
+          </div>
+          <div class="role-card-body">
+            <p>Anda memberikan masukan dan nasihat dalam aspek spiritual — membantu tim Jodohmu memastikan proses tetap sesuai dengan nilai-nilai Islam dan kearifan lokal.</p>
+            <p style="margin-top: 10px;">Cocok untuk ustadz, pemimpin majelis, atau tokoh agama yang ingin terlibat lebih aktif.</p>
+            <span class="role-pill">Nasihat & Panduan</span>
+          </div>
+        </div>
+        <div class="role-card card-purple">
+          <div class="role-card-top">
+            <div class="role-num">3</div>
+            <div>
+              <div class="role-sub">Peran Publik</div>
+              <div class="role-title">Pembicara</div>
+            </div>
+          </div>
+          <div class="role-card-body">
+            <p>Jodohmu secara rutin menyelenggarakan event komunitas tentang kesiapan menikah, parenting, dan hubungan keluarga.</p>
+            <p style="margin-top: 10px;">Anda diundang sebagai pembicara — memperluas jangkauan dakwah Anda ke audiens baru yang relevan.</p>
+            <span class="role-pill">Event & Dakwah</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Slide 5 — Commission ── -->
+  <div class="slide" id="s5">
+    <div class="slide-inner">
+      <div class="col-left" style="flex: 0 0 52%; background: var(--navy); padding: 64px;">
+        <div class="badge badge-white">Struktur Komisi</div>
+        <div class="commission-number">20%</div>
+        <div class="commission-unit">dari biaya paket klien yang Anda rujuk</div>
+        <div class="divider" style="background: var(--pink);"></div>
+        <ul class="check-list">
+          <li><span class="check">✓</span> Tidak ada biaya apapun untuk mitra</li>
+          <li><span class="check">✓</span> Tidak perlu pekerjaan teknis</li>
+          <li><span class="check">✓</span> Komisi dicatat otomatis saat rujukan terdaftar</li>
+          <li><span class="check">✓</span> Dibayarkan setelah klien aktif minimal 1 bulan</li>
+          <li><span class="check">✓</span> Transparansi penuh — tidak ada yang hilang atau diperdebatkan</li>
+        </ul>
+      </div>
+      <div class="col-right" style="flex: 0 0 48%; background: var(--navy-dark); padding: 48px;">
+        <div class="badge badge-pink">Detail</div>
+        <h2 class="section-title" style="color: white; margin-bottom: 24px;">Cara Kerja<br />Pembayaran Komisi</h2>
+        <div class="comm-detail">
+          <strong>Kapan dihitung?</strong>
+          <span>Komisi dihitung sejak rujukan Anda mendaftar dan menjadi klien aktif Jodohmu.</span>
+        </div>
+        <div class="comm-detail" style="margin-top: 12px;">
+          <strong>Kapan dibayarkan?</strong>
+          <span>Setelah klien aktif selama minimal 1 bulan — menjamin kualitas rujukan, bukan sekadar pendaftaran.</span>
+        </div>
+        <div class="comm-detail" style="margin-top: 12px;">
+          <strong>Bagaimana pelacakannya?</strong>
+          <span>Setiap rujukan dicatat dengan nama Anda. Tim admin Jodohmu mengirimkan laporan bulanan kepada mitra.</span>
+        </div>
+        <div style="margin-top: 20px; background: rgba(232,20,122,0.15); border: 1px solid rgba(232,20,122,0.3); border-radius: 10px; padding: 14px 18px;">
+          <p style="font-size: 13px; color: rgba(255,255,255,0.8); font-style: italic; line-height: 1.6;">
+            "Kami percaya bahwa niat baik layak dihargai. Komisi ini adalah bentuk apresiasi nyata atas kepercayaan Anda kepada Jodohmu."
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Slide 6 — How referrals work ── -->
+  <div class="slide" id="s6">
+    <div class="slide-inner" style="flex-direction: column;">
+      <div class="slide-header" style="padding: 40px 56px 24px;">
+        <div class="badge badge-pink">Cara Kerja Rujukan</div>
+        <h2 class="section-title" style="color: var(--text);">Sesederhana Lima Langkah</h2>
+        <p style="color: var(--muted);">Anda cukup berbagi nama — Jodohmu menangani sisanya dengan penuh amanah.</p>
+      </div>
+      <div class="flow-body">
+        <div class="flow-step">
+          <div class="flow-icon flow-icon-1">
+            🙋
+            <div class="flow-step-num">1</div>
+          </div>
+          <div class="flow-label">Identifikasi</div>
+          <div class="flow-desc">Anda mengenal seseorang yang serius ingin menikah</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-icon flow-icon-2">
+            📲
+            <div class="flow-step-num">2</div>
+          </div>
+          <div class="flow-label">Bagikan Nama</div>
+          <div class="flow-desc">Anda kirim nama & nomor WA-nya kepada tim Jodohmu</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-icon flow-icon-3">
+            📞
+            <div class="flow-step-num">3</div>
+          </div>
+          <div class="flow-label">Tim Kami Hubungi</div>
+          <div class="flow-desc">Jodohmu menghubungi dengan sopan atas nama Anda</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-icon flow-icon-4">
+            📋
+            <div class="flow-step-num">4</div>
+          </div>
+          <div class="flow-label">Dicatat & Dilacak</div>
+          <div class="flow-desc">Rujukan tercatat dengan nama Anda — tidak akan hilang</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="flow-icon flow-icon-5">
+            💰
+            <div class="flow-step-num">5</div>
+          </div>
+          <div class="flow-label">Komisi Dikirim</div>
+          <div class="flow-desc">Setelah klien aktif 1 bulan, komisi langsung ditransfer</div>
+        </div>
+      </div>
+      <div class="flow-note">
+        <div class="flow-note-icon">🤝</div>
+        <p>Nama Anda selalu kami sebut dengan hormat saat menghubungi rujukan — kepercayaan Anda kepada kami adalah amanah yang tidak kami sia-siakan.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Slide 7 — Speaker ── -->
+  <div class="slide" id="s7">
+    <div class="slide-inner">
+      <div class="col-left" style="flex: 0 0 48%; background: linear-gradient(160deg, var(--navy-dark) 0%, #1e3aad 100%); padding: 56px 52px;">
+        <div class="badge badge-white">Peluang Pembicara</div>
+        <h2 class="section-title" style="color: white;">Event Komunitas<br />Jodohmu</h2>
+        <div class="divider" style="background: var(--pink);"></div>
+        <p style="color: rgba(255,255,255,0.7); margin-bottom: 24px;">Kami membangun seri event berkala untuk komunitas — dan Anda diundang sebagai narasumber dalam topik-topik berikut:</p>
+        <div class="speaker-topic">
+          <div class="speaker-topic-icon">💍</div>
+          <div class="speaker-topic-text">Kesiapan Menikah dari Perspektif Islam</div>
+        </div>
+        <div class="speaker-topic">
+          <div class="speaker-topic-icon">👨‍👩‍👧</div>
+          <div class="speaker-topic-text">Membangun Keluarga Sakinah Mawaddah Warahmah</div>
+        </div>
+        <div class="speaker-topic">
+          <div class="speaker-topic-icon">🧠</div>
+          <div class="speaker-topic-text">Kesehatan Mental & Kematangan Emosi Sebelum Menikah</div>
+        </div>
+        <div class="speaker-topic">
+          <div class="speaker-topic-icon">📖</div>
+          <div class="speaker-topic-text">Adab Ta'aruf: Batas, Etika, dan Tujuan</div>
+        </div>
+        <div class="speaker-topic">
+          <div class="speaker-topic-icon">🤲</div>
+          <div class="speaker-topic-text">Doa, Ikhtiar, dan Tawakal dalam Mencari Pasangan</div>
+        </div>
+      </div>
+      <div class="col-right" style="flex: 0 0 52%; padding: 56px 52px;">
+        <div class="badge badge-outline">Apa Manfaat untuk Anda</div>
+        <h2 class="section-title" style="color: var(--text);">Keuntungan<br />Menjadi Pembicara</h2>
+        <div class="benefit-item">
+          <div class="benefit-dot"></div>
+          <div class="benefit-text">
+            <strong>Jangkauan Audiens Baru</strong>
+            <span>Berbicara di depan peserta yang aktif mencari panduan pernikahan — relevan dan reseptif terhadap pesan dakwah Anda.</span>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-dot"></div>
+          <div class="benefit-text">
+            <strong>Dipromosikan oleh Jodohmu</strong>
+            <span>Profil dan nama Anda akan dipromosikan di seluruh materi promosi event — media sosial, WhatsApp blast, dan flyer.</span>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-dot"></div>
+          <div class="benefit-text">
+            <strong>Memperkuat Posisi Anda sebagai Tokoh Pernikahan</strong>
+            <span>Asosiasi dengan Jodohmu memperkuat kredibilitas Anda di bidang bimbingan pernikahan dan keluarga.</span>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-dot"></div>
+          <div class="benefit-text">
+            <strong>Honorarium Pembicara</strong>
+            <span>Jodohmu memberikan honorarium untuk setiap sesi yang Anda isi — sebagai bentuk penghargaan atas waktu dan ilmu Anda.</span>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-dot"></div>
+          <div class="benefit-text">
+            <strong>Kombinasikan dengan Mitra Rujukan</strong>
+            <span>Peran pembicara bisa dikombinasikan dengan peran Mitra Rujukan — memaksimalkan kontribusi dan komisi Anda.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Slide 8 — Closing ── -->
+  <div class="slide" id="s8">
+    <div class="slide-inner" style="flex-direction: column; align-items: center; justify-content: center; padding: 48px; gap: 0; text-align: center;">
+      <div class="closing-logo"><span>J</span></div>
+      <div class="closing-quote">
+        Mari bersama memastikan ummat menikah<br />dengan cara yang <span style="color: var(--pink);">mulia</span> dan <span style="color: var(--pink);">terhormat.</span>
+      </div>
+      <div class="closing-steps">
+        <div class="closing-step">
+          <div class="closing-step-num">1</div>
+          <p>Diskusi singkat — tim kami siap menjawab pertanyaan Anda</p>
+        </div>
+        <div class="closing-step">
+          <div class="closing-step-num">2</div>
+          <p>Tandatangani perjanjian kemitraan sederhana & resmi</p>
+        </div>
+        <div class="closing-step">
+          <div class="closing-step-num">3</div>
+          <p>Mulai rujuk kandidat serius dari komunitas Anda</p>
+        </div>
+      </div>
+      <div class="contact-box">
+        <div class="contact-item">
+          <span>📱</span>
+          <div>
+            <span class="contact-label">WhatsApp</span>
+            0811-2221-0303
+          </div>
+        </div>
+        <div style="width: 1px; height: 40px; background: rgba(232,20,122,0.3);"></div>
+        <div class="contact-item">
+          <span>🌐</span>
+          <div>
+            <span class="contact-label">Website</span>
+            jodohmu.com
+          </div>
+        </div>
+        <div style="width: 1px; height: 40px; background: rgba(232,20,122,0.3);"></div>
+        <div class="contact-item">
+          <span>📸</span>
+          <div>
+            <span class="contact-label">Instagram</span>
+            @jodohmu_official
+          </div>
+        </div>
+      </div>
+      <p style="margin-top: 28px; font-size: 13px; color: rgba(255,255,255,0.35);">Jazākumullāhu khayran atas waktu dan kepercayaan Anda.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<div id="nav">
+  <button class="nav-btn" id="prev-btn" onclick="go(-1)" disabled>‹</button>
+  <div class="nav-dots" id="dots"></div>
+  <span id="slide-counter">1 / 8</span>
+  <button class="nav-btn" id="next-btn" onclick="go(1)">›</button>
+</div>
+
+<button id="fs-btn" onclick="toggleFullscreen()">⛶ Layar Penuh</button>
+
+<script>
+  const TOTAL = 8;
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('slide-counter');
+  const dotsEl = document.getElementById('dots');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  // Build dots
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('button');
+    d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(n) {
+    const prev = slides[current];
+    prev.classList.remove('active');
+    prev.classList.add('prev');
+    setTimeout(() => prev.classList.remove('prev'), 500);
+
+    current = n;
+    slides[current].classList.add('active');
+    counter.textContent = `${current + 1} / ${TOTAL}`;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === TOTAL - 1;
+
+    document.querySelectorAll('.nav-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+  }
+
+  function go(dir) {
+    const n = current + dir;
+    if (n >= 0 && n < TOTAL) goTo(n);
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') go(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') go(-1);
+  });
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  // Touch swipe
+  let touchX = 0;
+  document.addEventListener('touchstart', e => touchX = e.touches[0].clientX);
+  document.addEventListener('touchend', e => {
+    const diff = touchX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) go(diff > 0 ? 1 : -1);
+  });
+</script>
+</body>
+</html>
