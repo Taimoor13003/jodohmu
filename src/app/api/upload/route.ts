@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { adminAuth } from "@/lib/firebase-admin";
 import cloudinary from "@/lib/cloudinary";
 
-export const config = { api: { bodyParser: false } };
-
 function badRequest(message: string, status = 400) {
   return NextResponse.json({ error: message }, { status });
 }
