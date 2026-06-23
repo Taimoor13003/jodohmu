@@ -27,8 +27,8 @@ const gemImage: Record<string, string> = {
 };
 
 const packages: PkgConfig[] = [
-  { key: "awal",      featuresCount: 7,  months: 3,  discount: true },
-  { key: "serius",    featuresCount: 11, months: 6,  discount: true, popular: true },
+  { key: "awal",      featuresCount: 7,  months: 3 },
+  { key: "serius",    featuresCount: 11, months: 6,  popular: true },
   { key: "istimewa",  featuresCount: 13, months: 12 },
 ];
 

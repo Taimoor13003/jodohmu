@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Program Kemitraan — Jodohmu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+    :root {
+      --pink:    #e8147a;
+      --navy:    #1630a0;
+      --ink:     #1a1330;
+      --muted:   #6a6480;
+      --border:  rgba(26,19,48,.1);
+      --bg-alt:  #f8f7fc;
+      --bg-card: #f1effb;
+    }
+
+    html, body {
+      margin:0; padding:0; overflow:hidden;
+      font-family:'Inter',sans-serif; color:var(--ink);
+      background:#0e0a20;
+      height:100%; width:100%;
+    }
+
+    /* ── Deck ── */
+    .deck { position:fixed; top:0; left:0; right:0; bottom:0; background:#0e0a20; }
+
+    /* ── Slides ── */
+    .slide {
+      position:absolute; inset:0;
+      display:none; flex-direction:column;
+      overflow:hidden;
+    }
+    .slide.active { display:flex; animation:fadein .4s ease both; }
+    .slide.prev   { display:flex; animation:fadeout .4s ease both; }
+    @keyframes fadein  { from { opacity:0; transform:translateY(24px) } to { opacity:1; transform:none } }
+    @keyframes fadeout { from { opacity:1; transform:none } to { opacity:0; transform:translateY(-24px) } }
+
+    /* ── Background types ── */
+    .slide-dark  { background:var(--ink); }
+    .slide-light { background:#fff; }
+    .slide-alt   { background:var(--bg-alt); }
+
+    /* ── Dark slide glows (transparent → bg-colour-at-0 to prevent iOS spots) ── */
+    .slide-dark .glow-a {
+      position:absolute; border-radius:50%; pointer-events:none; z-index:0;
+      width:min(520px,130vw); height:min(520px,130vw);
+      background:radial-gradient(circle, rgba(232,20,122,.30) 0%, rgba(26,19,48,0) 70%);
+      top:-80px; right:-80px;
+    }
+    .slide-dark .glow-b {
+      position:absolute; border-radius:50%; pointer-events:none; z-index:0;
+      width:min(440px,110vw); height:min(440px,110vw);
+      background:radial-gradient(circle, rgba(22,48,160,.28) 0%, rgba(26,19,48,0) 70%);
+      bottom:-100px; left:-80px;
+    }
+    .slide-dark > * { position:relative; z-index:2; }
+
+    /* ── Topbar ── */
+    .topbar {
+      height:52px; flex-shrink:0;
+      display:flex; align-items:center;
+      padding:0 clamp(20px,6vw,32px);
+    }
+    .topbar-light { border-bottom:1px solid var(--border); }
+    .topbar-dark  { border-bottom:1px solid rgba(255,255,255,.08); }
+    .topbar-logo  { height:26px; width:auto; }
+    .topbar-tag   { margin-left:auto; font-size:9px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); }
+    .topbar-tag-d { margin-left:auto; font-size:9px; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:rgba(255,255,255,.3); }
+
+    /* ── Typography ── */
+    .tag {
+      display:flex; align-items:center; gap:9px;
+      font-size:10px; font-weight:700; letter-spacing:.15em; text-transform:uppercase;
+      color:var(--pink); margin-bottom:12px;
+    }
+    .tag::before { content:''; width:18px; height:2px; background:linear-gradient(90deg,var(--pink),#ff8bc8); border-radius:2px; flex-shrink:0; }
+    .tag-w { color:#fff; }
+    .tag-center { justify-content:center; }
+    .tag-center::before { display:none; }
+
+    h1 { font-family:'Fraunces',serif; font-weight:900; line-height:1.05; letter-spacing:-.03em; }
+    h2 { font-family:'Fraunces',serif; font-weight:700; line-height:1.15; letter-spacing:-.02em; }
+    h3 { font-family:'Fraunces',serif; font-weight:600; line-height:1.2; }
+
+    /* ── Body scroll area ── */
+    .scroll { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+    .scroll::-webkit-scrollbar { display:none; }
+    .pad { padding:clamp(18px,5vw,28px) clamp(20px,6vw,32px); }
+
+    /* ── Cards ── */
+    .card { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:14px 16px; }
+    .card-pink { background:#fce8f2; border:1px solid rgba(232,20,122,.18); border-radius:14px; padding:14px 16px; }
+
+    /* ── Slide counter ── */
+    .snum { position:absolute; bottom:20px; right:24px; font-size:10px; color:var(--muted); letter-spacing:.06em; z-index:10; }
+    .snum-d { color:rgba(255,255,255,.22); }
+
+    /* ── Navigation ── */
+    #nav {
+      position:fixed; bottom:18px; left:50%; transform:translateX(-50%);
+      display:flex; align-items:center; gap:8px;
+      background:rgba(26,19,48,.92); backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.1); border-radius:99px; padding:6px 12px;
+      z-index:100;
+    }
+    .nav-btn { width:30px; height:30px; border-radius:50%; border:1px solid rgba(255,255,255,.12); background:transparent; color:rgba(255,255,255,.6); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .nav-btn:disabled { opacity:.2; cursor:default; }
+    .nav-dots { display:flex; gap:5px; padding:0 2px; }
+    .nav-dot  { width:5px; height:5px; border-radius:99px; background:rgba(255,255,255,.2); border:none; cursor:pointer; transition:all .25s; }
+    .nav-dot.active { background:var(--pink); width:16px; }
+    #counter { font-size:10px; color:rgba(255,255,255,.28); min-width:28px; text-align:center; }
+
+    /* ═══════════════════════════════════════
+       SLIDE-SPECIFIC STYLES
+    ═══════════════════════════════════════ */
+
+    /* S1 — Cover */
+    .s1-body {
+      flex:1; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      padding:clamp(24px,6vw,40px) clamp(24px,7vw,40px);
+      text-align:center; gap:0;
+    }
+    .s1-logo-wrap {
+      background:#fff; border-radius:22px;
+      padding:clamp(18px,4vw,26px) clamp(22px,5vw,32px);
+      box-shadow:0 20px 60px rgba(232,20,122,.2), 0 0 0 1px rgba(255,255,255,.08);
+      margin-bottom:clamp(22px,5vw,32px);
+    }
+    .s1-logo { height:clamp(32px,8vw,44px); width:auto; display:block; }
+    .s1-headline {
+      font-family:'Fraunces',serif; font-weight:900; color:#fff;
+      font-size:clamp(34px,9vw,52px); line-height:1.08; letter-spacing:-.025em;
+      margin-bottom:clamp(12px,3vw,18px);
+    }
+    .s1-headline em { color:var(--pink); font-style:normal; }
+    .s1-sub {
+      font-size:clamp(13px,3.5vw,16px); color:rgba(255,255,255,.5);
+      line-height:1.65; max-width:360px;
+      margin-bottom:clamp(20px,5vw,30px);
+    }
+    .s1-chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+    .s1-chip {
+      background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.11);
+      border-radius:10px; padding:10px 14px; text-align:left;
+    }
+    .s1-chip-lbl { font-size:9px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,.3); }
+    .s1-chip-val { font-size:12px; font-weight:600; color:#fff; margin-top:3px; line-height:1.3; }
+
+    /* S2 — Problem */
+    .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0; }
+    .stat-card { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:14px; }
+    .stat-num  { font-family:'Fraunces',serif; font-size:clamp(26px,7vw,36px); font-weight:900; color:var(--pink); line-height:1; }
+    .stat-txt  { font-size:10.5px; color:var(--muted); margin-top:4px; line-height:1.45; }
+    .stat-card.accent { background:#fce8f2; border-color:rgba(232,20,122,.18); }
+    .stat-card.accent .stat-num { font-size:13px; margin-top:2px; color:#c0105f; }
+    .stat-card.accent .stat-txt { color:#7a2050; }
+
+    .prob-row { display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); }
+    .prob-row:last-child { border:none; padding-bottom:0; }
+    .prob-ico  { width:32px; height:32px; flex-shrink:0; border-radius:9px; background:#fce8f2; border:1px solid rgba(232,20,122,.18); display:flex; align-items:center; justify-content:center; font-size:14px; }
+    .prob-title { font-size:12px; font-weight:700; color:var(--ink); margin-bottom:2px; }
+    .prob-desc  { font-size:11px; color:var(--muted); line-height:1.5; }
+
+    /* S3 — Solution */
+    .step { display:flex; gap:10px; margin-bottom:12px; }
+    .step:last-child { margin-bottom:0; }
+    .step-n { width:26px; height:26px; flex-shrink:0; border-radius:50%; background:var(--pink); color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; margin-top:1px; }
+    .step-title { font-size:12.5px; font-weight:700; color:var(--ink); margin-bottom:2px; }
+    .step-desc  { font-size:11px; color:var(--muted); line-height:1.5; }
+    .divider { height:1px; background:var(--border); margin:16px 0; }
+
+    /* S4 — Who */
+    .partner-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .partner-card { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:16px; }
+    .partner-icon  { font-size:24px; margin-bottom:8px; }
+    .partner-title { font-size:12.5px; font-weight:700; color:var(--ink); margin-bottom:4px; line-height:1.3; }
+    .partner-sub   { font-size:11px; color:var(--muted); line-height:1.5; }
+    .partner-tag   { display:inline-flex; margin-top:8px; font-size:9px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--pink); }
+
+    /* S5 — Join Mission */
+    .join-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .join-card { background:#fff; border:1px solid var(--border); border-radius:14px; padding:16px; }
+    .join-icon  { font-size:24px; margin-bottom:8px; }
+    .join-title { font-size:12.5px; font-weight:700; color:var(--ink); margin-bottom:4px; line-height:1.3; }
+    .join-desc  { font-size:11px; color:var(--muted); line-height:1.5; }
+    .join-cta   {
+      background:linear-gradient(135deg,rgba(232,20,122,.08),rgba(22,48,160,.06));
+      border:1px solid rgba(232,20,122,.18); border-radius:12px;
+      padding:14px 18px; margin-top:12px;
+    }
+    .join-cta-text { font-size:13px; font-weight:600; color:var(--ink); line-height:1.4; }
+    .join-cta-earn { font-size:12px; font-weight:700; color:var(--pink); margin-top:4px; }
+
+    /* S6 — Commission */
+    .check-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:8px; }
+    .chk { color:var(--pink); font-size:14px; font-weight:700; flex-shrink:0; margin-top:1px; }
+    .check-text { font-size:12px; color:var(--muted); line-height:1.5; }
+
+    /* S7 — Flow */
+    .flow-step { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); }
+    .flow-step:last-child { border:none; padding-bottom:0; }
+    .flow-num {
+      width:32px; height:32px; flex-shrink:0; border-radius:50%;
+      background:var(--pink); color:#fff; font-size:13px; font-weight:700;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .flow-icon  { font-size:22px; flex-shrink:0; width:32px; text-align:center; }
+    .flow-title { font-size:13px; font-weight:700; color:var(--ink); margin-bottom:2px; }
+    .flow-desc  { font-size:11.5px; color:var(--muted); line-height:1.5; }
+
+    /* S8 — FAQ */
+    .faq-item { padding:12px 0; border-bottom:1px solid var(--border); }
+    .faq-item:last-child { border:none; padding-bottom:0; }
+    .faq-q { font-size:12.5px; font-weight:700; color:var(--ink); margin-bottom:4px; }
+    .faq-a { font-size:11.5px; color:var(--muted); line-height:1.55; }
+
+    /* S9 — Closing */
+    .s9-quote {
+      font-family:'Fraunces',serif; font-weight:700; color:#fff;
+      font-size:clamp(20px,5.5vw,28px); line-height:1.25;
+      letter-spacing:-.015em; text-align:center;
+    }
+    .s9-quote em { color:var(--pink); font-style:normal; }
+    .s9-step { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
+    .s9-step-n { width:26px; height:26px; flex-shrink:0; border-radius:50%; background:var(--pink); color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+    .s9-step p { font-size:11.5px; color:rgba(255,255,255,.6); line-height:1.45; padding-top:4px; }
+    .s9-contact { display:flex; flex-direction:column; gap:8px; }
+    .s9-ci { display:flex; align-items:center; gap:10px; }
+    .s9-ci-lbl { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--pink); }
+    .s9-ci-val { font-size:13px; font-weight:600; color:#fff; }
+
+  </style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- ══ S1 — Cover ══ -->
+  <div class="slide slide-dark" id="s1">
+    <div class="glow-a"></div><div class="glow-b"></div>
+    <div class="topbar topbar-dark">
+      <span class="topbar-tag-d">DOKUMEN KEMITRAAN · RAHASIA</span>
+    </div>
+    <div class="s1-body">
+      <div class="s1-logo-wrap">
+        <img class="s1-logo" src="jodohmu-logo.png" alt="Jodohmu" />
+      </div>
+      <div class="tag tag-w tag-center" style="margin-bottom:14px;">Program Kemitraan Strategis</div>
+      <div class="s1-headline">Mari Bantu Indonesia<br /><em>Menikah</em><br />lebih mudah &amp; benar.</div>
+      <p class="s1-sub">Kami membangun sistem pernikahan yang bermartabat. Kami tidak bisa sendiri — mari kita bangun bersama.</p>
+      <div class="s1-chips">
+        <div class="s1-chip">
+          <div class="s1-chip-lbl">Yang Kami Butuhkan</div>
+          <div class="s1-chip-val">Tokoh, organisasi &amp; institusi berpengaruh</div>
+        </div>
+        <div class="s1-chip">
+          <div class="s1-chip-lbl">Berbasis di</div>
+          <div class="s1-chip-val">Indonesia</div>
+        </div>
+      </div>
+    </div>
+    <span class="snum snum-d">01 / 09</span>
+  </div>
+
+  <!-- ══ S2 — The Problem ══ -->
+  <div class="slide slide-light" id="s2">
+    <div class="topbar topbar-light">
+      <img class="topbar-logo" src="jodohmu-logo.png" alt="Jodohmu" />
+      <span class="topbar-tag">PERMASALAHAN</span>
+    </div>
+    <div class="scroll pad" style="padding-bottom:60px;">
+      <div class="tag">Krisis yang terus berkembang</div>
+      <h2 style="font-size:clamp(22px,6vw,28px); margin-bottom:4px;">Krisis pernikahan ini nyata — dan terus memburuk.</h2>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-num">394K+</div>
+          <div class="stat-txt">Perceraian di Indonesia pada 2024 — setara 1 perceraian setiap 80 detik</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">70%</div>
+          <div class="stat-txt">Anak muda Indonesia belum menikah — naik dari 55,79% satu dekade lalu</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">25%</div>
+          <div class="stat-txt">Penurunan total pernikahan dalam satu dekade — dari 2,1 juta menjadi 1,58 juta</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-num">Dampak Nyata</div>
+          <div class="stat-txt">Keluarga yang retak, orang tua tunggal, dan ketidakstabilan sosial terus bertambah</div>
+        </div>
+      </div>
+      <div style="margin-top:4px;">
+        <div class="prob-row">
+          <div class="prob-ico">📱</div>
+          <div><div class="prob-title">Aplikasi biasa tidak untuk orang serius</div><div class="prob-desc">Platform yang ada mengejar keterlibatan, bukan komitmen. Individu serius membuang waktu bertahun-tahun tanpa hasil.</div></div>
+        </div>
+        <div class="prob-row">
+          <div class="prob-ico">🔗</div>
+          <div><div class="prob-title">Referral informal tidak menghasilkan apa-apa</div><div class="prob-desc">Tanpa struktur, referral dari teman berujung pada situasi canggung tanpa tindak lanjut.</div></div>
+        </div>
+        <div class="prob-row">
+          <div class="prob-ico">🏛️</div>
+          <div><div class="prob-title">Organisasi punya jangkauan — tapi tidak ada mitra terpercaya</div><div class="prob-desc">Tokoh masyarakat tahu siapa yang butuh bantuan, tapi tidak ada tempat kredibel untuk mengarahkan mereka.</div></div>
+        </div>
+      </div>
+    </div>
+    <span class="snum">02 / 09</span>
+  </div>
+
+  <!-- ══ S3 — Our Response ══ -->
+  <div class="slide slide-alt" id="s3">
+    <div class="topbar topbar-light">
+      <img class="topbar-logo" src="jodohmu-logo.png" alt="Jodohmu" />
+      <span class="topbar-tag">RESPONS KAMI</span>
+    </div>
+    <div class="scroll pad" style="padding-bottom:60px;">
+      <div class="tag">Cara kerja Jodohmu</div>
+      <h2 style="font-size:clamp(20px,5.5vw,26px); margin-bottom:14px;">Bukan aplikasi. Sistem yang dijalankan manusia untuk orang-orang serius.</h2>
+      <div class="step"><div class="step-n">1</div><div><div class="step-title">Wawancara Mendalam</div><div class="step-desc">Setiap orang menjalani sesi menyeluruh — kepribadian, nilai, latar belakang, keluarga, dan tujuan hidup.</div></div></div>
+      <div class="step"><div class="step-n">2</div><div><div class="step-title">Verifikasi &amp; Membangun Kepercayaan</div><div class="step-desc">Kami memverifikasi dokumen dan referensi agar peserta bisa berproses dengan penuh keyakinan bersama.</div></div></div>
+      <div class="step"><div class="step-n">3</div><div><div class="step-title">Pencocokan yang Bijak</div><div class="step-desc">Tim kami mencocokkan orang berdasarkan kompatibilitas nyata — bukan geseran layar, bukan algoritma.</div></div></div>
+      <div class="step"><div class="step-n">4</div><div><div class="step-title">Perkenalan Terstruktur</div><div class="step-desc">Pertemuan dipandu dan selalu berada dalam batas yang etis. Tanpa pengecualian.</div></div></div>
+      <div class="step"><div class="step-n">5</div><div><div class="step-title">Keterlibatan Keluarga sejak Awal</div><div class="step-desc">Kami melibatkan keluarga sejak dini — bukan sebagai formalitas, melainkan sebagai fondasi.</div></div></div>
+      <div class="divider"></div>
+      <div class="tag" style="margin-top:0;">Mengapa kami berbeda</div>
+      <div style="display:flex; flex-direction:column; gap:0;">
+        <div class="prob-row"><div class="prob-ico">🔒</div><div><div class="prob-title">Tidak ada profil publik</div><div class="prob-desc">Informasi hanya dibagikan kepada pasangan yang relevan dan terverifikasi.</div></div></div>
+        <div class="prob-row"><div class="prob-ico">🤝</div><div><div class="prob-title">Manusia nyata, bukan bot</div><div class="prob-desc">Anggota tim menangani setiap kasus. Kami mengenal setiap orang dengan nama dan ceritanya.</div></div></div>
+        <div class="prob-row"><div class="prob-ico">👨‍👩‍👧</div><div><div class="prob-title">Keluarga adalah inti</div><div class="prob-desc">Kami bekerja bersama keluarga sejak awal — menciptakan akuntabilitas dan kepercayaan.</div></div></div>
+      </div>
+    </div>
+    <span class="snum">03 / 09</span>
+  </div>
+
+  <!-- ══ S4 — Who we need ══ -->
+  <div class="slide slide-light" id="s4">
+    <div class="topbar topbar-light">
+      <img class="topbar-logo" src="jodohmu-logo.png" alt="Jodohmu" />
+      <span class="topbar-tag">SIAPA YANG KAMI CARI</span>
+    </div>
+    <div class="scroll pad" style="padding-bottom:60px;">
+      <div class="tag">Mitra ideal kami</div>
+      <h2 style="font-size:clamp(20px,5.5vw,26px); margin-bottom:8px;">Kami butuh orang-orang yang punya jangkauan dan peduli pada komunitasnya.</h2>
+      <p style="font-size:12px; color:var(--muted); margin-bottom:16px; line-height:1.6;">Jodohmu adalah sistemnya. Kami butuh Anda menjadi jembatan bagi mereka yang membutuhkannya.</p>
+      <div class="partner-grid">
+        <div class="partner-card">
+          <div class="partner-icon">🕌</div>
+          <div class="partner-title">Lembaga Keagamaan &amp; Ustadz</div>
+          <div class="partner-sub">Anda sudah memiliki kepercayaan komunitas. Arahkan mereka ke sistem yang menghormati kepercayaan itu.</div>
+          <span class="partner-tag">Referral → Dampak</span>
+        </div>
+        <div class="partner-card">
+          <div class="partner-icon">🏢</div>
+          <div class="partner-title">Organisasi Masyarakat &amp; LSM</div>
+          <div class="partner-sub">Jaringan Anda adalah tempat di mana orang-orang yang membutuhkan Jodohmu berada.</div>
+          <span class="partner-tag">Kemitraan Institusional</span>
+        </div>
+        <div class="partner-card">
+          <div class="partner-icon">📣</div>
+          <div class="partner-title">Tokoh Sosial &amp; Influencer</div>
+          <div class="partner-sub">Anda punya suara dan audiens yang mempercayai rekomendasi Anda.</div>
+          <span class="partner-tag">Penjangkauan</span>
+        </div>
+        <div class="partner-card">
+          <div class="partner-icon">🎓</div>
+          <div class="partner-title">Institusi Pendidikan &amp; Profesional</div>
+          <div class="partner-sub">Jaringan alumni dan komunitas profesional punya anggota yang siap menikah tapi tidak tahu harus ke mana.</div>
+          <span class="partner-tag">Alumni · Profesional</span>
+        </div>
+      </div>
+    </div>
+    <span class="snum">04 / 09</span>
+  </div>
+
+  <!-- ══ S5 — Join the Mission ══ -->
+  <div class="slide slide-alt" id="s5">
+    <div class="topbar topbar-light">
+      <img class="topbar-logo" src="jodohmu-logo.png" alt="Jodohmu" />
+      <span class="topbar-tag">BERGABUNG DALAM MISI</span>
+    </div>
+    <div class="scroll pad" style="padding-bottom:60px;">
+      <div class="tag">Kami tidak bisa melakukan ini sendiri</div>
+      <h2 style="font-size:clamp(20px,5.5vw,26px); margin-bottom:8px;">Jika Anda punya jangkauan atau komunitas yang mempercayai Anda — <em style="color:var(--pink); font-style:normal;">kami membutuhkan Anda.</em></h2>
+      <p style="font-size:12px; color:var(--muted); margin-bottom:16px; line-height:1.6;">Anda tidak perlu menjadi mak comblang. Cukup mengenal seseorang yang membutuhkan bantuan — dan cukup peduli untuk mengarahkan mereka.</p>
+      <div class="join-grid">
+        <div class="join-card">
+          <div class="join-icon">🕌</div>
+          <div class="join-title">Tokoh Agama</div>
+          <div class="join-desc">Komunitas Anda mempercayai bimbingan Anda. Arahkan mereka ke sistem yang menjunjung nilai yang Anda pegang.</div>
+        </div>
+        <div class="join-card">
+          <div class="join-icon">🏢</div>
+          <div class="join-title">Organisator</div>
+          <div class="join-desc">Anggota Anda menghadapi masalah ini sekarang. Anda punya akses yang tidak akan dimiliki aplikasi manapun.</div>
+        </div>
+        <div class="join-card">
+          <div class="join-icon">📣</div>
+          <div class="join-title">Suara Berpengaruh</div>
+          <div class="join-desc">Satu rekomendasi tulus dari Anda menjangkau mereka yang tidak akan menemukan Jodohmu sendiri.</div>
+        </div>
+        <div class="join-card">
+          <div class="join-icon">🤲</div>
+          <div class="join-title">Siapapun yang Peduli</div>
+          <div class="join-desc">Jika Anda mengenal satu orang yang benar-benar siap menikah — itu sudah cukup untuk memulai.</div>
+        </div>
+      </div>
+      <div class="join-cta">
+        <div class="join-cta-text">Satu langkah: referensikan seseorang. Tim kami mengurus segalanya.</div>
+        <div class="join-cta-earn">Tanyakan soal penghasilan mitra →</div>
+      </div>
+    </div>
+    <span class="snum">05 / 09</span>
+  </div>
+
+  <!-- ══ S6 — More than Commission ══ -->
+  <div class="slide slide-light" id="s6">
+    <div class="topbar topbar-light">
+      <img class="topbar-logo" src="jodohmu-logo.png" alt="Jodohmu" />
+      <span class="topbar-tag">DETAIL KEMITRAAN</span>
+    </div>
+    <div class="scroll pad" style="padding-bottom:60px;">
+      <div class="tag">Kemitraan yang nyata</div>
+      <h2 style="font-size:clamp(22px,6vw,30px); margin-bottom:12px;">Lebih dari Sekadar Komisi</h2>
+      <p style="font-size:12.5px; color:var(--muted); line-height:1.7; margin-bottom:12px;">Setiap referral yang berhasil bukan sekadar komisi — itu satu keluarga yang terbantu, satu keputusan besar yang terjawab dengan baik.</p>
+      <p style="font-size:12.5px; color:var(--muted); line-height:1.7; margin-bottom:16px;">Detail apresiasi dan komisi kami jelaskan langsung — bukan karena ada yang disembunyikan, tapi karena Anda layak mendapat kejelasan penuh sejak awal.</p>
+      <div class="check-row"><span class="chk">✓</span><span class="check-text">Gratis bergabung — tidak ada biaya apapun</span></div>
+      <div class="check-row"><span class="chk">✓</span><span class="check-text">Tidak ada pekerjaan teknis dari pihak Anda</span></div>
+      <div class="check-row"><span class="chk">✓</span><span class="check-text">Referral Anda dicatat dan dikreditkan oleh tim kami</span></div>
+      <div class="check-row"><span class="chk">✓</span><span class="check-text">Ketentuan dijelaskan langsung — transparan sejak hari pertama</span></div>
+      <div class="divider"></div>
+      <div class="tag" style="margin-top:0;">Yang bisa Anda harapkan</div>
+      <div class="card" style="margin-bottom:10px;">
+        <strong style="display:block; margin-bottom:4px; color:var(--ink); font-size:12.5px;">Bagaimana komisi dihitung?</strong>
+        <p style="font-size:11.5px;">Struktur komisi dirancang untuk menghargai mitra yang menghubungkan kami dengan orang yang tepat. Detail dibagikan saat percakapan onboarding.</p>
+      </div>
+      <div class="card" style="margin-bottom:10px;">
+        <strong style="display:block; margin-bottom:4px; color:var(--ink); font-size:12.5px;">Bagaimana referral saya dilacak?</strong>
+        <p style="font-size:11.5px;">Setiap referral tercatat. Anda selalu tahu statusnya melalui komunikasi langsung dengan staf kami.</p>
+      </div>
+      <div class="card-pink">
+        <p style="font-size:11.5px; color:#7a2050; font-style:italic; line-height:1.65;">"Kami tidak menjelaskan komisi lewat slide bukan karena ada yang disembunyikan — tapi karena Anda layak mendapat kejelasan langsung."</p>
+      </div>
+    </div>
+    <span class="snum">06 / 09</span>
+  </div>
+
+  <!-- ══ S7 — How Referrals Work ══ -->
+  <div class="slide slide-alt" id="s7">
+    <div class="topbar topbar-light">
+      <img class="topbar-logo" src="jodohmu-logo.png" alt="Jodohmu" />
+      <span class="topbar-tag">CARA KERJA REFERRAL</span>
+    </div>
+    <div class="scroll pad" style="padding-bottom:60px;">
+      <div class="tag">Lima langkah — hanya itu</div>
+      <h2 style="font-size:clamp(20px,5.5vw,26px); margin-bottom:4px;">Semudah berbagi sebuah nama.</h2>
+      <p style="font-size:12px; color:var(--muted); margin-bottom:16px; line-height:1.6;">Anda membuat koneksinya. Jodohmu yang menangani sisanya — dengan penuh perhatian dan rasa hormat.</p>
+      <div>
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div><div class="flow-title">🙋 Kenali Seseorang</div><div class="flow-desc">Anda mengenal seseorang yang benar-benar siap menikah dan membutuhkan bimbingan yang tepat.</div></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div><div class="flow-title">📲 Kirimkan Nama Mereka</div><div class="flow-desc">Bagikan nama dan nomor WhatsApp mereka kepada tim kami. Hanya itu yang perlu Anda lakukan.</div></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div><div class="flow-title">📞 Kami Menghubungi</div><div class="flow-desc">Jodohmu menghubungi mereka dengan penuh hormat, menyebut nama Anda, dan memulai proses pendaftaran.</div></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <div><div class="flow-title">📋 Dicatat oleh Tim Kami</div><div class="flow-desc">Referral Anda dicatat dan dipantau. Anda selalu diinformasikan tentang statusnya.</div></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">5</div>
+          <div><div class="flow-title">🤝 Anda Mendapat Penghasilan</div><div class="flow-desc">Begitu orang tersebut menjadi klien aktif, kontribusi Anda diakui. Ketentuan dibahas langsung bersama tim kami.</div></div>
+        </div>
+      </div>
+      <div style="margin-top:14px; background:#fce8f2; border:1px solid rgba(232,20,122,.18); border-radius:12px; padding:12px 16px; display:flex; gap:10px; align-items:flex-start;">
+        <span style="font-size:18px; flex-shrink:0;">🤝</span>
+        <p style="font-size:11.5px; color:#7a2050; font-weight:500; line-height:1.5;">Nama Anda disebut dengan penuh hormat setiap kali kami menghubungi referral Anda. Kami menjaga hubungan Anda dengan mereka — selalu.</p>
+      </div>
+    </div>
+    <span class="snum">07 / 09</span>
+  </div>
+
+  <!-- ══ S8 — FAQ ══ -->
+  <div class="slide slide-alt" id="s8">
+    <div class="topbar topbar-light">
+      <img class="topbar-logo" src="jodohmu-logo.png" alt="Jodohmu" />
+      <span class="topbar-tag">PERTANYAAN MITRA</span>
+    </div>
+    <div class="scroll pad" style="padding-bottom:60px;">
+      <div class="tag">Yang sering ditanyakan</div>
+      <h2 style="font-size:clamp(20px,5.5vw,26px); margin-bottom:16px;">Pertanyaan yang Sering Ditanyakan Mitra</h2>
+      <div class="faq-item">
+        <div class="faq-q">Apakah perlu kontrak?</div>
+        <div class="faq-a">Ya, kami akan menyiapkan perjanjian kemitraan sederhana setelah kita sepakat — tidak ada kewajiban sebelum itu.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Berapa lama komisi cair?</div>
+        <div class="faq-a">Setelah klien rujukan Anda aktif minimal 1 bulan, komisi diproses.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Bagaimana jika rujukan saya tidak akhirnya mendaftar?</div>
+        <div class="faq-a">Tidak masalah — tidak ada target atau tekanan. Anda hanya dihargai untuk yang benar-benar menjadi klien.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Apakah ada biaya untuk mitra?</div>
+        <div class="faq-a">Tidak ada sama sekali — bergabung sebagai mitra sepenuhnya gratis.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Apakah saya bisa merujuk lebih dari satu orang?</div>
+        <div class="faq-a">Tentu — tidak ada batas jumlah rujukan. Setiap orang yang menjadi klien akan dihargai secara terpisah.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Bagaimana cara saya tahu status rujukan saya?</div>
+        <div class="faq-a">Tim Jodohmu akan mengabari Anda langsung melalui WhatsApp setiap ada perkembangan — Anda tidak perlu bertanya berulang kali.</div>
+      </div>
+    </div>
+    <span class="snum">08 / 09</span>
+  </div>
+
+  <!-- ══ S9 — Closing + QR ══ -->
+  <div class="slide slide-dark" id="s9">
+    <div class="glow-a"></div><div class="glow-b"></div>
+    <div class="scroll pad" style="padding-bottom:70px; display:flex; flex-direction:column; gap:20px;">
+
+      <!-- Quote -->
+      <div style="text-align:center; padding-top:8px;">
+        <div class="tag tag-w tag-center" style="justify-content:center; margin-bottom:14px;">Bergabung bersama kami</div>
+        <div class="s9-quote">Masalah ini terlalu besar untuk satu organisasi.<br />Dibutuhkan sebuah <em>komunitas</em> — para pemimpin, institusi, dan masyarakat — yang bersatu.</div>
+      </div>
+
+      <!-- QR Code -->
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
+        <div class="tag tag-w tag-center" style="justify-content:center; margin-bottom:0;">Scan untuk Daftar</div>
+        <div style="background:#fff; border-radius:18px; padding:14px; box-shadow:0 20px 60px rgba(232,20,122,.28), 0 0 0 1px rgba(255,255,255,.1);">
+          <img src="styled-qr-code.jpeg" alt="Scan untuk mendaftar" style="width:min(180px,42vw); height:auto; display:block; border-radius:6px;" />
+        </div>
+        <p style="font-size:11.5px; color:rgba(255,255,255,.45); text-align:center; line-height:1.5;">Membuka <strong style="color:#fff;">formulir pendaftaran</strong> langsung di ponsel Anda</p>
+      </div>
+
+      <!-- Steps -->
+      <div>
+        <div class="s9-step"><div class="s9-step-n">1</div><p>Percakapan singkat dengan tim kami — tanpa tekanan, tanpa kewajiban</p></div>
+        <div class="s9-step"><div class="s9-step-n">2</div><p>Diskusikan bagaimana kemitraan ini bisa berjalan untuk Anda</p></div>
+        <div class="s9-step"><div class="s9-step-n">3</div><p>Mulai menghubungkan orang di jaringan Anda ke proses yang bisa mereka percaya</p></div>
+      </div>
+
+      <!-- Contact -->
+      <div style="background:rgba(232,20,122,.1); border:1px solid rgba(232,20,122,.24); border-radius:14px; padding:16px 18px;">
+        <div class="s9-contact">
+          <div class="s9-ci"><span style="font-size:16px;">📱</span><div><div class="s9-ci-lbl">WhatsApp</div><div class="s9-ci-val">0811-2221-0303</div></div></div>
+          <div class="s9-ci"><span style="font-size:16px;">🌐</span><div><div class="s9-ci-lbl">Website</div><div class="s9-ci-val">jodohmu.com</div></div></div>
+          <div class="s9-ci"><span style="font-size:16px;">📸</span><div><div class="s9-ci-lbl">Instagram</div><div class="s9-ci-val">@jodohmu_official</div></div></div>
+        </div>
+      </div>
+
+    </div>
+    <span class="snum snum-d">09 / 09</span>
+  </div>
+
+</div><!-- end deck -->
+
+<div id="nav">
+  <button class="nav-btn" id="prev-btn" onclick="go(-1)" disabled>‹</button>
+  <div class="nav-dots" id="dots"></div>
+  <span id="counter">1 / 9</span>
+  <button class="nav-btn" id="next-btn" onclick="go(1)">›</button>
+</div>
+
+<script>
+  const TOTAL  = 9;
+  let cur = 0, animating = false;
+  const slides  = document.querySelectorAll('.slide');
+  const dotsEl  = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.createElement('button');
+    d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(n) {
+    if (animating || n === cur) return;
+    animating = true;
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('prev');
+    const prevIdx = cur;
+    cur = n;
+    slides[cur].classList.add('active');
+    counter.textContent = `${cur + 1} / ${TOTAL}`;
+    prevBtn.disabled = cur === 0;
+    nextBtn.disabled = cur === TOTAL - 1;
+    document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+    setTimeout(() => { slides[prevIdx].classList.remove('prev'); animating = false; }, 450);
+  }
+
+  function go(dir) { const n = cur + dir; if (n >= 0 && n < TOTAL) goTo(n); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); go(1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    { e.preventDefault(); go(-1); }
+  });
+
+  /* Swipe support */
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive:true });
+  document.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+  }, { passive:true });
+</script>
+</body>
+</html>

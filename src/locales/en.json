@@ -1296,10 +1296,10 @@
   },
   "pricingPage": {
     "discount": {
-      "badge": "Limited Seats — 50% Introductory Price",
-      "headline": "🌙 50% introductory price for Pearl & Ruby — limited seats available.",
+      "badge": "Founding Member Offer",
+      "headline": "🌙 We're offering a founding member discount — book a free consultation to learn more.",
       "sub": "",
-      "cta": "Claim 50% Off Now",
+      "cta": "Book a Free Consultation",
       "ctaNoDiscount": "Get Started",
       "urgency": "Seats filling fast — register today"
     },
