@@ -1,153 +1,166 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import { auth } from "@/lib/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { useRouter } from "next/navigation";
-import { useLanguage } from "@/context/LanguageContext";
 import Link from "next/link";
-import { Shield, Users, Heart } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
+import { useLanguage } from "@/context/LanguageContext";
+import { useAuth } from "@/context/AuthContext";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import LogoIcon from "@/assets/jodohmu-logo.png";
+import CoverImage from "@/assets/login-cover.png";
+
+const WA_FORGOT   = "https://wa.me/6281122210303?text=Assalamualaikum%2C%20saya%20lupa%20password%20akun%20Jodohmu%20saya.";
+const WA_REGISTER = "https://wa.me/6281122210303?text=Assalamualaikum%2C%20saya%20ingin%20mendaftar%20akun%20di%20Jodohmu.";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const { t } = useLanguage();
-  const [isPending, setIsPending] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const router      = useRouter();
+  const { t, lang } = useLanguage();
+  const { user, role, loading } = useAuth();
 
-  const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    if (loading) return;
+    if (!user) return;
+    if (role === "admin" || role === "worker") router.replace("/admin");
+    else router.replace("/dashboard");
+  }, [user, role, loading, router]);
+
+  const [email,    setEmail]    = useState("");
+  const [password, setPassword] = useState("");
+  const [showPwd,  setShowPwd]  = useState(false);
+  const [pending,  setPending]  = useState(false);
+  const [error,    setError]    = useState<string | null>(null);
+
+  const l = (id: string, en: string) => lang === "id" ? id : en;
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setPending(true);
     try {
-      setIsPending(true);
-      await signInWithEmailAndPassword(auth, email, password);
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Error signing in with email/password: ", error);
+      const cred    = await signInWithEmailAndPassword(auth, email, password);
+      const roleDoc = await getDoc(doc(db, "user_roles", cred.user.uid));
+      const role    = (roleDoc.data() as { role?: string } | undefined)?.role;
+      const redirect = new URLSearchParams(window.location.search).get("redirect");
+      if (redirect)                                   router.push(redirect);
+      else if (role === "admin" || role === "worker") router.push("/admin");
+      else                                            router.push("/dashboard");
+    } catch {
       setError(t("login.error"));
     } finally {
-      setIsPending(false);
+      setPending(false);
     }
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <Image
-        src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=2070&auto=format&fit=crop"
-        alt="Couple holding hands at sunset"
-        fill
-        priority
-        className="object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0b3a86]/80 via-[#0b3a86]/70 to-[#9B2242]/80" />
+    <div className="min-h-screen flex">
 
-      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-16">
-        <div className="grid w-full max-w-5xl grid-cols-1 overflow-hidden rounded-3xl bg-white/10 backdrop-blur-2xl shadow-2xl border border-white/15 lg:grid-cols-[1.1fr,0.9fr]">
-          <div className="relative hidden h-full bg-white/5 lg:block">
-            <Image
-              src="https://images.unsplash.com/photo-1489278353717-f64c6ee8a4d2?q=80&w=2046&auto=format&fit=crop"
-              alt="Couple walking together"
-              fill
-              className="object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#9B2242]/85 via-[#0b3a86]/40 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-10 text-white space-y-4">
-              <span className="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1 text-sm font-semibold uppercase tracking-wide">
-                <span className="h-2 w-2 rounded-full bg-white" />
-                {t("login.badge")}
-              </span>
-              <h2 className="text-3xl font-serif font-bold leading-tight drop-shadow">
-                {t("login.title")}
-              </h2>
-              <p className="text-white/85 leading-relaxed">
-                {t("login.subtitle")}
-              </p>
-              <div className="grid gap-3 pt-4 text-sm text-white/80">
-                <div className="flex items-start gap-3">
-                  <div className="mt-1 rounded-full bg-white/20 p-2"><Shield className="h-4 w-4" /></div>
-                  <p>{t("login.features.security")}</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="mt-1 rounded-full bg-white/20 p-2"><Users className="h-4 w-4" /></div>
-                  <p>{t("login.features.matches")}</p>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="mt-1 rounded-full bg-white/20 p-2"><Heart className="h-4 w-4" /></div>
-                  <p>{t("login.features.support")}</p>
-                </div>
-              </div>
-            </div>
+      {/* ── left: cover image ── */}
+      <div className="hidden lg:block relative w-1/2">
+        <Image src={CoverImage} alt="Jodohmu" fill className="object-cover" priority />
+      </div>
+
+      {/* ── right: form ── */}
+      <div className="w-full lg:w-1/2 flex flex-col justify-center bg-white px-8 py-12 sm:px-12">
+
+        {/* mobile logo */}
+        <div className="mb-8 flex justify-center lg:hidden">
+          <Image src={LogoIcon} alt="Jodohmu" height={40} style={{ width: "auto" }} priority />
+        </div>
+
+        <div className="w-full max-w-sm mx-auto flex flex-col gap-7">
+
+          {/* heading */}
+          <div>
+            <h1 className="text-3xl font-bold text-[#0b3a86]" style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}>
+              {l("Masuk", "Sign in")}
+            </h1>
+            <p className="mt-1.5 text-sm text-slate-500">
+              {l("Belum punya akun?", "Don't have an account?")}
+              {" "}
+              <a href={WA_REGISTER} target="_blank" rel="noopener noreferrer"
+                className="font-semibold text-[#9B2242] hover:underline">
+                {l("Hubungi kami", "Contact us")}
+              </a>
+            </p>
           </div>
 
-          <div className="relative bg-white/85 px-6 py-10 sm:px-10">
-            <div className="absolute -top-20 -right-20 h-40 w-40 rounded-full bg-[#9B2242]/15 blur-3xl" />
-            <div className="absolute -bottom-24 -left-24 h-48 w-48 rounded-full bg-[#0b3a86]/15 blur-3xl" />
-            <div className="relative z-10 space-y-8">
-              <div className="space-y-3 text-center">
-                <span className="inline-flex items-center gap-2 rounded-full bg-[#9B2242]/10 px-4 py-1 text-sm font-semibold text-[#9B2242]">
-                  {t("login.badge")}
+          {/* form */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                {t("login.emailLabel")}
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                <input
+                  id="email" type="email" autoComplete="email" required
+                  value={email} onChange={e => setEmail(e.target.value)}
+                  placeholder={t("login.emailPlaceholder")}
+                  className="w-full h-12 pl-10 pr-4 rounded-xl border border-slate-200 bg-slate-50 text-[15px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0b3a86]/25 focus:border-[#0b3a86]/40 transition"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                {t("login.passwordLabel")}
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                <input
+                  id="password" type={showPwd ? "text" : "password"} autoComplete="current-password" required
+                  value={password} onChange={e => setPassword(e.target.value)}
+                  placeholder={t("login.passwordPlaceholder")}
+                  className="w-full h-12 pl-10 pr-11 rounded-xl border border-slate-200 bg-slate-50 text-[15px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0b3a86]/25 focus:border-[#0b3a86]/40 transition"
+                />
+                <button type="button" tabIndex={-1}
+                  onClick={() => setShowPwd(v => !v)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition">
+                  {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {error && (
+              <div className="rounded-xl bg-rose-50 border border-rose-200 px-4 py-3 text-sm font-medium text-rose-600">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit" disabled={pending}
+              className="mt-1 w-full h-12 rounded-full font-bold text-base text-white shadow-md transition-all duration-200 hover:opacity-90 active:scale-[0.98] disabled:opacity-60"
+              style={{ background: "linear-gradient(to right, #9B2242, #0b3a86)" }}
+            >
+              {pending ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                  </svg>
+                  {t("login.buttonLoading")}
                 </span>
-                <h1 className="text-3xl font-serif font-bold text-[#0b3a86] sm:text-4xl">
-                  {t("login.title")}
-                </h1>
-                <p className="text-base text-muted-foreground leading-relaxed">
-                  {t("login.subtitle")}
-                </p>
-              </div>
+              ) : t("login.button")}
+            </button>
 
-              <form onSubmit={handleEmailLogin} className="space-y-4">
-                <div className="text-left space-y-2">
-                  <label className="text-sm font-semibold text-[#0b3a86]" htmlFor="email">
-                    {t("login.emailLabel")}
-                  </label>
-                  <Input
-                    id="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder={t("login.emailPlaceholder")}
-                    className="h-12 rounded-xl border-[#0b3a86]/20 bg-white/80"
-                  />
-                </div>
-                <div className="text-left space-y-2">
-                  <label className="text-sm font-semibold text-[#0b3a86]" htmlFor="password">
-                    {t("login.passwordLabel")}
-                  </label>
-                  <Input
-                    id="password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder={t("login.passwordPlaceholder")}
-                    className="h-12 rounded-xl border-[#0b3a86]/20 bg-white/80"
-                  />
-                </div>
-                {error && <p className="text-sm font-semibold text-[#9B2242]">{error}</p>}
+          </form>
 
-                <Button
-                  type="submit"
-                  disabled={isPending}
-                  className="w-full rounded-full bg-gradient-to-r from-[#9B2242] to-[#0b3a86] py-6 text-base font-semibold shadow-lg transition duration-300 hover:from-[#861b37] hover:to-[#0a3377] disabled:opacity-80"
-                >
-                  {isPending ? t("login.buttonLoading") : t("login.button")}
-                </Button>
-              </form>
-
-              <p className="text-center text-sm text-muted-foreground">
-                <Link href="/" className="font-semibold text-[#9B2242] transition hover:text-[#7f1b36]">
-                  {t("login.back")}
-                </Link>
-              </p>
-            </div>
+          {/* helper links */}
+          <div className="flex items-center justify-between text-sm border-t border-slate-100 pt-5">
+            <a href={WA_FORGOT} target="_blank" rel="noopener noreferrer"
+              className="font-semibold text-slate-500 hover:text-[#0b3a86] transition">
+              {l("Lupa password?", "Forgot password?")}
+            </a>
+            <Link href="/" className="text-slate-400 hover:text-slate-600 transition text-xs">
+              ← {t("login.back")}
+            </Link>
           </div>
+
         </div>
       </div>
     </div>

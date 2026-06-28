@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { db, auth } from "@/lib/firebase";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
+import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -371,7 +370,7 @@ function MultiCheck({ label, note, wide, options, value, onChange }: {
 // ─── Main page ────────────────────────────────────────────────────────────────
 
 export default function AdminUsersPage() {
-  const { role } = useAuth();
+  const { role, loading: authLoading } = useAuth();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -407,22 +406,32 @@ export default function AdminUsersPage() {
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
-      const snap = await getDocs(query(collection(db, "user_roles"), orderBy("createdAt", "desc")));
-      setUsers(snap.docs.map(doc => {
-        const data = doc.data();
-        return {
-          uid: doc.id,
-          name: data.name ?? "—",
-          email: data.email ?? "—",
-          role: data.role ?? "candidate",
-          createdAt: data.createdAt?.toDate() ?? null,
-        };
-      }));
-    } catch { /* silently fail */ }
-    finally { setLoading(false); }
+      const current = auth.currentUser;
+      if (!current) throw new Error("Not authenticated");
+      const token = await current.getIdToken();
+      const res = await fetch("/api/admin/list-users", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed to fetch users");
+      setUsers((data.users as Array<{ uid: string; name: string; email: string; role: Role; createdAt: string | null }>).map(u => ({
+        ...u,
+        createdAt: u.createdAt ? new Date(u.createdAt) : null,
+      })));
+    } catch (err) {
+      console.error("fetchUsers error", err);
+    } finally { setLoading(false); }
   }, []);
 
   useEffect(() => { if (role === "admin") fetchUsers(); }, [role, fetchUsers]);
+
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[40vh]">
+        <div className="w-8 h-8 rounded-full border-2 border-[#0b3a86] border-t-transparent animate-spin" />
+      </div>
+    );
+  }
 
   if (role !== "admin") {
     return (

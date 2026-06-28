@@ -3,11 +3,9 @@ import { Playfair_Display, Nunito, Roboto } from "next/font/google";
 import Script from "next/script";
 import { Toaster } from "sonner";
 import "./globals.css";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { AuthProvider } from "@/context/AuthContext";
 import { LanguageProvider } from "@/context/LanguageContext";
-import { WhatsAppFab } from "@/components/layout/whatsapp-fab";
+import { PublicShell } from "@/components/layout/public-shell";
 
 const GA_MEASUREMENT_ID = "G-8XHZM9P9F3";
 
@@ -61,9 +59,9 @@ export const metadata: Metadata = {
     siteName: "Jodohmu",
     images: [
       {
-        url: `${siteUrl}/favicon.svg`,
-        width: 256,
-        height: 256,
+        url: `${siteUrl}/jodohmu-logo.png`,
+        width: 512,
+        height: 512,
         alt: "Jodohmu logo",
       },
     ],
@@ -75,14 +73,15 @@ export const metadata: Metadata = {
     title: "Jodohmu — Perjodohan Offline & Ta'aruf di Indonesia",
     description:
       "Jasa perjodohan offline yang halal dengan fasilitasi ta'aruf untuk lajang siap nikah di Indonesia.",
-    images: [`${siteUrl}/favicon.svg`],
+    images: [`${siteUrl}/jodohmu-logo.png`],
   },
   icons: {
     icon: [
+      { url: "/jodohmu-logo.png", type: "image/png", sizes: "any" },
       { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.svg", rel: "shortcut icon", type: "image/svg+xml" },
     ],
-    apple: { url: "/favicon.svg" },
+    shortcut: "/jodohmu-logo.png",
+    apple: { url: "/jodohmu-logo.png" },
   },
 };
 
@@ -100,12 +99,9 @@ export default function RootLayout({
       <body>
         <LanguageProvider>
           <AuthProvider>
-            <Header />
-            <main id="main-content" role="main">
+            <PublicShell whatsappHref={whatsappHref}>
               {children}
-            </main>
-            <Footer />
-            <WhatsAppFab href={whatsappHref} />
+            </PublicShell>
           </AuthProvider>
         </LanguageProvider>
         <Toaster richColors position="top-center" />

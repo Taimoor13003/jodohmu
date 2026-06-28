@@ -113,11 +113,10 @@ export function Header() {
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                   <Avatar className="h-10 w-10 border-2" style={{ borderColor: badgeBg }}>
                     <AvatarImage src={user.photoURL ?? ""} alt={user.displayName ?? ""} />
-                    <AvatarFallback>
+                    <AvatarFallback className="text-sm font-bold text-white" style={{ background: "linear-gradient(135deg, #9B2242, #0b3a86)" }}>
                       {user.displayName
-                        ?.split(" ")
-                        .map((n) => n[0])
-                        .join("")}
+                        ? user.displayName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)
+                        : (user.email?.[0] ?? "U").toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -234,7 +233,7 @@ export function Header() {
               <div className="flex flex-col gap-2">
                 <Link
                   href="/dashboard"
-                  className="rounded-xl border border-[#0b3a86]/10 px-4 py-3 text-sm font-semibold text-[#0b3a86] hover:border-[#9B2242]/30 hover:text-[#9B2242] transition-colors"
+                  className="rounded-xl border border-[#0b3a86]/10 px-4 py-3 text-sm font-semibold text-[#0b3a86] hover:border-[#9B2242]/30 hover:text-[#9B2242] transition-colors text-center"
                   onClick={() => setIsMobileOpen(false)}
                 >
                   {t("header.dashboard")}
@@ -250,7 +249,7 @@ export function Header() {
             ) : (
               <Link
                 href="/login"
-                className={mobileNavLinkClass("/login")}
+                className="block w-full rounded-full bg-gradient-to-r from-[#9B2242] to-[#0b3a86] px-4 py-3 text-center text-sm font-bold text-white shadow-md transition hover:opacity-90"
                 onClick={() => setIsMobileOpen(false)}
               >
                 {t("header.login")}

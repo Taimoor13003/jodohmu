@@ -12,19 +12,22 @@ type UserRole = "candidate" | "worker" | "admin";
 interface AuthContextType {
   user: User | null;
   role: UserRole;
+  loading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType>({ user: null, role: "candidate" });
+const AuthContext = createContext<AuthContextType>({ user: null, role: "candidate", loading: true });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<UserRole>("candidate");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       if (!user?.email) {
         setRole("candidate");
+        setLoading(false);
         return;
       }
 
@@ -37,6 +40,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const data = roleDoc.data() as { role?: UserRole };
           if (data.role === "admin" || data.role === "worker" || data.role === "candidate") {
             setRole(data.role);
+            setLoading(false);
             return;
           }
         }
@@ -50,6 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const data = roleSnap.docs[0].data() as { role?: UserRole };
           if (data.role === "admin" || data.role === "worker" || data.role === "candidate") {
             setRole(data.role);
+            setLoading(false);
             return;
           }
         }
@@ -66,12 +71,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         console.error("Error fetching user role", error);
         setRole("candidate");
       }
+
+      setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  return <AuthContext.Provider value={{ user, role }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, role, loading }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);
