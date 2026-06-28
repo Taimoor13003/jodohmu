@@ -10,6 +10,7 @@ import { Heart, Users, Star, Calendar, ShieldCheck, Handshake, Sparkles, HeartHa
 import Link from "next/link";
 import { motion } from 'framer-motion';
 import { analytics } from "@/lib/analytics";
+import { HomeContactForm } from "@/components/home/HomeContactForm";
 import heroSectionImage from "@/assets/jodoh-mu-hero-section.png";
 import indoBrideImage from "@/assets/indo-bride.png";
 import indoGroomImage from "@/assets/indo-groom.png";
@@ -594,31 +595,18 @@ export default function HomePage() {
             <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
           </div>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="container flex flex-col items-center justify-center gap-6 px-4 text-center md:px-6 relative z-10"
+            className="container flex flex-col items-center justify-center px-4 text-center md:px-6 relative z-10"
           >
             <h2 className="text-4xl font-extrabold tracking-tight font-serif">{t("homepage.cta.title")}</h2>
-            <p className="max-w-[600px] text-lg leading-relaxed text-white/90">
+            <p className="max-w-[600px] text-lg leading-relaxed text-white/90 mt-4">
               {t("homepage.cta.description")}
             </p>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Button asChild size="lg" className="bg-white text-[#9B2242] hover:bg-white/90 rounded-full px-10 py-7 text-lg font-semibold shadow-2xl hover:shadow-white/25 transition-all duration-300 border border-white/20">
-                <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick('bottom_cta', 'home')}>
-                  {t("homepage.cta.button")}
-                </Link>
-              </Button>
-            </motion.div>
+            <HomeContactForm />
           </motion.div>
         </AnimatedSection>
       </main>
