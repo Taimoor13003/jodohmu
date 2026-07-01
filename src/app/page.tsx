@@ -13,15 +13,31 @@ export const metadata: Metadata = {
       "Perjodohan offline yang halal dengan fasilitasi ta'aruf, penyaringan keluarga, dan perkenalan terarah bagi lajang siap nikah di seluruh Indonesia.",
     url: siteUrl,
     type: "website",
+    locale: "id_ID",
+    siteName: "Jodohmu",
+    images: [
+      {
+        url: `${siteUrl}/jodohmu-logo.png`,
+        width: 512,
+        height: 512,
+        alt: "Jodohmu — Matchmaking Service",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Jodohmu — Jasa Perjodohan & Ta'aruf Offline di Indonesia",
     description:
       "Perjodohan offline yang halal dengan fasilitasi ta'aruf untuk lajang siap nikah di Indonesia.",
+    images: [`${siteUrl}/jodohmu-logo.png`],
   },
   alternates: {
     canonical: siteUrl,
+    languages: {
+      "id": siteUrl,
+      "en": `${siteUrl}/en`,
+      "x-default": siteUrl,
+    },
   },
 };
 

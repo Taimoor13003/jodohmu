@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     alternateLocale: ["en_US"],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Jodohmu — Perjodohan Offline & Ta'aruf di Indonesia",
     description:
       "Jasa perjodohan offline yang halal dengan fasilitasi ta'aruf untuk lajang siap nikah di Indonesia.",

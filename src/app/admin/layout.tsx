@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,15 +10,14 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   Users, Briefcase, UserCheck, MessageCircle,
-  ChevronLeft, ChevronRight,
+  ChevronLeft,
   Globe, LogOut, Menu,
 } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 
 /* ── constants ── */
-const TOPBAR_H   = 52;
-const SIDEBAR_W  = 220;
-const SIDEBAR_COL = 60;
+const TOPBAR_H  = 52;
+const SIDEBAR_W = 220;
 
 const NAV = [
   { href: "/admin/candidates", label: "Kandidat",      icon: <UserCheck      className="w-full h-full" />, color: "#C4294A", bg: "#FFF1F2" },
@@ -28,33 +27,39 @@ const NAV = [
 ];
 
 /* ── sidebar ── */
-function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
+function Sidebar({ open, onClose, onSidebarEnter, onSidebarLeave }: {
+  open: boolean; onClose: () => void;
+  onSidebarEnter: () => void; onSidebarLeave: () => void;
+}) {
   const pathname = usePathname();
-  const w = collapsed ? SIDEBAR_COL : SIDEBAR_W;
 
   return (
-    <div style={{
-      position: "fixed",
-      top: TOPBAR_H,
-      left: 0,
-      width: w,
-      height: `calc(100vh - ${TOPBAR_H}px)`,
-      background: "#fff",
-      borderRight: "1px solid #E2E8F0",
-      display: "flex",
-      flexDirection: "column",
-      zIndex: 40,
-      transition: "width 0.2s ease",
-      overflow: "hidden",
-    }}>
+    <div
+      onMouseEnter={onSidebarEnter}
+      onMouseLeave={onSidebarLeave}
+      style={{
+        position: "fixed",
+        top: TOPBAR_H,
+        left: 0,
+        width: SIDEBAR_W,
+        height: `calc(100vh - ${TOPBAR_H}px)`,
+        background: "#fff",
+        borderRight: "1px solid #E2E8F0",
+        display: "flex",
+        flexDirection: "column",
+        zIndex: 45,
+        transform: open ? "translateX(0)" : `translateX(-${SIDEBAR_W}px)`,
+        transition: "transform 0.22s cubic-bezier(0.4,0,0.2,1)",
+        boxShadow: open ? "4px 0 24px rgba(0,0,0,0.10)" : "none",
+        overflow: "hidden",
+      }}
+    >
       {/* Section label */}
-      {!collapsed && (
-        <div style={{ padding: "14px 16px 6px", flexShrink: 0 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, color: "#94A3B8", letterSpacing: "0.8px", textTransform: "uppercase" }}>
-            Navigasi
-          </span>
-        </div>
-      )}
+      <div style={{ padding: "14px 16px 6px", flexShrink: 0 }}>
+        <span style={{ fontSize: 10, fontWeight: 700, color: "#94A3B8", letterSpacing: "0.8px", textTransform: "uppercase" }}>
+          Navigasi
+        </span>
+      </div>
 
       {/* Nav */}
       <nav style={{ flex: 1, overflowY: "auto", padding: "6px 8px", display: "flex", flexDirection: "column", gap: 2 }}>
@@ -64,7 +69,7 @@ function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => 
             <Link
               key={item.href}
               href={item.href}
-              title={collapsed ? item.label : undefined}
+              onClick={onClose}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -76,7 +81,6 @@ function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => 
                 fontWeight: active ? 700 : 500,
                 fontSize: 13.5,
                 textDecoration: "none",
-                justifyContent: collapsed ? "center" : "flex-start",
                 transition: "background 0.15s",
               }}
             >
@@ -90,29 +94,24 @@ function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => 
               }}>
                 <span style={{ width: 16, height: 16, display: "flex" }}>{item.icon}</span>
               </div>
-              {!collapsed && (
-                <>
-                  <span style={{ flex: 1, whiteSpace: "nowrap" }}>{item.label}</span>
-                  {active && <div style={{ width: 6, height: 6, borderRadius: "50%", background: item.color }} />}
-                </>
-              )}
+              <span style={{ flex: 1, whiteSpace: "nowrap" }}>{item.label}</span>
+              {active && <div style={{ width: 6, height: 6, borderRadius: "50%", background: item.color }} />}
             </Link>
           );
         })}
       </nav>
 
-      {/* Collapse toggle */}
+      {/* Close button */}
       <button
-        onClick={onToggle}
+        onClick={onClose}
         style={{
           height: 44, flexShrink: 0,
           borderTop: "1px solid #E2E8F0",
           background: "transparent",
           cursor: "pointer",
           display: "flex", alignItems: "center",
-          justifyContent: collapsed ? "center" : "flex-start",
           gap: 6,
-          padding: collapsed ? "0 12px" : "0 16px",
+          padding: "0 16px",
           color: "#94A3B8",
           fontSize: 12, fontWeight: 500,
           transition: "background 0.15s",
@@ -120,17 +119,19 @@ function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => 
         onMouseEnter={e => (e.currentTarget.style.background = "#F8FAFC")}
         onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
       >
-        {collapsed
-          ? <ChevronRight style={{ width: 16, height: 16 }} />
-          : <><ChevronLeft style={{ width: 16, height: 16 }} /><span>Tutup sidebar</span></>
-        }
+        <ChevronLeft style={{ width: 16, height: 16 }} />
+        <span>Tutup sidebar</span>
       </button>
     </div>
   );
 }
 
 /* ── topbar ── */
-function Topbar({ onToggle }: { onToggle: () => void }) {
+function Topbar({ onToggle, onMenuHover, onMenuLeave }: {
+  onToggle: () => void;
+  onMenuHover: () => void;
+  onMenuLeave: () => void;
+}) {
   const { user } = useAuth();
   const { lang, setLang } = useLanguage();
   const router = useRouter();
@@ -153,9 +154,11 @@ function Topbar({ onToggle }: { onToggle: () => void }) {
       gap: 12,
       zIndex: 50,
     }}>
-      {/* Sidebar toggle */}
+      {/* Sidebar toggle — opens on click or hover */}
       <button
         onClick={onToggle}
+        onMouseEnter={onMenuHover}
+        onMouseLeave={onMenuLeave}
         style={{
           width: 34, height: 34, borderRadius: 9,
           background: "transparent",
@@ -166,8 +169,8 @@ function Topbar({ onToggle }: { onToggle: () => void }) {
           flexShrink: 0,
           transition: "background 0.15s",
         }}
-        onMouseEnter={e => (e.currentTarget.style.background = "#F8FAFC")}
-        onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+        onFocus={e => (e.currentTarget.style.background = "#F8FAFC")}
+        onBlur={e => (e.currentTarget.style.background = "transparent")}
       >
         <Menu style={{ width: 16, height: 16 }} />
       </button>
@@ -241,33 +244,66 @@ function Topbar({ onToggle }: { onToggle: () => void }) {
 
 /* ── layout ── */
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const openTimerRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("jm-admin-sidebar");
-      if (saved !== null) setCollapsed(saved === "1");
-    } catch {}
-  }, []);
-
-  const toggle = () => {
-    setCollapsed(prev => {
-      const next = !prev;
-      try { localStorage.setItem("jm-admin-sidebar", next ? "1" : "0"); } catch {}
-      return next;
-    });
+  const clearAllTimers = () => {
+    if (openTimerRef.current)  clearTimeout(openTimerRef.current);
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
   };
 
-  const sw = collapsed ? SIDEBAR_COL : SIDEBAR_W;
+  // close on route change
+  useEffect(() => { setOpen(false); }, [pathname]);
+
+  const close = () => { clearAllTimers(); setOpen(false); };
+
+  // toggle clears all pending timers first so hover can't re-open after a click-close
+  const toggle = () => { clearAllTimers(); setOpen(prev => !prev); };
+
+  // hover on ☰ button: cancel any pending close, schedule open
+  const handleMenuHover = () => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    openTimerRef.current = setTimeout(() => setOpen(true), 150);
+  };
+  const handleMenuLeave = () => {
+    if (openTimerRef.current) clearTimeout(openTimerRef.current);
+  };
+
+  // sidebar mouse enter/leave handlers
+  const handleSidebarEnter = () => {
+    if (openTimerRef.current)  clearTimeout(openTimerRef.current);
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+  };
+  const handleSidebarLeave = () => {
+    closeTimerRef.current = setTimeout(() => setOpen(false), 250);
+  };
 
   return (
     <div style={{ background: "#EEF2F7", minHeight: "100vh" }}>
-      <Topbar onToggle={toggle} />
-      <Sidebar collapsed={collapsed} onToggle={toggle} />
+      <Topbar onToggle={toggle} onMenuHover={handleMenuHover} onMenuLeave={handleMenuLeave} />
+
+      {/* Backdrop — darkens the content area when sidebar is open */}
+      <div
+        onClick={close}
+        style={{
+          position: "fixed",
+          inset: 0,
+          top: TOPBAR_H,
+          background: "rgba(15, 23, 42, 0.45)",
+          zIndex: 40,
+          opacity: open ? 1 : 0,
+          pointerEvents: open ? "auto" : "none",
+          transition: "opacity 0.22s ease",
+        }}
+      />
+
+      <Sidebar open={open} onClose={close} onSidebarEnter={handleSidebarEnter} onSidebarLeave={handleSidebarLeave} />
+
+      {/* Main content — always full width, never pushed by sidebar */}
       <div style={{
-        marginLeft: sw,
         paddingTop: TOPBAR_H,
-        transition: "margin-left 0.2s ease",
         minHeight: "100vh",
       }}>
         {children}

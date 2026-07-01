@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -12,7 +12,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
 import {
   LayoutDashboard, User, Globe, LogOut,
-  ChevronLeft, ChevronRight, Menu,
+  ChevronLeft, Menu,
   Brain, ShieldCheck, ClipboardList, History, Stars, Lock,
 } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
@@ -20,7 +20,6 @@ import { ChatWidget } from "@/components/chat/ChatWidget";
 
 const TOPBAR_H  = 52;
 const SIDEBAR_W = 240;
-const SIDEBAR_C = 60;
 
 type Lang = "id" | "en";
 type D = Record<string, unknown>;
@@ -80,53 +79,49 @@ function isLocked(data: D, key: string): boolean {
   return false;
 }
 
-function Sidebar({ collapsed, onToggle, lang, data }: {
-  collapsed: boolean; onToggle: () => void; lang: Lang; data: D;
+function Sidebar({ open, onClose, onMouseEnter, onMouseLeave, lang, data }: {
+  open: boolean; onClose: () => void;
+  onMouseEnter: () => void; onMouseLeave: () => void;
+  lang: Lang; data: D;
 }) {
   const pathname = usePathname();
-  const [hovered, setHovered] = useState(false);
-  const open = !collapsed || hovered;
-  const w = open ? SIDEBAR_W : SIDEBAR_C;
 
   const WA = "https://wa.me/6281122210303?text=Assalamualaikum%2C%20saya%20ingin%20bertanya%20tentang%20akun%20Jodohmu%20saya.";
 
   return (
     <div
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       style={{
         position: "fixed", top: TOPBAR_H, left: 0,
-        width: w, height: `calc(100vh - ${TOPBAR_H}px)`,
+        width: SIDEBAR_W, height: `calc(100vh - ${TOPBAR_H}px)`,
         background: "#fff", borderRight: "1px solid #E2E8F0",
         display: "flex", flexDirection: "column",
-        zIndex: collapsed && hovered ? 45 : 40,
-        transition: "width 0.2s ease", overflow: "hidden",
-        boxShadow: collapsed && hovered ? "4px 0 16px rgba(15,23,42,0.08)" : "none",
+        zIndex: 45,
+        transform: open ? "translateX(0)" : `translateX(-${SIDEBAR_W}px)`,
+        transition: "transform 0.22s cubic-bezier(0.4,0,0.2,1)",
+        boxShadow: open ? "4px 0 24px rgba(0,0,0,0.10)" : "none",
+        overflow: "hidden",
       }}>
 
       <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden", display: "flex", flexDirection: "column" }}>
 
         {/* main nav */}
         <nav style={{ padding: "8px 8px 4px", display: "flex", flexDirection: "column", gap: 2 }}>
-          {open && (
-            <p style={{ fontSize: 10, fontWeight: 700, color: "#94A3B8", letterSpacing: "0.8px", textTransform: "uppercase", padding: "6px 8px 4px" }}>
-              {lang === "id" ? "Menu" : "Navigation"}
-            </p>
-          )}
+          <p style={{ fontSize: 10, fontWeight: 700, color: "#94A3B8", letterSpacing: "0.8px", textTransform: "uppercase", padding: "6px 8px 4px" }}>
+            {lang === "id" ? "Menu" : "Navigation"}
+          </p>
           {MAIN_NAV.map(item => {
             const active = item.exact ? pathname === item.href : pathname.startsWith(item.href);
             return (
-              <Link key={item.href} href={item.href}
-                title={!open ? item.label[lang] : undefined}
+              <Link key={item.href} href={item.href} onClick={onClose}
                 style={{
                   display: "flex", alignItems: "center", gap: 10,
                   padding: "8px 10px", borderRadius: 10,
                   background: active ? "#EEF2F7" : "transparent",
                   color: active ? "#0F172A" : "#64748B",
                   fontWeight: active ? 700 : 500, fontSize: 13,
-                  textDecoration: "none",
-                  justifyContent: open ? "flex-start" : "center",
-                  transition: "background 0.15s",
+                  textDecoration: "none", transition: "background 0.15s",
                 }}>
                 <div style={{
                   width: 30, height: 30, borderRadius: 8,
@@ -137,8 +132,8 @@ function Sidebar({ collapsed, onToggle, lang, data }: {
                 }}>
                   <span style={{ width: 15, height: 15, display: "flex" }}>{item.icon}</span>
                 </div>
-                {open && <span style={{ flex: 1, whiteSpace: "nowrap" }}>{item.label[lang]}</span>}
-                {open && active && <div style={{ width: 5, height: 5, borderRadius: "50%", background: item.color }} />}
+                <span style={{ flex: 1, whiteSpace: "nowrap" }}>{item.label[lang]}</span>
+                {active && <div style={{ width: 5, height: 5, borderRadius: "50%", background: item.color }} />}
               </Link>
             );
           })}
@@ -149,11 +144,9 @@ function Sidebar({ collapsed, onToggle, lang, data }: {
 
         {/* result nav */}
         <nav style={{ padding: "4px 8px 8px", display: "flex", flexDirection: "column", gap: 2 }}>
-          {open && (
-            <p style={{ fontSize: 10, fontWeight: 700, color: "#94A3B8", letterSpacing: "0.8px", textTransform: "uppercase", padding: "6px 8px 4px" }}>
-              {lang === "id" ? "Hasil & Match" : "Results & Matches"}
-            </p>
-          )}
+          <p style={{ fontSize: 10, fontWeight: 700, color: "#94A3B8", letterSpacing: "0.8px", textTransform: "uppercase", padding: "6px 8px 4px" }}>
+            {lang === "id" ? "Hasil & Match" : "Results & Matches"}
+          </p>
           {RESULT_NAV.map(item => {
             const active = pathname.startsWith(item.href);
             const locked = isLocked(data, item.lockKey);
@@ -161,7 +154,6 @@ function Sidebar({ collapsed, onToggle, lang, data }: {
             if (locked) {
               return (
                 <button key={item.href}
-                  title={!open ? item.label[lang] : undefined}
                   onClick={() => {
                     toast.info(item.toast[lang], {
                       description: lang === "id"
@@ -173,44 +165,34 @@ function Sidebar({ collapsed, onToggle, lang, data }: {
                   style={{
                     display: "flex", alignItems: "center", gap: 10,
                     padding: "8px 10px", borderRadius: 10,
-                    background: "transparent",
-                    color: "#CBD5E1",
+                    background: "transparent", color: "#CBD5E1",
                     fontWeight: 500, fontSize: 13,
                     textDecoration: "none", border: "none", cursor: "pointer",
-                    justifyContent: open ? "flex-start" : "center",
                     textAlign: "left", width: "100%",
                   }}>
                   <div style={{
                     width: 30, height: 30, borderRadius: 8,
-                    background: "#F8FAFC",
-                    color: "#CBD5E1",
+                    background: "#F8FAFC", color: "#CBD5E1",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     flexShrink: 0,
                   }}>
                     <span style={{ width: 15, height: 15, display: "flex" }}>{item.icon}</span>
                   </div>
-                  {open && (
-                    <>
-                      <span style={{ flex: 1, whiteSpace: "nowrap" }}>{item.label[lang]}</span>
-                      <Lock style={{ width: 12, height: 12, color: "#CBD5E1", flexShrink: 0 }} />
-                    </>
-                  )}
+                  <span style={{ flex: 1, whiteSpace: "nowrap" }}>{item.label[lang]}</span>
+                  <Lock style={{ width: 12, height: 12, color: "#CBD5E1", flexShrink: 0 }} />
                 </button>
               );
             }
 
             return (
-              <Link key={item.href} href={item.href}
-                title={!open ? item.label[lang] : undefined}
+              <Link key={item.href} href={item.href} onClick={onClose}
                 style={{
                   display: "flex", alignItems: "center", gap: 10,
                   padding: "8px 10px", borderRadius: 10,
                   background: active ? "#EEF2F7" : "transparent",
                   color: active ? "#0F172A" : "#64748B",
                   fontWeight: active ? 700 : 500, fontSize: 13,
-                  textDecoration: "none",
-                  justifyContent: open ? "flex-start" : "center",
-                  transition: "background 0.15s",
+                  textDecoration: "none", transition: "background 0.15s",
                 }}>
                 <div style={{
                   width: 30, height: 30, borderRadius: 8,
@@ -221,55 +203,60 @@ function Sidebar({ collapsed, onToggle, lang, data }: {
                 }}>
                   <span style={{ width: 15, height: 15, display: "flex" }}>{item.icon}</span>
                 </div>
-                {open && <span style={{ flex: 1, whiteSpace: "nowrap" }}>{item.label[lang]}</span>}
-                {open && active && <div style={{ width: 5, height: 5, borderRadius: "50%", background: item.color }} />}
+                <span style={{ flex: 1, whiteSpace: "nowrap" }}>{item.label[lang]}</span>
+                {active && <div style={{ width: 5, height: 5, borderRadius: "50%", background: item.color }} />}
               </Link>
             );
           })}
         </nav>
       </div>
 
-      {/* collapse toggle */}
-      <button onClick={onToggle}
+      {/* close button */}
+      <button onClick={onClose}
         style={{
           height: 44, flexShrink: 0, borderTop: "1px solid #E2E8F0",
           background: "transparent", cursor: "pointer",
           display: "flex", alignItems: "center",
-          justifyContent: open ? "flex-start" : "center",
-          gap: 6, padding: open ? "0 18px" : "0 12px",
+          gap: 6, padding: "0 18px",
           color: "#94A3B8", fontSize: 12, fontWeight: 500,
           transition: "background 0.15s", border: "none",
         }}
         onMouseEnter={e => (e.currentTarget.style.background = "#F8FAFC")}
         onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
-        {open
-          ? <><ChevronLeft style={{ width: 15, height: 15 }} /><span>{lang === "id" ? "Tutup" : "Collapse"}</span></>
-          : <ChevronRight style={{ width: 15, height: 15 }} />
-        }
+        <ChevronLeft style={{ width: 15, height: 15 }} />
+        <span>{lang === "id" ? "Tutup" : "Close"}</span>
       </button>
     </div>
   );
 }
 
-function Topbar({ onToggle }: { onToggle: () => void }) {
+function Topbar({ onToggle, onMenuHover, onMenuLeave }: {
+  onToggle: () => void;
+  onMenuHover: () => void;
+  onMenuLeave: () => void;
+}) {
   const { user } = useAuth();
   const { lang, setLang } = useLanguage();
   const router = useRouter();
+
   return (
     <div style={{
       position: "fixed", top: 0, left: 0, right: 0,
       height: TOPBAR_H, background: "#fff", borderBottom: "1px solid #E2E8F0",
       display: "flex", alignItems: "center", padding: "0 16px", gap: 12, zIndex: 50,
     }}>
-      <button onClick={onToggle}
+      <button
+        onClick={onToggle}
+        onMouseEnter={onMenuHover}
+        onMouseLeave={onMenuLeave}
         style={{
           width: 34, height: 34, borderRadius: 9, background: "transparent",
           border: "1px solid #E2E8F0", cursor: "pointer",
           display: "flex", alignItems: "center", justifyContent: "center",
           color: "#64748B", flexShrink: 0, transition: "background 0.15s",
         }}
-        onMouseEnter={e => (e.currentTarget.style.background = "#F8FAFC")}
-        onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
+        onFocus={e => (e.currentTarget.style.background = "#F8FAFC")}
+        onBlur={e => (e.currentTarget.style.background = "transparent")}>
         <Menu style={{ width: 16, height: 16 }} />
       </button>
       <Link href="/dashboard" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
@@ -321,11 +308,19 @@ function Topbar({ onToggle }: { onToggle: () => void }) {
 }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const [collapsed, setCollapsed] = useState(false);
+  const [open, setOpen] = useState(false);
   const [candidateData, setCandidateData] = useState<D>({});
   const { lang } = useLanguage();
   const { user, role, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+  const openTimerRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearAllTimers = () => {
+    if (openTimerRef.current)  clearTimeout(openTimerRef.current);
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+  };
 
   useEffect(() => {
     if (loading) return;
@@ -333,12 +328,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (role === "admin" || role === "worker") { router.replace("/admin"); return; }
   }, [user, role, loading, router]);
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("jm-dash-sidebar");
-      if (saved !== null) setCollapsed(saved === "1");
-    } catch {}
-  }, []);
+  // close on route change
+  useEffect(() => { setOpen(false); }, [pathname]);
 
   const fetchCandidate = useCallback(async () => {
     if (!user) return;
@@ -354,21 +345,52 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   useEffect(() => { fetchCandidate(); }, [fetchCandidate]);
 
-  const toggle = () => {
-    setCollapsed(prev => {
-      const next = !prev;
-      try { localStorage.setItem("jm-dash-sidebar", next ? "1" : "0"); } catch {}
-      return next;
-    });
+  const close = () => { clearAllTimers(); setOpen(false); };
+
+  // toggle clears all pending timers first so hover can't re-open after a click-close
+  const toggle = () => { clearAllTimers(); setOpen(prev => !prev); };
+
+  // hover on ☰ button: cancel any pending close, schedule open
+  const handleMenuHover = () => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    openTimerRef.current = setTimeout(() => setOpen(true), 150);
+  };
+  const handleMenuLeave = () => {
+    if (openTimerRef.current) clearTimeout(openTimerRef.current);
   };
 
-  const sw = collapsed ? SIDEBAR_C : SIDEBAR_W;
+  // sidebar mouse enter/leave: cancel open timer, schedule close
+  const handleSidebarEnter = () => {
+    if (openTimerRef.current) clearTimeout(openTimerRef.current);
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+  };
+  const handleSidebarLeave = () => {
+    closeTimerRef.current = setTimeout(() => setOpen(false), 250);
+  };
 
   return (
     <div style={{ background: "#EEF2F7", minHeight: "100vh" }}>
-      <Topbar onToggle={toggle} />
-      <Sidebar collapsed={collapsed} onToggle={toggle} lang={lang} data={candidateData} />
-      <div style={{ marginLeft: sw, paddingTop: TOPBAR_H, transition: "margin-left 0.2s ease", minHeight: "100vh" }}>
+      <Topbar onToggle={toggle} onMenuHover={handleMenuHover} onMenuLeave={handleMenuLeave} />
+
+      {/* Backdrop */}
+      <div
+        onClick={close}
+        style={{
+          position: "fixed",
+          inset: 0,
+          top: TOPBAR_H,
+          background: "rgba(15, 23, 42, 0.45)",
+          zIndex: 40,
+          opacity: open ? 1 : 0,
+          pointerEvents: open ? "auto" : "none",
+          transition: "opacity 0.22s ease",
+        }}
+      />
+
+      <Sidebar open={open} onClose={close} onMouseEnter={handleSidebarEnter} onMouseLeave={handleSidebarLeave} lang={lang} data={candidateData} />
+
+      {/* Main content — always full width */}
+      <div style={{ paddingTop: TOPBAR_H, minHeight: "100vh" }}>
         {children}
       </div>
       <ChatWidget />
