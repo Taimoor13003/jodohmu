@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
@@ -369,12 +370,21 @@ function MultiCheck({ label, note, wide, options, value, onChange }: {
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 
-export default function AdminUsersPage() {
+function AdminUsersPageInner() {
   const { role, loading: authLoading } = useAuth();
+  const searchParams = useSearchParams();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [formRole, setFormRole] = useState<Role>("candidate");
+
+  // Auto-open dialog when navigated from Add Candidate button
+  useEffect(() => {
+    if (searchParams.get("create") === "candidate") {
+      setFormRole("candidate");
+      setDialogOpen(true);
+    }
+  }, [searchParams]);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
   const [basic, setBasic] = useState({ name: "", email: "", password: "", note: "" });
@@ -1665,5 +1675,13 @@ export default function AdminUsersPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function AdminUsersPage() {
+  return (
+    <Suspense>
+      <AdminUsersPageInner />
+    </Suspense>
   );
 }

@@ -13,7 +13,7 @@ import {
   MapPin, Briefcase, GraduationCap, Heart, Eye, EyeOff, Camera,
   ChevronLeft, ChevronRight, X, BookOpen, Shield, Leaf, Star,
   Users, CalendarDays, Target, Link as LinkIcon, CheckCircle2 as CheckCircle2Icon,
-  Lock, Brain, ShieldCheck, ClipboardList, History, Sparkles,
+  Lock, Brain, ShieldCheck, ClipboardList, History, Sparkles, Pencil,
 } from "lucide-react";
 
 type Lang = "id" | "en";
@@ -202,8 +202,9 @@ function GenderAvatar({ gender }: { gender: string; size?: number }) {
 }
 
 /* ── section card ─────────────────────────────────────────────────────── */
-function SCard({ title, icon, iconColor, iconBg, children }: {
-  title: string; icon: React.ReactNode; iconColor: string; iconBg: string; children: React.ReactNode;
+function SCard({ title, icon, iconColor, iconBg, children, actions }: {
+  title: string; icon: React.ReactNode; iconColor: string; iconBg: string;
+  children: React.ReactNode; actions?: React.ReactNode;
 }) {
   return (
     <div className="bg-white rounded-2xl border" style={{ borderColor: C.border, boxShadow: "0 2px 8px rgba(15,23,42,0.06)" }}>
@@ -212,6 +213,7 @@ function SCard({ title, icon, iconColor, iconBg, children }: {
           <span style={{ width: 14, height: 14, display: "flex" }}>{icon}</span>
         </div>
         <h3 className="text-[13px] font-bold" style={{ color: C.text }}>{title}</h3>
+        {actions && <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6 }}>{actions}</div>}
       </div>
       <div className="px-5 py-4">{children}</div>
     </div>
@@ -365,6 +367,45 @@ function ResultCard({ title, icon, iconBg, iconColor, locked, lang, children }: 
   );
 }
 
+/* ── editable input for edit mode ────────────────────────────────────── */
+function EInput({ field, label, type = "text", opts, draft, locked, upd, long = false }: {
+  field: string; label: string; type?: "text" | "num" | "sel" | "ta" | "date";
+  opts?: [string, string][];
+  draft: Record<string, string>; locked: boolean;
+  upd: (f: string, v: string) => void; long?: boolean;
+}) {
+  const val = draft[field] ?? "";
+  const inputStyle: React.CSSProperties = {
+    width: "100%", padding: "6px 8px", borderRadius: 8,
+    border: "1px solid #CBD5E1", fontSize: 13, color: C.text, background: "#fff",
+    outline: "none", boxSizing: "border-box",
+  };
+  return (
+    <div className={long ? "sm:col-span-2" : ""}>
+      <p className="text-[10.5px] font-bold uppercase tracking-wide mb-1" style={{ color: C.muted }}>{label}</p>
+      {locked ? (
+        <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 10px", borderRadius: 8, background: "#F8FAFC", border: "1px solid #E2E8F0" }}>
+          <Lock style={{ width: 11, height: 11, color: "#CBD5E1", flexShrink: 0 }} />
+          <span style={{ fontSize: 13, color: "#CBD5E1" }}>{val || "—"}</span>
+        </div>
+      ) : type === "sel" && opts ? (
+        <select value={val} onChange={e => upd(field, e.target.value)} style={inputStyle}>
+          <option value="">—</option>
+          {opts.map(([v, d]) => <option key={v} value={v}>{d}</option>)}
+        </select>
+      ) : type === "ta" ? (
+        <textarea value={val} onChange={e => upd(field, e.target.value)} rows={3}
+          style={{ ...inputStyle, resize: "vertical" }} />
+      ) : type === "date" ? (
+        <input type="date" value={val} onChange={e => upd(field, e.target.value)} style={inputStyle} />
+      ) : (
+        <input type={type === "num" ? "number" : "text"} value={val}
+          onChange={e => upd(field, e.target.value)} style={inputStyle} />
+      )}
+    </div>
+  );
+}
+
 /* ── main component ───────────────────────────────────────────────────── */
 export default function CandidateProfilePage() {
   const { user } = useAuth();
@@ -378,6 +419,9 @@ export default function CandidateProfilePage() {
   const [photosPublic, setPhotosPublic]     = useState(false);
   const [togglingPhotos, setTogglingPhotos] = useState(false);
   const [copied, setCopied]                 = useState(false);
+  const [editSection, setEditSection]       = useState<string | null>(null);
+  const [draft, setDraft]                   = useState<Record<string, string>>({});
+  const [saving, setSaving]                 = useState(false);
 
   const fetchData = useCallback(async () => {
     if (!user) return;
@@ -440,7 +484,110 @@ export default function CandidateProfilePage() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  /* ── edit helpers ── */
+  const lockedFields = Array.isArray(data.lockedFields) ? data.lockedFields as string[] : [];
+  const isLocked = (field: string) => lockedFields.includes(field);
+  const upd = (f: string, v: string) => setDraft(p => ({ ...p, [f]: v }));
+
+  const dateToInput = (s: string): string => {
+    if (!s || s === "—") return "";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+    const m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if (m) return `${m[3]}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}`;
+    return s;
+  };
+
+  const startEdit = (sectionKey: string, fields: string[]) => {
+    const d: Record<string, string> = {};
+    for (const f of fields) {
+      const v = data[f];
+      d[f] = (v !== null && v !== undefined) ? String(v) : "";
+    }
+    if ("dateOfBirth" in d) d.dateOfBirth = dateToInput(d.dateOfBirth);
+    setDraft(d);
+    setEditSection(sectionKey);
+  };
+
+  const cancelEdit = () => { setEditSection(null); setDraft({}); };
+
+  const saveEdit = async () => {
+    if (saving) return;
+    setSaving(true);
+    try {
+      const token = await getIdToken(auth.currentUser!);
+      const body: Record<string, unknown> = {};
+      for (const [k, v] of Object.entries(draft)) {
+        if (!isLocked(k)) body[k] = v === "" ? null : v;
+      }
+      // Section-specific timestamps
+      if (editSection === "marriage") {
+        body.maritalGoalsUpdatedAt = new Date().toISOString();
+      }
+      // Auto-calculate age from dateOfBirth
+      if (body.dateOfBirth && typeof body.dateOfBirth === "string") {
+        const dob = new Date(body.dateOfBirth as string);
+        if (!isNaN(dob.getTime())) {
+          const today = new Date();
+          let a = today.getFullYear() - dob.getFullYear();
+          const dm = today.getMonth() - dob.getMonth();
+          if (dm < 0 || (dm === 0 && today.getDate() < dob.getDate())) a--;
+          if (a > 0 && a < 120 && !isLocked("age")) body.age = String(a);
+        }
+      }
+      const res = await fetch("/api/candidate/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify(body),
+      });
+      if (res.ok) {
+        setData(prev => ({ ...prev, ...body }));
+        setEditSection(null);
+        setDraft({});
+      }
+    } catch { /* silent */ }
+    finally { setSaving(false); }
+  };
+
   const l = (id: string, en: string) => lang === "id" ? id : en;
+
+  const vOpt = (keys: string[]): [string, string][] => keys.map(k => [k, V[k]?.[lang] ?? k]);
+
+  const editBtn = (sectionKey: string, fields: string[]) => {
+    if (stranger) return undefined;
+    const allLocked = fields.length > 0 && fields.every(f => isLocked(f));
+    if (allLocked) return undefined;
+    if (editSection === sectionKey) {
+      return <>
+        <button onClick={cancelEdit} style={{ padding: "3px 10px", borderRadius: 6, border: "1px solid #E2E8F0", fontSize: 12, color: "#64748B", background: "#fff", cursor: "pointer" }}>
+          {lang === "id" ? "Batal" : "Cancel"}
+        </button>
+        <button onClick={saveEdit} disabled={saving} style={{ padding: "3px 10px", borderRadius: 6, border: "none", fontSize: 12, color: "#fff", background: "#9B2242", cursor: saving ? "default" : "pointer", opacity: saving ? 0.7 : 1 }}>
+          {saving ? (lang === "id" ? "Menyimpan…" : "Saving…") : (lang === "id" ? "Simpan" : "Save")}
+        </button>
+      </>;
+    }
+    return (
+      <button onClick={() => startEdit(sectionKey, fields)}
+        style={{ display: "flex", alignItems: "center", gap: 4, padding: "3px 10px", borderRadius: 6, border: "1px solid #E2E8F0", fontSize: 12, color: "#64748B", background: "#fff", cursor: "pointer" }}>
+        <Pencil style={{ width: 11, height: 11 }} />
+        {lang === "id" ? "Edit" : "Edit"}
+      </button>
+    );
+  };
+
+  /* ── field keys per section (for startEdit & lock check) ── */
+  const FIELDS = {
+    aboutMe:   ["aboutMe"],
+    personal:  ["gender","dateOfBirth","nationality","ethnicity","height","weight","bloodType","birthPlace","currentlyLivingWith","ownHealthCondition","whatsappNumber"],
+    career:    ["occupation","employmentStatus","incomeRange","propertyStatus","hasDebts"],
+    lifestyle: ["smokingStatus","alcoholUse","exerciseFrequency","socialPreference"],
+    values:    ["quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing"],
+    religion:  ["religion","religiousPracticeLevel","prayerHabit","quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing","hijab","beard","waliAvailability","islamicOrganization","churchAttendance","baptized","bibleReading","religionNotes"],
+    marriage:  ["maritalTimeline","weddingPreference","financialManagementStyle","decisionMakingStyle"],
+    roles:     ["myRoleExpectation","roleExpectationsHusband","roleExpectationsWife"],
+    family:    ["fatherAlive","motherAlive","siblingCount","childOrder","maleSiblingCount","femaleSiblingCount","hasChildren","childrenCount","childCustody","childrenLivingWith","childrenNotes","waliName","waliRelationship","waliContact"],
+    partner:   ["preferredMinAge","preferredMaxAge","preferredReligion","prefReligionLevel","preferredEducationLevel","prefPreviousStatus","preferredLocationOfSpouse","openToDifferentEthnicity","prefMinHeight","prefMaxHeight","prefBodyType","physicalPreferences","preferredPersonalityTraits","spouseDealBreakers"],
+  };
 
   if (!user || loading) {
     return (
@@ -634,12 +781,17 @@ export default function CandidateProfilePage() {
               </SCard>
             )
           ) : (
-            raw(data,"aboutMe") !== "—"
-              ? <SCard title={l("Tentang Saya","About Me")} icon={<BookOpen className="w-full h-full" />} iconColor="#8B5CF6" iconBg="#F5F3FF">
-                  <p className="text-[13.5px] leading-relaxed" style={{ color: C.body }}>{raw(data,"aboutMe")}</p>
-                </SCard>
-              : <CollapsedSection title={l("Tentang Saya","About Me")} icon={<BookOpen className="w-full h-full" />} iconColor="#8B5CF6" iconBg="#F5F3FF" lang={lang}
-                  fields={[l("Deskripsi diri","About yourself")]} />
+            <SCard title={l("Tentang Saya","About Me")} icon={<BookOpen className="w-full h-full" />} iconColor="#8B5CF6" iconBg="#F5F3FF" actions={editBtn("aboutMe", FIELDS.aboutMe)}>
+              {editSection === "aboutMe" ? (
+                <FieldGrid>
+                  <EInput field="aboutMe" label={l("Tentang Saya","About Me")} type="ta" draft={draft} locked={isLocked("aboutMe")} upd={upd} long />
+                </FieldGrid>
+              ) : raw(data,"aboutMe") !== "—" ? (
+                <p className="text-[13.5px] leading-relaxed" style={{ color: C.body }}>{raw(data,"aboutMe")}</p>
+              ) : (
+                <EmptyHint />
+              )}
+            </SCard>
           )}
 
           {/* Photos */}
@@ -690,25 +842,40 @@ export default function CandidateProfilePage() {
                 </SCard>
               )
             ) : (
-              hasAny("age","gender","dateOfBirth","nationality","ethnicity","height","weight","bloodType","birthPlace","currentlyLivingWith","ownHealthCondition")
-                ? <SCard title={l("Data Pribadi","Personal Info")} icon={<Shield className="w-full h-full" />} iconColor="#3B82F6" iconBg="#EFF6FF">
-                    <FieldGrid>
-                      <Field label={l("Usia","Age")} value={age} stranger={stranger} />
-                      <Field label={l("Jenis Kelamin","Gender")} value={s("gender")} stranger={stranger} />
-                      <Field label={l("Tgl Lahir","Date of Birth")} value={raw(data,"dateOfBirth")} stranger={stranger} />
-                      <Field label={l("Kewarganegaraan","Nationality")} value={raw(data,"nationality")} stranger={stranger} />
-                      <Field label={l("Suku","Ethnicity")} value={raw(data,"ethnicity")} stranger={stranger} />
-                      <Field label={l("Tinggi","Height")} value={raw(data,"height") !== "—" ? `${raw(data,"height")} cm` : "—"} stranger={stranger} />
-                      <Field label={l("Berat","Weight")} value={raw(data,"weight") !== "—" ? `${raw(data,"weight")} kg` : "—"} stranger={stranger} />
-                      <Field label={l("Gol. Darah","Blood Type")} value={s("bloodType")} stranger={stranger} />
-                      <Field label={l("Lahir Di","Place of Birth")} value={raw(data,"birthPlace")} stranger={stranger} />
-                      <Field label={l("Tinggal Dengan","Living With")} value={raw(data,"currentlyLivingWith")} stranger={stranger} />
-                      <Field label={l("Kondisi Kesehatan","Health Condition")} value={raw(data,"ownHealthCondition")} stranger={stranger} long />
-                      <Field label={l("WhatsApp","WhatsApp")} value={raw(data,"whatsappNumber")} stranger={false} />
-                    </FieldGrid>
-                  </SCard>
-                : <CollapsedSection title={l("Data Pribadi","Personal Info")} icon={<Shield className="w-full h-full" />} iconColor="#3B82F6" iconBg="#EFF6FF" lang={lang}
-                    fields={[l("Usia","Age"), l("Jenis Kelamin","Gender"), l("Tgl Lahir","Date of Birth"), l("Kewarganegaraan","Nationality"), l("Suku","Ethnicity"), l("Tinggi","Height"), l("Berat","Weight"), l("Gol. Darah","Blood Type"), l("Lahir Di","Place of Birth"), l("Kondisi Kesehatan","Health Condition"), l("WhatsApp","WhatsApp")]} />
+              <SCard title={l("Data Pribadi","Personal Info")} icon={<Shield className="w-full h-full" />} iconColor="#3B82F6" iconBg="#EFF6FF" actions={editBtn("personal", FIELDS.personal)}>
+                {editSection === "personal" ? (
+                  <FieldGrid>
+                    <EInput field="gender" label={l("Jenis Kelamin","Gender")} type="sel" opts={vOpt(["male","female"])} draft={draft} locked={isLocked("gender")} upd={upd} />
+                    <EInput field="dateOfBirth" label={l("Tgl Lahir (Usia otomatis)","Date of Birth (Age auto-set)")} type="date" draft={draft} locked={isLocked("dateOfBirth")} upd={upd} />
+                    <EInput field="nationality" label={l("Kewarganegaraan","Nationality")} draft={draft} locked={isLocked("nationality")} upd={upd} />
+                    <EInput field="ethnicity" label={l("Suku","Ethnicity")} draft={draft} locked={isLocked("ethnicity")} upd={upd} />
+                    <EInput field="height" label={l("Tinggi (cm)","Height (cm)")} type="num" draft={draft} locked={isLocked("height")} upd={upd} />
+                    <EInput field="weight" label={l("Berat (kg)","Weight (kg)")} type="num" draft={draft} locked={isLocked("weight")} upd={upd} />
+                    <EInput field="bloodType" label={l("Gol. Darah","Blood Type")} type="sel" opts={[["A","A"],["B","B"],["AB","AB"],["O","O"]]} draft={draft} locked={isLocked("bloodType")} upd={upd} />
+                    <EInput field="birthPlace" label={l("Lahir Di","Place of Birth")} draft={draft} locked={isLocked("birthPlace")} upd={upd} />
+                    <EInput field="currentlyLivingWith" label={l("Tinggal Dengan","Living With")} draft={draft} locked={isLocked("currentlyLivingWith")} upd={upd} />
+                    <EInput field="ownHealthCondition" label={l("Kondisi Kesehatan","Health Condition")} draft={draft} locked={isLocked("ownHealthCondition")} upd={upd} long />
+                    <EInput field="whatsappNumber" label={l("WhatsApp","WhatsApp")} draft={draft} locked={isLocked("whatsappNumber")} upd={upd} />
+                  </FieldGrid>
+                ) : hasAny("age","gender","dateOfBirth","nationality","ethnicity","height","weight","bloodType","birthPlace","currentlyLivingWith","ownHealthCondition") ? (
+                  <FieldGrid>
+                    <Field label={l("Usia","Age")} value={age} stranger={stranger} />
+                    <Field label={l("Jenis Kelamin","Gender")} value={s("gender")} stranger={stranger} />
+                    <Field label={l("Tgl Lahir","Date of Birth")} value={raw(data,"dateOfBirth")} stranger={stranger} />
+                    <Field label={l("Kewarganegaraan","Nationality")} value={raw(data,"nationality")} stranger={stranger} />
+                    <Field label={l("Suku","Ethnicity")} value={raw(data,"ethnicity")} stranger={stranger} />
+                    <Field label={l("Tinggi","Height")} value={raw(data,"height") !== "—" ? `${raw(data,"height")} cm` : "—"} stranger={stranger} />
+                    <Field label={l("Berat","Weight")} value={raw(data,"weight") !== "—" ? `${raw(data,"weight")} kg` : "—"} stranger={stranger} />
+                    <Field label={l("Gol. Darah","Blood Type")} value={s("bloodType")} stranger={stranger} />
+                    <Field label={l("Lahir Di","Place of Birth")} value={raw(data,"birthPlace")} stranger={stranger} />
+                    <Field label={l("Tinggal Dengan","Living With")} value={raw(data,"currentlyLivingWith")} stranger={stranger} />
+                    <Field label={l("Kondisi Kesehatan","Health Condition")} value={raw(data,"ownHealthCondition")} stranger={stranger} long />
+                    <Field label={l("WhatsApp","WhatsApp")} value={raw(data,"whatsappNumber")} stranger={false} />
+                  </FieldGrid>
+                ) : (
+                  <EmptyHint />
+                )}
+              </SCard>
             )}
 
             {stranger ? (
@@ -724,18 +891,27 @@ export default function CandidateProfilePage() {
                 </SCard>
               )
             ) : (
-              hasAny("occupation","employmentStatus","incomeRange","propertyStatus","hasDebts")
-                ? <SCard title={l("Karir & Keuangan","Career & Finance")} icon={<Briefcase className="w-full h-full" />} iconColor="#14B8A6" iconBg="#F0FDFA">
-                    <FieldGrid>
-                      <Field label={l("Pekerjaan","Occupation")} value={raw(data,"occupation")} stranger={stranger} long />
-                      <Field label={l("Status Kerja","Employment")} value={s("employmentStatus")} stranger={stranger} />
-                      <Field label={l("Pendapatan","Income")} value={s("incomeRange")} stranger={stranger} />
-                      <Field label={l("Properti","Property")} value={s("propertyStatus")} stranger={stranger} />
-                      <Field label={l("Hutang","Has Debts")} value={s("hasDebts")} stranger={stranger} />
-                    </FieldGrid>
-                  </SCard>
-                : <CollapsedSection title={l("Karir & Keuangan","Career & Finance")} icon={<Briefcase className="w-full h-full" />} iconColor="#14B8A6" iconBg="#F0FDFA" lang={lang}
-                    fields={[l("Pekerjaan","Occupation"), l("Status Kerja","Employment"), l("Pendapatan","Income"), l("Properti","Property"), l("Hutang","Has Debts")]} />
+              <SCard title={l("Karir & Keuangan","Career & Finance")} icon={<Briefcase className="w-full h-full" />} iconColor="#14B8A6" iconBg="#F0FDFA" actions={editBtn("career", FIELDS.career)}>
+                {editSection === "career" ? (
+                  <FieldGrid>
+                    <EInput field="occupation" label={l("Pekerjaan","Occupation")} draft={draft} locked={isLocked("occupation")} upd={upd} long />
+                    <EInput field="employmentStatus" label={l("Status Kerja","Employment")} type="sel" opts={vOpt(["employed","self_employed","business_owner","unemployed","student","retired"])} draft={draft} locked={isLocked("employmentStatus")} upd={upd} />
+                    <EInput field="incomeRange" label={l("Pendapatan","Income")} type="sel" opts={vOpt(["below_5m","5m_10m","10m_20m","20m_50m","above_50m","prefer_not_to_say"])} draft={draft} locked={isLocked("incomeRange")} upd={upd} />
+                    <EInput field="propertyStatus" label={l("Properti","Property")} type="sel" opts={vOpt(["own","rent","family_home","company_provided"])} draft={draft} locked={isLocked("propertyStatus")} upd={upd} />
+                    <EInput field="hasDebts" label={l("Hutang","Has Debts")} type="sel" opts={vOpt(["yes","no"])} draft={draft} locked={isLocked("hasDebts")} upd={upd} />
+                  </FieldGrid>
+                ) : hasAny("occupation","employmentStatus","incomeRange","propertyStatus","hasDebts") ? (
+                  <FieldGrid>
+                    <Field label={l("Pekerjaan","Occupation")} value={raw(data,"occupation")} stranger={stranger} long />
+                    <Field label={l("Status Kerja","Employment")} value={s("employmentStatus")} stranger={stranger} />
+                    <Field label={l("Pendapatan","Income")} value={s("incomeRange")} stranger={stranger} />
+                    <Field label={l("Properti","Property")} value={s("propertyStatus")} stranger={stranger} />
+                    <Field label={l("Hutang","Has Debts")} value={s("hasDebts")} stranger={stranger} />
+                  </FieldGrid>
+                ) : (
+                  <EmptyHint />
+                )}
+              </SCard>
             )}
           </div>
 
@@ -753,17 +929,25 @@ export default function CandidateProfilePage() {
                 </SCard>
               )
             ) : (
-              hasAny("smokingStatus","alcoholUse","exerciseFrequency","socialPreference")
-                ? <SCard title={l("Gaya Hidup","Lifestyle")} icon={<Leaf className="w-full h-full" />} iconColor="#16A34A" iconBg="#F0FDF4">
-                    <FieldGrid>
-                      <Field label={l("Merokok","Smoking")} value={s("smokingStatus")} stranger={stranger} />
-                      <Field label={l("Alkohol","Alcohol")} value={s("alcoholUse")} stranger={stranger} />
-                      <Field label={l("Olahraga","Exercise")} value={s("exerciseFrequency")} stranger={stranger} />
-                      <Field label={l("Kepribadian Sosial","Social Style")} value={s("socialPreference")} stranger={stranger} />
-                    </FieldGrid>
-                  </SCard>
-                : <CollapsedSection title={l("Gaya Hidup","Lifestyle")} icon={<Leaf className="w-full h-full" />} iconColor="#16A34A" iconBg="#F0FDF4" lang={lang}
-                    fields={[l("Merokok","Smoking"), l("Alkohol","Alcohol"), l("Olahraga","Exercise"), l("Kepribadian Sosial","Social Style")]} />
+              <SCard title={l("Gaya Hidup","Lifestyle")} icon={<Leaf className="w-full h-full" />} iconColor="#16A34A" iconBg="#F0FDF4" actions={editBtn("lifestyle", FIELDS.lifestyle)}>
+                {editSection === "lifestyle" ? (
+                  <FieldGrid>
+                    <EInput field="smokingStatus" label={l("Merokok","Smoking")} type="sel" opts={vOpt(["never","occasionally","regularly","quit"])} draft={draft} locked={isLocked("smokingStatus")} upd={upd} />
+                    <EInput field="alcoholUse" label={l("Alkohol","Alcohol")} type="sel" opts={vOpt(["never","occasionally","regularly"])} draft={draft} locked={isLocked("alcoholUse")} upd={upd} />
+                    <EInput field="exerciseFrequency" label={l("Olahraga","Exercise")} type="sel" opts={vOpt(["rarely","sometimes","weekly","daily"])} draft={draft} locked={isLocked("exerciseFrequency")} upd={upd} />
+                    <EInput field="socialPreference" label={l("Kepribadian Sosial","Social Style")} type="sel" opts={vOpt(["introvert","extrovert","ambivert"])} draft={draft} locked={isLocked("socialPreference")} upd={upd} />
+                  </FieldGrid>
+                ) : hasAny("smokingStatus","alcoholUse","exerciseFrequency","socialPreference") ? (
+                  <FieldGrid>
+                    <Field label={l("Merokok","Smoking")} value={s("smokingStatus")} stranger={stranger} />
+                    <Field label={l("Alkohol","Alcohol")} value={s("alcoholUse")} stranger={stranger} />
+                    <Field label={l("Olahraga","Exercise")} value={s("exerciseFrequency")} stranger={stranger} />
+                    <Field label={l("Kepribadian Sosial","Social Style")} value={s("socialPreference")} stranger={stranger} />
+                  </FieldGrid>
+                ) : (
+                  <EmptyHint />
+                )}
+              </SCard>
             )}
 
             {stranger ? (
@@ -778,27 +962,35 @@ export default function CandidateProfilePage() {
                 </SCard>
               )
             ) : (
-              hasAny("quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing")
-                ? <SCard title={l("Nilai & Keyakinan","Values & Beliefs")} icon={<Star className="w-full h-full" />} iconColor="#F59E0B" iconBg="#FFFBEB">
-                    <FieldGrid>
-                      <Field label={l("Baca Al-Qur'an","Quran Reading")} value={s("quranReading")} stranger={stranger} />
-                      <Field label={l("Ilmu Islam","Islamic Knowledge")} value={s("islamicKnowledgeLevel")} stranger={stranger} />
-                      <Field label={l("Gaya Hidup Halal","Halal Lifestyle")} value={s("halalLifestyleStrictness")} stranger={stranger} />
-                      <Field label={l("Pergaulan Campur","Mixed Socializing")} value={s("viewsOnMixedSocializing")} stranger={stranger} />
-                    </FieldGrid>
-                  </SCard>
-                : <CollapsedSection title={l("Nilai & Keyakinan","Values & Beliefs")} icon={<Star className="w-full h-full" />} iconColor="#F59E0B" iconBg="#FFFBEB" lang={lang}
-                    fields={[l("Baca Al-Qur'an","Quran Reading"), l("Ilmu Islam","Islamic Knowledge"), l("Gaya Hidup Halal","Halal Lifestyle"), l("Pergaulan Campur","Mixed Socializing")]} />
+              <SCard title={l("Nilai & Keyakinan","Values & Beliefs")} icon={<Star className="w-full h-full" />} iconColor="#F59E0B" iconBg="#FFFBEB" actions={editBtn("values", FIELDS.values)}>
+                {editSection === "values" ? (
+                  <FieldGrid>
+                    <EInput field="quranReading" label={l("Baca Al-Qur'an","Quran Reading")} type="sel" opts={vOpt(["daily","weekly","sometimes","rarely","never"])} draft={draft} locked={isLocked("quranReading")} upd={upd} />
+                    <EInput field="islamicKnowledgeLevel" label={l("Ilmu Islam","Islamic Knowledge")} type="sel" opts={vOpt(["none","basic","intermediate","advanced"])} draft={draft} locked={isLocked("islamicKnowledgeLevel")} upd={upd} />
+                    <EInput field="halalLifestyleStrictness" label={l("Gaya Hidup Halal","Halal Lifestyle")} type="sel" opts={vOpt(["strict","moderate","relaxed"])} draft={draft} locked={isLocked("halalLifestyleStrictness")} upd={upd} />
+                    <EInput field="viewsOnMixedSocializing" label={l("Pergaulan Campur","Mixed Socializing")} type="sel" opts={vOpt(["avoid","limited","comfortable"])} draft={draft} locked={isLocked("viewsOnMixedSocializing")} upd={upd} />
+                  </FieldGrid>
+                ) : hasAny("quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing") ? (
+                  <FieldGrid>
+                    <Field label={l("Baca Al-Qur'an","Quran Reading")} value={s("quranReading")} stranger={stranger} />
+                    <Field label={l("Ilmu Islam","Islamic Knowledge")} value={s("islamicKnowledgeLevel")} stranger={stranger} />
+                    <Field label={l("Gaya Hidup Halal","Halal Lifestyle")} value={s("halalLifestyleStrictness")} stranger={stranger} />
+                    <Field label={l("Pergaulan Campur","Mixed Socializing")} value={s("viewsOnMixedSocializing")} stranger={stranger} />
+                  </FieldGrid>
+                ) : (
+                  <EmptyHint />
+                )}
+              </SCard>
             )}
           </div>
 
           {/* Profil Agama — conditional on religion */}
-          {hasAny("religion","religiousPracticeLevel","prayerHabit","hijab","beard","waliAvailability","islamicKnowledgeLevel","churchAttendance","baptized","quranReading","halalLifestyleStrictness","viewsOnMixedSocializing","islamicOrganization","bibleReading","religionNotes") ? (
-            <SCard title={l("Profil Agama","Religious Profile")} icon={<BookOpen className="w-full h-full" />} iconColor="#7C3AED" iconBg="#F5F3FF">
+          {(() => {
+            const relKeys = ["religion","religiousPracticeLevel","prayerHabit","hijab","beard","waliAvailability","islamicKnowledgeLevel","churchAttendance","baptized","quranReading","halalLifestyleStrictness","viewsOnMixedSocializing","islamicOrganization","bibleReading","religionNotes"];
+            if (stranger && !hasAny(...relKeys)) return null;
+            const displayContent = (
               <FieldGrid>
                 <Field label={l("Agama","Religion")} value={raw(data,"religion")} stranger={stranger} />
-
-                {/* ── Islam ── */}
                 {(isIslam || !religionKnown) && <>
                   <Field label={l("Tingkat Praktik","Practice Level")}    value={s("religiousPracticeLevel")}  stranger={stranger} />
                   <Field label={l("Sholat","Prayer Habit")}               value={s("prayerHabit")}             stranger={stranger} />
@@ -806,167 +998,210 @@ export default function CandidateProfilePage() {
                   <Field label={l("Ilmu Islam","Islamic Knowledge")}       value={s("islamicKnowledgeLevel")}   stranger={stranger} />
                   <Field label={l("Gaya Hidup Halal","Halal Lifestyle")}  value={s("halalLifestyleStrictness")} stranger={stranger} />
                   <Field label={l("Pergaulan Campur","Mixed Socializing")} value={s("viewsOnMixedSocializing")} stranger={stranger} />
-                  {gender !== "male"  && <Field label={l("Hijab","Hijab")}      value={s("hijab")} stranger={stranger} />}
-                  {gender === "male"  && <Field label={l("Jenggot","Beard")}    value={s("beard")} stranger={stranger} />}
+                  {gender !== "male" && <Field label={l("Hijab","Hijab")} value={s("hijab")} stranger={stranger} />}
+                  {gender === "male" && <Field label={l("Jenggot","Beard")} value={s("beard")} stranger={stranger} />}
                   <Field label={l("Wali Tersedia","Wali Available")}       value={s("waliAvailability")}        stranger={stranger} />
                   <Field label={l("Organisasi Islam","Islamic Org.")}      value={s("islamicOrganization")}     stranger={stranger} />
                 </>}
-
-                {/* ── Kristen / Katolik ── */}
                 {isChristian && <>
                   <Field label={l("Tingkat Praktik","Practice Level")}    value={s("religiousPracticeLevel")}  stranger={stranger} />
                   <Field label={l("Ibadah Mingguan","Church Attendance")} value={s("churchAttendance")}        stranger={stranger} />
                   <Field label={l("Sudah Dibaptis","Baptized")}           value={s("baptized")}                stranger={stranger} />
                   <Field label={l("Baca Alkitab","Bible Reading")}        value={s("bibleReading")}            stranger={stranger} />
                 </>}
-
-                {/* ── Hindu / Buddha ── */}
                 {isHinduBuddhist && <>
                   <Field label={l("Tingkat Praktik","Practice Level")}    value={s("religiousPracticeLevel")}  stranger={stranger} />
                   <Field label={l("Kebiasaan Ibadah","Worship Habit")}    value={s("prayerHabit")}             stranger={stranger} />
                   <Field label={l("Catatan","Notes")}                     value={raw(data,"religionNotes")}    stranger={stranger} long />
                 </>}
-
-                {/* ── Atheis / Liberal / Agnostik ── */}
                 {isAtheistLiberal && (
                   <Field label={l("Catatan","Notes")} value={raw(data,"religionNotes")} stranger={stranger} long />
                 )}
-
-                {/* ── Other known religion ── */}
                 {religionKnown && !isIslam && !isChristian && !isHinduBuddhist && !isAtheistLiberal && <>
                   <Field label={l("Tingkat Praktik","Practice Level")}    value={s("religiousPracticeLevel")}  stranger={stranger} />
                   <Field label={l("Kebiasaan Ibadah","Worship Habit")}    value={s("prayerHabit")}             stranger={stranger} />
                   <Field label={l("Catatan","Notes")}                     value={raw(data,"religionNotes")}    stranger={stranger} long />
                 </>}
               </FieldGrid>
-            </SCard>
-          ) : (
-            !stranger && <CollapsedSection
-              title={l("Profil Agama","Religious Profile")}
-              icon={<BookOpen className="w-full h-full" />} iconColor="#7C3AED" iconBg="#F5F3FF"
-              lang={lang}
-              fields={[
-                l("Agama","Religion"),
-                l("Tingkat Praktik","Practice Level"),
-                l("Kebiasaan Ibadah / Sholat","Prayer / Worship Habit"),
-                l("Bacaan Kitab Suci","Scripture Reading"),
-                l("Catatan Agama","Religion Notes"),
-              ]}
-            />
-          )}
+            );
+            const draftRel = (draft.religion ?? "").toLowerCase();
+            const dEditIsIslam = draftRel === "islam" || draftRel === "";
+            const dEditIsChristian = ["kristen","christian","catholic","katholik","protestan","katolik"].some(r => draftRel.includes(r));
+            const dEditIsHB = ["hindu","buddh","budha"].some(r => draftRel.includes(r));
+            const dEditIsAtheist = ["atheis","agnostik","agnostic","liberal","tidak beragama"].some(r => draftRel.includes(r));
+            const editContent = (
+              <FieldGrid>
+                <EInput field="religion" label={l("Agama","Religion")} draft={draft} locked={isLocked("religion")} upd={upd} />
+                {(dEditIsIslam) && <>
+                  <EInput field="religiousPracticeLevel" label={l("Tingkat Praktik","Practice Level")} type="sel" opts={vOpt(["very_practicing","practicing","not_practicing"])} draft={draft} locked={isLocked("religiousPracticeLevel")} upd={upd} />
+                  <EInput field="prayerHabit" label={l("Sholat","Prayer Habit")} type="sel" opts={vOpt(["always","mostly","sometimes","rarely","never"])} draft={draft} locked={isLocked("prayerHabit")} upd={upd} />
+                  <EInput field="quranReading" label={l("Baca Al-Qur'an","Quran Reading")} type="sel" opts={vOpt(["daily","weekly","sometimes","rarely","never"])} draft={draft} locked={isLocked("quranReading")} upd={upd} />
+                  <EInput field="islamicKnowledgeLevel" label={l("Ilmu Islam","Islamic Knowledge")} type="sel" opts={vOpt(["none","basic","intermediate","advanced"])} draft={draft} locked={isLocked("islamicKnowledgeLevel")} upd={upd} />
+                  <EInput field="halalLifestyleStrictness" label={l("Gaya Hidup Halal","Halal Lifestyle")} type="sel" opts={vOpt(["strict","moderate","relaxed"])} draft={draft} locked={isLocked("halalLifestyleStrictness")} upd={upd} />
+                  <EInput field="viewsOnMixedSocializing" label={l("Pergaulan Campur","Mixed Socializing")} type="sel" opts={vOpt(["avoid","limited","comfortable"])} draft={draft} locked={isLocked("viewsOnMixedSocializing")} upd={upd} />
+                  {gender !== "male" && <EInput field="hijab" label={l("Hijab","Hijab")} type="sel" opts={vOpt(["yes_full","yes_sometimes","no","converting"])} draft={draft} locked={isLocked("hijab")} upd={upd} />}
+                  {gender === "male" && <EInput field="beard" label={l("Jenggot","Beard")} type="sel" opts={vOpt(["yes","no"])} draft={draft} locked={isLocked("beard")} upd={upd} />}
+                  <EInput field="waliAvailability" label={l("Wali Tersedia","Wali Available")} type="sel" opts={vOpt(["yes","no"])} draft={draft} locked={isLocked("waliAvailability")} upd={upd} />
+                  <EInput field="islamicOrganization" label={l("Organisasi Islam","Islamic Org.")} type="sel" opts={vOpt(["nu","muhammadiyah","salafi","netral"])} draft={draft} locked={isLocked("islamicOrganization")} upd={upd} />
+                </>}
+                {dEditIsChristian && <>
+                  <EInput field="religiousPracticeLevel" label={l("Tingkat Praktik","Practice Level")} type="sel" opts={vOpt(["very_practicing","practicing","not_practicing"])} draft={draft} locked={isLocked("religiousPracticeLevel")} upd={upd} />
+                  <EInput field="churchAttendance" label={l("Ibadah Mingguan","Church Attendance")} type="sel" opts={vOpt(["every_sunday","most_sundays","sometimes","rarely","never"])} draft={draft} locked={isLocked("churchAttendance")} upd={upd} />
+                  <EInput field="baptized" label={l("Sudah Dibaptis","Baptized")} type="sel" opts={vOpt(["yes","no"])} draft={draft} locked={isLocked("baptized")} upd={upd} />
+                  <EInput field="bibleReading" label={l("Baca Alkitab","Bible Reading")} type="sel" opts={vOpt(["daily_reading","weekly_reading","sometimes","rarely","never"])} draft={draft} locked={isLocked("bibleReading")} upd={upd} />
+                </>}
+                {(dEditIsHB || dEditIsAtheist || (!dEditIsIslam && !dEditIsChristian && draftRel !== "")) && (
+                  <EInput field="religionNotes" label={l("Catatan","Notes")} type="ta" draft={draft} locked={isLocked("religionNotes")} upd={upd} long />
+                )}
+              </FieldGrid>
+            );
+            return (
+              <SCard title={l("Profil Agama","Religious Profile")} icon={<BookOpen className="w-full h-full" />} iconColor="#7C3AED" iconBg="#F5F3FF" actions={editBtn("religion", FIELDS.religion)}>
+                {editSection === "religion" ? editContent : hasAny(...relKeys) ? displayContent : <EmptyHint />}
+              </SCard>
+            );
+          })()}
 
           {/* Goals + Expectations */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {hasAny("maritalTimeline","weddingPreference","financialManagementStyle","decisionMakingStyle") ? (
-              <SCard title={l("Tujuan Pernikahan","Marriage Goals")} icon={<CalendarDays className="w-full h-full" />} iconColor="#0EA5E9" iconBg="#F0F9FF">
-                <FieldGrid>
-                  <Field label={l("Timeline","Timeline")} value={s("maritalTimeline")} stranger={stranger} />
-                  <Field label={l("Resepsi","Wedding Style")} value={s("weddingPreference")} stranger={stranger} />
-                  <Field label={l("Keuangan","Finance Mgmt")} value={s("financialManagementStyle")} stranger={stranger} />
-                  <Field label={l("Keputusan","Decision Making")} value={s("decisionMakingStyle")} stranger={stranger} />
-                </FieldGrid>
-              </SCard>
+            {stranger ? (
+              hasAny("maritalTimeline","weddingPreference","financialManagementStyle","decisionMakingStyle") && (
+                <SCard title={l("Tujuan Pernikahan","Marriage Goals")} icon={<CalendarDays className="w-full h-full" />} iconColor="#0EA5E9" iconBg="#F0F9FF">
+                  <div className="flex flex-col gap-3">
+                    <FieldGrid>
+                      <Field label={l("Timeline","Timeline")} value={s("maritalTimeline")} stranger={stranger} />
+                      <Field label={l("Resepsi","Wedding Style")} value={s("weddingPreference")} stranger={stranger} />
+                      <Field label={l("Keuangan","Finance Mgmt")} value={s("financialManagementStyle")} stranger={stranger} />
+                      <Field label={l("Keputusan","Decision Making")} value={s("decisionMakingStyle")} stranger={stranger} />
+                    </FieldGrid>
+                    {raw(data,"maritalGoalsUpdatedAt") !== "—" && (() => {
+                      try {
+                        const d = new Date(raw(data,"maritalGoalsUpdatedAt"));
+                        const fmt = new Intl.DateTimeFormat(lang === "id" ? "id-ID" : "en-GB", { day: "numeric", month: "short", year: "numeric" }).format(d);
+                        return <p style={{ fontSize: 11, color: "#94A3B8", marginTop: 2 }}>🕐 {l("Diperbarui","Updated")}: <span style={{ fontWeight: 600 }}>{fmt}</span></p>;
+                      } catch { return null; }
+                    })()}
+                  </div>
+                </SCard>
+              )
             ) : (
-              !stranger && <CollapsedSection
-                title={l("Tujuan Pernikahan","Marriage Goals")}
-                icon={<CalendarDays className="w-full h-full" />} iconColor="#0EA5E9" iconBg="#F0F9FF"
-                lang={lang}
-                fields={[
-                  l("Timeline Menikah","Marriage Timeline"),
-                  l("Gaya Resepsi","Wedding Style"),
-                  l("Manajemen Keuangan","Finance Management"),
-                  l("Pengambilan Keputusan","Decision Making"),
-                ]}
-              />
+              <SCard title={l("Tujuan Pernikahan","Marriage Goals")} icon={<CalendarDays className="w-full h-full" />} iconColor="#0EA5E9" iconBg="#F0F9FF" actions={editBtn("marriage", FIELDS.marriage)}>
+                {editSection === "marriage" ? (
+                  <FieldGrid>
+                    <EInput field="maritalTimeline" label={l("Timeline","Timeline")} type="sel" opts={vOpt(["asap","6_months","1_year","2_years","3_plus_years","not_sure"])} draft={draft} locked={isLocked("maritalTimeline")} upd={upd} />
+                    <EInput field="weddingPreference" label={l("Resepsi","Wedding Style")} type="sel" opts={vOpt(["simple","grand","no_preference"])} draft={draft} locked={isLocked("weddingPreference")} upd={upd} />
+                    <EInput field="financialManagementStyle" label={l("Keuangan","Finance Mgmt")} type="sel" opts={vOpt(["joint","separate","husband_manages","wife_manages","discussed"])} draft={draft} locked={isLocked("financialManagementStyle")} upd={upd} />
+                    <EInput field="decisionMakingStyle" label={l("Keputusan","Decision Making")} type="sel" opts={vOpt(["husband_leads","wife_leads","discussed_case_by_case"])} draft={draft} locked={isLocked("decisionMakingStyle")} upd={upd} />
+                  </FieldGrid>
+                ) : hasAny("maritalTimeline","weddingPreference","financialManagementStyle","decisionMakingStyle") ? (
+                  <div className="flex flex-col gap-3">
+                    <FieldGrid>
+                      <Field label={l("Timeline","Timeline")} value={s("maritalTimeline")} stranger={stranger} />
+                      <Field label={l("Resepsi","Wedding Style")} value={s("weddingPreference")} stranger={stranger} />
+                      <Field label={l("Keuangan","Finance Mgmt")} value={s("financialManagementStyle")} stranger={stranger} />
+                      <Field label={l("Keputusan","Decision Making")} value={s("decisionMakingStyle")} stranger={stranger} />
+                    </FieldGrid>
+                    {raw(data,"maritalGoalsUpdatedAt") !== "—" && (() => {
+                      try {
+                        const d = new Date(raw(data,"maritalGoalsUpdatedAt"));
+                        const fmt = new Intl.DateTimeFormat(lang === "id" ? "id-ID" : "en-GB", { day: "numeric", month: "short", year: "numeric" }).format(d);
+                        return (
+                          <p style={{ fontSize: 11, color: "#94A3B8", marginTop: 2 }}>
+                            🕐 {l("Diperbarui","Updated")}: <span style={{ fontWeight: 600 }}>{fmt}</span>
+                          </p>
+                        );
+                      } catch { return null; }
+                    })()}
+                  </div>
+                ) : (
+                  <EmptyHint />
+                )}
+              </SCard>
             )}
 
-            {hasAny("roleExpectationsHusband","roleExpectationsWife","myRoleExpectation") ? (
-              <SCard title={l("Harapan Peran","Role Expectations")} icon={<Heart className="w-full h-full" />} iconColor="#EC4899" iconBg="#FDF2F8">
-                <div className="flex flex-col gap-5">
-
-                  {/* My own role */}
-                  {(!stranger || raw(data,"myRoleExpectation") !== "—") && (
+            {stranger ? (
+              hasAny("roleExpectationsHusband","roleExpectationsWife","myRoleExpectation") && (
+                <SCard title={l("Harapan Peran","Role Expectations")} icon={<Heart className="w-full h-full" />} iconColor="#EC4899" iconBg="#FDF2F8">
+                  <div className="flex flex-col gap-5">
+                    {raw(data,"myRoleExpectation") !== "—" && (
+                      <div>
+                        <p className="text-[10.5px] font-bold uppercase tracking-wide mb-1" style={{ color: C.muted }}>
+                          {gender === "male" ? l("Peran Saya sebagai Suami","My Role as Husband") : gender === "female" ? l("Peran Saya sebagai Istri","My Role as Wife") : l("Peran Saya","My Role")}
+                        </p>
+                        <p className="text-[13px] leading-relaxed" style={{ color: C.text }}>{raw(data,"myRoleExpectation")}</p>
+                      </div>
+                    )}
+                    {gender === "male" && raw(data,"roleExpectationsWife") !== "—" && (
+                      <div>
+                        <p className="text-[10.5px] font-bold uppercase tracking-wide mb-1" style={{ color: C.muted }}>{l("Harapan terhadap Istri","What I Expect from My Wife")}</p>
+                        <p className="text-[13px] leading-relaxed" style={{ color: C.text }}>{raw(data,"roleExpectationsWife")}</p>
+                      </div>
+                    )}
+                    {gender === "female" && raw(data,"roleExpectationsHusband") !== "—" && (
+                      <div>
+                        <p className="text-[10.5px] font-bold uppercase tracking-wide mb-1" style={{ color: C.muted }}>{l("Harapan terhadap Suami","What I Expect from My Husband")}</p>
+                        <p className="text-[13px] leading-relaxed" style={{ color: C.text }}>{raw(data,"roleExpectationsHusband")}</p>
+                      </div>
+                    )}
+                  </div>
+                </SCard>
+              )
+            ) : (
+              <SCard title={l("Harapan Peran","Role Expectations")} icon={<Heart className="w-full h-full" />} iconColor="#EC4899" iconBg="#FDF2F8" actions={editBtn("roles", FIELDS.roles)}>
+                {editSection === "roles" ? (
+                  <FieldGrid>
+                    <EInput field="myRoleExpectation" label={gender === "male" ? l("Peran Saya sebagai Suami","My Role as Husband") : gender === "female" ? l("Peran Saya sebagai Istri","My Role as Wife") : l("Peran Saya","My Role")} type="ta" draft={draft} locked={isLocked("myRoleExpectation")} upd={upd} long />
+                    {gender === "male" && <EInput field="roleExpectationsWife" label={l("Harapan terhadap Istri","What I Expect from My Wife")} type="ta" draft={draft} locked={isLocked("roleExpectationsWife")} upd={upd} long />}
+                    {gender === "female" && <EInput field="roleExpectationsHusband" label={l("Harapan terhadap Suami","What I Expect from My Husband")} type="ta" draft={draft} locked={isLocked("roleExpectationsHusband")} upd={upd} long />}
+                    {gender !== "male" && gender !== "female" && <>
+                      <EInput field="roleExpectationsHusband" label={l("Harapan terhadap Suami","Expectations of Husband")} type="ta" draft={draft} locked={isLocked("roleExpectationsHusband")} upd={upd} long />
+                      <EInput field="roleExpectationsWife" label={l("Harapan terhadap Istri","Expectations of Wife")} type="ta" draft={draft} locked={isLocked("roleExpectationsWife")} upd={upd} long />
+                    </>}
+                  </FieldGrid>
+                ) : hasAny("roleExpectationsHusband","roleExpectationsWife","myRoleExpectation") ? (
+                  <div className="flex flex-col gap-5">
                     <div>
                       <p className="text-[10.5px] font-bold uppercase tracking-wide mb-1" style={{ color: C.muted }}>
-                        {gender === "male"   ? l("Peran Saya sebagai Suami",   "My Role as Husband")
-                        : gender === "female" ? l("Peran Saya sebagai Istri",   "My Role as Wife")
-                        :                       l("Peran Saya",                  "My Role")}
+                        {gender === "male" ? l("Peran Saya sebagai Suami","My Role as Husband") : gender === "female" ? l("Peran Saya sebagai Istri","My Role as Wife") : l("Peran Saya","My Role")}
                       </p>
-                      {raw(data,"myRoleExpectation") !== "—"
-                        ? <p className="text-[13px] leading-relaxed" style={{ color: C.text }}>{raw(data,"myRoleExpectation")}</p>
-                        : !stranger ? <EmptyHint block /> : null
-                      }
+                      {raw(data,"myRoleExpectation") !== "—" ? <p className="text-[13px] leading-relaxed" style={{ color: C.text }}>{raw(data,"myRoleExpectation")}</p> : <EmptyHint block />}
                     </div>
-                  )}
-
-                  {/* Expectations of partner */}
-                  {gender === "male" && (!stranger || raw(data,"roleExpectationsWife") !== "—") && (
-                    <div>
-                      <p className="text-[10.5px] font-bold uppercase tracking-wide mb-1" style={{ color: C.muted }}>
-                        {l("Harapan terhadap Istri","What I Expect from My Wife")}
-                      </p>
-                      {raw(data,"roleExpectationsWife") !== "—"
-                        ? <p className="text-[13px] leading-relaxed" style={{ color: C.text }}>{raw(data,"roleExpectationsWife")}</p>
-                        : !stranger ? <EmptyHint block /> : null
-                      }
-                    </div>
-                  )}
-
-                  {gender === "female" && (!stranger || raw(data,"roleExpectationsHusband") !== "—") && (
-                    <div>
-                      <p className="text-[10.5px] font-bold uppercase tracking-wide mb-1" style={{ color: C.muted }}>
-                        {l("Harapan terhadap Suami","What I Expect from My Husband")}
-                      </p>
-                      {raw(data,"roleExpectationsHusband") !== "—"
-                        ? <p className="text-[13px] leading-relaxed" style={{ color: C.text }}>{raw(data,"roleExpectationsHusband")}</p>
-                        : !stranger ? <EmptyHint block /> : null
-                      }
-                    </div>
-                  )}
-
-                  {/* If gender unknown, show both */}
-                  {gender !== "male" && gender !== "female" && <>
-                    {(!stranger || raw(data,"roleExpectationsHusband") !== "—") && (
+                    {gender === "male" && (
+                      <div>
+                        <p className="text-[10.5px] font-bold uppercase tracking-wide mb-1" style={{ color: C.muted }}>{l("Harapan terhadap Istri","What I Expect from My Wife")}</p>
+                        {raw(data,"roleExpectationsWife") !== "—" ? <p className="text-[13px] leading-relaxed" style={{ color: C.text }}>{raw(data,"roleExpectationsWife")}</p> : <EmptyHint block />}
+                      </div>
+                    )}
+                    {gender === "female" && (
+                      <div>
+                        <p className="text-[10.5px] font-bold uppercase tracking-wide mb-1" style={{ color: C.muted }}>{l("Harapan terhadap Suami","What I Expect from My Husband")}</p>
+                        {raw(data,"roleExpectationsHusband") !== "—" ? <p className="text-[13px] leading-relaxed" style={{ color: C.text }}>{raw(data,"roleExpectationsHusband")}</p> : <EmptyHint block />}
+                      </div>
+                    )}
+                    {gender !== "male" && gender !== "female" && <>
                       <div>
                         <p className="text-[10.5px] font-bold uppercase tracking-wide mb-1" style={{ color: C.muted }}>{l("Harapan terhadap Suami","Expectations of Husband")}</p>
-                        {raw(data,"roleExpectationsHusband") !== "—"
-                          ? <p className="text-[13px] leading-relaxed" style={{ color: C.text }}>{raw(data,"roleExpectationsHusband")}</p>
-                          : !stranger ? <EmptyHint block /> : null}
+                        {raw(data,"roleExpectationsHusband") !== "—" ? <p className="text-[13px] leading-relaxed" style={{ color: C.text }}>{raw(data,"roleExpectationsHusband")}</p> : <EmptyHint block />}
                       </div>
-                    )}
-                    {(!stranger || raw(data,"roleExpectationsWife") !== "—") && (
                       <div>
                         <p className="text-[10.5px] font-bold uppercase tracking-wide mb-1" style={{ color: C.muted }}>{l("Harapan terhadap Istri","Expectations of Wife")}</p>
-                        {raw(data,"roleExpectationsWife") !== "—"
-                          ? <p className="text-[13px] leading-relaxed" style={{ color: C.text }}>{raw(data,"roleExpectationsWife")}</p>
-                          : !stranger ? <EmptyHint block /> : null}
+                        {raw(data,"roleExpectationsWife") !== "—" ? <p className="text-[13px] leading-relaxed" style={{ color: C.text }}>{raw(data,"roleExpectationsWife")}</p> : <EmptyHint block />}
                       </div>
-                    )}
-                  </>}
-                </div>
+                    </>}
+                  </div>
+                ) : (
+                  <EmptyHint />
+                )}
               </SCard>
-            ) : (
-              !stranger && <CollapsedSection
-                title={l("Harapan Peran","Role Expectations")}
-                icon={<Heart className="w-full h-full" />} iconColor="#EC4899" iconBg="#FDF2F8"
-                lang={lang}
-                fields={[
-                  gender === "male"   ? l("Peran Saya sebagai Suami","My Role as Husband")
-                  : gender === "female" ? l("Peran Saya sebagai Istri","My Role as Wife")
-                  :                       l("Peran Saya","My Role"),
-                  gender === "male"   ? l("Harapan terhadap Istri","What I Expect from My Wife")
-                  : gender === "female" ? l("Harapan terhadap Suami","What I Expect from My Husband")
-                  :                       l("Harapan terhadap Pasangan","Expectations of Partner"),
-                ]}
-              />
             )}
           </div>
 
           {/* Family */}
-          {hasAny("siblingCount","childOrder","childrenCount","waliName","waliRelationship","fatherAlive","motherAlive","hasChildren","maleSiblingCount","femaleSiblingCount","childCustody","childrenLivingWith","childrenNotes","waliContact") ? (
-            <SCard title={l("Keluarga","Family")} icon={<Users className="w-full h-full" />} iconColor="#C4294A" iconBg="#FFF1F2">
+          {(() => {
+            const famKeys = ["siblingCount","childOrder","childrenCount","waliName","waliRelationship","fatherAlive","motherAlive","hasChildren","maleSiblingCount","femaleSiblingCount","childCustody","childrenLivingWith","childrenNotes","waliContact"];
+            const famHas = hasAny(...famKeys);
+            const familyDisplay = (
               <div className="flex flex-col gap-5">
-
                 {/* Parents */}
                 {(!stranger || hasAny("fatherAlive","motherAlive")) && (
                   <div>
@@ -1025,26 +1260,40 @@ export default function CandidateProfilePage() {
                   </div>
                 )}
               </div>
-            </SCard>
-          ) : (
-            !stranger && <CollapsedSection
-              title={l("Keluarga","Family")}
-              icon={<Users className="w-full h-full" />} iconColor="#C4294A" iconBg="#FFF1F2"
-              lang={lang}
-              fields={[
-                l("Status Ayah","Father's Status"),
-                l("Status Ibu","Mother's Status"),
-                l("Jumlah Saudara","No. of Siblings"),
-                l("Anak Ke-","Birth Order"),
-                l("Memiliki Anak","Has Children"),
-                l("Wali / Guardian","Guardian / Wali"),
-              ]}
-            />
-          )}
+            );
+            const familyEdit = (
+              <FieldGrid>
+                <EInput field="fatherAlive" label={l("Ayah","Father")} type="sel" opts={vOpt(["alive","passed_away"])} draft={draft} locked={isLocked("fatherAlive")} upd={upd} />
+                <EInput field="motherAlive" label={l("Ibu","Mother")} type="sel" opts={vOpt(["alive","passed_away"])} draft={draft} locked={isLocked("motherAlive")} upd={upd} />
+                <EInput field="siblingCount" label={l("Jumlah Saudara","No. of Siblings")} type="num" draft={draft} locked={isLocked("siblingCount")} upd={upd} />
+                <EInput field="childOrder" label={l("Anak Ke-","Birth Order")} type="num" draft={draft} locked={isLocked("childOrder")} upd={upd} />
+                <EInput field="maleSiblingCount" label={l("Saudara Laki-laki","Male Siblings")} type="num" draft={draft} locked={isLocked("maleSiblingCount")} upd={upd} />
+                <EInput field="femaleSiblingCount" label={l("Saudara Perempuan","Female Siblings")} type="num" draft={draft} locked={isLocked("femaleSiblingCount")} upd={upd} />
+                <EInput field="hasChildren" label={l("Memiliki Anak","Has Children")} type="sel" opts={vOpt(["yes","no","prefer_not_to_discuss"])} draft={draft} locked={isLocked("hasChildren")} upd={upd} />
+                {draft.hasChildren === "yes" && <>
+                  <EInput field="childrenCount" label={l("Jumlah Anak","No. of Children")} type="num" draft={draft} locked={isLocked("childrenCount")} upd={upd} />
+                  <EInput field="childCustody" label={l("Hak Asuh","Custody")} type="sel" opts={vOpt(["custody_self","custody_ex","custody_shared"])} draft={draft} locked={isLocked("childCustody")} upd={upd} />
+                  <EInput field="childrenLivingWith" label={l("Anak Tinggal Dengan","Children Live With")} draft={draft} locked={isLocked("childrenLivingWith")} upd={upd} />
+                  <EInput field="childrenNotes" label={l("Catatan tentang Anak","Notes on Children")} type="ta" draft={draft} locked={isLocked("childrenNotes")} upd={upd} long />
+                </>}
+                <EInput field="waliName" label={l("Nama Wali","Guardian Name")} draft={draft} locked={isLocked("waliName")} upd={upd} />
+                <EInput field="waliRelationship" label={l("Hubungan Wali","Guardian Relationship")} draft={draft} locked={isLocked("waliRelationship")} upd={upd} />
+                <EInput field="waliContact" label={l("Kontak Wali","Guardian Contact")} draft={draft} locked={isLocked("waliContact")} upd={upd} />
+              </FieldGrid>
+            );
+            if (stranger && !famHas) return null;
+            return (
+              <SCard title={l("Keluarga","Family")} icon={<Users className="w-full h-full" />} iconColor="#C4294A" iconBg="#FFF1F2" actions={editBtn("family", FIELDS.family)}>
+                {editSection === "family" ? familyEdit : famHas ? familyDisplay : <EmptyHint />}
+              </SCard>
+            );
+          })()}
 
           {/* Ideal Partner */}
-          {hasAny("preferredMinAge","preferredMaxAge","preferredReligion","prefReligionLevel","preferredEducationLevel","prefPreviousStatus","preferredLocationOfSpouse","prefMinHeight","prefMaxHeight","preferredPersonalityTraits","spouseDealBreakers","openToDifferentEthnicity","prefBodyType","physicalPreferences") ? (
-            <SCard title={l("Kriteria Pasangan Ideal","Ideal Partner Criteria")} icon={<Target className="w-full h-full" />} iconColor="#C4294A" iconBg="#FFF1F2">
+          {(() => {
+            const partKeys = ["preferredMinAge","preferredMaxAge","preferredReligion","prefReligionLevel","preferredEducationLevel","prefPreviousStatus","preferredLocationOfSpouse","prefMinHeight","prefMaxHeight","preferredPersonalityTraits","spouseDealBreakers","openToDifferentEthnicity","prefBodyType","physicalPreferences"];
+            const partHas = hasAny(...partKeys);
+            const partDisplay = (
               <div className="flex flex-col gap-5">
                 <div>
                   <p className="text-[11px] font-bold uppercase tracking-wide mb-3" style={{ color: C.muted }}>{l("Umum","General")}</p>
@@ -1088,23 +1337,32 @@ export default function CandidateProfilePage() {
                   </div>
                 )}
               </div>
-            </SCard>
-          ) : (
-            !stranger && <CollapsedSection
-              title={l("Kriteria Pasangan Ideal","Ideal Partner Criteria")}
-              icon={<Target className="w-full h-full" />} iconColor="#C4294A" iconBg="#FFF1F2"
-              lang={lang}
-              fields={[
-                l("Rentang Usia","Age Range"),
-                l("Agama & Tingkat Religiusitas","Religion & Religiosity"),
-                l("Pendidikan","Education"),
-                l("Lokasi","Location"),
-                l("Tinggi Badan","Height Range"),
-                l("Kepribadian Diharapkan","Desired Personality"),
-                l("Deal Breaker","Deal Breakers"),
-              ]}
-            />
-          )}
+            );
+            const partEdit = (
+              <FieldGrid>
+                <EInput field="preferredMinAge" label={l("Usia Min","Min Age")} type="num" draft={draft} locked={isLocked("preferredMinAge")} upd={upd} />
+                <EInput field="preferredMaxAge" label={l("Usia Max","Max Age")} type="num" draft={draft} locked={isLocked("preferredMaxAge")} upd={upd} />
+                <EInput field="preferredReligion" label={l("Agama","Religion")} draft={draft} locked={isLocked("preferredReligion")} upd={upd} />
+                <EInput field="prefReligionLevel" label={l("Tingkat Agama","Religiosity")} type="sel" opts={vOpt(["very_practicing","practicing","not_practicing","no_pref"])} draft={draft} locked={isLocked("prefReligionLevel")} upd={upd} />
+                <EInput field="preferredEducationLevel" label={l("Pendidikan","Education")} type="sel" opts={vOpt(["sd","smp","sma","d3","s1_d4","s2","s3","no_pref"])} draft={draft} locked={isLocked("preferredEducationLevel")} upd={upd} />
+                <EInput field="prefPreviousStatus" label={l("Status Sebelumnya","Prev Status")} type="sel" opts={vOpt(["single_only","open_divorced","open_all"])} draft={draft} locked={isLocked("prefPreviousStatus")} upd={upd} />
+                <EInput field="preferredLocationOfSpouse" label={l("Lokasi","Location")} type="sel" opts={vOpt(["same_city","diff_city_ok","relocate_ok"])} draft={draft} locked={isLocked("preferredLocationOfSpouse")} upd={upd} />
+                <EInput field="openToDifferentEthnicity" label={l("Suku Berbeda","Diff Ethnicity")} type="sel" opts={vOpt(["yes","no","no_pref"])} draft={draft} locked={isLocked("openToDifferentEthnicity")} upd={upd} />
+                <EInput field="prefMinHeight" label={l("Tinggi Min (cm)","Min Height (cm)")} type="num" draft={draft} locked={isLocked("prefMinHeight")} upd={upd} />
+                <EInput field="prefMaxHeight" label={l("Tinggi Max (cm)","Max Height (cm)")} type="num" draft={draft} locked={isLocked("prefMaxHeight")} upd={upd} />
+                <EInput field="prefBodyType" label={l("Tipe Tubuh","Body Type")} type="sel" opts={vOpt(["slim_build","average_build","athletic_build","no_pref"])} draft={draft} locked={isLocked("prefBodyType")} upd={upd} />
+                <EInput field="physicalPreferences" label={l("Pref Fisik Lain","Other Physical")} type="ta" draft={draft} locked={isLocked("physicalPreferences")} upd={upd} long />
+                <EInput field="preferredPersonalityTraits" label={l("Kepribadian Diharapkan","Desired Personality")} type="ta" draft={draft} locked={isLocked("preferredPersonalityTraits")} upd={upd} long />
+                <EInput field="spouseDealBreakers" label={l("Deal Breaker","Deal Breakers")} type="ta" draft={draft} locked={isLocked("spouseDealBreakers")} upd={upd} long />
+              </FieldGrid>
+            );
+            if (stranger && !partHas) return null;
+            return (
+              <SCard title={l("Kriteria Pasangan Ideal","Ideal Partner Criteria")} icon={<Target className="w-full h-full" />} iconColor="#C4294A" iconBg="#FFF1F2" actions={editBtn("partner", FIELDS.partner)}>
+                {editSection === "partner" ? partEdit : partHas ? partDisplay : <EmptyHint />}
+              </SCard>
+            );
+          })()}
 
           {/* ── Laporan & Hasil (own view only) ── */}
           {!stranger && (() => {

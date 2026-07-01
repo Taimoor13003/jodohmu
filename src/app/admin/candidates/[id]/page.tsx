@@ -286,7 +286,7 @@ const OPTS: Record<string, string[]> = {
   hijab:                       ["yes_full","yes_sometimes","no","converting"],
   beard:                       ["yes","no","sometimes"],
   waliAvailability:            ["yes","no","in_process"],
-  polygamyView:                ["accept","not_accept","conditional"],
+  polygamyView:                ["no","yes"],
   employmentStatus:            ["employed","self_employed","business_owner","unemployed","student","retired"],
   incomeRange:                 ["below_5m","5m_10m","10m_20m","20m_50m","above_50m","prefer_not_to_say"],
   propertyStatus:              ["own","rent","family_home","company_provided"],
@@ -411,7 +411,7 @@ const T: Record<Lang, Record<string, string>> = {
     f_occupation: "Pekerjaan", f_emp_status: "Status Kerja",
     f_income: "Penghasilan", f_property: "Properti", f_debts: "Hutang",
     f_religion: "Agama", f_practice: "Ibadah", f_prayer2: "Shalat",
-    f_hijab: "Hijab", f_beard: "Jenggot", f_polygamy: "Poligami", f_mahar: "Mahar",
+    f_hijab: "Hijab", f_beard: "Jenggot", f_polygamy: "Terbuka Poligami", f_mahar: "Mahar",
     f_pref_education: "Pendidikan", f_pref_location: "Lokasi", f_pref_age_range: "Rentang Usia",
     f_personality_sought: "Kepribadian yang Dicari", f_deal_breaker: "Deal-Breaker Mutlak",
     c_sales: "Sales Lead", c_matchmaker: "Matchmaker", c_imam: "Imam / Ustaz",
@@ -491,7 +491,7 @@ const T: Record<Lang, Record<string, string>> = {
     f_occupation: "Occupation", f_emp_status: "Employment status",
     f_income: "Income", f_property: "Property", f_debts: "Debts",
     f_religion: "Religion", f_practice: "Practice level", f_prayer2: "Prayer",
-    f_hijab: "Hijab", f_beard: "Beard", f_polygamy: "Polygamy view", f_mahar: "Dowry (Mahar)",
+    f_hijab: "Hijab", f_beard: "Beard", f_polygamy: "Open to Polygamy", f_mahar: "Dowry (Mahar)",
     f_pref_education: "Education", f_pref_location: "Location", f_pref_age_range: "Age range",
     f_personality_sought: "Personality sought", f_deal_breaker: "Absolute Deal-Breakers",
     c_sales: "Sales Lead", c_matchmaker: "Matchmaker", c_imam: "Imam / Ustaz",
@@ -966,7 +966,7 @@ export default function AdminCandidateProfile({ params }: { params: { id: string
       education: "Pendidikan", occupation: "Pekerjaan", employment: "Status Kerja",
       religious: "Profil Agama", religion: "Agama", practice: "Ibadah",
       prayer: "Shalat", quran: "Al-Qur'an", hijab: "Hijab", beard: "Jenggot",
-      polygamy: "Poligami", lifestyle: "Gaya Hidup", smoking: "Rokok",
+      polygamy: "Terbuka Poligami", lifestyle: "Gaya Hidup", smoking: "Rokok",
       alcohol: "Alkohol", exercise: "Olahraga", diet: "Diet",
       marriage: "Tujuan Pernikahan", timeline: "Target Waktu",
       wedding: "Pesta Nikah", finance: "Keuangan", decision: "Keputusan",
@@ -983,7 +983,7 @@ export default function AdminCandidateProfile({ params }: { params: { id: string
       education: "Education", occupation: "Occupation", employment: "Employment",
       religious: "Religious Profile", religion: "Religion", practice: "Practice Level",
       prayer: "Prayer Habit", quran: "Quran", hijab: "Hijab", beard: "Beard",
-      polygamy: "Polygamy View", lifestyle: "Lifestyle", smoking: "Smoking",
+      polygamy: "Open to Polygamy", lifestyle: "Lifestyle", smoking: "Smoking",
       alcohol: "Alcohol", exercise: "Exercise", diet: "Diet",
       marriage: "Marriage Goals", timeline: "Timeline",
       wedding: "Wedding Pref.", finance: "Finance", decision: "Decisions",
@@ -1786,8 +1786,7 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
                         <FR label={t.f_prayer2}  value={g("profil-agama","prayerHabit")}            fieldKey="prayerHabit"            select={OPTS.prayerHabit}            {...ep("profil-agama")} />
                         {gender !== "male" && <FR label={t.f_hijab}   value={g("profil-agama","hijab")}  fieldKey="hijab"  select={OPTS.hijab}  {...ep("profil-agama")} />}
                         {gender === "male" && <FR label={t.f_beard}   value={g("profil-agama","beard")}  fieldKey="beard"  select={OPTS.beard}  {...ep("profil-agama")} />}
-                        <FR label={t.f_polygamy} value={g("profil-agama","polygamyView")} fieldKey="polygamyView" select={OPTS.polygamyView} {...ep("profil-agama")} />
-                        <FR label={t.f_mahar}    value={raw(data,"maharExpectation") !== "—" ? raw(data,"maharExpectation") : raw(data,"maharBudget")} fieldKey="maharExpectation" {...ep("profil-agama")} />
+<FR label={t.f_mahar}    value={raw(data,"maharExpectation") !== "—" ? raw(data,"maharExpectation") : raw(data,"maharBudget")} fieldKey="maharExpectation" {...ep("profil-agama")} />
                       </div>
                     </Card>
                 }

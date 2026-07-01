@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { auth } from "@/lib/firebase";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { UserPlus, ArrowLeft, ExternalLink } from "lucide-react";
+import { UserPlus, ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 interface UserRow {
@@ -23,6 +23,7 @@ export default function CandidatesPage() {
   const { role, loading: authLoading } = useAuth();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
@@ -73,23 +74,25 @@ export default function CandidatesPage() {
 
   return (
     <div className="container mx-auto max-w-5xl p-6 space-y-6">
-      <div className="flex items-center gap-3">
-        <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-[#9B2242] flex items-center gap-1">
-          <ArrowLeft className="h-4 w-4" /> Dashboard
-        </Link>
-      </div>
-
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-[#9B2242]">Candidates</h1>
           <p className="text-muted-foreground">All registered candidates in the matchmaking program.</p>
         </div>
 
-        <Button asChild className="rounded-full bg-gradient-to-r from-[#9B2242] to-[#0b3a86] text-white gap-2">
-          <Link href="/admin/users">
-            <UserPlus className="h-4 w-4" /> Add candidate
-          </Link>
-        </Button>
+        <button
+          onClick={() => router.push("/admin/users?create=candidate")}
+          style={{
+            display: "flex", alignItems: "center", gap: 8,
+            padding: "10px 20px", borderRadius: 999, border: "none",
+            background: "linear-gradient(135deg, #9B2242, #0b3a86)",
+            color: "#fff", fontSize: 13.5, fontWeight: 700,
+            cursor: "pointer", whiteSpace: "nowrap",
+          }}
+        >
+          <UserPlus style={{ width: 16, height: 16 }} />
+          Add candidate
+        </button>
       </div>
 
       <Card className="border-0 shadow-xl">
