@@ -11,8 +11,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
 import {
-  LayoutDashboard, User, Globe, LogOut,
-  ChevronLeft, Menu,
+  LayoutDashboard, User, Globe, LogOut, Menu,
   Brain, ShieldCheck, ClipboardList, History, Stars, Lock,
 } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
@@ -79,9 +78,10 @@ function isLocked(data: D, key: string): boolean {
   return false;
 }
 
-function Sidebar({ open, onClose, onMouseEnter, onMouseLeave, lang, data }: {
+function Sidebar({ open, onClose, onMouseEnter, onMouseLeave, onLogout, lang, data }: {
   open: boolean; onClose: () => void;
   onMouseEnter: () => void; onMouseLeave: () => void;
+  onLogout: () => void;
   lang: Lang; data: D;
 }) {
   const pathname = usePathname();
@@ -211,20 +211,20 @@ function Sidebar({ open, onClose, onMouseEnter, onMouseLeave, lang, data }: {
         </nav>
       </div>
 
-      {/* close button */}
-      <button onClick={onClose}
+      {/* Logout */}
+      <button onClick={onLogout}
         style={{
           height: 44, flexShrink: 0, borderTop: "1px solid #E2E8F0",
           background: "transparent", cursor: "pointer",
           display: "flex", alignItems: "center",
-          gap: 6, padding: "0 18px",
-          color: "#94A3B8", fontSize: 12, fontWeight: 500,
-          transition: "background 0.15s", border: "none",
+          gap: 8, padding: "0 18px",
+          color: "#94A3B8", fontSize: 12.5, fontWeight: 500,
+          transition: "background 0.15s, color 0.15s", border: "none", width: "100%",
         }}
-        onMouseEnter={e => (e.currentTarget.style.background = "#F8FAFC")}
-        onMouseLeave={e => (e.currentTarget.style.background = "transparent")}>
-        <ChevronLeft style={{ width: 15, height: 15 }} />
-        <span>{lang === "id" ? "Tutup" : "Close"}</span>
+        onMouseEnter={e => { e.currentTarget.style.background = "#FFF1F2"; e.currentTarget.style.color = "#C4294A"; }}
+        onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#94A3B8"; }}>
+        <LogOut style={{ width: 15, height: 15, flexShrink: 0 }} />
+        <span>Logout</span>
       </button>
     </div>
   );
@@ -387,7 +387,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         }}
       />
 
-      <Sidebar open={open} onClose={close} onMouseEnter={handleSidebarEnter} onMouseLeave={handleSidebarLeave} lang={lang} data={candidateData} />
+      <Sidebar
+        open={open}
+        onClose={close}
+        onMouseEnter={handleSidebarEnter}
+        onMouseLeave={handleSidebarLeave}
+        onLogout={async () => { await signOut(auth); router.push("/login"); }}
+        lang={lang}
+        data={candidateData}
+      />
 
       {/* Main content — always full width */}
       <div style={{ paddingTop: TOPBAR_H, minHeight: "100vh" }}>

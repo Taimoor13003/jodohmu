@@ -10,7 +10,6 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   Users, Briefcase, UserCheck, MessageCircle,
-  ChevronLeft,
   Globe, LogOut, Menu,
 } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
@@ -27,9 +26,10 @@ const NAV = [
 ];
 
 /* ── sidebar ── */
-function Sidebar({ open, onClose, onSidebarEnter, onSidebarLeave }: {
+function Sidebar({ open, onClose, onSidebarEnter, onSidebarLeave, onLogout }: {
   open: boolean; onClose: () => void;
   onSidebarEnter: () => void; onSidebarLeave: () => void;
+  onLogout: () => void;
 }) {
   const pathname = usePathname();
 
@@ -101,26 +101,25 @@ function Sidebar({ open, onClose, onSidebarEnter, onSidebarLeave }: {
         })}
       </nav>
 
-      {/* Close button */}
+      {/* Logout */}
       <button
-        onClick={onClose}
+        onClick={onLogout}
         style={{
           height: 44, flexShrink: 0,
           borderTop: "1px solid #E2E8F0",
           background: "transparent",
           cursor: "pointer",
           display: "flex", alignItems: "center",
-          gap: 6,
-          padding: "0 16px",
-          color: "#94A3B8",
-          fontSize: 12, fontWeight: 500,
-          transition: "background 0.15s",
+          gap: 8, padding: "0 16px",
+          color: "#94A3B8", fontSize: 12.5, fontWeight: 500,
+          transition: "background 0.15s, color 0.15s",
+          width: "100%",
         }}
-        onMouseEnter={e => (e.currentTarget.style.background = "#F8FAFC")}
-        onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+        onMouseEnter={e => { e.currentTarget.style.background = "#FFF1F2"; e.currentTarget.style.color = "#C4294A"; }}
+        onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#94A3B8"; }}
       >
-        <ChevronLeft style={{ width: 16, height: 16 }} />
-        <span>Tutup sidebar</span>
+        <LogOut style={{ width: 15, height: 15, flexShrink: 0 }} />
+        <span>Logout</span>
       </button>
     </div>
   );
@@ -246,6 +245,7 @@ function Topbar({ onToggle, onMenuHover, onMenuLeave }: {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
   const openTimerRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -299,7 +299,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         }}
       />
 
-      <Sidebar open={open} onClose={close} onSidebarEnter={handleSidebarEnter} onSidebarLeave={handleSidebarLeave} />
+      <Sidebar
+        open={open}
+        onClose={close}
+        onSidebarEnter={handleSidebarEnter}
+        onSidebarLeave={handleSidebarLeave}
+        onLogout={async () => { await signOut(auth); router.push("/login"); }}
+      />
 
       {/* Main content — always full width, never pushed by sidebar */}
       <div style={{
