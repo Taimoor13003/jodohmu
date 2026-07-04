@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ArticleDetail } from "@/components/blog/article-is-jodohmu";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
-const ogImage = `${siteUrl}/og/family-involvement.svg`;
+const ogImage = `${siteUrl}/og/family-involvement.png`;
 const datePublished = "2024-11-25";
 const dateModified = "2025-01-20";
 

@@ -113,17 +113,17 @@
         "curated": {
           "badge": "Handpicked",
           "title": "Thoughtful matches shaped around your values",
-          "subtitle": "We pair your story with hearts that share the same faith, family vision, and pace." 
+          "subtitle": "We pair your story with hearts that share the same faith, family vision, and pace."
         },
         "trusted": {
           "badge": "Trusted Hearts",
           "title": "Real people, verified intentions",
-          "subtitle": "Every profile is screened and welcomed personally by our concierge team." 
+          "subtitle": "Every profile is screened and welcomed personally by our concierge team."
         },
         "celebrated": {
           "badge": "Celebrated Love",
           "title": "Stories that blossom into forever",
-          "subtitle": "From first salaam to engagement, we stand beside couples at every milestone." 
+          "subtitle": "From first salaam to engagement, we stand beside couples at every milestone."
         }
       },
       "cards": {
@@ -280,8 +280,8 @@
     "badge": "Selamat datang kembali",
     "title": "Sign in to continue your journey",
     "subtitle": "Unlock premium matchmaking, curated profiles, and a guided experience crafted just for serious commitment.",
-    "emailLabel": "Email address",
-    "emailPlaceholder": "Enter email",
+    "emailLabel": "Email or username",
+    "emailPlaceholder": "Enter email or username",
     "passwordLabel": "Password",
     "passwordPlaceholder": "Enter password",
     "error": "Invalid email or password. Please try again.",
@@ -595,7 +595,8 @@
     "quickLinks": {
       "title": "Quick Links",
       "privacy": "Privacy",
-      "terms": "Terms"
+      "terms": "Terms",
+      "contact": "Contact"
     },
     "connect": {
       "title": "Connect With Us",
@@ -609,9 +610,11 @@
       "rights": "All rights reserved",
       "crafted": "Crafted with",
       "andFaith": "and faith"
+    },
+    "social": {
+      "title": "Follow Us"
     }
-  }
-  ,
+  },
   "blogPage": {
     "hero": {
       "title": "Jodohmu Blog: start with one clear answer",
@@ -664,7 +667,9 @@
   "blogArticle": {
     "related": {
       "faq": "See frequently asked questions",
-      "register": "Register now"
+      "register": "Register now",
+      "title": "Related & next steps",
+      "subtitle": "Explore more guidance and get in touch for facilitated, marriage-focused matchmaking."
     },
     "stepByStepProcess": {
       "metaTitle": "Offline ta'aruf step-by-step | How Jodohmu guides you to marriage",
@@ -1292,7 +1297,12 @@
       "ctaBody": "Every person we introduce you to has been personally verified by our team. If that's the standard you're looking for, we'd love to talk.",
       "ctaPrimary": "Message us on WhatsApp",
       "ctaSecondary": "Back to blog"
-    }
+    },
+    "breadcrumb": {
+      "home": "Home",
+      "blog": "Blog"
+    },
+    "guidedBadge": "Guided & family-ready"
   },
   "pricingPage": {
     "discount": {
@@ -1317,9 +1327,18 @@
       "subtitleLine2": "We help you build a future filled with",
       "subtitleWords": "love, mercy, and barakah.",
       "trust": {
-        "0": { "title": "100% Halal", "desc": "Faith-focused matchmaking" },
-        "1": { "title": "Verified Profiles", "desc": "Authentic members, serious intentions" },
-        "2": { "title": "Privacy First", "desc": "Your privacy is our priority" }
+        "0": {
+          "title": "100% Halal",
+          "desc": "Faith-focused matchmaking"
+        },
+        "1": {
+          "title": "Verified Profiles",
+          "desc": "Authentic members, serious intentions"
+        },
+        "2": {
+          "title": "Privacy First",
+          "desc": "Your privacy is our priority"
+        }
       },
       "socialCount": "1+",
       "socialTitle": "Registered Members",
@@ -1591,6 +1610,29 @@
       "title": "Still have questions?",
       "subtitle": "Talk directly with our matchmakers for a personalized plan.",
       "button": "Register now"
+    },
+    "heroBadges": {
+      "offline": "Offline & halal",
+      "facilitated": "Facilitated meetings",
+      "family": "Family-ready"
+    },
+    "categories": {
+      "halalSafety": "Halal & Safety",
+      "process": "Process",
+      "support": "Support"
+    },
+    "whyBox": {
+      "title": "Why Jodohmu is best:",
+      "points": {
+        "0": "Offline, halal-first meetings with vetted candidates.",
+        "1": "Facilitators/chaperones (imam/pastor) on request.",
+        "2": "Family-friendly venues and structured agendas.",
+        "3": "Transparent packages—no surprise fees."
+      }
+    },
+    "callBox": {
+      "title": "Need a call?",
+      "body": "Share your city, timeline, and whether you want a facilitator; we'll tailor the plan."
     }
   },
   "careersPage": {
@@ -1600,9 +1642,18 @@
       "subtitle": "We are growing a team of people who genuinely believe in helping Muslims find their life partner with dignity. Every role here has real impact on real people's lives."
     },
     "values": {
-      "0": { "title": "Mission-driven work", "text": "Every client who finds their spouse through Jodohmu is a life changed. Your work here has meaning beyond a paycheck." },
-      "1": { "title": "Performance rewarded", "text": "We believe in paying people for results. Our commission structure is transparent, fair, and designed to grow with you." },
-      "2": { "title": "Room to grow", "text": "We are early. The people who join now will shape how this company grows — and be rewarded for it." }
+      "0": {
+        "title": "Mission-driven work",
+        "text": "Every client who finds their spouse through Jodohmu is a life changed. Your work here has meaning beyond a paycheck."
+      },
+      "1": {
+        "title": "Performance rewarded",
+        "text": "We believe in paying people for results. Our commission structure is transparent, fair, and designed to grow with you."
+      },
+      "2": {
+        "title": "Room to grow",
+        "text": "We are early. The people who join now will shape how this company grows — and be rewarded for it."
+      }
     },
     "jobs": {
       "title": "Open Positions",
@@ -1615,7 +1666,10 @@
         "0": {
           "title": "Appointment Setter",
           "subtitle": "Pencari Klien & Penjadwal Konsultasi",
-          "tags": { "0": "Remote", "1": "Commission Only" },
+          "tags": {
+            "0": "Remote",
+            "1": "Commission Only"
+          },
           "desc": "You reach out to potential clients — through your network, social media, or community — and invite them to a free consultation with our team. Once they show up and qualify as a genuine lead, you earn. Simple, remote, and entirely flexible.",
           "do": {
             "0": "Reach out to potential clients via WhatsApp, Instagram, or community groups",
@@ -1642,7 +1696,10 @@
         "1": {
           "title": "Sales Consultant",
           "subtitle": "Konsultan Penjualan & Penutup Klien",
-          "tags": { "0": "Remote / Hybrid", "1": "Commission Only" },
+          "tags": {
+            "0": "Remote / Hybrid",
+            "1": "Commission Only"
+          },
           "desc": "You meet with potential clients — in person or via call — explain our service, understand their needs, and guide them to register. You are the bridge between a curious lead and a committed client. High commission, no cap.",
           "do": {
             "0": "Conduct free consultation meetings with warm leads",
@@ -1669,7 +1726,10 @@
         "2": {
           "title": "Operations Assistant",
           "subtitle": "Asisten Operasional & Penanganan Klien",
-          "tags": { "0": "Bandung", "1": "Part-time → Full-time" },
+          "tags": {
+            "0": "Bandung",
+            "1": "Part-time → Full-time"
+          },
           "desc": "This is our core team role. You handle WhatsApp communication with registered clients, assist in the matching process, manage our client database, and create daily social media content. Starting part-time — becomes full-time onsite within 3 months as the business grows.",
           "do": {
             "0": "Handle WhatsApp communication with registered clients",

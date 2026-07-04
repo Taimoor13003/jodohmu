@@ -8,6 +8,13 @@ function badRequest(message: string, status = 400) {
   return NextResponse.json({ error: message }, { status });
 }
 
+function generateUsername(): string {
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  let suffix = "";
+  for (let i = 0; i < 6; i++) suffix += chars[Math.floor(Math.random() * chars.length)];
+  return `jdm_${suffix}`;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const authHeader = req.headers.get("authorization");
@@ -46,12 +53,20 @@ export async function POST(req: NextRequest) {
       disabled: false,
     });
 
+    const username = generateUsername();
+
     await adminDb().collection("user_roles").doc(userRecord.uid).set({
       role,
       email: emailLower,
       name,
+      username,
       createdAt: FieldValue.serverTimestamp(),
       createdBy: requesterUid,
+    });
+
+    await adminDb().collection("usernames").doc(username).set({
+      uid: userRecord.uid,
+      email: emailLower,
     });
 
     if (role === "candidate") {
@@ -64,7 +79,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    return NextResponse.json({ success: true, uid: userRecord.uid });
+    return NextResponse.json({ success: true, uid: userRecord.uid, username });
   } catch (error) {
     console.error("Error creating user via admin API", error);
     const message = error instanceof Error ? error.message : "Unexpected error";

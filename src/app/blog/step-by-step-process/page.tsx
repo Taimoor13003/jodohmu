@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { ArticleDetail } from "@/components/blog/article-is-jodohmu";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
-const ogImage = `${siteUrl}/og/step-by-step-process.svg`;
+const ogImage = `${siteUrl}/og/step-by-step-process.png`;
 const datePublished = "2024-11-20";
 const dateModified = "2025-01-20";
 
 export const metadata: Metadata = {
-  title: "Alur Ta'aruf Offline Langkah demi Langkah — Panduan Jodohmu",
+  title: "Alur Ta'aruf Offline Langkah demi Langkah — Panduan Lengkap",
   description:
     "Dari intake hingga lamaran: kandidat terkurasi, pre-call, pertemuan terverifikasi, fasilitator, dan tindak lanjut transparan—offline dan fokus nikah.",
   openGraph: {

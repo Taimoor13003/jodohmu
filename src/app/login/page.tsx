@@ -9,7 +9,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
-import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { AtSign, Eye, EyeOff, Lock } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 import CoverImage from "@/assets/login-cover.png";
 
@@ -28,11 +28,11 @@ export default function LoginPage() {
     else router.replace("/dashboard");
   }, [user, role, loading, router]);
 
-  const [email,    setEmail]    = useState("");
-  const [password, setPassword] = useState("");
-  const [showPwd,  setShowPwd]  = useState(false);
-  const [pending,  setPending]  = useState(false);
-  const [error,    setError]    = useState<string | null>(null);
+  const [identifier, setIdentifier] = useState("");
+  const [password,   setPassword]   = useState("");
+  const [showPwd,    setShowPwd]    = useState(false);
+  const [pending,    setPending]    = useState(false);
+  const [error,      setError]      = useState<string | null>(null);
 
   const l = (id: string, en: string) => lang === "id" ? id : en;
 
@@ -41,6 +41,12 @@ export default function LoginPage() {
     setError(null);
     setPending(true);
     try {
+      let email = identifier.trim();
+      if (!email.includes("@")) {
+        const usernameDoc = await getDoc(doc(db, "usernames", email));
+        if (!usernameDoc.exists()) { setError(t("login.error")); setPending(false); return; }
+        email = (usernameDoc.data() as { email: string }).email;
+      }
       const cred    = await signInWithEmailAndPassword(auth, email, password);
       const roleDoc = await getDoc(doc(db, "user_roles", cred.user.uid));
       const role    = (roleDoc.data() as { role?: string } | undefined)?.role;
@@ -92,14 +98,14 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <label htmlFor="identifier" className="text-xs font-bold uppercase tracking-wider text-slate-500">
                 {t("login.emailLabel")}
               </label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                <AtSign className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                 <input
-                  id="email" type="email" autoComplete="email" required
-                  value={email} onChange={e => setEmail(e.target.value)}
+                  id="identifier" type="text" autoComplete="username" required
+                  value={identifier} onChange={e => setIdentifier(e.target.value)}
                   placeholder={t("login.emailPlaceholder")}
                   className="w-full h-12 pl-10 pr-4 rounded-xl border border-slate-200 bg-slate-50 text-[15px] text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0b3a86]/25 focus:border-[#0b3a86]/40 transition"
                 />

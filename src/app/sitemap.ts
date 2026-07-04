@@ -1,3 +1,4 @@
+// INVARIANT: see /SEO.md before changing anything in this file. URLs may be added, never removed.
 import { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blog-posts";
 
@@ -16,13 +17,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: Route[] = [
     { path: "/", priority: 1, changeFrequency: "weekly", lastModified: now },
     { path: "/pricing", priority: 0.9, changeFrequency: "monthly", lastModified: now },
+    { path: "/pricing/international", priority: 0.8, changeFrequency: "monthly", lastModified: now },
     { path: "/careers", priority: 0.7, changeFrequency: "monthly", lastModified: now },
     { path: "/blog", priority: 0.8, changeFrequency: "weekly", lastModified: now },
     { path: "/faq", priority: 0.7, lastModified: now },
     { path: "/contact", priority: 0.7, lastModified: now },
     { path: "/privacy", lastModified: now },
     { path: "/terms", lastModified: now },
-    { path: "/id/blog", priority: 0.7, changeFrequency: "weekly", lastModified: now },
   ];
 
   const articleRoutes: Route[] = blogPosts.map((post) => ({

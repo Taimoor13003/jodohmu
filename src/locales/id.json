@@ -113,17 +113,17 @@
         "curated": {
           "badge": "Terkurasi",
           "title": "Kecocokan tulus yang selaras nilai Anda",
-          "subtitle": "Kami mempertemukan kisah Anda dengan hati yang seiman, sevisi keluarga, dan seirama." 
+          "subtitle": "Kami mempertemukan kisah Anda dengan hati yang seiman, sevisi keluarga, dan seirama."
         },
         "trusted": {
           "badge": "Dipercaya",
           "title": "Profil nyata dengan niat yang terverifikasi",
-          "subtitle": "Setiap kandidat disaring dan disambut langsung oleh tim concierge kami." 
+          "subtitle": "Setiap kandidat disaring dan disambut langsung oleh tim concierge kami."
         },
         "celebrated": {
           "badge": "Cinta Dirayakan",
           "title": "Cerita yang bersemi menjadi selamanya",
-          "subtitle": "Dari salam pertama hingga lamaran, kami mendampingi pasangan di setiap momen penting." 
+          "subtitle": "Dari salam pertama hingga lamaran, kami mendampingi pasangan di setiap momen penting."
         }
       },
       "cards": {
@@ -173,7 +173,8 @@
           "title": "Pendampingan Hangat",
           "description": "Setelah setiap pertemuan kami mendengarkan, mendukung, dan memandu langkah berikutnya agar Anda selalu mantap melangkah."
         }
-      }
+      },
+      "us": "Hubungi Kami"
     },
     "testimonials": {
       "title": "Dari Komunitas Kami",
@@ -193,6 +194,11 @@
       "title": "Siap Menemukan 'Belahan Jiwa'?",
       "description": "Perjalanan menuju pernikahan yang penuh makna dimulai di sini. Biarkan kami mendampingi langkah Anda menuju kebahagiaan.",
       "button": "Buat Profil Anda"
+    },
+    "whatsappCta": {
+      "caption": "Ingin dibimbing langsung? Isi Google Form kami dan tim kami akan menghubungi Anda.",
+      "button": "Daftar sekarang",
+      "prefill": "Halo Jodohmu, saya ingin konsultasi dengan tim Anda."
     }
   },
   "register": {
@@ -274,8 +280,8 @@
     "badge": "Selamat datang kembali",
     "title": "Masuk untuk melanjutkan perjalanan Anda",
     "subtitle": "Nikmati matchmaking premium, profil terkurasi, dan pendampingan khusus untuk komitmen yang serius.",
-    "emailLabel": "Alamat email",
-    "emailPlaceholder": "Masukkan email",
+    "emailLabel": "Email atau username",
+    "emailPlaceholder": "Masukkan email atau username",
     "passwordLabel": "Kata sandi",
     "passwordPlaceholder": "Masukkan kata sandi",
     "error": "Email atau kata sandi salah. Coba lagi.",
@@ -589,7 +595,8 @@
     "quickLinks": {
       "title": "Tautan Cepat",
       "privacy": "Privasi",
-      "terms": "Syarat & Ketentuan"
+      "terms": "Syarat & Ketentuan",
+      "contact": "Kontak"
     },
     "connect": {
       "title": "Terhubung dengan Kami",
@@ -603,9 +610,11 @@
       "rights": "Hak cipta dilindungi",
       "crafted": "Dibuat dengan",
       "andFaith": "dan iman"
+    },
+    "social": {
+      "title": "Ikuti Kami"
     }
-  }
-  ,
+  },
   "blogPage": {
     "hero": {
       "title": "Satu jawaban jelas: Jodohmu cocokkan sesuai niatmu",
@@ -662,67 +671,9 @@
   "blogArticle": {
     "related": {
       "faq": "Lihat pertanyaan yang sering diajukan",
-      "register": "Daftar sekarang"
-    },
-    "isJodohmuOnlyForMuslims": {
-      "metaTitle": "Apakah Jodohmu hanya untuk Muslim? | Cara kami mencocokkan niat dan fasilitasi pertemuan",
-      "metaDescription": "Tidak. Jodohmu mencocokkan sesuai niat dan nilai Anda. Untuk klien Kristen, kami dapat hadirkan pastor atau fasilitator terhormat, venue tenang, dan alur jelas menuju pernikahan.",
-      "ogTitle": "Apakah Jodohmu hanya untuk Muslim? | Jawaban lengkap",
-      "ogDescription": "Kami mencocokkan berdasarkan niat dan nilai. Fasilitator/pastor tersedia untuk klien Kristen, venue tenang, kandidat terkurasi, dan langkah jelas menuju pernikahan.",
-      "tag": "Blog Jodohmu",
-      "title": "Apakah Jodohmu hanya untuk Muslim?",
-      "subtitle": "Jawaban singkat: tidak. Kami cocokkan sesuai niat, nilai, dan cara Anda ingin memulai pernikahan. Untuk klien Kristen, kami bisa hadirkan pastor atau fasilitator Kristen terhormat. Tujuannya jelas: pernikahan.",
-      "heroBadge": "Inklusif, fokus pernikahan",
-      "heroLead": "Pertemuan offline terarah untuk klien Muslim maupun Kristen—dengan pendamping/fasilitator, venue tenang, dan alur menuju komitmen.",
-      "whyTitle": "Mengapa kami bukan hanya untuk Muslim",
-      "flowTitle": "Bayangkan alurnya",
-      "flowIntro": "Begini gambaran alur pertemuan terarah yang fokus ke pernikahan bersama Jodohmu:",
-      "points": [
-        "Tidak eksklusif untuk Muslim. Pencocokan digerakkan niat, nilai, dan tujuan pernikahan Anda.",
-        "Untuk klien Kristen, kami bisa menghadirkan pastor atau tokoh Kristen terhormat agar percakapan terarah dan nyaman.",
-        "Tujuan akhirnya pernikahan. Setiap percakapan dan tindak lanjut diarahkan ke komitmen, bukan sekadar kenalan santai.",
-        "Vetting kandidat, jadwal, dan venue santun kami siapkan; Anda fokus menilai kecocokan."
-      ],
-      "steps": [
-        "Pre-call singkat: kami dengarkan niat, batasan, dan preferensi Anda (termasuk kebutuhan fasilitator agama).",
-        "Seleksi kandidat: disaring untuk keseriusan, niat menikah, keselarasan nilai, dan kesiapan keluarga.",
-        "Penjadwalan & venue: lounge hotel atau kafe santun/ruang privat, tenang, kondusif untuk obrolan serius.",
-        "Fasilitator hadir: pastor atau tokoh Kristen (atau pendamping lain) memandu alur, menjaga adab, dan bantu bahas kesiapan keluarga.",
-        "Tindak lanjut & biaya: paket transparan; lanjut ke sesi berikutnya atau lamaran dengan panduan jelas."
-      ],
-      "scenario": "Bayangkan lounge hotel atau kafe santun yang tenang, kedua keluarga diundang, fasilitator memandu, logistik beres, dan Anda fokus pada komitmen. Biaya transparan memudahkan Anda siap lanjut begitu merasa cocok.",
-      "whatWeHandleTitle": "Apa yang kami tangani agar Anda fokus menilai kecocokan",
-      "whatWeHandle": [
-        "Perkenalan terkurasi: kandidat disaring untuk niat menikah, keselarasan nilai, dan kesiapan keluarga.",
-        "Fasilitasi sensitif iman: pastor/tokoh Kristen tersedia bila diminta; imam/pendamping untuk klien Muslim.",
-        "Venue & jadwal: ruang netral, tenang, santun dengan alur dan waktu yang tertata.",
-        "Keamanan & kejelasan: batasan disepakati di awal; langkah lanjut dijelaskan sebelum Anda bertemu."
-      ],
-      "benefitsTitle": "Yang Anda dapat dari pertemuan terarah",
-      "benefits": [
-        {
-          "title": "Jelas sejak menit pertama",
-          "desc": "Kami membingkai niat, kesiapan keluarga, dan pertimbangan iman di awal—tidak ada tebak-tebakan."
-        },
-        {
-          "title": "Venue netral dan tenang",
-          "desc": "Lounge hotel atau ruang privat kafe—nyaman, tertutup, dan kondusif untuk obrolan fokus."
-        },
-        {
-          "title": "Lebih cepat ke komitmen",
-          "desc": "Dengan agenda, fasilitator, dan biaya transparan, Anda mudah memutuskan lanjut, komit, atau berhenti dengan terhormat."
-        }
-      ],
-      "facilitationTitle": "Fasilitator, venue, dan suasana",
-      "facilitationBody": "Anda tiba di lounge/ruang kafe yang sudah disiapkan untuk obrolan tenang. Pastor/tokoh Kristen (untuk klien Kristen) atau fasilitator yang diminta memandu alur, menjaga adab, dan membantu kedua pihak membahas iman, ekspektasi keluarga, serta kesiapan. Orang tua dipersilakan hadir. Anda fokus menilai kecocokan.",
-      "pricingTitle": "Biaya & komitmen",
-      "pricingBody": "Paket transparan meliputi screening, penjadwalan, venue, dan kehadiran fasilitator. Jika merasa cocok, kami pandu sesi berikutnya atau langkah lamaran tanpa biaya kejutan.",
-      "ctaTitle": "Siap bergerak ke pernikahan?",
-      "ctaBody": "Kami pandu dari perkenalan sampai komitmen. Ingin jadwalkan sesi dengan fasilitator (termasuk pastor untuk klien Kristen) dan tahu rincian biaya secara transparan?",
-      "ctaPrimary": "Daftar sekarang",
-
-
-      "ctaSecondary": "Kembali ke blog utama"
+      "register": "Daftar sekarang",
+      "title": "Artikel terkait & langkah berikutnya",
+      "subtitle": "Baca panduan lainnya, atau hubungi kami untuk perjodohan yang difasilitasi dan berorientasi pernikahan."
     },
     "stepByStepProcess": {
       "metaTitle": "Alur ta'aruf offline langkah demi langkah | Panduan Jodohmu menuju pernikahan",
@@ -1350,7 +1301,12 @@
       "ctaBody": "Setiap orang yang kami perkenalkan kepada Anda telah diverifikasi langsung oleh tim kami. Jika itu standar yang Anda cari, kami ingin mengobrol.",
       "ctaPrimary": "Hubungi kami di WhatsApp",
       "ctaSecondary": "Kembali ke blog"
-    }
+    },
+    "breadcrumb": {
+      "home": "Beranda",
+      "blog": "Blog"
+    },
+    "guidedBadge": "Didampingi & melibatkan keluarga"
   },
   "pricingPage": {
     "discount": {
@@ -1375,9 +1331,18 @@
       "subtitleLine2": "Kami membantu Anda membangun masa depan yang penuh",
       "subtitleWords": "cinta, kasih sayang, dan barakah.",
       "trust": {
-        "0": { "title": "100% Halal", "desc": "Perjodohan berbasis iman" },
-        "1": { "title": "Profil Terverifikasi", "desc": "Anggota autentik, niat serius" },
-        "2": { "title": "Privasi Utama", "desc": "Privasi Anda adalah prioritas kami" }
+        "0": {
+          "title": "100% Halal",
+          "desc": "Perjodohan berbasis iman"
+        },
+        "1": {
+          "title": "Profil Terverifikasi",
+          "desc": "Anggota autentik, niat serius"
+        },
+        "2": {
+          "title": "Privasi Utama",
+          "desc": "Privasi Anda adalah prioritas kami"
+        }
       },
       "socialCount": "1+",
       "socialTitle": "Anggota Terdaftar",
@@ -1649,6 +1614,29 @@
       "title": "Masih ada pertanyaan?",
       "subtitle": "Bicara langsung dengan matchmaker kami untuk rencana yang dipersonalisasi.",
       "button": "Daftar sekarang"
+    },
+    "heroBadges": {
+      "offline": "Offline & halal",
+      "facilitated": "Pertemuan difasilitasi",
+      "family": "Melibatkan keluarga"
+    },
+    "categories": {
+      "halalSafety": "Halal & Keamanan",
+      "process": "Proses",
+      "support": "Dukungan"
+    },
+    "whyBox": {
+      "title": "Kenapa memilih Jodohmu:",
+      "points": {
+        "0": "Pertemuan offline yang halal dengan kandidat yang sudah diverifikasi.",
+        "1": "Pendamping (ustaz/pendeta) tersedia sesuai permintaan.",
+        "2": "Tempat pertemuan yang nyaman untuk keluarga dengan agenda yang terarah.",
+        "3": "Paket transparan — tanpa biaya tersembunyi."
+      }
+    },
+    "callBox": {
+      "title": "Ingin ditelepon?",
+      "body": "Ceritakan kota Anda, target waktu menikah, dan apakah Anda ingin didampingi fasilitator — kami akan siapkan rencananya untuk Anda."
     }
   },
   "careersPage": {
@@ -1658,9 +1646,18 @@
       "subtitle": "Kami sedang membangun tim yang benar-benar percaya dalam membantu Muslim menemukan pasangan hidup dengan bermartabat. Setiap peran di sini berdampak nyata pada kehidupan nyata."
     },
     "values": {
-      "0": { "title": "Kerja berbasis misi", "text": "Setiap klien yang menemukan pasangan melalui Jodohmu adalah kehidupan yang berubah. Pekerjaan Anda di sini memiliki makna lebih dari sekadar gaji." },
-      "1": { "title": "Kinerja dihargai", "text": "Kami percaya membayar orang berdasarkan hasil. Struktur komisi kami transparan, adil, dan dirancang untuk berkembang bersama Anda." },
-      "2": { "title": "Ruang untuk berkembang", "text": "Kami masih awal. Orang-orang yang bergabung sekarang akan membentuk bagaimana perusahaan ini tumbuh — dan mendapat imbalannya." }
+      "0": {
+        "title": "Kerja berbasis misi",
+        "text": "Setiap klien yang menemukan pasangan melalui Jodohmu adalah kehidupan yang berubah. Pekerjaan Anda di sini memiliki makna lebih dari sekadar gaji."
+      },
+      "1": {
+        "title": "Kinerja dihargai",
+        "text": "Kami percaya membayar orang berdasarkan hasil. Struktur komisi kami transparan, adil, dan dirancang untuk berkembang bersama Anda."
+      },
+      "2": {
+        "title": "Ruang untuk berkembang",
+        "text": "Kami masih awal. Orang-orang yang bergabung sekarang akan membentuk bagaimana perusahaan ini tumbuh — dan mendapat imbalannya."
+      }
     },
     "jobs": {
       "title": "Posisi Terbuka",
@@ -1673,7 +1670,10 @@
         "0": {
           "title": "Appointment Setter",
           "subtitle": "Pencari Klien & Penjadwal Konsultasi",
-          "tags": { "0": "Remote", "1": "Komisi Saja" },
+          "tags": {
+            "0": "Remote",
+            "1": "Komisi Saja"
+          },
           "desc": "Anda menjangkau calon klien melalui jaringan, media sosial, atau komunitas, lalu mengundang mereka ke konsultasi gratis bersama tim kami. Setiap klien yang hadir dan memenuhi syarat, Anda dapat komisi. Sederhana, remote, dan sepenuhnya fleksibel.",
           "do": {
             "0": "Menjangkau calon klien via WhatsApp, Instagram, atau komunitas",
@@ -1700,7 +1700,10 @@
         "1": {
           "title": "Sales Consultant",
           "subtitle": "Konsultan Penjualan & Penutup Klien",
-          "tags": { "0": "Remote / Hybrid", "1": "Komisi Saja" },
+          "tags": {
+            "0": "Remote / Hybrid",
+            "1": "Komisi Saja"
+          },
           "desc": "Anda bertemu calon klien secara langsung atau via call, menjelaskan layanan kami, memahami kebutuhan mereka, dan membimbing mereka untuk mendaftar. Anda adalah jembatan antara lead yang penasaran dan klien yang berkomitmen. Komisi tinggi, tidak ada batas.",
           "do": {
             "0": "Melakukan pertemuan konsultasi gratis dengan lead hangat",
@@ -1727,7 +1730,10 @@
         "2": {
           "title": "Operations Assistant",
           "subtitle": "Asisten Operasional & Penanganan Klien",
-          "tags": { "0": "Bandung", "1": "Part-time → Full-time" },
+          "tags": {
+            "0": "Bandung",
+            "1": "Part-time → Full-time"
+          },
           "desc": "Ini adalah peran inti tim kami. Anda menangani komunikasi WhatsApp dengan klien terdaftar, membantu proses pencocokan, mengelola database klien, dan membuat konten media sosial harian. Dimulai part-time — menjadi full-time onsite dalam 3 bulan seiring bisnis berkembang.",
           "do": {
             "0": "Menangani komunikasi WhatsApp dengan klien terdaftar",

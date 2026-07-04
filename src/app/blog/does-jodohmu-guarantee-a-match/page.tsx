@@ -2,29 +2,29 @@ import type { Metadata } from "next";
 import { ArticleDetail } from "@/components/blog/article-is-jodohmu";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
-const ogImage = `${siteUrl}/og/does-jodohmu-guarantee-a-match.svg`;
+const ogImage = `${siteUrl}/og/does-jodohmu-guarantee-a-match.png`;
 const datePublished = "2026-06-07";
 const dateModified = "2026-06-07";
 
 export const metadata: Metadata = {
-  title: "Does Jodohmu Guarantee a Match? | Honest Expectations",
+  title: "Apakah Jodohmu Menjamin Pasti Dapat Jodoh? Jawaban Jujur Kami",
   description:
-    "What Jodohmu actually commits to — and what no matchmaker in the world can promise. An honest answer to the question every serious client asks.",
+    "Apa yang benar-benar kami janjikan — dan apa yang tidak bisa dijanjikan biro jodoh mana pun. Jawaban jujur untuk pertanyaan yang paling sering muncul sebelum mendaftar ta'aruf.",
   openGraph: {
-    title: "Does Jodohmu Guarantee a Match?",
+    title: "Apakah Jodohmu Menjamin Pasti Dapat Jodoh?",
     description:
-      "An honest, warm answer to the question every serious client asks before signing up.",
+      "Jawaban yang jujur dan hangat untuk pertanyaan yang selalu ditanyakan calon klien serius sebelum mendaftar.",
     url: `${siteUrl}/blog/does-jodohmu-guarantee-a-match`,
     type: "article",
-    images: [{ url: ogImage, alt: "Does Jodohmu guarantee a match", width: 1200, height: 630 }],
+    images: [{ url: ogImage, alt: "Apakah Jodohmu menjamin pasti dapat jodoh", width: 1200, height: 630 }],
     publishedTime: datePublished,
     modifiedTime: dateModified,
   },
   twitter: {
     card: "summary",
-    title: "Does Jodohmu Guarantee a Match?",
-    description: "Honest expectations from a matchmaking service that puts trust first.",
-    images: [{ url: ogImage, alt: "Does Jodohmu guarantee a match" }],
+    title: "Apakah Jodohmu Menjamin Pasti Dapat Jodoh?",
+    description: "Ekspektasi yang jujur dari layanan perjodohan yang mengutamakan kepercayaan.",
+    images: [{ url: ogImage, alt: "Apakah Jodohmu menjamin pasti dapat jodoh" }],
   },
   alternates: {
     canonical: `${siteUrl}/blog/does-jodohmu-guarantee-a-match`,

@@ -26,6 +26,18 @@ const nextConfig = {
         destination: "https://www.jodohmu.com/:path*",
         permanent: true,
       },
+      // /id/* served identical content to the root routes (duplicate content).
+      // Consolidate signals on the canonical root URLs.
+      {
+        source: "/id",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/id/:path*",
+        destination: "/:path*",
+        permanent: true,
+      },
     ];
   },
   async headers() {
@@ -43,11 +55,23 @@ const nextConfig = {
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }],
       },
       {
+        source: "/dashboard/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }],
+      },
+      {
+        source: "/admin",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }],
+      },
+      {
         source: "/admin/:path*",
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }],
       },
       {
         source: "/profiles",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }],
+      },
+      {
+        source: "/profiles/:path*",
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }],
       },
       {

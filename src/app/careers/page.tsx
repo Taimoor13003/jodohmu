@@ -4,16 +4,16 @@ import { CareersPage } from "@/components/careers/careers-page";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
 
 export const metadata: Metadata = {
-  title: "Careers",
+  title: "Karier",
   description:
-    "Join the Jodohmu team in Bandung. We are hiring Appointment Setters, Sales Consultants, and Operations Assistants. Commission-based and part-time roles available.",
+    "Bergabunglah dengan tim Jodohmu di Bandung. Kami membuka lowongan Appointment Setter, Konsultan Penjualan, dan Asisten Operasional — tersedia peran paruh waktu dan berbasis komisi.",
   alternates: {
     canonical: `${siteUrl}/careers`,
   },
   openGraph: {
-    title: "Careers | Jodohmu",
+    title: "Karier | Jodohmu",
     description:
-      "Join the Jodohmu team in Bandung. We are hiring Appointment Setters, Sales Consultants, and Operations Assistants.",
+      "Bergabunglah dengan tim Jodohmu di Bandung. Kami membuka lowongan Appointment Setter, Konsultan Penjualan, dan Asisten Operasional.",
     url: `${siteUrl}/careers`,
     type: "website",
   },

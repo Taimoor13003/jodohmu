@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { ArticleDetail } from "@/components/blog/article-is-jodohmu";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
-const ogImage = `${siteUrl}/og/tips-taaruf-pertama.svg`;
+const ogImage = `${siteUrl}/og/tips-taaruf-pertama.png`;
 const datePublished = "2025-05-20";
 const dateModified = "2025-05-20";
 
 export const metadata: Metadata = {
-  title: "Tips Ta'aruf Pertama Kali — Persiapan Lengkap dari Jodohmu",
+  title: "Tips Ta'aruf Pertama Kali — Persiapan Lengkap",
   description:
     "Mau ta'aruf tapi bingung mulai dari mana? Tips lengkap persiapan ta'aruf pertama kali: apa yang ditanya, sikap, pakaian, dan ekspektasi realistis.",
   openGraph: {

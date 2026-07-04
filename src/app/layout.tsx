@@ -128,21 +128,38 @@ export default function RootLayout({
                 "@context": "https://schema.org",
                 "@graph": [
                   {
+                    "@type": "WebSite",
+                    "@id": `${siteUrl}#website`,
+                    url: siteUrl,
+                    name: "Jodohmu",
+                    inLanguage: "id",
+                    publisher: { "@id": `${siteUrl}#organization` },
+                  },
+                  {
                     "@type": "LocalBusiness",
                     "@id": `${siteUrl}#organization`,
                     name: "Jodohmu",
                     url: siteUrl,
-                    logo: `${siteUrl}/favicon.ico`,
+                    logo: `${siteUrl}/jodohmu-logo.png`,
+                    image: `${siteUrl}/jodohmu-logo.png`,
                     description:
-                      "Offline, faith-aligned marriage matchmaking and ta'aruf facilitation for serious singles across Indonesia.",
+                      "Jasa perjodohan offline yang halal dengan fasilitasi ta'aruf dan pelibatan keluarga untuk lajang siap nikah di seluruh Indonesia.",
+                    address: {
+                      "@type": "PostalAddress",
+                      addressLocality: "Bandung",
+                      addressRegion: "Jawa Barat",
+                      addressCountry: "ID",
+                    },
                     areaServed: "Indonesia",
                     serviceType: [
                       "Offline marriage matching",
                       "Ta'aruf facilitation",
                       "Family-friendly matchmaking",
                     ],
-                    inLanguage: ["en", "id"],
+                    inLanguage: ["id", "en"],
+                    knowsLanguage: ["id", "en"],
                     telephone: "+62 811 222 10303",
+                    email: "info@jodohmu.com",
                     sameAs: [
                       "https://www.facebook.com/profile.php?id=61583458260206",
                       "https://www.instagram.com/jodohmu_official/",
@@ -158,44 +175,8 @@ export default function RootLayout({
                     areaServed: "Indonesia",
                     url: siteUrl,
                     description:
-                      "Curated offline introductions, guided ta'aruf, and safety-first verification for serious marriage-seeking singles.",
-                    inLanguage: ["en", "id"],
-                  },
-                  {
-                    "@type": "FAQPage",
-                    "@id": `${siteUrl}#faq`,
-                    mainEntity: [
-                      {
-                        "@type": "Question",
-                        name: "How does Jodohmu facilitate offline matchmaking and ta'aruf?",
-                        acceptedAnswer: {
-                          "@type": "Answer",
-                          text:
-                            "We curate serious matches, arrange guided introductions, and support ta'aruf that aligns with faith and family expectations.",
-                        },
-                        inLanguage: ["en", "id"],
-                      },
-                      {
-                        "@type": "Question",
-                        name: "Is Jodohmu focused on serious, marriage-intent candidates?",
-                        acceptedAnswer: {
-                          "@type": "Answer",
-                          text:
-                            "Yes. We vet candidates for marriage intent, encourage family involvement, and provide a structured process for commitment-focused singles.",
-                        },
-                        inLanguage: ["en", "id"],
-                      },
-                      {
-                        "@type": "Question",
-                        name: "Do you operate across Indonesia?",
-                        acceptedAnswer: {
-                          "@type": "Answer",
-                          text:
-                            "Yes. We serve clients across Indonesia and can tailor introductions to your city or preferred regions.",
-                        },
-                        inLanguage: ["en", "id"],
-                      },
-                    ],
+                      "Perkenalan offline yang dikurasi, ta'aruf yang didampingi, dan verifikasi kandidat yang mengutamakan keamanan untuk lajang yang serius menikah.",
+                    inLanguage: ["id", "en"],
                   },
                 ],
               },

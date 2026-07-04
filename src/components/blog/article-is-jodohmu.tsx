@@ -1,7 +1,6 @@
 'use client';
 
 import Link from "next/link";
-import Script from "next/script";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import { getRelatedPosts } from "@/lib/blog-posts";
@@ -28,8 +27,8 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
-      { "@type": "ListItem", position: 2, name: "Blog", item: `${siteUrl}/blog` },
+      { "@type": "ListItem", position: 1, name: t("blogArticle.breadcrumb.home"), item: siteUrl },
+      { "@type": "ListItem", position: 2, name: t("blogArticle.breadcrumb.blog"), item: `${siteUrl}/blog` },
       { "@type": "ListItem", position: 3, name: t(`${articleKey}.title`), item: articleUrl },
     ],
   };
@@ -53,7 +52,7 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
       url: siteUrl,
       logo: {
         "@type": "ImageObject",
-        url: `${siteUrl}/favicon.ico`,
+        url: `${siteUrl}/jodohmu-logo.png`,
       },
     },
     author: {
@@ -76,23 +75,22 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
 
   return (
     <div className="pb-24 pt-16">
-      <Script
-        id={`ld-json-${articleKey}`}
+      {/* Plain script tags so the JSON-LD is present in the server-rendered
+          HTML — next/script afterInteractive only injects after hydration,
+          which crawlers may never execute. */}
+      <script
         type="application/ld+json"
-        strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <Script
-        id={`ld-breadcrumb-${articleKey}`}
+      <script
         type="application/ld+json"
-        strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       <section className="container max-w-5xl">
         <nav className="mb-4 flex items-center gap-2 text-sm text-[#0b3a86]">
-          <Link href="/" className="hover:text-[#9B2242]">Home</Link>
+          <Link href="/" className="hover:text-[#9B2242]">{t("blogArticle.breadcrumb.home")}</Link>
           <span aria-hidden="true">›</span>
-          <Link href="/blog" className="hover:text-[#9B2242]">Blog</Link>
+          <Link href="/blog" className="hover:text-[#9B2242]">{t("blogArticle.breadcrumb.blog")}</Link>
           <span aria-hidden="true">›</span>
           <span className="text-muted-foreground">{t(`${articleKey}.title`)}</span>
         </nav>
@@ -209,7 +207,7 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
               <p className="text-[#4a4f63]">{t(`${articleKey}.heroLead`)}</p>
             </div>
             <div className="rounded-full bg-[#ffe4ed] px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-[#9B2242]">
-              Guided & family-ready
+              {t("blogArticle.guidedBadge")}
             </div>
           </div>
           <ul className="mt-6 grid gap-4 md:grid-cols-3">
@@ -226,9 +224,9 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
         </section>
 
         <section className="rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
-          <h2 className="text-2xl font-semibold text-[#0b3a86]">Related & next steps</h2>
+          <h2 className="text-2xl font-semibold text-[#0b3a86]">{t("blogArticle.related.title")}</h2>
           <p className="mt-2 text-[#4a4f63]">
-            Explore more guidance and get in touch for facilitated, marriage-focused matchmaking.
+            {t("blogArticle.related.subtitle")}
           </p>
           <ul className="mt-4 space-y-3">
             {relatedLinks.map((link) => (

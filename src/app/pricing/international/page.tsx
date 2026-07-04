@@ -1,10 +1,22 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
+
 export const metadata: Metadata = {
-  title: "International Packages | Jodohmu",
+  title: "International Packages",
   description:
     "Jodohmu's international matchmaking service for those outside Indonesia seeking a verified Indonesian spouse — conducted with dignity, full facilitation, and serious intent.",
+  openGraph: {
+    title: "International Packages | Jodohmu",
+    description:
+      "Jodohmu's international matchmaking service for those outside Indonesia seeking a verified Indonesian spouse — full facilitation and serious intent.",
+    url: `${siteUrl}/pricing/international`,
+    type: "website",
+  },
+  alternates: {
+    canonical: `${siteUrl}/pricing/international`,
+  },
 };
 
 const whatsappHref =

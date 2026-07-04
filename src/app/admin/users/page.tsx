@@ -387,6 +387,7 @@ function AdminUsersPageInner() {
   }, [searchParams]);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [createdUsername, setCreatedUsername] = useState<string | null>(null);
   const [basic, setBasic] = useState({ name: "", email: "", password: "", note: "" });
   const [d, setD] = useState<CandidateDetails>(EMPTY);
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
@@ -484,6 +485,7 @@ function AdminUsersPageInner() {
     setPhotoUrls([]);
     setStatus("idle");
     setError(null);
+    setCreatedUsername(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -507,9 +509,11 @@ function AdminUsersPageInner() {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || "Failed to create user");
       }
+      const data = await res.json().catch(() => ({}));
+      setCreatedUsername(data.username ?? null);
       setStatus("success");
       await fetchUsers();
-      setTimeout(() => { setDialogOpen(false); reset(); }, 1200);
+      setTimeout(() => { setDialogOpen(false); reset(); }, 3000);
     } catch (err) {
       setStatus("error");
       setError(err instanceof Error ? err.message : "Unexpected error");
@@ -1629,7 +1633,14 @@ function AdminUsersPageInner() {
                   className="w-full rounded-full bg-gradient-to-r from-[#9B2242] to-[#0b3a86] text-white py-5">
                   {status === "loading" ? "Creating..." : "Create user"}
                 </Button>
-                {status === "success" && <p className="mt-2 text-sm font-semibold text-[#0b3a86]">User created successfully.</p>}
+                {status === "success" && (
+                  <div className="mt-2 rounded-lg bg-blue-50 border border-blue-200 px-4 py-3 text-sm text-[#0b3a86]">
+                    <p className="font-semibold">User created successfully.</p>
+                    {createdUsername && (
+                      <p className="mt-1">Username: <span className="font-mono font-bold">{createdUsername}</span></p>
+                    )}
+                  </div>
+                )}
                 {status === "error" && error && <p className="mt-2 text-sm font-semibold text-[#9B2242]">{error}</p>}
               </div>
             </form>

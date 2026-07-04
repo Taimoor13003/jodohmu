@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { ArticleDetail } from "@/components/blog/article-is-jodohmu";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
-const ogImage = `${siteUrl}/og/cari-jodoh-serius.svg`;
+const ogImage = `${siteUrl}/og/cari-jodoh-serius.png`;
 const datePublished = "2025-05-20";
 const dateModified = "2025-05-20";
 
 export const metadata: Metadata = {
-  title: "Cara Cari Jodoh Serius di Indonesia — Panduan Lengkap Jodohmu",
+  title: "Cara Cari Jodoh Serius di Indonesia — Panduan Lengkap",
   description:
     "Bingung cara cari jodoh serius? Panduan lengkap dari Jodohmu: perjodohan offline, ta'aruf terfasilitasi, dan proses terverifikasi untuk lajang siap nikah.",
   openGraph: {

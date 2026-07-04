@@ -1,7 +1,6 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 import { Header } from "./header";
 import { Footer } from "./footer";
 import { WhatsAppFab } from "./whatsapp-fab";
@@ -15,7 +14,6 @@ export function PublicShell({
   children: React.ReactNode;
   whatsappHref: string;
 }) {
-  const { loading } = useAuth();
   const pathname = usePathname();
 
   const isAppRoute = APP_PREFIXES.some((p) => pathname.startsWith(p));
@@ -23,9 +21,9 @@ export function PublicShell({
   // App routes (dashboard / admin / public profile) manage their own shell
   if (isAppRoute) return <>{children}</>;
 
-  // While auth is resolving on marketing pages, skip the shell to avoid flash
-  if (loading) return <>{children}</>;
-
+  // The shell must render during SSR too — header/footer carry the site-wide
+  // internal links crawlers rely on. Auth-dependent UI inside Header handles
+  // its own loading state instead of hiding the whole shell.
   return (
     <>
       <Header />

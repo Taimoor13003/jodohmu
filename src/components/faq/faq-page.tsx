@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import Script from "next/script";
 import { ChevronDown } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
@@ -22,7 +21,7 @@ const faqKeys = [
 ];
 
 export function FaqPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [openKey, setOpenKey] = useState<string | null>(faqKeys[0]);
 
   const items = useMemo(
@@ -31,7 +30,12 @@ export function FaqPage() {
         key,
         q: t(`${key}.q`),
         a: t(`${key}.a`),
-        badge: idx < 3 ? "Halal & Safety" : idx < 5 ? "Process" : "Support",
+        badge:
+          idx < 3
+            ? t("faqPage.categories.halalSafety")
+            : idx < 5
+              ? t("faqPage.categories.process")
+              : t("faqPage.categories.support"),
       })),
     [t]
   );
@@ -46,7 +50,7 @@ export function FaqPage() {
         "@type": "Answer",
         text: item.a,
       },
-      inLanguage: ["en", "id"],
+      inLanguage: lang,
     })),
     url: `${siteUrl}/faq`,
   };
@@ -57,10 +61,9 @@ export function FaqPage() {
 
   return (
     <div className="flex flex-col gap-12 pb-20 pt-16">
-      <Script
-        id="faq-schema"
+      {/* Plain script tag so the FAQPage JSON-LD is in the server-rendered HTML */}
+      <script
         type="application/ld+json"
-        strategy="afterInteractive"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <section className="container max-w-4xl space-y-5 text-center">
@@ -70,9 +73,9 @@ export function FaqPage() {
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">{t("faqPage.hero.title")}</h1>
         <p className="mx-auto max-w-3xl text-lg text-[#3d425a]">{t("faqPage.hero.subtitle")}</p>
         <div className="flex flex-wrap justify-center gap-3 text-xs font-semibold text-[#0b3a86]">
-          <span className="rounded-full bg-[#e9f0ff] px-3 py-1">Offline & halal</span>
-          <span className="rounded-full bg-[#e9f0ff] px-3 py-1">Facilitated meetings</span>
-          <span className="rounded-full bg-[#e9f0ff] px-3 py-1">Family-ready</span>
+          <span className="rounded-full bg-[#e9f0ff] px-3 py-1">{t("faqPage.heroBadges.offline")}</span>
+          <span className="rounded-full bg-[#e9f0ff] px-3 py-1">{t("faqPage.heroBadges.facilitated")}</span>
+          <span className="rounded-full bg-[#e9f0ff] px-3 py-1">{t("faqPage.heroBadges.family")}</span>
         </div>
       </section>
 
@@ -121,12 +124,11 @@ export function FaqPage() {
             <p className="text-white/85 leading-relaxed">{t("faqPage.cta.subtitle")}</p>
           </div>
           <div className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-sm text-white/90">
-            <p className="font-semibold">Why Jodohmu is best:</p>
+            <p className="font-semibold">{t("faqPage.whyBox.title")}</p>
             <ul className="mt-1 list-disc space-y-1 pl-4">
-              <li>Offline, halal-first meetings with vetted candidates.</li>
-              <li>Facilitators/chaperones (imam/pastor) on request.</li>
-              <li>Family-friendly venues and structured agendas.</li>
-              <li>Transparent packages—no surprise fees.</li>
+              {["0", "1", "2", "3"].map((idx) => (
+                <li key={idx}>{t(`faqPage.whyBox.points.${idx}`)}</li>
+              ))}
             </ul>
           </div>
           <Button asChild size="lg" className="bg-white text-[#0b3a86] hover:bg-white/90">
@@ -135,8 +137,8 @@ export function FaqPage() {
             </Link>
           </Button>
           <div className="rounded-2xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white/85">
-            <p className="font-semibold">Need a call?</p>
-            <p>Share your city, timeline, and whether you want a facilitator; we’ll tailor the plan.</p>
+            <p className="font-semibold">{t("faqPage.callBox.title")}</p>
+            <p>{t("faqPage.callBox.body")}</p>
           </div>
         </div>
       </section>

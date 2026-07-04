@@ -29,6 +29,11 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="font-bold text-brand-blue">{t("footer.quickLinks.title")}</h3>
             <div className="flex flex-col gap-2 text-sm font-semibold">
+              <Link href="/blog" className="hover:text-brand-rose transition-colors">{t("header.blog")}</Link>
+              <Link href="/pricing" className="hover:text-brand-rose transition-colors">{t("header.pricing")}</Link>
+              <Link href="/faq" className="hover:text-brand-rose transition-colors">{t("header.faq")}</Link>
+              <Link href="/careers" className="hover:text-brand-rose transition-colors">{t("header.careers")}</Link>
+              <Link href="/contact" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.contact")}</Link>
               <Link href="/privacy" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.privacy")}</Link>
               <Link href="/terms" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.terms")}</Link>
             </div>
@@ -54,7 +59,7 @@ export function Footer() {
 
           {/* Social */}
           <div className="space-y-4">
-            <h3 className="font-bold text-brand-blue">Follow Us</h3>
+            <h3 className="font-bold text-brand-blue">{t("footer.social.title")}</h3>
             <div className="flex items-center gap-3">
               <Link href="https://www.facebook.com/profile.php?id=61583458260206" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue hover:bg-brand-rose/10 hover:text-brand-rose transition-colors">
                 <Facebook className="h-5 w-5" />

@@ -271,6 +271,7 @@ function FieldGrid({ children }: { children: React.ReactNode }) {
 }
 
 /* ── collapsed section (all fields empty) ────────────────────────────────── */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function CollapsedSection({ title, icon, fields, lang }: {
   title: string; icon: React.ReactNode; iconColor: string; iconBg: string;
   fields: string[]; lang: Lang;

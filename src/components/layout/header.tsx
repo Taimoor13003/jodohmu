@@ -22,7 +22,7 @@ import LogoIcon from "@/assets/jodohmu-logo.png";
 import { Globe, Menu, X } from "lucide-react";
 
 export function Header() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const { lang, setLang, t } = useLanguage();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const pathname = usePathname();
@@ -107,7 +107,10 @@ export function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {user ? (
+          {loading ? (
+            /* auth resolving: reserve the slot so nothing jumps, no wrong state flashes */
+            <span aria-hidden className="inline-block h-10 w-10" />
+          ) : user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full">
@@ -229,7 +232,7 @@ export function Header() {
                 English
               </Button>
             </div>
-            {user ? (
+            {loading ? null : user ? (
               <div className="flex flex-col gap-2">
                 <Link
                   href="/dashboard"

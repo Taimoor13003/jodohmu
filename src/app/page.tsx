@@ -31,13 +31,10 @@ export const metadata: Metadata = {
       "Perjodohan offline yang halal dengan fasilitasi ta'aruf untuk lajang siap nikah di Indonesia.",
     images: [`${siteUrl}/jodohmu-logo.png`],
   },
+  // No hreflang alternates: the site has a single (Indonesian) URL per page,
+  // and pointing hreflang at routes that don't exist (e.g. /en) hurts crawling.
   alternates: {
     canonical: siteUrl,
-    languages: {
-      "id": siteUrl,
-      "en": `${siteUrl}/en`,
-      "x-default": siteUrl,
-    },
   },
 };
 
