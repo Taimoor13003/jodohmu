@@ -310,6 +310,7 @@ function Topbar({ onToggle, onMenuHover, onMenuLeave }: {
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const [candidateData, setCandidateData] = useState<D>({});
+  const [candidateLoaded, setCandidateLoaded] = useState(false);
   const { lang } = useLanguage();
   const { user, role, loading } = useAuth();
   const router = useRouter();
@@ -328,6 +329,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (role === "admin" || role === "worker") { router.replace("/admin"); return; }
   }, [user, role, loading, router]);
 
+  // first-time candidates who haven't completed the quick lead-capture form
+  useEffect(() => {
+    if (loading || !user || role !== "candidate" || !candidateLoaded) return;
+    if (!candidateData.fullName || !candidateData.whatsappNumber || !candidateData.gender) {
+      router.replace("/onboarding");
+    }
+  }, [loading, user, role, candidateLoaded, candidateData, router]);
+
   // close on route change
   useEffect(() => { setOpen(false); }, [pathname]);
 
@@ -341,6 +350,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         setCandidateData(data ?? {});
       }
     } catch { /* silent */ }
+    finally { setCandidateLoaded(true); }
   }, [user]);
 
   useEffect(() => { fetchCandidate(); }, [fetchCandidate]);

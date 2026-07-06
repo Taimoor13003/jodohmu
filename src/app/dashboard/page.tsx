@@ -28,7 +28,8 @@ const TAARUF_LABEL: Record<string, { id: string; en: string }> = {
 };
 
 const STATUS_LABEL: Record<string, { id: string; en: string }> = {
-  new_lead:           { id: "Akun Belum Aktif",  en: "Account Not Active" },
+  new_lead:                { id: "Akun Belum Aktif",        en: "Account Not Active" },
+  awaiting_discovery_call: { id: "Menunggu Discovery Call", en: "Awaiting Discovery Call" },
   registered_looking: { id: "Mencari Pasangan",  en: "Searching" },
   matched:            { id: "Match Ditemukan",    en: "Match Found" },
   in_taaruf:          { id: "Dalam Ta'aruf",      en: "In Ta'aruf" },

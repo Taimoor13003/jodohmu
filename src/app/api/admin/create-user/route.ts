@@ -1,18 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
+import { generateUsername } from "@/lib/username";
 
 type Role = "admin" | "worker" | "candidate";
 
 function badRequest(message: string, status = 400) {
   return NextResponse.json({ error: message }, { status });
-}
-
-function generateUsername(): string {
-  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-  let suffix = "";
-  for (let i = 0; i < 6; i++) suffix += chars[Math.floor(Math.random() * chars.length)];
-  return `jdm_${suffix}`;
 }
 
 export async function POST(req: NextRequest) {
@@ -34,7 +28,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { role, email, password, name, details } = body ?? {};
+    const { role, email, password, name, details, username: rawUsername } = body ?? {};
 
     if (!role || !["admin", "worker", "candidate"].includes(role)) {
       return badRequest("Invalid role");
@@ -45,6 +39,20 @@ export async function POST(req: NextRequest) {
 
     const emailLower = String(email).toLowerCase();
 
+    let username: string;
+    if (rawUsername && String(rawUsername).trim()) {
+      username = String(rawUsername).trim().toLowerCase();
+      if (!/^[a-z0-9_]{3,20}$/.test(username)) {
+        return badRequest("Username must be 3–20 characters: lowercase letters, numbers, underscores only");
+      }
+      const existing = await adminDb().collection("usernames").doc(username).get();
+      if (existing.exists) {
+        return badRequest("Username already taken");
+      }
+    } else {
+      username = generateUsername();
+    }
+
     const userRecord = await adminAuth().createUser({
       email: emailLower,
       password: String(password),
@@ -52,8 +60,6 @@ export async function POST(req: NextRequest) {
       emailVerified: false,
       disabled: false,
     });
-
-    const username = generateUsername();
 
     await adminDb().collection("user_roles").doc(userRecord.uid).set({
       role,

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 import { adminDb } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
+import { sendAdminEmail } from "@/lib/mailer";
 
 export async function POST(request: Request) {
   try {
@@ -24,33 +24,18 @@ export async function POST(request: Request) {
     });
 
     // Best-effort email notification via Gmail SMTP
-    const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, CONTACT_TO, CONTACT_FROM } = process.env;
-    if (SMTP_HOST && SMTP_USER && SMTP_PASS) {
-      const transporter = nodemailer.createTransport({
-        host: SMTP_HOST,
-        port: Number(SMTP_PORT) || 587,
-        secure: Number(SMTP_PORT) === 465,
-        auth: { user: SMTP_USER, pass: SMTP_PASS },
-      });
-
-      const to = CONTACT_TO || "taimoorghori13003@gmail.com";
-      const from = CONTACT_FROM || SMTP_USER;
-
-      await transporter.sendMail({
-        from,
-        to,
-        subject: `New Jodohmu inquiry — ${name} (${city})`,
-        html: `
-          <h2>New contact submission</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Phone:</strong> ${phone}</p>
-          <p><strong>City:</strong> ${city}</p>
-          <p><strong>Email:</strong> ${email || "Not provided"}</p>
-          <p><strong>Gender:</strong> ${gender || "Not provided"}</p>
-          <p><strong>Age:</strong> ${age ?? "Not provided"}</p>
-        `,
-      });
-    }
+    await sendAdminEmail(
+      `New Jodohmu inquiry — ${name} (${city})`,
+      `
+        <h2>New contact submission</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>City:</strong> ${city}</p>
+        <p><strong>Email:</strong> ${email || "Not provided"}</p>
+        <p><strong>Gender:</strong> ${gender || "Not provided"}</p>
+        <p><strong>Age:</strong> ${age ?? "Not provided"}</p>
+      `
+    );
 
     return NextResponse.json({ success: true });
   } catch (error) {

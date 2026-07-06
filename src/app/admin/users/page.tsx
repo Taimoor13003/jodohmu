@@ -388,7 +388,7 @@ function AdminUsersPageInner() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
   const [createdUsername, setCreatedUsername] = useState<string | null>(null);
-  const [basic, setBasic] = useState({ name: "", email: "", password: "", note: "" });
+  const [basic, setBasic] = useState({ name: "", email: "", password: "", note: "", username: "" });
   const [d, setD] = useState<CandidateDetails>(EMPTY);
   const [photoUrls, setPhotoUrls] = useState<string[]>([]);
   const [photoUploading, setPhotoUploading] = useState(false);
@@ -480,7 +480,7 @@ function AdminUsersPageInner() {
 
   const reset = () => {
     setFormRole("candidate");
-    setBasic({ name: "", email: "", password: "", note: "" });
+    setBasic({ name: "", email: "", password: "", note: "", username: "" });
     setD(EMPTY);
     setPhotoUrls([]);
     setStatus("idle");
@@ -497,8 +497,8 @@ function AdminUsersPageInner() {
       if (!current) throw new Error("Not authenticated");
       const token = await current.getIdToken();
       const payload = formRole === "candidate"
-        ? { role: formRole, name: basic.name, email: basic.email, password: basic.password, details: { ...d, photoUrls } }
-        : { role: formRole, name: basic.name, email: basic.email, password: basic.password, details: { note: basic.note } };
+        ? { role: formRole, name: basic.name, email: basic.email, password: basic.password, username: basic.username, details: { ...d, photoUrls } }
+        : { role: formRole, name: basic.name, email: basic.email, password: basic.password, username: basic.username, details: { note: basic.note } };
 
       const res = await fetch("/api/admin/create-user", {
         method: "POST",
@@ -554,6 +554,9 @@ function AdminUsersPageInner() {
                 </F>
                 <F label="Email">
                   <Input className="h-9 text-sm" type="email" value={basic.email} onChange={e => setBasic({ ...basic, email: e.target.value })} required placeholder="user@example.com" />
+                </F>
+                <F label="Username">
+                  <Input className="h-9 text-sm" required value={basic.username} onChange={e => setBasic({ ...basic, username: e.target.value.toLowerCase() })} placeholder="e.g. ahmad_rizki" />
                 </F>
                 <F label="Temporary Password">
                   <Input className="h-9 text-sm" type="password" value={basic.password} onChange={e => setBasic({ ...basic, password: e.target.value })} required placeholder="Temporary password" />

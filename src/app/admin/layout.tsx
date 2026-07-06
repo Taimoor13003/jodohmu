@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,9 +10,178 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   Users, Briefcase, UserCheck, MessageCircle,
-  Globe, LogOut, Menu,
+  Globe, LogOut, Menu, Bell, MessageSquareText,
 } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
+
+interface AdminNotification {
+  id: string;
+  uid: string;
+  name: string;
+  phone: string | null;
+  waLink: string | null;
+  city: string | null;
+  read: boolean;
+  createdAt: string | null;
+}
+
+function timeAgo(iso: string | null): string {
+  if (!iso) return "";
+  const diffMs = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  return `${Math.floor(hours / 24)}d ago`;
+}
+
+/* ── notification bell ── */
+function NotificationBell() {
+  const router = useRouter();
+  const [notifications, setNotifications] = useState<AdminNotification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const fetchNotifications = useCallback(async () => {
+    const current = auth.currentUser;
+    if (!current) return;
+    try {
+      const token = await current.getIdToken();
+      const res = await fetch("/api/admin/notifications", { headers: { Authorization: `Bearer ${token}` } });
+      if (!res.ok) return;
+      const data = await res.json() as { notifications: AdminNotification[]; unreadCount: number };
+      setNotifications(data.notifications);
+      setUnreadCount(data.unreadCount);
+    } catch { /* silent */ }
+  }, []);
+
+  useEffect(() => {
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 45000);
+    return () => clearInterval(interval);
+  }, [fetchNotifications]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [open]);
+
+  const markRead = async (id: string) => {
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+    setUnreadCount(prev => Math.max(0, prev - 1));
+    const current = auth.currentUser;
+    if (!current) return;
+    const token = await current.getIdToken();
+    await fetch("/api/admin/notifications", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ id }),
+    });
+  };
+
+  const markAllRead = async () => {
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    setUnreadCount(0);
+    const current = auth.currentUser;
+    if (!current) return;
+    const token = await current.getIdToken();
+    await fetch("/api/admin/notifications", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ markAllRead: true }),
+    });
+  };
+
+  return (
+    <div ref={containerRef} style={{ position: "relative" }}>
+      <button
+        onClick={() => setOpen(v => !v)}
+        style={{
+          width: 34, height: 34, borderRadius: 9, position: "relative",
+          background: "transparent", border: "1px solid #E2E8F0", cursor: "pointer",
+          display: "flex", alignItems: "center", justifyContent: "center", color: "#64748B",
+        }}
+        title="Notifications"
+      >
+        <Bell style={{ width: 16, height: 16 }} />
+        {unreadCount > 0 && (
+          <span style={{
+            position: "absolute", top: -4, right: -4, minWidth: 16, height: 16, borderRadius: 8,
+            background: "#C4294A", color: "#fff", fontSize: 10, fontWeight: 700,
+            display: "flex", alignItems: "center", justifyContent: "center", padding: "0 3px",
+          }}>
+            {unreadCount > 9 ? "9+" : unreadCount}
+          </span>
+        )}
+      </button>
+
+      {open && (
+        <div style={{
+          position: "absolute", top: 42, right: 0, width: 340, maxHeight: 420, overflowY: "auto",
+          background: "#fff", borderRadius: 14, border: "1px solid #E2E8F0",
+          boxShadow: "0 12px 32px rgba(15,23,42,0.15)", zIndex: 60,
+        }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 14px", borderBottom: "1px solid #F1F5F9" }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: "#0F172A" }}>Notifications</span>
+            {unreadCount > 0 && (
+              <button onClick={markAllRead} style={{ fontSize: 11.5, fontWeight: 700, color: "#0b3a86", background: "transparent", border: "none", cursor: "pointer" }}>
+                Mark all read
+              </button>
+            )}
+          </div>
+
+          {notifications.length === 0 ? (
+            <div style={{ padding: "24px 14px", textAlign: "center", fontSize: 12.5, color: "#94A3B8" }}>
+              No notifications yet.
+            </div>
+          ) : (
+            notifications.map(n => (
+              <div key={n.id}
+                onClick={() => { markRead(n.id); setOpen(false); router.push(`/admin/candidates/${n.uid}`); }}
+                style={{
+                  display: "flex", gap: 10, padding: "12px 14px", cursor: "pointer",
+                  background: n.read ? "transparent" : "#FFF7ED",
+                  borderBottom: "1px solid #F8FAFC",
+                }}
+              >
+                <div style={{
+                  width: 30, height: 30, borderRadius: 8, flexShrink: 0,
+                  background: "#EEF2F7", color: "#9B2242",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                }}>
+                  <MessageSquareText style={{ width: 14, height: 14 }} />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 12.5, fontWeight: 700, color: "#0F172A", marginBottom: 2 }}>
+                    {n.name} {!n.read && <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#C4294A", marginLeft: 4 }} />}
+                  </p>
+                  <p style={{ fontSize: 11.5, color: "#64748B", marginBottom: 4 }}>
+                    New profile — discovery call not done yet{n.city ? ` · ${n.city}` : ""}
+                  </p>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    {n.waLink && (
+                      <a href={n.waLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
+                        style={{ fontSize: 11, fontWeight: 700, color: "#059669", textDecoration: "none" }}>
+                        Message on WhatsApp →
+                      </a>
+                    )}
+                    <span style={{ fontSize: 10.5, color: "#CBD5E1" }}>{timeAgo(n.createdAt)}</span>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
 
 /* ── constants ── */
 const TOPBAR_H  = 52;
@@ -188,6 +357,8 @@ function Topbar({ onToggle, onMenuHover, onMenuLeave }: {
       </span>
 
       <div style={{ flex: 1 }} />
+
+      <NotificationBell />
 
       {/* Language toggle */}
       <button

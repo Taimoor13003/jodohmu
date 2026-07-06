@@ -16,13 +16,23 @@ interface UserRow {
   name: string;
   email: string;
   role: string;
+  phone: string | null;
+  personStatus: string | null;
   createdAt: Date | null;
 }
+
+const STATUS_BADGE: Record<string, { label: string; className: string }> = {
+  new_lead:                { label: "New Lead",              className: "bg-amber-50 text-amber-700 border-amber-200" },
+  awaiting_discovery_call: { label: "Discovery Call Pending", className: "bg-sky-50 text-sky-700 border-sky-200" },
+};
+
+const LEAD_STATUSES = new Set(["new_lead", "awaiting_discovery_call"]);
 
 export default function CandidatesPage() {
   const { role, loading: authLoading } = useAuth();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<"all" | "leads">("all");
   const router = useRouter();
 
   const fetchUsers = useCallback(async () => {
@@ -37,7 +47,7 @@ export default function CandidatesPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Failed");
       setUsers(
-        (data.users as Array<{ uid: string; name: string; email: string; role: string; createdAt: string | null }>).map(u => ({
+        (data.users as Array<{ uid: string; name: string; email: string; role: string; phone: string | null; personStatus: string | null; createdAt: string | null }>).map(u => ({
           ...u,
           createdAt: u.createdAt ? new Date(u.createdAt) : null,
         }))
@@ -48,6 +58,9 @@ export default function CandidatesPage() {
       setLoading(false);
     }
   }, []);
+
+  const leadCount = users.filter(u => LEAD_STATUSES.has(u.personStatus ?? "")).length;
+  const visibleUsers = filter === "leads" ? users.filter(u => LEAD_STATUSES.has(u.personStatus ?? "")) : users;
 
   useEffect(() => {
     if (role === "admin") fetchUsers();
@@ -95,40 +108,72 @@ export default function CandidatesPage() {
         </button>
       </div>
 
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => setFilter("all")}
+          className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition ${filter === "all" ? "bg-[#0b3a86] text-white border-[#0b3a86]" : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"}`}
+        >
+          All ({users.length})
+        </button>
+        <button
+          onClick={() => setFilter("leads")}
+          className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition ${filter === "leads" ? "bg-[#9B2242] text-white border-[#9B2242]" : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"}`}
+        >
+          New Leads ({leadCount})
+        </button>
+      </div>
+
       <Card className="border-0 shadow-xl">
         <CardContent className="p-0">
           {loading ? (
             <div className="p-8 text-center text-muted-foreground">Loading...</div>
-          ) : users.length === 0 ? (
-            <div className="p-8 text-center text-muted-foreground">No candidates found.</div>
+          ) : visibleUsers.length === 0 ? (
+            <div className="p-8 text-center text-muted-foreground">
+              {filter === "leads" ? "No new leads right now." : "No candidates found."}
+            </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
+                  <TableHead>Phone</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users.map(u => (
-                  <TableRow key={u.uid}>
-                    <TableCell className="font-medium">{u.name}</TableCell>
-                    <TableCell className="text-muted-foreground">{u.email}</TableCell>
-                    <TableCell className="text-muted-foreground text-sm">
-                      {u.createdAt ? u.createdAt.toLocaleDateString() : "—"}
-                    </TableCell>
-                    <TableCell>
-                      <Link
-                        href={`/admin/candidates/${u.uid}`}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-[#9B2242] hover:underline"
-                      >
-                        View profile <ExternalLink className="h-3 w-3" />
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {visibleUsers.map(u => {
+                  const badge = u.personStatus ? STATUS_BADGE[u.personStatus] : null;
+                  return (
+                    <TableRow key={u.uid}>
+                      <TableCell className="font-medium">{u.name}</TableCell>
+                      <TableCell className="text-muted-foreground">{u.email}</TableCell>
+                      <TableCell className="text-muted-foreground">{u.phone ?? "—"}</TableCell>
+                      <TableCell>
+                        {badge ? (
+                          <span className={`px-2.5 py-1 rounded-full border text-[11px] font-bold whitespace-nowrap ${badge.className}`}>
+                            {badge.label}
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground text-sm">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground text-sm">
+                        {u.createdAt ? u.createdAt.toLocaleDateString() : "—"}
+                      </TableCell>
+                      <TableCell>
+                        <Link
+                          href={`/admin/candidates/${u.uid}`}
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-[#9B2242] hover:underline"
+                        >
+                          View profile <ExternalLink className="h-3 w-3" />
+                        </Link>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           )}

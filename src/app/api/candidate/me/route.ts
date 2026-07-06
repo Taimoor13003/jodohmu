@@ -63,8 +63,9 @@ export async function PATCH(req: NextRequest) {
 
     // Read lockedFields from existing doc
     const snap = await adminDb().collection("candidate_intake").doc(decoded.uid).get();
-    const lockedFields: string[] = Array.isArray(snap.data()?.lockedFields)
-      ? (snap.data()!.lockedFields as string[])
+    const existing = snap.data();
+    const lockedFields: string[] = Array.isArray(existing?.lockedFields)
+      ? (existing!.lockedFields as string[])
       : [];
 
     const safe: Record<string, unknown> = {};
@@ -73,10 +74,45 @@ export async function PATCH(req: NextRequest) {
     }
     if (!Object.keys(safe).length) return NextResponse.json({ error: "No writable fields" }, { status: 400 });
 
+    // First time a lead supplies name + phone + gender, mark them ready for a
+    // discovery call and notify the ops team so they can reach out via WhatsApp.
+    const currentStatus = existing?.personStatus;
+    const completingOnboarding =
+      (!currentStatus || currentStatus === "new_lead") &&
+      !!safe.fullName && !!safe.whatsappNumber && !!safe.gender;
+
+    if (completingOnboarding) {
+      safe.personStatus = "awaiting_discovery_call";
+      safe.discoveryCallDone = false;
+      safe.onboardingCompletedAt = FieldValue.serverTimestamp();
+    }
+
     await adminDb().collection("candidate_intake").doc(decoded.uid).set(
       { ...safe, updatedAt: FieldValue.serverTimestamp() },
       { merge: true }
     );
+
+    if (completingOnboarding) {
+      const phoneDigits = String(safe.whatsappNumber).replace(/[^\d+]/g, "").replace(/^\+/, "");
+      try {
+        await adminDb().collection("admin_notifications").add({
+          type: "discovery_call_pending",
+          uid: decoded.uid,
+          name: safe.fullName,
+          phone: safe.whatsappNumber,
+          waLink: `https://wa.me/${phoneDigits}`,
+          gender: safe.gender,
+          age: safe.age ?? null,
+          city: safe.location ?? null,
+          email: existing?.email ?? null,
+          read: false,
+          createdAt: FieldValue.serverTimestamp(),
+        });
+      } catch (err) {
+        console.error("admin notification write failed", err);
+      }
+    }
+
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Error" }, { status: 500 });

@@ -30,6 +30,7 @@ export async function GET(req: NextRequest) {
           name: data.name ?? "—",
           email: data.email ?? "—",
           role: (data.role ?? "candidate") as string,
+          source: (data.source as string | undefined) ?? null,
           createdAt: data.createdAt?.toDate?.()?.toISOString() ?? null,
         };
       })
@@ -40,6 +41,23 @@ export async function GET(req: NextRequest) {
         if (!b.createdAt) return -1;
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       });
+
+    // Join lightweight lead fields from candidate_intake for candidate rows —
+    // dataset is small, so per-row lookups are fine (same tradeoff as above).
+    const candidateUids = users.filter(u => u.role === "candidate").map(u => u.uid);
+    if (candidateUids.length) {
+      const intakeSnaps = await Promise.all(
+        candidateUids.map(uid => adminDb().collection("candidate_intake").doc(uid).get())
+      );
+      const intakeByUid = new Map(
+        intakeSnaps.map(s => [s.id, s.data()])
+      );
+      for (const u of users) {
+        const intake = intakeByUid.get(u.uid);
+        (u as Record<string, unknown>).personStatus = intake?.personStatus ?? null;
+        (u as Record<string, unknown>).phone = intake?.whatsappNumber ?? null;
+      }
+    }
 
     return NextResponse.json({ users });
   } catch (error) {

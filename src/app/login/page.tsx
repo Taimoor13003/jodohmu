@@ -4,17 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "@/lib/firebase";
+import { auth, db, googleProvider } from "@/lib/firebase";
 import { useLanguage } from "@/context/LanguageContext";
 import { useAuth } from "@/context/AuthContext";
 import { AtSign, Eye, EyeOff, Lock } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 import CoverImage from "@/assets/login-cover.png";
 
-const WA_FORGOT   = "https://wa.me/6281122210303?text=Assalamualaikum%2C%20saya%20lupa%20password%20akun%20Jodohmu%20saya.";
-const WA_REGISTER = "https://wa.me/6281122210303?text=Assalamualaikum%2C%20saya%20ingin%20mendaftar%20akun%20di%20Jodohmu.";
+const WA_FORGOT = "https://wa.me/6281122210303?text=Assalamualaikum%2C%20saya%20lupa%20password%20akun%20Jodohmu%20saya.";
 
 export default function LoginPage() {
   const router      = useRouter();
@@ -32,9 +31,18 @@ export default function LoginPage() {
   const [password,   setPassword]   = useState("");
   const [showPwd,    setShowPwd]    = useState(false);
   const [pending,    setPending]    = useState(false);
+  const [googlePending, setGooglePending] = useState(false);
   const [error,      setError]      = useState<string | null>(null);
 
   const l = (id: string, en: string) => lang === "id" ? id : en;
+
+  const routeAfterAuth = (role: string | undefined, needsOnboarding: boolean) => {
+    const redirect = new URLSearchParams(window.location.search).get("redirect");
+    if (redirect)                                    router.push(redirect);
+    else if (role === "admin" || role === "worker")  router.push("/admin");
+    else if (needsOnboarding)                        router.push("/onboarding");
+    else                                              router.push("/dashboard");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,14 +58,32 @@ export default function LoginPage() {
       const cred    = await signInWithEmailAndPassword(auth, email, password);
       const roleDoc = await getDoc(doc(db, "user_roles", cred.user.uid));
       const role    = (roleDoc.data() as { role?: string } | undefined)?.role;
-      const redirect = new URLSearchParams(window.location.search).get("redirect");
-      if (redirect)                                   router.push(redirect);
-      else if (role === "admin" || role === "worker") router.push("/admin");
-      else                                            router.push("/dashboard");
+      routeAfterAuth(role, false);
     } catch {
       setError(t("login.error"));
     } finally {
       setPending(false);
+    }
+  };
+
+  const handleGoogle = async () => {
+    setError(null);
+    setGooglePending(true);
+    try {
+      const cred  = await signInWithPopup(auth, googleProvider);
+      const token = await cred.user.getIdToken();
+      const res   = await fetch("/api/auth/bootstrap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ name: cred.user.displayName }),
+      });
+      const bootstrap = await res.json() as { role?: string; needsOnboarding?: boolean; error?: string };
+      if (!res.ok) throw new Error(bootstrap.error ?? "Bootstrap failed");
+      routeAfterAuth(bootstrap.role, !!bootstrap.needsOnboarding);
+    } catch {
+      setError(l("Gagal masuk dengan Google. Coba lagi.", "Google sign-in failed. Please try again."));
+    } finally {
+      setGooglePending(false);
     }
   };
 
@@ -87,11 +113,37 @@ export default function LoginPage() {
             <p className="mt-1.5 text-sm text-slate-500">
               {l("Belum punya akun?", "Don't have an account?")}
               {" "}
-              <a href={WA_REGISTER} target="_blank" rel="noopener noreferrer"
-                className="font-semibold text-[#9B2242] hover:underline">
-                {l("Hubungi kami", "Contact us")}
-              </a>
+              <Link href="/register" className="font-semibold text-[#9B2242] hover:underline">
+                {l("Daftar sekarang", "Sign up")}
+              </Link>
             </p>
+          </div>
+
+          {/* Google sign-in */}
+          <button
+            type="button" onClick={handleGoogle} disabled={googlePending || pending}
+            className="w-full h-12 flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white text-[15px] font-semibold text-slate-700 shadow-sm hover:bg-slate-50 active:scale-[0.98] transition disabled:opacity-60"
+          >
+            {googlePending ? (
+              <svg className="w-4 h-4 animate-spin text-slate-400" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.47c-.28 1.5-1.13 2.78-2.4 3.63v3.02h3.88c2.27-2.09 3.57-5.17 3.57-8.84z" />
+                <path fill="#34A853" d="M12 24c3.24 0 5.96-1.07 7.95-2.9l-3.88-3.02c-1.08.72-2.45 1.15-4.07 1.15-3.13 0-5.78-2.11-6.73-4.96H1.26v3.12A11.996 11.996 0 0012 24z" />
+                <path fill="#FBBC05" d="M5.27 14.27a7.2 7.2 0 010-4.54V6.61H1.26a12 12 0 000 10.78l4.01-3.12z" />
+                <path fill="#EA4335" d="M12 4.77c1.76 0 3.34.6 4.59 1.79l3.44-3.44C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.69 1.26 6.61l4.01 3.12C6.22 6.88 8.87 4.77 12 4.77z" />
+              </svg>
+            )}
+            {l("Lanjutkan dengan Google", "Continue with Google")}
+          </button>
+
+          <div className="flex items-center gap-3">
+            <div className="h-px flex-1 bg-slate-200" />
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">{l("atau", "or")}</span>
+            <div className="h-px flex-1 bg-slate-200" />
           </div>
 
           {/* form */}
