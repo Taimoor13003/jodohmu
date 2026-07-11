@@ -14,7 +14,7 @@ import {
   ChevronLeft, ChevronRight, X, BookOpen, Shield, Leaf, Star,
   Users, CalendarDays, Target, Link as LinkIcon, CheckCircle2 as CheckCircle2Icon,
   Lock, Brain, ShieldCheck, ClipboardList, History, Sparkles, Pencil,
-  Plus, Trash2,
+  Plus, Trash2, Loader2,
 } from "lucide-react";
 
 type Lang = "id" | "en";
@@ -425,6 +425,8 @@ export default function CandidateProfilePage() {
   const [draft, setDraft]                   = useState<Record<string, string>>({});
   const [saving, setSaving]                 = useState(false);
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [uploadPreview, setUploadPreview]   = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const photoInputRef                       = useRef<HTMLInputElement | null>(null);
 
   const fetchData = useCallback(async () => {
@@ -554,18 +556,37 @@ export default function CandidateProfilePage() {
 
   const MAX_PHOTOS = 5;
 
+  const uploadFile = (url: string, form: FormData, token: string, onProgress: (pct: number) => void) =>
+    new Promise<{ url: string }>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", url);
+      xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100));
+      };
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try { resolve(JSON.parse(xhr.responseText)); }
+          catch { reject(new Error("Bad response")); }
+        } else reject(new Error("Upload failed"));
+      };
+      xhr.onerror = () => reject(new Error("Upload failed"));
+      xhr.send(form);
+    });
+
   const uploadPhoto = async (file: File) => {
     const currentPhotos = Array.isArray(data.photoUrls) ? data.photoUrls as string[] : [];
     if (currentPhotos.length >= MAX_PHOTOS) return;
     setUploadingPhoto(true);
+    setUploadProgress(0);
+    const previewUrl = URL.createObjectURL(file);
+    setUploadPreview(previewUrl);
     try {
       const token = await getIdToken(auth.currentUser!);
       const form = new FormData();
       form.append("file", file);
       form.append("folder", `candidates/${user!.uid}`);
-      const upRes = await fetch("/api/upload", { method: "POST", headers: { Authorization: `Bearer ${token}` }, body: form });
-      if (!upRes.ok) throw new Error("Upload failed");
-      const { url } = await upRes.json() as { url: string };
+      const { url } = await uploadFile("/api/upload", form, token, setUploadProgress);
       const newUrls = [...currentPhotos, url];
       const patchRes = await fetch("/api/candidate/me", {
         method: "PATCH",
@@ -576,6 +597,9 @@ export default function CandidateProfilePage() {
     } catch { /* silent */ }
     finally {
       setUploadingPhoto(false);
+      setUploadProgress(0);
+      setUploadPreview(null);
+      URL.revokeObjectURL(previewUrl);
       if (photoInputRef.current) photoInputRef.current.value = "";
     }
   };
@@ -881,24 +905,62 @@ export default function CandidateProfilePage() {
                         )}
                       </div>
                     ))}
-                    {!stranger && !isLocked("photoUrls") && photos.length < MAX_PHOTOS && (
+                    {!stranger && !isLocked("photoUrls") && uploadingPhoto && (
+                      <div className="aspect-[3/4] rounded-xl overflow-hidden relative">
+                        {uploadPreview && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={uploadPreview} alt="" className="w-full h-full object-cover object-top" />
+                        )}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5" style={{ background: "rgba(15,23,42,0.55)" }}>
+                          <div className="relative w-8 h-8">
+                            <svg className="w-8 h-8 -rotate-90" viewBox="0 0 36 36">
+                              <circle cx="18" cy="18" r="15.5" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="3" />
+                              <circle cx="18" cy="18" r="15.5" fill="none" stroke="#fff" strokeWidth="3"
+                                strokeDasharray={2 * Math.PI * 15.5}
+                                strokeDashoffset={2 * Math.PI * 15.5 * (1 - uploadProgress / 100)}
+                                strokeLinecap="round"
+                                style={{ transition: "stroke-dashoffset 0.15s ease" }} />
+                            </svg>
+                            <Loader2 className="w-4 h-4 text-white animate-spin absolute inset-0 m-auto" />
+                          </div>
+                          <span className="text-[10px] font-bold text-white">{uploadProgress}%</span>
+                        </div>
+                      </div>
+                    )}
+                    {!stranger && !isLocked("photoUrls") && !uploadingPhoto && photos.length < MAX_PHOTOS && (
                       <button
                         onClick={() => photoInputRef.current?.click()}
-                        disabled={uploadingPhoto}
                         className="aspect-[3/4] rounded-xl border-2 border-dashed flex items-center justify-center transition-colors"
-                        style={{ borderColor: C.border, color: C.muted, cursor: uploadingPhoto ? "default" : "pointer" }}>
+                        style={{ borderColor: C.border, color: C.muted, cursor: "pointer" }}>
                         <Plus className="w-5 h-5" />
                       </button>
                     )}
                   </div>
                 : <div className="flex flex-col gap-3">
-                    <p className="text-[13px] italic" style={{ color: C.muted }}>{l("Belum ada foto.", "No photos yet.")}</p>
-                    {!stranger && !isLocked("photoUrls") && (
+                    {!uploadingPhoto && <p className="text-[13px] italic" style={{ color: C.muted }}>{l("Belum ada foto.", "No photos yet.")}</p>}
+                    {!stranger && !isLocked("photoUrls") && uploadingPhoto && (
+                      <div className="flex items-center justify-center gap-3 rounded-xl border-2 border-dashed py-4" style={{ borderColor: C.border }}>
+                        <div className="relative w-6 h-6 shrink-0">
+                          <svg className="w-6 h-6 -rotate-90" viewBox="0 0 36 36">
+                            <circle cx="18" cy="18" r="15.5" fill="none" stroke={C.div} strokeWidth="3" />
+                            <circle cx="18" cy="18" r="15.5" fill="none" stroke={C.g1} strokeWidth="3"
+                              strokeDasharray={2 * Math.PI * 15.5}
+                              strokeDashoffset={2 * Math.PI * 15.5 * (1 - uploadProgress / 100)}
+                              strokeLinecap="round"
+                              style={{ transition: "stroke-dashoffset 0.15s ease" }} />
+                          </svg>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin absolute inset-0 m-auto" style={{ color: C.g1 }} />
+                        </div>
+                        <span className="text-[12.5px] font-semibold" style={{ color: C.body }}>
+                          {l("Mengunggah…", "Uploading…")} {uploadProgress}%
+                        </span>
+                      </div>
+                    )}
+                    {!stranger && !isLocked("photoUrls") && !uploadingPhoto && (
                       <button
                         onClick={() => photoInputRef.current?.click()}
-                        disabled={uploadingPhoto}
                         className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed py-4 text-[12.5px] font-semibold transition-colors"
-                        style={{ borderColor: C.border, color: C.muted, cursor: uploadingPhoto ? "default" : "pointer" }}>
+                        style={{ borderColor: C.border, color: C.muted, cursor: "pointer" }}>
                         <Plus className="w-4 h-4" />
                         {l("Tambah Foto", "Add Photo")}
                       </button>
