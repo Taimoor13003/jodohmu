@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import { analytics } from "@/lib/analytics";
 
-const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
+const contactFormHref = "/register";
 const whatsappHref = "https://wa.me/6281122210303";
 
 const packageWhatsappHref = (name: string) =>
@@ -53,7 +53,7 @@ export function PricingPage() {
             </p>
           </div>
           <Button asChild size="sm" className="shrink-0 rounded-full bg-white px-4 py-1.5 text-xs font-bold text-[#9B2242] shadow-md hover:bg-white/90 sm:px-5 sm:text-sm">
-            <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick('discount_banner', 'pricing')}>
+            <Link href={contactFormHref} onClick={() => analytics.ctaClick('discount_banner', 'pricing')}>
               {t("pricingPage.discount.cta")}
             </Link>
           </Button>
@@ -199,7 +199,7 @@ export function PricingPage() {
                     className="w-full rounded-full py-[22px] text-[17px] font-serif font-bold tracking-wide text-white hover:opacity-95"
                     style={{ background: 'linear-gradient(90deg, #0b1535 0%, #1a1050 100%)', boxShadow: '0 4px 24px rgba(11,21,53,0.35)' }}
                   >
-                    <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick('hero_reg_card', 'pricing')}>
+                    <Link href={contactFormHref} onClick={() => analytics.ctaClick('hero_reg_card', 'pricing')}>
                       <span className="flex w-full items-center px-1">
                         <span className="flex-1 text-center">{t("pricingPage.registration.cardCta")}</span>
                         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 border-[#d4849c]/60 bg-[#b85470]">
@@ -552,7 +552,7 @@ export function PricingPage() {
             <p className="mx-auto max-w-xl text-white/85 text-base leading-relaxed sm:text-lg">{t("pricingPage.cta.subtitle")}</p>
             <div className="flex flex-wrap justify-center gap-3 pt-2">
               <Button asChild size="lg" className="rounded-full bg-white px-7 py-5 text-sm font-extrabold text-[#9B2242] hover:bg-white/90 shadow-xl shadow-black/20 sm:px-10 sm:py-6 sm:text-base">
-                <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick('bottom_cta', 'pricing')}>
+                <Link href={contactFormHref} onClick={() => analytics.ctaClick('bottom_cta', 'pricing')}>
                   {t("pricingPage.cta.button")}
                 </Link>
               </Button>

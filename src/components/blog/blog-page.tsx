@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
 import { Button } from "@/components/ui/button";
 
-const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
+const contactFormHref = "/register";
 
 const articles = [
   { key: "cariJodohSerius", href: "/blog/cari-jodoh-serius" },
@@ -65,7 +65,7 @@ export function BlogPage() {
                   variant="outline"
                   className="border-[#9B2242] text-[#9B2242] hover:bg-[#9B2242]/5"
                 >
-                  <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
+                  <Link href={contactFormHref}>
                     {t("blogPage.sections.article.secondaryCta")}
                   </Link>
                 </Button>

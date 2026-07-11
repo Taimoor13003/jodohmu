@@ -1,7 +1,7 @@
 "use client";
 
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { auth } from "@/lib/firebase";
@@ -14,6 +14,7 @@ import {
   ChevronLeft, ChevronRight, X, BookOpen, Shield, Leaf, Star,
   Users, CalendarDays, Target, Link as LinkIcon, CheckCircle2 as CheckCircle2Icon,
   Lock, Brain, ShieldCheck, ClipboardList, History, Sparkles, Pencil,
+  Plus, Trash2,
 } from "lucide-react";
 
 type Lang = "id" | "en";
@@ -423,6 +424,8 @@ export default function CandidateProfilePage() {
   const [editSection, setEditSection]       = useState<string | null>(null);
   const [draft, setDraft]                   = useState<Record<string, string>>({});
   const [saving, setSaving]                 = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const photoInputRef                       = useRef<HTMLInputElement | null>(null);
 
   const fetchData = useCallback(async () => {
     if (!user) return;
@@ -547,6 +550,55 @@ export default function CandidateProfilePage() {
       }
     } catch { /* silent */ }
     finally { setSaving(false); }
+  };
+
+  const MAX_PHOTOS = 5;
+
+  const uploadPhoto = async (file: File) => {
+    const currentPhotos = Array.isArray(data.photoUrls) ? data.photoUrls as string[] : [];
+    if (currentPhotos.length >= MAX_PHOTOS) return;
+    setUploadingPhoto(true);
+    try {
+      const token = await getIdToken(auth.currentUser!);
+      const form = new FormData();
+      form.append("file", file);
+      form.append("folder", `candidates/${user!.uid}`);
+      const upRes = await fetch("/api/upload", { method: "POST", headers: { Authorization: `Bearer ${token}` }, body: form });
+      if (!upRes.ok) throw new Error("Upload failed");
+      const { url } = await upRes.json() as { url: string };
+      const newUrls = [...currentPhotos, url];
+      const patchRes = await fetch("/api/candidate/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ photoUrls: newUrls }),
+      });
+      if (patchRes.ok) setData(prev => ({ ...prev, photoUrls: newUrls }));
+    } catch { /* silent */ }
+    finally {
+      setUploadingPhoto(false);
+      if (photoInputRef.current) photoInputRef.current.value = "";
+    }
+  };
+
+  const deletePhoto = async (idx: number) => {
+    const currentPhotos = Array.isArray(data.photoUrls) ? data.photoUrls as string[] : [];
+    if (!confirm(lang === "id" ? "Hapus foto ini?" : "Delete this photo?")) return;
+    const newUrls = currentPhotos.filter((_, i) => i !== idx);
+    try {
+      const token = await getIdToken(auth.currentUser!);
+      const res = await fetch("/api/candidate/me", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ photoUrls: newUrls }),
+      });
+      if (res.ok) {
+        setData(prev => ({ ...prev, photoUrls: newUrls }));
+        if (lightboxIdx !== null) {
+          if (newUrls.length === 0) setLightboxIdx(null);
+          else setLightboxIdx(Math.min(lightboxIdx, newUrls.length - 1));
+        }
+      }
+    } catch { /* silent */ }
   };
 
   const l = (id: string, en: string) => lang === "id" ? id : en;
@@ -798,13 +850,18 @@ export default function CandidateProfilePage() {
           {/* Photos */}
           {showPhotos && (!stranger || photos.length > 0) && (
             <SCard title={l("Foto", "Photos")} icon={<Camera className="w-full h-full" />} iconColor="#EC4899" iconBg="#FDF2F8">
-              <div className="flex items-center gap-1.5 mb-3">
-                {photoVis === "visible_all"
-                  ? <><Eye className="w-3.5 h-3.5" style={{ color: "#059669" }} /><span className="text-[11.5px] font-semibold" style={{ color: "#059669" }}>{disp("visible_all", lang)}</span></>
-                  : photoVis === "after_match"
-                    ? <><EyeOff className="w-3.5 h-3.5" style={{ color: C.muted }} /><span className="text-[11.5px] font-semibold" style={{ color: C.muted }}>{disp("after_match", lang)}</span></>
-                    : null
-                }
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-1.5">
+                  {photoVis === "visible_all"
+                    ? <><Eye className="w-3.5 h-3.5" style={{ color: "#059669" }} /><span className="text-[11.5px] font-semibold" style={{ color: "#059669" }}>{disp("visible_all", lang)}</span></>
+                    : photoVis === "after_match"
+                      ? <><EyeOff className="w-3.5 h-3.5" style={{ color: C.muted }} /><span className="text-[11.5px] font-semibold" style={{ color: C.muted }}>{disp("after_match", lang)}</span></>
+                      : null
+                  }
+                </div>
+                {!stranger && !isLocked("photoUrls") && (
+                  <span className="text-[11px]" style={{ color: C.muted }}>{photos.length}/{MAX_PHOTOS}</span>
+                )}
               </div>
               {photos.length > 0
                 ? <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
@@ -814,11 +871,49 @@ export default function CandidateProfilePage() {
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={url} alt={`Photo ${i + 1}`} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform" />
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors rounded-xl" />
+                        {!stranger && !isLocked("photoUrls") && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); deletePhoto(i); }}
+                            className="absolute top-1.5 right-1.5 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            style={{ background: "rgba(15,23,42,0.65)" }}>
+                            <Trash2 className="w-3 h-3 text-white" />
+                          </button>
+                        )}
                       </div>
                     ))}
+                    {!stranger && !isLocked("photoUrls") && photos.length < MAX_PHOTOS && (
+                      <button
+                        onClick={() => photoInputRef.current?.click()}
+                        disabled={uploadingPhoto}
+                        className="aspect-[3/4] rounded-xl border-2 border-dashed flex items-center justify-center transition-colors"
+                        style={{ borderColor: C.border, color: C.muted, cursor: uploadingPhoto ? "default" : "pointer" }}>
+                        <Plus className="w-5 h-5" />
+                      </button>
+                    )}
                   </div>
-                : <p className="text-[13px] italic" style={{ color: C.muted }}>{l("Belum ada foto.", "No photos yet.")}</p>
+                : <div className="flex flex-col gap-3">
+                    <p className="text-[13px] italic" style={{ color: C.muted }}>{l("Belum ada foto.", "No photos yet.")}</p>
+                    {!stranger && !isLocked("photoUrls") && (
+                      <button
+                        onClick={() => photoInputRef.current?.click()}
+                        disabled={uploadingPhoto}
+                        className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed py-4 text-[12.5px] font-semibold transition-colors"
+                        style={{ borderColor: C.border, color: C.muted, cursor: uploadingPhoto ? "default" : "pointer" }}>
+                        <Plus className="w-4 h-4" />
+                        {l("Tambah Foto", "Add Photo")}
+                      </button>
+                    )}
+                  </div>
               }
+              {!stranger && !isLocked("photoUrls") && (
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/heic,image/gif"
+                  className="hidden"
+                  onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadPhoto(f); }}
+                />
+              )}
             </SCard>
           )}
 

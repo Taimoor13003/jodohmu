@@ -72,6 +72,20 @@ export async function PATCH(req: NextRequest) {
     for (const [k, v] of Object.entries(body)) {
       if (ALL_WRITABLE.has(k) && !lockedFields.includes(k)) safe[k] = v;
     }
+
+    // Candidates may manage their own photos, capped at 5, unless admin-locked
+    if (
+      Array.isArray(body.photoUrls) &&
+      !lockedFields.includes("photoUrls") &&
+      (body.photoUrls as unknown[]).every((u) => typeof u === "string")
+    ) {
+      const photoUrls = body.photoUrls as string[];
+      if (photoUrls.length > 5) {
+        return NextResponse.json({ error: "Max 5 photos" }, { status: 400 });
+      }
+      safe.photoUrls = photoUrls;
+    }
+
     if (!Object.keys(safe).length) return NextResponse.json({ error: "No writable fields" }, { status: 400 });
 
     // First time a lead supplies name + phone + gender, mark them ready for a

@@ -6,7 +6,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { getRelatedPosts } from "@/lib/blog-posts";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
-const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
+const contactFormHref = "/register";
 const pointKeys = ["0", "1", "2", "3"];
 const stepKeys = ["0", "1", "2", "3", "4"];
 const handleKeys = ["0", "1", "2", "3"];
@@ -70,7 +70,7 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
       external: false,
     })),
     { href: "/faq", label: t("blogArticle.related.faq"), external: false },
-    { href: contactFormHref, label: t("blogArticle.related.register"), external: true },
+    { href: contactFormHref, label: t("blogArticle.related.register"), external: false },
   ];
 
   return (
@@ -108,7 +108,7 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
               <p className="text-base text-[#2d3150]">{t(`${articleKey}.heroLead`)}</p>
               <div className="flex flex-wrap gap-3 pt-2">
                 <Button asChild size="lg" className="bg-[#0b3a86] text-white hover:bg-[#0a357a]">
-                  <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
+                  <Link href={contactFormHref}>
                     {t(`${articleKey}.ctaPrimary`)}
                   </Link>
                 </Button>
@@ -254,7 +254,7 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
             </div>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg" className="bg-white text-[#0b3a86] hover:bg-white/90">
-                <Link href={contactFormHref} target="_blank" rel="noopener noreferrer">
+                <Link href={contactFormHref}>
                   {t(`${articleKey}.ctaPrimary`)}
                 </Link>
               </Button>

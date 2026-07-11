@@ -104,7 +104,7 @@ export default function HomePage() {
     t("homepage.meetings.promises.family")
   ];
 
-  const contactFormHref = "https://forms.gle/WUSTC71ZrpbvSXso6";
+  const contactFormHref = "/register";
 
   const heroTagline = t("homepage.hero.tagline");
 
@@ -171,7 +171,7 @@ export default function HomePage() {
                     size="lg"
                     className="rounded-full bg-white px-10 py-6 text-lg font-semibold text-[#9B2242] shadow-[0_14px_28px_rgba(0,0,0,0.25)] transition-all duration-300 hover:bg-white/90"
                   >
-                    <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick('hero_register', 'home')}>
+                    <Link href={contactFormHref} onClick={() => analytics.ctaClick('hero_register', 'home')}>
                       {t("homepage.hero.cta")}
                     </Link>
                   </Button>
@@ -353,7 +353,7 @@ export default function HomePage() {
                     size="lg"
                     className="rounded-full bg-gradient-to-r from-[#9B2242] to-[#c24977] px-8 py-6 text-sm font-semibold text-white shadow-lg shadow-[#9B2242]/30 transition-all duration-300 hover:shadow-[#9B2242]/40"
                   >
-                    <Link href={contactFormHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.ctaClick('story_register', 'home')}>
+                    <Link href={contactFormHref} onClick={() => analytics.ctaClick('story_register', 'home')}>
                       {t("homepage.features.storyCta")}
                     </Link>
                   </Button>
