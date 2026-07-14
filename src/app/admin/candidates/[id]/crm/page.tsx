@@ -195,7 +195,7 @@ export default function CRMPage({ params }: { params: { id: string } }) {
       <div className="w-8 h-8 rounded-full border-2 border-transparent animate-spin" style={{ borderTopColor: C.primary }} />
     </div>
   );
-  if (role !== "admin") return (
+  if (role !== "admin" && role !== "worker") return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: C.bg }}>
       <p style={{ color: C.muted }}>Access denied</p>
     </div>

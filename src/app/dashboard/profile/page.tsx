@@ -658,7 +658,7 @@ export default function CandidateProfilePage() {
     personal:  ["gender","dateOfBirth","nationality","ethnicity","height","weight","bloodType","birthPlace","currentlyLivingWith","ownHealthCondition","whatsappNumber"],
     career:    ["occupation","employmentStatus","incomeRange","propertyStatus","hasDebts"],
     lifestyle: ["smokingStatus","alcoholUse","exerciseFrequency","socialPreference"],
-    values:    ["quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing"],
+    values:    ["quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing","familyOriented"],
     religion:  ["religion","religiousPracticeLevel","prayerHabit","quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing","hijab","beard","waliAvailability","islamicOrganization","churchAttendance","baptized","bibleReading","religionNotes"],
     marriage:  ["maritalTimeline","weddingPreference","financialManagementStyle","decisionMakingStyle"],
     roles:     ["myRoleExpectation","roleExpectationsHusband","roleExpectationsWife"],
@@ -1109,13 +1109,14 @@ export default function CandidateProfilePage() {
             )}
 
             {stranger ? (
-              hasAny("quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing") && (
+              hasAny("quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing","familyOriented") && (
                 <SCard title={l("Nilai & Keyakinan","Values & Beliefs")} icon={<Star className="w-full h-full" />} iconColor="#F59E0B" iconBg="#FFFBEB">
                   <FieldGrid>
                     <Field label={l("Baca Al-Qur'an","Quran Reading")} value={s("quranReading")} stranger={stranger} />
                     <Field label={l("Ilmu Islam","Islamic Knowledge")} value={s("islamicKnowledgeLevel")} stranger={stranger} />
                     <Field label={l("Gaya Hidup Halal","Halal Lifestyle")} value={s("halalLifestyleStrictness")} stranger={stranger} />
                     <Field label={l("Pergaulan Campur","Mixed Socializing")} value={s("viewsOnMixedSocializing")} stranger={stranger} />
+                    <Field label={l("Orientasi Keluarga (1–10)","Family Oriented (1–10)")} value={raw(data,"familyOriented")} stranger={stranger} />
                   </FieldGrid>
                 </SCard>
               )
@@ -1127,13 +1128,15 @@ export default function CandidateProfilePage() {
                     <EInput field="islamicKnowledgeLevel" label={l("Ilmu Islam","Islamic Knowledge")} type="sel" opts={vOpt(["none","basic","intermediate","advanced"])} draft={draft} locked={isLocked("islamicKnowledgeLevel")} upd={upd} />
                     <EInput field="halalLifestyleStrictness" label={l("Gaya Hidup Halal","Halal Lifestyle")} type="sel" opts={vOpt(["strict","moderate","relaxed"])} draft={draft} locked={isLocked("halalLifestyleStrictness")} upd={upd} />
                     <EInput field="viewsOnMixedSocializing" label={l("Pergaulan Campur","Mixed Socializing")} type="sel" opts={vOpt(["avoid","limited","comfortable"])} draft={draft} locked={isLocked("viewsOnMixedSocializing")} upd={upd} />
+                    <EInput field="familyOriented" label={l("Orientasi Keluarga (1–10)","Family Oriented (1–10)")} type="sel" opts={["1","2","3","4","5","6","7","8","9","10"].map(n => [n, n] as [string, string])} draft={draft} locked={isLocked("familyOriented")} upd={upd} />
                   </FieldGrid>
-                ) : hasAny("quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing") ? (
+                ) : hasAny("quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing","familyOriented") ? (
                   <FieldGrid>
                     <Field label={l("Baca Al-Qur'an","Quran Reading")} value={s("quranReading")} stranger={stranger} />
                     <Field label={l("Ilmu Islam","Islamic Knowledge")} value={s("islamicKnowledgeLevel")} stranger={stranger} />
                     <Field label={l("Gaya Hidup Halal","Halal Lifestyle")} value={s("halalLifestyleStrictness")} stranger={stranger} />
                     <Field label={l("Pergaulan Campur","Mixed Socializing")} value={s("viewsOnMixedSocializing")} stranger={stranger} />
+                    <Field label={l("Orientasi Keluarga (1–10)","Family Oriented (1–10)")} value={raw(data,"familyOriented")} stranger={stranger} />
                   </FieldGrid>
                 ) : (
                   <EmptyHint />

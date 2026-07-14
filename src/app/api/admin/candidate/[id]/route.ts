@@ -13,8 +13,9 @@ async function canAccess(requesterUid: string, candidateId: string): Promise<{ o
   if (role === "worker") {
     const doc = await adminDb().collection("candidate_intake").doc(candidateId).get();
     const assigned: string[] = doc.data()?.assignedWorkers ?? [];
-    const canEdit = assigned.includes(requesterUid);
-    return { ok: true, canEdit };
+    const isAssigned = assigned.includes(requesterUid);
+    // Workers can only view/edit clients assigned to them, with full admin-level edit access
+    return { ok: isAssigned, canEdit: isAssigned };
   }
   // Candidate can view their own profile
   if (role === "candidate" && requesterUid === candidateId) {

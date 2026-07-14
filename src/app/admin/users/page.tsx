@@ -59,6 +59,7 @@ interface CandidateDetails {
   religion: string;
   religiousPracticeLevel: string;
   viewsOnMixedSocializing: string;
+  familyOriented: string;
 
   // Muslim
   prayerHabit: string;
@@ -192,7 +193,7 @@ const EMPTY: CandidateDetails = {
   maritalStatus: "", previousMarriageCount: "", divorceYear: "", divorceInitiatedBy: "",
   previousDivorceReason: "", timeToHealFromDivorce: "", childrenFromPreviousMarriage: "",
   custodyArrangement: "", coParentingRelationship: "", lessonsFromPastRelationships: "",
-  religion: "", religiousPracticeLevel: "", viewsOnMixedSocializing: "",
+  religion: "", religiousPracticeLevel: "", viewsOnMixedSocializing: "", familyOriented: "",
   prayerHabit: "", quranReading: "", hijab: "", beard: "", islamicKnowledgeLevel: "",
   halalLifestyleStrictness: "", waliAvailability: "", maharExpectation: "", maharBudget: "",
   polygamyView: "",
@@ -435,6 +436,7 @@ function AdminUsersPageInner() {
   }, []);
 
   useEffect(() => { if (role === "admin") fetchUsers(); }, [role, fetchUsers]);
+  useEffect(() => { if (role === "worker") setFormRole("candidate"); }, [role]);
 
   if (authLoading) {
     return (
@@ -444,7 +446,7 @@ function AdminUsersPageInner() {
     );
   }
 
-  if (role !== "admin") {
+  if (role !== "admin" && role !== "worker") {
     return (
       <div className="container mx-auto max-w-3xl p-6">
         <Card><CardHeader><CardTitle>Unauthorized</CardTitle></CardHeader>
@@ -525,13 +527,15 @@ function AdminUsersPageInner() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-[#0b3a86]">Users</h1>
-          <p className="text-muted-foreground">All registered users across all roles.</p>
+          <h1 className="text-3xl font-bold text-[#0b3a86]">{role === "admin" ? "Users" : "Add Client"}</h1>
+          <p className="text-muted-foreground">
+            {role === "admin" ? "All registered users across all roles." : "Create a new client profile — you'll be assigned to it automatically."}
+          </p>
         </div>
         <Dialog open={dialogOpen} onOpenChange={open => { setDialogOpen(open); if (!open) reset(); }}>
           <DialogTrigger asChild>
             <Button className="rounded-full bg-gradient-to-r from-[#9B2242] to-[#0b3a86] text-white gap-2">
-              <UserPlus className="h-4 w-4" /> Create user
+              <UserPlus className="h-4 w-4" /> {role === "admin" ? "Create user" : "Create client"}
             </Button>
           </DialogTrigger>
 
@@ -546,8 +550,12 @@ function AdminUsersPageInner() {
               <div className="grid grid-cols-2 gap-4">
                 <Sec title="Account" />
                 <F label="Role">
-                  <Sel value={formRole} onChange={v => setFormRole(v as Role)} placeholder="Select role"
-                    options={[{ value: "candidate", label: "Candidate" }, { value: "worker", label: "Worker" }, { value: "admin", label: "Admin" }]} />
+                  {role === "admin" ? (
+                    <Sel value={formRole} onChange={v => setFormRole(v as Role)} placeholder="Select role"
+                      options={[{ value: "candidate", label: "Candidate" }, { value: "worker", label: "Worker" }, { value: "admin", label: "Admin" }]} />
+                  ) : (
+                    <Input className="h-9 text-sm" value="Candidate" disabled />
+                  )}
                 </F>
                 <F label="Full Name">
                   <Input className="h-9 text-sm" value={basic.name} onChange={e => setBasic({ ...basic, name: e.target.value })} required placeholder="Full name" />
@@ -1261,6 +1269,9 @@ function AdminUsersPageInner() {
                       { value: "early_stages", label: "Early stages" },
                     ]} />
                 </F>
+                <F label="Family Oriented (1–10)">
+                  <Input className="h-9 text-sm" type="number" value={d.familyOriented} onChange={inp("familyOriented")} placeholder="e.g. 8" min={1} max={10} />
+                </F>
                 <F label="Greatest Strengths in Marriage" wide>
                   <Textarea className="text-sm" rows={2} value={d.strengthsInMarriage} onChange={inp("strengthsInMarriage")} placeholder="e.g. patience, loyalty, communication, emotional support..." />
                 </F>
@@ -1651,43 +1662,45 @@ function AdminUsersPageInner() {
         </Dialog>
       </div>
 
-      {/* Users table */}
-      <Card className="border-0 shadow-xl">
-        <CardContent className="p-0">
-          {loading ? (
-            <div className="p-8 text-center text-muted-foreground">Loading users...</div>
-          ) : users.length === 0 ? (
-            <div className="p-8 text-center text-muted-foreground">No users found.</div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Created</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {users.map(u => (
-                  <TableRow key={u.uid}>
-                    <TableCell className="font-medium">{u.name}</TableCell>
-                    <TableCell className="text-muted-foreground">{u.email}</TableCell>
-                    <TableCell>
-                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${ROLE_BADGE[u.role]}`}>
-                        {u.role}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-muted-foreground text-sm">
-                      {u.createdAt ? u.createdAt.toLocaleDateString() : "—"}
-                    </TableCell>
+      {/* Users table — admin only; workers only create clients, they don't browse the roster */}
+      {role === "admin" && (
+        <Card className="border-0 shadow-xl">
+          <CardContent className="p-0">
+            {loading ? (
+              <div className="p-8 text-center text-muted-foreground">Loading users...</div>
+            ) : users.length === 0 ? (
+              <div className="p-8 text-center text-muted-foreground">No users found.</div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Created</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+                </TableHeader>
+                <TableBody>
+                  {users.map(u => (
+                    <TableRow key={u.uid}>
+                      <TableCell className="font-medium">{u.name}</TableCell>
+                      <TableCell className="text-muted-foreground">{u.email}</TableCell>
+                      <TableCell>
+                        <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${ROLE_BADGE[u.role]}`}>
+                          {u.role}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground text-sm">
+                        {u.createdAt ? u.createdAt.toLocaleDateString() : "—"}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

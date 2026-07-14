@@ -31,7 +31,7 @@ const ALL_WRITABLE = new Set([
   "smokingStatus", "alcoholUse", "exerciseFrequency", "socialPreference",
   // values
   "quranReading", "islamicKnowledgeLevel", "halalLifestyleStrictness",
-  "viewsOnMixedSocializing", "openToPolygamy",
+  "viewsOnMixedSocializing", "openToPolygamy", "familyOriented",
   // religion
   "religion", "religiousPracticeLevel", "prayerHabit", "hijab", "beard",
   "waliAvailability", "islamicOrganization", "churchAttendance", "baptized",

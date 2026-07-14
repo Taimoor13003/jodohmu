@@ -7,14 +7,20 @@ async function getRole(uid: string) {
   return snap.data()?.role ?? null;
 }
 
-async function requireAdmin(req: NextRequest) {
+// Admins may manage CRM for any candidate; workers only for clients assigned to them
+async function requireCrmAccess(req: NextRequest, candidateId: string) {
   const token = req.headers.get("authorization")?.replace("Bearer ", "");
   if (!token) return null;
   try {
     const decoded = await adminAuth().verifyIdToken(token);
     const role = await getRole(decoded.uid);
-    if (role !== "admin") return null;
-    return decoded;
+    if (role === "admin") return decoded;
+    if (role === "worker") {
+      const doc = await adminDb().collection("candidate_intake").doc(candidateId).get();
+      const assigned: string[] = doc.data()?.assignedWorkers ?? [];
+      if (assigned.includes(decoded.uid)) return decoded;
+    }
+    return null;
   } catch {
     return null;
   }
@@ -23,7 +29,7 @@ async function requireAdmin(req: NextRequest) {
 /* GET /api/admin/crm/[id] — list entries + candidate meta */
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const caller = await requireAdmin(req);
+  const caller = await requireCrmAccess(req, id);
   if (!caller) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   try {
@@ -49,7 +55,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 /* POST /api/admin/crm/[id] — add new entry */
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const caller = await requireAdmin(req);
+  const caller = await requireCrmAccess(req, id);
   if (!caller) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   try {
@@ -71,7 +77,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 /* PATCH /api/admin/crm/[id] — update candidate CRM meta fields */
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const caller = await requireAdmin(req);
+  const caller = await requireCrmAccess(req, id);
   if (!caller) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   try {
@@ -90,7 +96,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 /* DELETE /api/admin/crm/[id]?entry=<entryId> — delete a log entry */
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const caller = await requireAdmin(req);
+  const caller = await requireCrmAccess(req, id);
   if (!caller) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const entryId = new URL(req.url).searchParams.get("entry");

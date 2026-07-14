@@ -11,8 +11,9 @@ export async function GET(req: NextRequest) {
     const token = authHeader.replace("Bearer ", "");
     const decoded = await adminAuth().verifyIdToken(token);
 
-    const requesterSnap = await adminDb().collection("user_roles").doc(decoded.uid).get();
-    if (requesterSnap.data()?.role !== "admin") {
+    const requesterRole = (await adminDb().collection("user_roles").doc(decoded.uid).get()).data()?.role;
+    // Admins can list any role; workers may only list candidates (scoped to their own assignments below)
+    if (requesterRole !== "admin" && !(requesterRole === "worker" && req.nextUrl.searchParams.get("role") === "candidate")) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -22,7 +23,7 @@ export async function GET(req: NextRequest) {
     // Filter by role and sort in memory — user count is small.
     const snap = await adminDb().collection("user_roles").get();
 
-    const users = snap.docs
+    let users = snap.docs
       .map(doc => {
         const data = doc.data();
         return {
@@ -56,6 +57,16 @@ export async function GET(req: NextRequest) {
         const intake = intakeByUid.get(u.uid);
         (u as Record<string, unknown>).personStatus = intake?.personStatus ?? null;
         (u as Record<string, unknown>).phone = intake?.whatsappNumber ?? null;
+      }
+
+      // Workers only ever see candidates assigned to them
+      if (requesterRole === "worker") {
+        const assignedUids = new Set(
+          intakeSnaps
+            .filter(s => ((s.data()?.assignedWorkers as string[] | undefined) ?? []).includes(decoded.uid))
+            .map(s => s.id)
+        );
+        users = users.filter(u => assignedUids.has(u.uid));
       }
     }
 

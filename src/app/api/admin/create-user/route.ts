@@ -23,12 +23,14 @@ export async function POST(req: NextRequest) {
     // Check requester role
     const requesterRoleSnap = await adminDb().collection("user_roles").doc(requesterUid).get();
     const requesterRole = requesterRoleSnap.exists ? (requesterRoleSnap.data()?.role as Role | undefined) : undefined;
-    if (requesterRole !== "admin") {
-      return badRequest("Forbidden", 403);
-    }
 
     const body = await req.json();
     const { role, email, password, name, details, username: rawUsername } = body ?? {};
+
+    // Admins can create any role; workers may only create candidates (their own clients)
+    if (requesterRole !== "admin" && !(requesterRole === "worker" && role === "candidate")) {
+      return badRequest("Forbidden", 403);
+    }
 
     if (!role || !["admin", "worker", "candidate"].includes(role)) {
       return badRequest("Invalid role");
@@ -80,6 +82,8 @@ export async function POST(req: NextRequest) {
         ...details,
         email: emailLower,
         name,
+        // Workers get auto-assigned to clients they create so they can edit them right away
+        ...(requesterRole === "worker" ? { assignedWorkers: [requesterUid] } : {}),
         createdAt: FieldValue.serverTimestamp(),
         createdBy: requesterUid,
       });

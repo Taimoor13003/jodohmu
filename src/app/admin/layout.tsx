@@ -195,12 +195,14 @@ const NAV = [
 ];
 
 /* ── sidebar ── */
-function Sidebar({ open, onClose, onSidebarEnter, onSidebarLeave, onLogout }: {
+function Sidebar({ open, onClose, onSidebarEnter, onSidebarLeave, onLogout, role }: {
   open: boolean; onClose: () => void;
   onSidebarEnter: () => void; onSidebarLeave: () => void;
   onLogout: () => void;
+  role: string;
 }) {
   const pathname = usePathname();
+  const nav = role === "worker" ? NAV.filter(item => item.href === "/admin/candidates" || item.href === "/admin/chat") : NAV;
 
   return (
     <div
@@ -232,7 +234,7 @@ function Sidebar({ open, onClose, onSidebarEnter, onSidebarLeave, onLogout }: {
 
       {/* Nav */}
       <nav style={{ flex: 1, overflowY: "auto", padding: "6px 8px", display: "flex", flexDirection: "column", gap: 2 }}>
-        {NAV.map(item => {
+        {nav.map(item => {
           const active = pathname === item.href || pathname.startsWith(item.href + "/");
           return (
             <Link
@@ -417,6 +419,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { role } = useAuth();
   const openTimerRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -476,6 +479,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         onSidebarEnter={handleSidebarEnter}
         onSidebarLeave={handleSidebarLeave}
         onLogout={async () => { await signOut(auth); router.push("/login"); }}
+        role={role}
       />
 
       {/* Main content — always full width, never pushed by sidebar */}

@@ -46,7 +46,7 @@ interface WorkerRow { uid: string; name: string; email: string }
 /* ── section → field map ─────────────────────────────────────────────── */
 const SF: Record<string, string[]> = {
   "tentang-saya":    ["aboutMe"],
-  "nilai-keyakinan": ["quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing"],
+  "nilai-keyakinan": ["quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing","familyOriented"],
   "gaya-hidup":      ["smokingStatus","alcoholUse","drugUse","exerciseFrequency","socialPreference","dietaryRestrictions"],
   "tujuan":          ["maritalTimeline","weddingPreference","financialManagementStyle","decisionMakingStyle"],
   "profil-agama":    ["religion","religiousPracticeLevel","prayerHabit","quranReading","hijab","beard","waliAvailability","maharExpectation","maharBudget","polygamyView"],
@@ -256,6 +256,7 @@ const V: Record<string, Record<Lang, string>> = {
 /* ── field dropdown options ──────────────────────────────────────────── */
 const OPTS: Record<string, string[]> = {
   gender:                      ["male","female"],
+  familyOriented:              ["1","2","3","4","5","6","7","8","9","10"],
   profileStatus:               ["not_registered","registered","id_verified","bg_checked","psych_assessed","inactive"],
   personStatus:                ["registered_looking","matched","in_taaruf","family_meeting","closed_success","closed_withdrawn"],
   openToTaaruf:                ["ready","preparing","no"],
@@ -401,6 +402,7 @@ const T: Record<Lang, Record<string, string>> = {
     f_strengths: "Kekuatan dalam pernikahan", f_growth: "Pertumbuhan diri", f_goals: "Tujuan jangka panjang",
     f_smoking: "Rokok", f_alcohol: "Alkohol", f_exercise: "Olahraga", f_social: "Sosial",
     f_prayer: "Shalat", f_quran: "Quran", f_islamic: "Ilmu Islam", f_halal: "Gaya Hidup Halal",
+    f_family_oriented: "Orientasi Keluarga (1–10)",
     f_pref_religion: "Agama", f_pref_minage: "Usia min", f_pref_maxage: "Usia maks",
     f_pref_divorced: "Status sebelumnya", f_pref_ethnicity: "Beda etnis",
     f_timeline: "Target Waktu", f_wedding: "Preferensi Pernikahan",
@@ -481,6 +483,7 @@ const T: Record<Lang, Record<string, string>> = {
     f_strengths: "Strengths in marriage", f_growth: "Personal growth", f_goals: "Long-term life goals",
     f_smoking: "Smoking", f_alcohol: "Alcohol", f_exercise: "Exercise", f_social: "Social",
     f_prayer: "Prayer", f_quran: "Quran", f_islamic: "Islamic knowledge", f_halal: "Halal lifestyle",
+    f_family_oriented: "Family Oriented (1–10)",
     f_pref_religion: "Religion", f_pref_minage: "Min age", f_pref_maxage: "Max age",
     f_pref_divorced: "Previous status", f_pref_ethnicity: "Diff. ethnicity",
     f_timeline: "Timeline", f_wedding: "Wedding preference",
@@ -1704,6 +1707,7 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
                       { k:"quranReading",            l: t.f_quran },
                       { k:"islamicKnowledgeLevel",   l: t.f_islamic },
                       { k:"halalLifestyleStrictness",l: t.f_halal },
+                      { k:"familyOriented",          l: t.f_family_oriented },
                     ].map(f => (
                       <div key={f.k}>
                         <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: C.muted }}>{f.l}</p>

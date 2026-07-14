@@ -41,7 +41,7 @@ export default function CandidatesPage() {
       const current = auth.currentUser;
       if (!current) return;
       const token = await current.getIdToken();
-      const res = await fetch("/api/admin/list-users?role=candidate", {
+      const res = await fetch(`/api/admin/list-users?role=candidate`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -63,7 +63,7 @@ export default function CandidatesPage() {
   const visibleUsers = filter === "leads" ? users.filter(u => LEAD_STATUSES.has(u.personStatus ?? "")) : users;
 
   useEffect(() => {
-    if (role === "admin") fetchUsers();
+    if (role === "admin" || role === "worker") fetchUsers();
   }, [role, fetchUsers]);
 
   if (authLoading) {
@@ -74,7 +74,7 @@ export default function CandidatesPage() {
     );
   }
 
-  if (role !== "admin") {
+  if (role !== "admin" && role !== "worker") {
     return (
       <div className="container mx-auto max-w-3xl p-6">
         <Card>

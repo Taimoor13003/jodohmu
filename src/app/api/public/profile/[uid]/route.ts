@@ -5,7 +5,7 @@ const PUBLIC_FIELDS = new Set([
   "fullName","age","gender","location","occupation","educations",
   "aboutMe","photoUrls","photoVisibility",
   "smokingStatus","alcoholUse","exerciseFrequency","socialPreference",
-  "quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing",
+  "quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing","familyOriented",
   "religion","religiousPracticeLevel","prayerHabit","hijab","beard","polygamyView","waliAvailability",
   "maritalStatus","maritalTimeline","weddingPreference","financialManagementStyle","decisionMakingStyle",
   "roleExpectationsHusband","roleExpectationsWife",
