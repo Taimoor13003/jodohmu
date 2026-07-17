@@ -58,6 +58,13 @@ export default function LoginPage() {
       const cred    = await signInWithEmailAndPassword(auth, email, password);
       const roleDoc = await getDoc(doc(db, "user_roles", cred.user.uid));
       const role    = (roleDoc.data() as { role?: string } | undefined)?.role;
+      if (role !== "admin" && role !== "worker") {
+        fetch("/api/push", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ targetRole: "admin", title: "Login baru 👤", body: `${email} baru saja masuk` }),
+        }).catch(() => {});
+      }
       routeAfterAuth(role, false);
     } catch {
       setError(t("login.error"));

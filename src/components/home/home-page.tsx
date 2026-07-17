@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/components/layout/animated-section";
@@ -104,7 +104,7 @@ export default function HomePage() {
     t("homepage.meetings.promises.family")
   ];
 
-  const contactFormHref = "/register";
+  const [showForm, setShowForm] = useState(false);
 
   const heroTagline = t("homepage.hero.tagline");
 
@@ -167,13 +167,11 @@ export default function HomePage() {
               >
                 <div className="flex flex-wrap items-center gap-4">
                   <Button
-                    asChild
                     size="lg"
                     className="rounded-full bg-white px-10 py-6 text-lg font-semibold text-[#9B2242] shadow-[0_14px_28px_rgba(0,0,0,0.25)] transition-all duration-300 hover:bg-white/90"
+                    onClick={() => { setShowForm(true); analytics.ctaClick('hero_register', 'home'); }}
                   >
-                    <Link href={contactFormHref} onClick={() => analytics.ctaClick('hero_register', 'home')}>
-                      {t("homepage.hero.cta")}
-                    </Link>
+                    {t("homepage.hero.cta")}
                   </Button>
                   <Button
                     asChild
@@ -349,13 +347,11 @@ export default function HomePage() {
 
                 <div className="flex flex-wrap items-center gap-4">
                   <Button
-                    asChild
                     size="lg"
                     className="rounded-full bg-gradient-to-r from-[#9B2242] to-[#c24977] px-8 py-6 text-sm font-semibold text-white shadow-lg shadow-[#9B2242]/30 transition-all duration-300 hover:shadow-[#9B2242]/40"
+                    onClick={() => { setShowForm(true); analytics.ctaClick('story_register', 'home'); }}
                   >
-                    <Link href={contactFormHref} onClick={() => analytics.ctaClick('story_register', 'home')}>
-                      {t("homepage.features.storyCta")}
-                    </Link>
+                    {t("homepage.features.storyCta")}
                   </Button>
                   <p className="text-xs text-[#6a3952]/70 max-w-[260px]">
                     {t("homepage.features.storyFootnote")}
@@ -610,6 +606,32 @@ export default function HomePage() {
           </motion.div>
         </AnimatedSection>
       </main>
+
+      {/* Google Form modal */}
+      {showForm && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          onClick={() => setShowForm(false)}
+        >
+          <div
+            className="relative w-full max-w-2xl h-[90vh] rounded-2xl overflow-hidden shadow-2xl bg-white"
+            onClick={e => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowForm(false)}
+              className="absolute top-3 right-3 z-10 flex items-center justify-center w-8 h-8 rounded-full bg-black/20 text-white hover:bg-black/40 transition"
+              aria-label="Close"
+            >
+              ✕
+            </button>
+            <iframe
+              src="https://forms.gle/zF2xZV9hFAW7aXcp9"
+              className="w-full h-full border-0"
+              title="Registration Form"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { UserPlus, ExternalLink } from "lucide-react";
+import { UserPlus, ExternalLink, MessageCircle } from "lucide-react";
 import Link from "next/link";
 
 interface UserRow {
@@ -164,12 +164,21 @@ export default function CandidatesPage() {
                         {u.createdAt ? u.createdAt.toLocaleDateString() : "—"}
                       </TableCell>
                       <TableCell>
-                        <Link
-                          href={`/admin/candidates/${u.uid}`}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-[#9B2242] hover:underline"
-                        >
-                          View profile <ExternalLink className="h-3 w-3" />
-                        </Link>
+                        <div className="flex items-center gap-3">
+                          <Link
+                            href={`/admin/candidates/${u.uid}`}
+                            className="inline-flex items-center gap-1 text-xs font-semibold text-[#9B2242] hover:underline"
+                          >
+                            View profile <ExternalLink className="h-3 w-3" />
+                          </Link>
+                          <Link
+                            href={`/admin/chat?uid=${u.uid}&name=${encodeURIComponent(u.name)}`}
+                            className="inline-flex items-center justify-center w-7 h-7 rounded-full hover:bg-slate-100 transition text-slate-400 hover:text-[#0b3a86]"
+                            title={`Chat with ${u.name}`}
+                          >
+                            <MessageCircle className="h-4 w-4" />
+                          </Link>
+                        </div>
                       </TableCell>
                     </TableRow>
                   );

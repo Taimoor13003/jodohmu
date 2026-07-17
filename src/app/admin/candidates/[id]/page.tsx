@@ -15,7 +15,7 @@ import {
   AlertTriangle, CheckCircle, Fingerprint, Award,
   Pencil, Save, X, UserPlus, Trash2, Clock, Star, ToggleLeft,
   BookOpen, Shield, Leaf, Target, Users, CalendarDays,
-  ArrowLeft, LayoutList, Plus, Download, FileText,
+  ArrowLeft, LayoutList, Plus, Download, FileText, MessageCircle,
 } from "lucide-react";
 
 /* ── palette ─────────────────────────────────────────────────────────── */
@@ -1391,6 +1391,12 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
           <FileText style={{ width: 13, height: 13 }} />
           {lang === "id" ? "CV Ta'aruf" : "Taaruf CV"}
         </button>
+        <Link href={`/admin/chat?uid=${id}&name=${encodeURIComponent(meta.name ?? "")}`}
+          className="flex items-center gap-1.5 text-[12.5px] font-semibold px-3.5 py-1.5 rounded-lg border transition-colors hover:bg-white"
+          style={{ color: C.body, borderColor: C.border, background: "white" }}>
+          <MessageCircle style={{ width: 13, height: 13 }} />
+          Chat
+        </Link>
         <Link href={`/admin/candidates/${id}/crm`}
           className="flex items-center gap-1.5 text-[12.5px] font-bold px-4 py-1.5 rounded-lg text-white transition-opacity hover:opacity-90"
           style={{ background: "linear-gradient(135deg, #1B3A6B, #2563EB)" }}>

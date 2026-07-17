@@ -117,6 +117,16 @@ export function ChatWidget() {
         unreadAdmin: increment(1),
         unreadCandidate: 0,
       }, { merge: true });
+      fetch("/api/push", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          targetRole: "admin",
+          title: name,
+          body: msg.length > 100 ? msg.slice(0, 97) + "…" : msg,
+          link: "/admin/chat",
+        }),
+      }).catch(() => {});
     } finally {
       setSending(false);
     }

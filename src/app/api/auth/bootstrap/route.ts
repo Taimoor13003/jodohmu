@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
 import { generateUsername } from "@/lib/username";
+import { pushToAdmin } from "@/lib/push-server";
 
 /**
  * Called right after any self-serve sign-in (Google or email/password).
@@ -62,6 +63,31 @@ export async function POST(req: NextRequest) {
       leadSource: authProvider,
       createdAt: FieldValue.serverTimestamp(),
     });
+
+    const welcomeText = `Assalamualaikum ${name}! 👋\n\nSelamat datang di Jodohmu. Kami sangat senang kamu bergabung dalam perjalanan ta'aruf ini.\n\nTim kami akan segera menghubungi kamu untuk langkah selanjutnya. Jangan ragu untuk bertanya apa saja di sini — kami siap membantu! 🌸`;
+
+    const msgRef = await adminDb().collection("chats").doc(uid).collection("messages").add({
+      text: welcomeText,
+      from: "admin",
+      senderName: "Tim Jodohmu",
+      createdAt: FieldValue.serverTimestamp(),
+    });
+
+    await adminDb().collection("chats").doc(uid).set({
+      displayName: name,
+      email,
+      lastMessage: welcomeText,
+      lastAt: FieldValue.serverTimestamp(),
+      lastMessageFrom: "admin",
+      lastMessageRead: false,
+      unreadCandidate: 1,
+      unreadAdmin: 0,
+    });
+
+    // suppress unused var lint
+    void msgRef;
+
+    pushToAdmin("Pendaftaran baru 🎉", `${name} baru saja mendaftar di Jodohmu`).catch(() => {});
 
     return NextResponse.json({ role: "candidate", needsOnboarding: true, isNewUser: true });
   } catch (error) {

@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { app, db } from '@/lib/firebase';
 import { collection, getDocs, query, where, limit, doc, getDoc } from 'firebase/firestore';
+import { registerFcmToken } from '@/lib/fcm';
 
 const auth = getAuth(app);
 
@@ -25,6 +26,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
+      if (user) registerFcmToken(user.uid).catch(() => {});
       if (!user?.email) {
         setRole("candidate");
         setLoading(false);

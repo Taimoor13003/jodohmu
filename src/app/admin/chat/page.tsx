@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -31,8 +32,10 @@ interface Message {
 
 export default function AdminChatPage() {
   const { user } = useAuth();
+  const searchParams = useSearchParams();
   const [threads, setThreads] = useState<Thread[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
+  const [urlName, setUrlName] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
@@ -51,6 +54,13 @@ export default function AdminChatPage() {
     setShowEmoji(false);
     inputRef.current?.focus();
   };
+
+  // Pre-select thread from URL ?uid=&name=
+  useEffect(() => {
+    const uid  = searchParams.get("uid");
+    const name = searchParams.get("name");
+    if (uid) { setSelected(uid); setUrlName(name); }
+  }, [searchParams]);
 
   // Load all chat threads
   useEffect(() => {
@@ -91,12 +101,15 @@ export default function AdminChatPage() {
     return () => unsub();
   }, [selected]);
 
-  // Mark as read when thread opened
+  // Mark as read when thread opened; backfill displayName only if thread is missing it
   useEffect(() => {
     if (!selected) return;
-    updateDoc(doc(db, "chats", selected), { unreadAdmin: 0 }).catch(() => {});
+    const patch: Record<string, unknown> = { unreadAdmin: 0 };
+    const threadHasName = threads.find(t => t.uid === selected)?.displayName;
+    if (!threadHasName && urlName) patch.displayName = urlName;
+    updateDoc(doc(db, "chats", selected), patch).catch(() => {});
     setTimeout(() => inputRef.current?.focus(), 100);
-  }, [selected]);
+  }, [selected, urlName, threads]);
 
   // Scroll on new messages
   useEffect(() => {
@@ -116,6 +129,7 @@ export default function AdminChatPage() {
         senderName: name,
         createdAt: serverTimestamp(),
       });
+      const knownName = selectedThread?.displayName || urlName || null;
       await setDoc(doc(db, "chats", selected), {
         lastMessage: msg,
         lastAt: serverTimestamp(),
@@ -123,7 +137,18 @@ export default function AdminChatPage() {
         lastMessageRead: false,
         unreadAdmin: 0,
         unreadCandidate: increment(1),
+        ...(knownName ? { displayName: knownName } : {}),
       }, { merge: true });
+      fetch("/api/push", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          targetUid: selected,
+          title: "Tim Jodohmu 💬",
+          body: msg.length > 100 ? msg.slice(0, 97) + "…" : msg,
+          link: "/dashboard",
+        }),
+      }).catch(() => {});
     } finally {
       setSending(false);
     }
@@ -172,7 +197,7 @@ export default function AdminChatPage() {
             )}
             {threads.map(t => (
               <button key={t.uid}
-                onClick={() => setSelected(t.uid)}
+                onClick={() => { setSelected(t.uid); setUrlName(null); }}
                 className="w-full text-left px-4 py-3 border-b border-slate-50 transition hover:bg-slate-50"
                 style={{ background: selected === t.uid ? "#F8FAFC" : undefined, borderLeft: selected === t.uid ? "3px solid #C4294A" : "3px solid transparent" }}>
                 <div className="flex items-start gap-3">
@@ -224,11 +249,11 @@ export default function AdminChatPage() {
               <div className="px-4 py-3.5 border-b border-slate-100 flex items-center gap-3 shrink-0">
                 <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white"
                   style={{ background: "linear-gradient(135deg, #9B2242, #0b3a86)" }}>
-                  {(selectedThread?.displayName[0] ?? "?").toUpperCase()}
+                  {((selectedThread?.displayName ?? urlName ?? "?")?.[0] ?? "?").toUpperCase()}
                 </div>
                 <div>
-                  <p className="text-[13.5px] font-bold text-slate-800">{selectedThread?.displayName}</p>
-                  <p className="text-[11.5px] text-slate-400">{selectedThread?.email}</p>
+                  <p className="text-[13.5px] font-bold text-slate-800">{selectedThread?.displayName ?? urlName ?? "—"}</p>
+                  <p className="text-[11.5px] text-slate-400">{selectedThread?.email ?? ""}</p>
                 </div>
                 <a href={`/admin/candidates/${selected}`}
                   className="ml-auto flex items-center gap-1.5 text-[11.5px] font-bold px-3 py-1.5 rounded-full border border-slate-200 text-slate-600 hover:bg-slate-50 transition">
