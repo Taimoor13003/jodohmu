@@ -70,9 +70,33 @@
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.pricing-fonts {
+  --font-nunito: var(--font-roboto);
+  font-family: var(--font-roboto), sans-serif;
+}
+
+.pricing-fonts main {
+  font-family: var(--font-roboto), sans-serif;
+}
+
+.pricing-fonts .font-serif {
+  font-family: var(--font-roboto), sans-serif;
+  font-weight: 700;
 }
 
 .reg-card-gradient-border {

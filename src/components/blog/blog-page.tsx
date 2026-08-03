@@ -1,27 +1,17 @@
 'use client';
 
 import Link from "next/link";
+import Image from "next/image";
 import { useLanguage } from "@/context/LanguageContext";
-import { Button } from "@/components/ui/button";
+import { blogPosts } from "@/lib/blog-posts";
 
-const contactFormHref = "/register";
-
-const articles = [
-  { key: "cariJodohSerius", href: "/blog/cari-jodoh-serius" },
-  { key: "perjodohanHalalVsDatingApp", href: "/blog/perjodohan-halal-vs-dating-app" },
-  { key: "tipsTaarufPertama", href: "/blog/tips-taaruf-pertama" },
-  { key: "stepByStepProcess", href: "/blog/step-by-step-process" },
-  { key: "whyDatingAppsFail", href: "/blog/why-dating-apps-fail" },
-  { key: "familyInvolvement", href: "/blog/family-involvement" },
-  { key: "syariahSafeguards", href: "/blog/syariah-safeguards" },
-  { key: "howMeetingsAreSupervised", href: "/blog/how-meetings-are-supervised" },
-  { key: "doesJodohmuGuaranteeMatch", href: "/blog/does-jodohmu-guarantee-a-match" },
-  { key: "whatMakesTaarufDifferent", href: "/blog/what-makes-taaruf-different-from-dating" },
-  { key: "howWeVerifyEveryCandidate", href: "/blog/how-we-verify-every-candidate" },
-];
+const defaultHeroImage = "/images/blog/default-article-hero.png";
 
 export function BlogPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const locale = lang === "id" ? "id-ID" : "en-US";
+  const formatDate = (date: string) => new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", year: "numeric" }).format(new Date(`${date}T00:00:00`));
+  const readTimeLabel = (minutes: number) => (lang === "id" ? `${minutes} menit baca` : `${minutes} min read`);
 
   return (
     <div className="flex flex-col gap-12 pb-20 pt-16">
@@ -39,37 +29,38 @@ export function BlogPage() {
 
       <section className="container">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {articles.map((article) => (
+          {blogPosts.map((article) => (
             <article
-              key={article.key}
-              className="flex h-full flex-col justify-between rounded-2xl border border-[#e6eaf5] bg-white p-6 shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md"
+              key={article.slug}
+              className="group flex h-full flex-col overflow-hidden rounded-3xl border border-[#e0e7f3] bg-white shadow-[0_10px_30px_rgba(20,48,104,.07)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(20,48,104,.14)]"
             >
-              <div className="space-y-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9B2242]">
-                  {t(`blogArticle.${article.key}.tag`)}
-                </p>
-                <h2 className="text-xl font-semibold leading-tight text-[#0b3a86]">
-                  {t(`blogArticle.${article.key}.title`)}
-                </h2>
-                <p className="text-sm leading-relaxed text-[#4a4f63]">
-                  {t(`blogArticle.${article.key}.subtitle`)}
-                </p>
-              </div>
-              <div className="mt-4 flex flex-wrap gap-3">
-                <Button asChild size="sm" className="bg-[#0b3a86] text-white hover:bg-[#0a357a]">
-                  <Link href={article.href}>{t("blogPage.sections.article.cta")}</Link>
-                </Button>
-                <Button
-                  asChild
-                  size="sm"
-                  variant="outline"
-                  className="border-[#9B2242] text-[#9B2242] hover:bg-[#9B2242]/5"
-                >
-                  <Link href={contactFormHref}>
-                    {t("blogPage.sections.article.secondaryCta")}
-                  </Link>
-                </Button>
-              </div>
+              <Link href={article.slug} className="flex h-full flex-col focus:outline-none focus-visible:ring-4 focus-visible:ring-[#e48aa7]/40">
+                <div className="overflow-hidden">
+                  <Image
+                    src={article.heroImage ?? defaultHeroImage}
+                    alt={t(`${article.articleKey}.title`)}
+                    width={1200}
+                    height={630}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="aspect-[16/9] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9B2242]">
+                    {t(`${article.articleKey}.tag`)}
+                  </p>
+                  <h2 className="text-xl font-semibold leading-tight text-[#0b3a86] group-hover:text-[#9B2242]">
+                    {t(`${article.articleKey}.title`)}
+                  </h2>
+                  <p className="text-sm leading-relaxed text-[#4a4f63]">
+                    {t(`${article.articleKey}.subtitle`)}
+                  </p>
+                  <div className="mt-6 flex items-center justify-between border-t border-[#e8edf7] pt-4 text-xs font-semibold text-[#687590]">
+                    <time dateTime={article.datePublished}>{formatDate(article.datePublished)}</time>
+                    <span>{readTimeLabel(article.readTime)}</span>
+                  </div>
+                </div>
+              </Link>
             </article>
           ))}
         </div>

@@ -32,6 +32,7 @@ export function PublicShell({
       </main>
       <Footer />
       <WhatsAppFab href={whatsappHref} />
+      {/* The lead chatbot is paused until the client-success handoff process is ready. */}
     </>
   );
 }

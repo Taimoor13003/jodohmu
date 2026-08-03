@@ -91,7 +91,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const whatsappHref = `https://wa.me/6281122210303?text=${encodeURIComponent(
-    "Assalamualaikum, saya ingin konsultasi dengan tim Jodohmu."
+    "Halo, saya ingin menjadwalkan panggilan dengan tim Jodohmu."
   )}`;
 
   return (

@@ -583,8 +583,8 @@
   },
   "footer": {
     "hero": {
-      "tagline": "Find your soulmate with care, faith, and sincerity.",
-      "description": "Join thousands of hearts who trust JodohMu to nurture meaningful introductions grounded in shared values and purposeful intentions.",
+      "tagline": "Find a life partner with human guidance.",
+      "description": "Jodohmu helps you build meaningful, safe introductions with marriage as the goal.",
       "cta": "Start Your Journey"
     },
     "badges": {
@@ -600,7 +600,7 @@
     },
     "connect": {
       "title": "Connect With Us",
-      "description": "Stay close to the JodohMu community and never miss heartfelt success stories, events, and tips curated for your journey.",
+      "description": "Receive information, events, and practical guidance curated for your journey toward marriage.",
       "email": "info@jodohmu.com",
       "phone": "+62 811 222 10303",
       "whatsapp": "6281122210303"
@@ -608,8 +608,8 @@
     "subfooter": {
       "copyright": "© {{year}} Jodohmu",
       "rights": "All rights reserved",
-      "crafted": "Crafted with",
-      "andFaith": "and faith"
+      "crafted": "Built with",
+      "andFaith": "good intentions"
     },
     "social": {
       "title": "Follow Us"
@@ -1298,6 +1298,60 @@
       "ctaPrimary": "Message us on WhatsApp",
       "ctaSecondary": "Back to blog"
     },
+    "jobleJodohmuTable": {
+      "tag": "The Joble guide",
+      "title": "Joble: a planned meeting for marriage",
+      "subtitle": "A private, intentional meeting for two people who want to explore marriage - with a format that respects both sides.",
+      "heroBadge": "Open to every religion",
+      "heroLead": "Joble means Jodohmu Table: a real-world meeting designed around clarity, comfort, and the serious intention to marry - never endless swiping.",
+      "whyTitle": "Why Joble exists",
+      "flowTitle": "How a Joble is planned",
+      "flowIntro": "The details are agreed with both people before anyone meets.",
+      "points": [
+        "Marriage is the goal. A Joble is not a casual date or a profile-shopping experience.",
+        "It is open to everyone. You may choose an imam, priest, the Jodohmu team, or no facilitator.",
+        "Human judgment replaces endless swiping, catfishing risk, and conversations with no clear direction.",
+        "You can bring trusted people, so the meeting feels grounded rather than lonely or pressured."
+      ],
+      "steps": [
+        "Tell us your conversation style, boundaries, and who you would feel comfortable bringing.",
+        "Choose one facilitator option: an imam, priest, Jodohmu team member, or no facilitator.",
+        "We align both sides. If preferences clash, Jodohmu proposes the final format that is comfortable and respectful for everyone.",
+        "We coordinate a private venue, timing, food, and a clear meeting plan before the Joble happens.",
+        "After the meeting, each person reflects privately and decides whether the next conversation makes sense."
+      ],
+      "scenario": "A Joble is designed to create clarity, not performance. You arrive knowing the purpose, the format, who will be present, and what happens after the conversation.",
+      "whatWeHandleTitle": "The three Joble formats",
+      "whatWeHandle": [
+        "Pearl Joble: one planned meeting with a prepared meal, not a buffet. Each person may bring one trusted guest and choose one facilitator.",
+        "Ruby Joble: two planned meetings with buffet dining. Each person may bring up to two trusted guests and choose one facilitator.",
+        "Diamond Signature Joble: three private meetings at a 4- or 5-star hotel with buffet dining. Each person may bring up to two trusted guests and one facilitator is included.",
+        "The package sets the hospitality level. Jodohmu coordinates the practical details so both people can focus on the conversation."
+      ],
+      "facilitationTitle": "One facilitator, if you want one",
+      "facilitationBody": "A facilitator is one person, not a couple. Their role is to help the meeting begin comfortably and stay respectful. The choice is yours, subject to the other person's agreement and availability.",
+      "pricingTitle": "Food and guests are planned, not extras",
+      "pricingBody": "Food is included according to the Joble format. Pearl uses a prepared meal; Ruby uses buffet dining; Diamond uses a 4- or 5-star hotel buffet. Guest limits keep the room balanced and the conversation personal.",
+      "benefitsTitle": "What a good Joble gives you",
+      "benefits": [
+        {
+          "title": "A clear purpose",
+          "desc": "Both people enter knowing this is a conversation about compatibility and a future, not casual entertainment."
+        },
+        {
+          "title": "A format that fits",
+          "desc": "You can choose support from family, friends, faith leaders, the Jodohmu team, or no facilitator."
+        },
+        {
+          "title": "A real decision",
+          "desc": "A respectful in-person meeting gives more useful clarity than weeks of messages and scrolling."
+        }
+      ],
+      "ctaTitle": "Plan your Joble with us",
+      "ctaBody": "Start with a short conversation. We will explain the packages, listen to what feels right for you, and coordinate only when both sides are ready.",
+      "ctaPrimary": "See packages",
+      "ctaSecondary": "Back to blog"
+    },
     "breadcrumb": {
       "home": "Home",
       "blog": "Blog"
@@ -1462,18 +1516,18 @@
         },
         "awal": {
           "name": "Pearl",
-          "tagline": "Your first step toward a blessed marriage",
+          "tagline": "Your first step toward a serious marriage",
           "price": "Rp 2,5 juta",
           "discountedPrice": "Rp 1,25 juta",
           "duration": "3 months · registration included",
           "features": [
-            "60-minute in-depth intake interview",
-            "Your profile built, verified & locked by our team",
-            "2–3 new matched candidate profiles every week",
-            "Ongoing refinements based on your feedback",
-            "1 facilitated offline ta'aruf session",
-            "ID & social media verification",
-            "Registration fee included"
+            "60-minute founder intake call",
+            "Your profile built and reviewed by our team",
+            "Weekly matchmaking progress update",
+            "1 Joble Essential with a prepared meal (not buffet)",
+            "Bring up to 1 trusted guest",
+            "Choose 1 facilitator for your Joble",
+            "ID & social verification plus team guidance"
           ]
         },
         "serius": {
@@ -1488,33 +1542,33 @@
             "ID, workplace & payslip verification",
             "Comprehensive background check",
             "1 clinical psychology assessment",
-            "5–7 new matched candidate profiles every week",
+            "Weekly progress update and active candidate sourcing",
             "Ongoing refinements based on your feedback",
-            "3 facilitated offline ta'aruf sessions",
-            "Imam present at ta'aruf (optional)",
+            "2 Joble Private meetings with buffet dining",
+            "Bring up to 2 trusted guests and choose 1 facilitator",
             "1 family gathering facilitation",
-            "Registration fee included"
+            "Process coordination by the Jodohmu team"
           ]
         },
         "istimewa": {
           "name": "Diamond",
-          "tagline": "The most thorough and trusted ta'aruf experience",
+          "tagline": "Our most thorough and private support",
           "price": "Rp 40 juta",
           "duration": "12 months · fully private",
           "features": [
-            "60-minute in-depth intake interview",
-            "Your profile built, verified & locked by our team",
-            "ID, workplace & payslip verification",
-            "3 comprehensive background checks",
-            "3 clinical psychology sessions",
-            "5–7 new matched candidate profiles every week",
-            "Ongoing refinements based on your feedback",
-            "10 facilitated offline ta'aruf sessions",
-            "Imam present at ta'aruf (optional)",
-            "3 family gathering facilitations",
-            "Dedicated personal facilitator & guidance throughout",
-            "Handled directly by the founder",
-            "Registration fee included"
+            "Everything included in Ruby",
+            "Founder-led private search strategy",
+            "Dedicated personal matchmaking concierge",
+            "Proactive sourcing inside and outside the Jodohmu network",
+            "Weekly confidential search report",
+            "Priority interviews and enhanced verification for shortlisted candidates",
+            "Up to 3 psychologist-led preparation or compatibility sessions",
+            "3 Joble Signature meetings at a 4- or 5-star hotel",
+            "Buffet dining, up to 2 trusted guests, and 1 facilitator at each Joble",
+            "Private debrief after every introduction",
+            "Family meeting facilitation when appropriate",
+            "Controlled profile sharing and strict confidentiality",
+            "Limited client capacity for focused, discreet service"
           ]
         }
       }

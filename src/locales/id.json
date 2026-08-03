@@ -583,8 +583,8 @@
   },
   "footer": {
     "hero": {
-      "tagline": "Temukan jodoh Anda dengan penuh kasih, iman, dan ketulusan.",
-      "description": "Bergabunglah dengan ribuan hati yang mempercayai JodohMu untuk menghadirkan perkenalan bermakna yang berlandaskan nilai dan niat baik.",
+      "tagline": "Temukan pasangan hidup dengan pendampingan manusia.",
+      "description": "Jodohmu membantu Anda membangun perkenalan yang bermakna, aman, dan berorientasi pada pernikahan.",
       "cta": "Mulai Perjalanan Anda"
     },
     "badges": {
@@ -600,7 +600,7 @@
     },
     "connect": {
       "title": "Terhubung dengan Kami",
-      "description": "Tetap dekat dengan komunitas JodohMu dan dapatkan kisah inspiratif, acara, serta tips yang kami kurasi untuk perjalanan Anda.",
+      "description": "Dapatkan informasi, acara, dan tips yang kami kurasi untuk perjalanan Anda menuju pernikahan.",
       "email": "info@jodohmu.com",
       "phone": "+6281122210303",
       "whatsapp": "6281122210303"
@@ -609,7 +609,7 @@
       "copyright": "© {{year}} Jodohmu",
       "rights": "Hak cipta dilindungi",
       "crafted": "Dibuat dengan",
-      "andFaith": "dan iman"
+      "andFaith": "niat baik"
     },
     "social": {
       "title": "Ikuti Kami"
@@ -1302,6 +1302,60 @@
       "ctaPrimary": "Hubungi kami di WhatsApp",
       "ctaSecondary": "Kembali ke blog"
     },
+    "jobleJodohmuTable": {
+      "tag": "Panduan Joble",
+      "title": "Joble: pertemuan terencana untuk menikah",
+      "subtitle": "Pertemuan privat dan penuh tujuan bagi dua orang yang ingin mengenal kecocokan menuju pernikahan - dengan format yang menghormati kedua pihak.",
+      "heroBadge": "Terbuka untuk semua agama",
+      "heroLead": "Joble berarti Jodohmu Table: pertemuan nyata yang dirancang dengan jelas, nyaman, dan serius menuju pernikahan - bukan swipe tanpa akhir.",
+      "whyTitle": "Mengapa Joble ada",
+      "flowTitle": "Cara Joble direncanakan",
+      "flowIntro": "Detailnya disepakati bersama oleh kedua orang sebelum mereka bertemu.",
+      "points": [
+        "Tujuannya adalah pernikahan. Joble bukan kencan santai atau tempat memilih-milih profil.",
+        "Joble terbuka untuk semua orang. Anda dapat memilih imam, pendeta, tim Jodohmu, atau tanpa fasilitator.",
+        "Pertimbangan manusia menggantikan swipe tanpa akhir, risiko catfish, dan percakapan tanpa arah yang jelas.",
+        "Anda dapat membawa orang tepercaya agar pertemuan terasa lebih tenang, tidak sendiri, dan tidak menekan."
+      ],
+      "steps": [
+        "Ceritakan gaya percakapan, batasan, dan siapa yang nyaman Anda bawa.",
+        "Pilih satu fasilitator: imam, pendeta, anggota tim Jodohmu, atau tanpa fasilitator.",
+        "Kami menyelaraskan pilihan kedua pihak. Jika ada perbedaan, Jodohmu mengusulkan format akhir yang nyaman dan saling menghormati.",
+        "Kami mengoordinasikan venue privat, waktu, makanan, dan rencana pertemuan yang jelas sebelum Joble berlangsung.",
+        "Setelah pertemuan, setiap orang memiliki ruang untuk refleksi pribadi dan menentukan apakah percakapan berikutnya tepat."
+      ],
+      "scenario": "Joble dirancang untuk memberi kejelasan, bukan untuk tampil sempurna. Anda datang dengan memahami tujuan, format, siapa yang hadir, dan apa langkah setelah percakapan.",
+      "whatWeHandleTitle": "Tiga format Joble",
+      "whatWeHandle": [
+        "Pearl Joble: satu pertemuan terencana dengan hidangan terpilih, bukan buffet. Setiap orang dapat membawa satu pendamping tepercaya dan memilih satu fasilitator.",
+        "Ruby Joble: dua pertemuan terencana dengan makan buffet. Setiap orang dapat membawa maksimal dua pendamping tepercaya dan memilih satu fasilitator.",
+        "Diamond Signature Joble: tiga pertemuan privat di hotel bintang 4 atau 5 dengan makan buffet. Setiap orang dapat membawa maksimal dua pendamping tepercaya dan satu fasilitator.",
+        "Paket menentukan tingkat hospitality. Jodohmu mengoordinasikan detail praktis agar kedua orang dapat fokus pada percakapan."
+      ],
+      "facilitationTitle": "Satu fasilitator, bila Anda menginginkannya",
+      "facilitationBody": "Fasilitator adalah satu orang, bukan pasangan. Perannya membantu pertemuan dimulai dengan nyaman dan tetap saling menghormati. Pilihan ini mengikuti persetujuan kedua pihak dan ketersediaan.",
+      "pricingTitle": "Makanan dan pendamping direncanakan, bukan tambahan",
+      "pricingBody": "Makanan sudah termasuk sesuai format Joble. Pearl memakai hidangan terpilih; Ruby memakai buffet; Diamond memakai buffet hotel bintang 4 atau 5. Batas pendamping menjaga pertemuan tetap seimbang dan personal.",
+      "benefitsTitle": "Apa yang diberikan Joble yang baik",
+      "benefits": [
+        {
+          "title": "Tujuan yang jelas",
+          "desc": "Kedua orang datang dengan memahami bahwa ini adalah percakapan tentang kecocokan dan masa depan, bukan hiburan santai."
+        },
+        {
+          "title": "Format yang sesuai",
+          "desc": "Anda dapat memilih dukungan keluarga, teman, pemuka agama, tim Jodohmu, atau tanpa fasilitator."
+        },
+        {
+          "title": "Keputusan yang nyata",
+          "desc": "Pertemuan langsung yang saling menghormati memberi kejelasan lebih baik daripada berminggu-minggu chat dan scrolling."
+        }
+      ],
+      "ctaTitle": "Rencanakan Joble Anda bersama kami",
+      "ctaBody": "Mulai dari percakapan singkat. Kami menjelaskan paketnya, mendengarkan kebutuhan Anda, lalu mengoordinasikan hanya ketika kedua pihak siap.",
+      "ctaPrimary": "Lihat paket",
+      "ctaSecondary": "Kembali ke blog"
+    },
     "breadcrumb": {
       "home": "Beranda",
       "blog": "Blog"
@@ -1466,18 +1520,18 @@
         },
         "awal": {
           "name": "Pearl",
-          "tagline": "Langkah pertamamu menuju pernikahan yang berkah",
+          "tagline": "Langkah pertama menuju pernikahan yang serius",
           "price": "Rp 2,5 juta",
           "discountedPrice": "Rp 1,25 juta",
           "duration": "3 bulan · registrasi termasuk",
           "features": [
-            "Sesi wawancara mendalam 60 menit",
-            "Profil Anda dibangun, diverifikasi & dikelola oleh tim kami",
-            "2–3 profil kandidat baru dikirimkan setiap minggu",
-            "Penyesuaian berkelanjutan berdasarkan masukan Anda",
-            "1 sesi ta'aruf offline terfasilitasi",
-            "Verifikasi KTP & media sosial",
-            "Biaya pendaftaran sudah termasuk"
+            "Panggilan intake 60 menit bersama founder",
+            "Profil Anda dibangun dan ditinjau oleh tim kami",
+            "Update progres matchmaking setiap minggu",
+            "1 Joble Essential dengan hidangan terpilih (bukan buffet)",
+            "Bawa maksimal 1 pendamping tepercaya",
+            "Pilih 1 fasilitator untuk Joble Anda",
+            "Verifikasi KTP & media sosial serta pendampingan tim"
           ]
         },
         "serius": {
@@ -1492,33 +1546,33 @@
             "Verifikasi KTP, tempat kerja & slip gaji",
             "Background check menyeluruh",
             "1 tes psikologi klinis",
-            "5–7 profil kandidat baru dikirimkan setiap minggu",
+            "Update progres mingguan dan sourcing kandidat aktif",
             "Penyesuaian berkelanjutan berdasarkan masukan Anda",
-            "3 sesi ta'aruf offline terfasilitasi",
-            "Kehadiran imam saat ta'aruf (opsional)",
+            "2 Joble Private dengan makan buffet",
+            "Bawa maksimal 2 pendamping tepercaya dan pilih 1 fasilitator",
             "1 fasilitasi pertemuan keluarga",
-            "Biaya pendaftaran sudah termasuk"
+            "Koordinasi proses oleh tim Jodohmu"
           ]
         },
         "istimewa": {
           "name": "Diamond",
-          "tagline": "Pengalaman ta'aruf paling menyeluruh dan terpercaya",
+          "tagline": "Pendampingan paling menyeluruh dan privat",
           "price": "Rp 40 juta",
           "duration": "12 bulan · sepenuhnya privat",
           "features": [
-            "Sesi wawancara mendalam 60 menit",
-            "Profil Anda dibangun, diverifikasi & dikelola oleh tim kami",
-            "Verifikasi KTP, tempat kerja & slip gaji",
-            "3 background check menyeluruh",
-            "3 sesi psikologi klinis",
-            "5–7 profil kandidat baru dikirimkan setiap minggu",
-            "Penyesuaian berkelanjutan berdasarkan masukan Anda",
-            "10 sesi ta'aruf offline terfasilitasi",
-            "Kehadiran imam saat ta'aruf (opsional)",
-            "3 fasilitasi pertemuan keluarga",
-            "Pendamping pribadi & bimbingan sepanjang proses",
-            "Ditangani langsung oleh founder",
-            "Biaya pendaftaran sudah termasuk"
+            "Semua layanan dalam Ruby",
+            "Strategi pencarian privat langsung bersama founder",
+            "Matchmaking concierge pribadi sebagai satu titik kontak",
+            "Sourcing kandidat proaktif di dalam dan di luar jaringan Jodohmu",
+            "Laporan pencarian rahasia setiap minggu",
+            "Wawancara prioritas dan verifikasi mendalam kandidat terpilih",
+            "Hingga 3 sesi persiapan atau kompatibilitas bersama psikolog",
+            "3 Joble Signature di hotel bintang 4 atau 5",
+            "Makan buffet, maksimal 2 pendamping, dan 1 fasilitator di setiap Joble",
+            "Debrief privat setelah setiap perkenalan",
+            "Fasilitasi pertemuan keluarga saat tepat",
+            "Berbagi profil terkendali dan kerahasiaan ketat",
+            "Kapasitas klien terbatas untuk layanan yang fokus dan rahasia"
           ]
         }
       }

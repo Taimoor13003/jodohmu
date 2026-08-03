@@ -1,16 +1,17 @@
 'use client';
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import { getRelatedPosts } from "@/lib/blog-posts";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
-const contactFormHref = "/register";
 const pointKeys = ["0", "1", "2", "3"];
 const stepKeys = ["0", "1", "2", "3", "4"];
 const handleKeys = ["0", "1", "2", "3"];
 const benefitKeys = ["0", "1", "2"];
+const defaultHeroImage = "/images/blog/default-article-hero.png";
 
 type ArticleDetailProps = {
   articleKey: string;
@@ -22,7 +23,15 @@ type ArticleDetailProps = {
 
 export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateModified }: ArticleDetailProps) {
   const { t, lang } = useLanguage();
+  const contactFormHref = articleKey === "blogArticle.jobleJodohmuTable" ? "/pricing" : "/register";
   const articleUrl = `${siteUrl}${slug}`;
+  const heroImage = ogImage ? ogImage.replace(/^https?:\/\/[^/]+/, "") : defaultHeroImage;
+  const tableOfContents = [
+    { id: "why", label: t(`${articleKey}.whyTitle`) },
+    { id: "process", label: t(`${articleKey}.flowTitle`) },
+    { id: "details", label: t(`${articleKey}.whatWeHandleTitle`) },
+    { id: "benefits", label: t(`${articleKey}.benefitsTitle`) },
+  ];
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -118,9 +127,15 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
               </div>
             </div>
             <div className="relative w-full max-w-sm">
-              <div className="aspect-[4/5] overflow-hidden rounded-2xl border border-white/70 bg-gradient-to-br from-[#0b3a86] via-[#9B2242] to-[#fbcfe8] shadow-lg ring-4 ring-white/50">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.25),transparent_40%),radial-gradient(circle_at_80%_0%,rgba(255,255,255,0.35),transparent_45%)]" />
-              </div>
+              <Image
+                src={heroImage}
+                alt={t(`${articleKey}.title`)}
+                width={1200}
+                height={1500}
+                priority
+                sizes="(max-width: 768px) 100vw, 384px"
+                className="aspect-[4/5] w-full rounded-2xl border border-white/70 object-cover shadow-lg ring-4 ring-white/50"
+              />
               <div className="absolute -left-4 -bottom-4 h-16 w-16 rounded-full bg-white/80 blur-xl" aria-hidden />
             </div>
           </div>
@@ -128,7 +143,20 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
       </section>
 
       <section className="container mx-auto mt-12 max-w-5xl space-y-8">
-        <section className="rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
+        <nav aria-label={lang === "id" ? "Daftar isi" : "Table of contents"} className="rounded-2xl border border-[#e6eaf5] bg-[#f8faff] p-6 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9B2242]">{lang === "id" ? "Daftar isi" : "Table of contents"}</p>
+          <ol className="mt-4 grid gap-2 sm:grid-cols-2">
+            {tableOfContents.map((item, index) => (
+              <li key={item.id}>
+                <a href={`#${item.id}`} className="group flex items-center gap-3 rounded-lg px-2 py-1 text-sm font-medium text-[#0b3a86] hover:bg-white hover:text-[#9B2242]">
+                  <span className="text-[#9B2242]">0{index + 1}</span>{item.label}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+
+        <section id="why" className="scroll-mt-24 rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
           <h2 className="text-2xl font-semibold text-[#0b3a86]">{t(`${articleKey}.whyTitle`)}</h2>
           <p className="mt-2 text-sm font-medium uppercase tracking-[0.2em] text-[#9B2242]">
             {t(`${articleKey}.heroBadge`)}
@@ -145,7 +173,7 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
           </ul>
         </section>
 
-        <section className="rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
+        <section id="process" className="scroll-mt-24 rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-2xl font-semibold text-[#0b3a86]">{t(`${articleKey}.flowTitle`)}</h2>
@@ -180,7 +208,7 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
         </section>
 
         <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
-          <section className="rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
+          <section id="details" className="scroll-mt-24 rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
             <h2 className="text-2xl font-semibold text-[#0b3a86]">{t(`${articleKey}.whatWeHandleTitle`)}</h2>
             <ul className="mt-5 space-y-3">
               {handleKeys.map((idx) => (
@@ -200,7 +228,7 @@ export function ArticleDetail({ articleKey, slug, ogImage, datePublished, dateMo
           </div>
         </div>
 
-        <section className="rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
+        <section id="benefits" className="scroll-mt-24 rounded-2xl border border-[#e6eaf5] bg-white p-8 shadow-sm">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="text-2xl font-semibold text-[#0b3a86]">{t(`${articleKey}.benefitsTitle`)}</h2>
