@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
@@ -31,6 +31,14 @@ interface Message {
 }
 
 export default function AdminChatPage() {
+  return (
+    <Suspense fallback={null}>
+      <AdminChatPageInner />
+    </Suspense>
+  );
+}
+
+function AdminChatPageInner() {
   const { user } = useAuth();
   const searchParams = useSearchParams();
   const [threads, setThreads] = useState<Thread[]>([]);
