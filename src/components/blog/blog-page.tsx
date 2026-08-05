@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { blogPosts } from "@/lib/blog-posts";
 
@@ -34,7 +35,7 @@ export function BlogPage() {
               key={article.slug}
               className="group flex h-full flex-col overflow-hidden rounded-3xl border border-[#e0e7f3] bg-white shadow-[0_10px_30px_rgba(20,48,104,.07)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(20,48,104,.14)]"
             >
-              <Link href={article.slug} className="flex h-full flex-col focus:outline-none focus-visible:ring-4 focus-visible:ring-[#e48aa7]/40">
+              <Link href={article.slug} className="flex flex-1 flex-col focus:outline-none focus-visible:ring-4 focus-visible:ring-[#e48aa7]/40">
                 <div className="overflow-hidden">
                   <Image
                     src={article.heroImage ?? defaultHeroImage}
@@ -49,18 +50,23 @@ export function BlogPage() {
                   <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9B2242]">
                     {t(`${article.articleKey}.tag`)}
                   </p>
-                  <h2 className="text-xl font-semibold leading-tight text-[#0b3a86] group-hover:text-[#9B2242]">
+                  <h2 className="mt-2 text-xl font-semibold leading-tight text-[#0b3a86] group-hover:text-[#9B2242]">
                     {t(`${article.articleKey}.title`)}
                   </h2>
-                  <p className="text-sm leading-relaxed text-[#4a4f63]">
+                  <p className="mt-2 text-sm leading-relaxed text-[#4a4f63]">
                     {t(`${article.articleKey}.subtitle`)}
                   </p>
-                  <div className="mt-6 flex items-center justify-between border-t border-[#e8edf7] pt-4 text-xs font-semibold text-[#687590]">
+                  <div className="mt-auto flex items-center justify-between pt-5 text-xs font-semibold text-[#687590]">
                     <time dateTime={article.datePublished}>{formatDate(article.datePublished)}</time>
                     <span>{readTimeLabel(article.readTime)}</span>
                   </div>
                 </div>
               </Link>
+              <div className="px-6 pb-6">
+                <Link href={article.slug} className="flex items-center justify-center gap-2 rounded-xl bg-[#0b3a86] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-[#9B2242] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#e48aa7]/40">
+                  {t("blogPage.readArticle")} <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
             </article>
           ))}
         </div>

@@ -334,6 +334,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (loading || !user || role !== "candidate" || !candidateLoaded) return;
     if (!candidateData.fullName || !candidateData.whatsappNumber || !candidateData.gender) {
       router.replace("/onboarding");
+    } else if (candidateData.personStatus === "new_lead" || candidateData.personStatus === "awaiting_discovery_call") {
+      router.replace("/request-submitted");
     }
   }, [loading, user, role, candidateLoaded, candidateData, router]);
 

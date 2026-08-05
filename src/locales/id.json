@@ -648,6 +648,7 @@
     }
   },
   "blogPage": {
+    "readArticle": "Baca artikel",
     "hero": {
       "title": "Satu jawaban jelas: Jodohmu cocokkan sesuai niatmu",
       "subtitle": "Mulai dengan artikel utama tentang siapa yang kami layani, bagaimana kami memfasilitasi pertemuan, dan kenapa fokusnya selalu ke pernikahan."
@@ -706,6 +707,11 @@
       "register": "Daftar sekarang",
       "title": "Artikel terkait & langkah berikutnya",
       "subtitle": "Baca panduan lainnya, atau hubungi kami untuk perjodohan yang difasilitasi dan berorientasi pernikahan."
+    },
+    "apaItuJodohmu": {
+      "tag": "Tentang Jodohmu",
+      "title": "Apa Itu Jodohmu? Jalan yang Lebih Personal untuk Menemukan Pasangan Hidup",
+      "subtitle": "Mengapa Jodohmu ada, tantangan yang banyak orang hadapi saat mencari pasangan, dan bagaimana proses yang lebih manusiawi dapat membantu."
     },
     "stepByStepProcess": {
       "metaTitle": "Alur ta'aruf offline langkah demi langkah | Panduan Jodohmu menuju pernikahan",

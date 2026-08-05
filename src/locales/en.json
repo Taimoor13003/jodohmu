@@ -648,6 +648,7 @@
     }
   },
   "blogPage": {
+    "readArticle": "Read article",
     "hero": {
       "title": "Jodohmu Blog: start with one clear answer",
       "subtitle": "Begin with our main article on how we match by intent—not just religion—and how meetings are facilitated for marriage-minded singles."
@@ -702,6 +703,11 @@
       "register": "Register now",
       "title": "Related & next steps",
       "subtitle": "Explore more guidance and get in touch for facilitated, marriage-focused matchmaking."
+    },
+    "apaItuJodohmu": {
+      "tag": "About Jodohmu",
+      "title": "What Is Jodohmu? A More Personal Path to Finding a Life Partner",
+      "subtitle": "Why Jodohmu exists, the challenges many people face while looking for a partner, and how a more human process can help."
     },
     "stepByStepProcess": {
       "metaTitle": "Offline ta'aruf step-by-step | How Jodohmu guides you to marriage",

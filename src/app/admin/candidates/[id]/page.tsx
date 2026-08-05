@@ -187,7 +187,8 @@ const V: Record<string, Record<Lang, string>> = {
   bg_checked:       { id: "Background Check Selesai",            en: "BG Check Completed" },
   psych_assessed:   { id: "Psikotest Selesai",                   en: "Psych Assessment Done" },
   /* person status */
-  new_lead:             { id: "Mencari Pasangan",                  en: "Searching Matches" },
+  new_lead:             { id: "Permintaan Baru",                   en: "New Request" },
+  awaiting_discovery_call: { id: "Menunggu Dihubungi",              en: "Awaiting Contact" },
   registered_looking:   { id: "Mencari Pasangan",                  en: "Searching Matches" },
   matched:              { id: "Dipertemukan",                    en: "Matched" },
   in_taaruf:            { id: "Dalam Ta'aruf",                   en: "In Ta'aruf" },
@@ -258,7 +259,7 @@ const OPTS: Record<string, string[]> = {
   gender:                      ["male","female"],
   familyOriented:              ["1","2","3","4","5","6","7","8","9","10"],
   profileStatus:               ["not_registered","registered","id_verified","bg_checked","psych_assessed","inactive"],
-  personStatus:                ["registered_looking","matched","in_taaruf","family_meeting","closed_success","closed_withdrawn"],
+  personStatus:                ["new_lead","awaiting_discovery_call","registered_looking","matched","in_taaruf","family_meeting","closed_success","closed_withdrawn"],
   openToTaaruf:                ["ready","preparing","no"],
   paket:                       ["not_selected","pearl","ruby","diamond","safar","amanah","custom"],
   targetWaktuMenikah:          ["under_3m","3_6m","6_12m","1yr_plus","not_sure"],

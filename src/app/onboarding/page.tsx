@@ -39,7 +39,8 @@ export default function OnboardingPage() {
         if (res.ok) {
           const { data } = await res.json() as { data: Record<string, unknown> | null };
           if (data?.fullName && data?.whatsappNumber && data?.gender) {
-            router.replace("/dashboard");
+            const status = typeof data.personStatus === "string" ? data.personStatus : "";
+            router.replace(status === "new_lead" || status === "awaiting_discovery_call" ? "/request-submitted" : "/dashboard");
             return;
           }
           if (typeof data?.fullName === "string" && data.fullName) setFullName(data.fullName);
@@ -91,7 +92,7 @@ export default function OnboardingPage() {
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Failed");
-      router.push("/dashboard");
+      router.push("/request-submitted");
     } catch {
       setError(l("Gagal menyimpan data. Coba lagi.", "Could not save your info. Please try again."));
       setPending(false);

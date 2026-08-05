@@ -8,6 +8,7 @@ export type BlogPost = {
 };
 
 export const blogPosts: BlogPost[] = [
+  { slug: "/blog/apa-itu-jodohmu", articleKey: "blogArticle.apaItuJodohmu", datePublished: "2026-08-05", dateModified: "2026-08-05", heroImage: "/images/blog/apa-itu-jodohmu-hero-v4.png", readTime: 10 },
   { slug: "/blog/paket-diamond-jodohmu", articleKey: "blogArticle.paketDiamondJodohmu", datePublished: "2026-08-04", dateModified: "2026-08-04", heroImage: "/images/blog/diamond-joble-hero.png", readTime: 12 },
   { slug: "/blog/paket-ruby-jodohmu", articleKey: "blogArticle.paketRubyJodohmu", datePublished: "2026-08-04", dateModified: "2026-08-04", heroImage: "/images/blog/ruby-joble-hero-v2.png", readTime: 11 },
   {

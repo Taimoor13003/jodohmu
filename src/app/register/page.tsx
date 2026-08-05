@@ -17,13 +17,6 @@ export default function RegisterPage() {
   const { lang }    = useLanguage();
   const { user, role, loading } = useAuth();
 
-  useEffect(() => {
-    if (loading) return;
-    if (!user) return;
-    if (role === "admin" || role === "worker") router.replace("/admin");
-    else router.replace("/dashboard");
-  }, [user, role, loading, router]);
-
   const [name,     setName]     = useState("");
   const [email,    setEmail]    = useState("");
   const [password, setPassword] = useState("");
@@ -32,6 +25,16 @@ export default function RegisterPage() {
   const [pending,       setPending]       = useState(false);
   const [googlePending, setGooglePending] = useState(false);
   const [error,    setError]    = useState<string | null>(null);
+
+  useEffect(() => {
+    if (loading) return;
+    // Keep the registration page in control while it creates the candidate
+    // record, so AuthContext cannot redirect a new member before onboarding.
+    if (pending || googlePending) return;
+    if (!user) return;
+    if (role === "admin" || role === "worker") router.replace("/admin");
+    else router.replace("/dashboard");
+  }, [user, role, loading, pending, googlePending, router]);
 
   const l = (id: string, en: string) => lang === "id" ? id : en;
 
