@@ -8,17 +8,19 @@ import { useLanguage } from "@/context/LanguageContext";
 import { getRelatedPosts } from "@/lib/blog-posts";
 
 type ArticleSection = { heading: string; paragraphs: string[]; list?: string[]; image?: string; imageAlt?: string };
-type ArticleContent = { tag: string; title: string; summary: string; author: string; date: string; readTime: string; heroImage?: string; heroImageAlt?: string; sections: ArticleSection[]; ctaTitle: string; ctaBody: string };
+type ArticleFaq = { question: string; answer: string };
+type ArticleContent = { tag: string; title: string; summary: string; author: string; date: string; readTime: string; heroImage?: string; heroImageAlt?: string; sections: ArticleSection[]; faqs?: ArticleFaq[]; ctaTitle: string; ctaBody: string };
 type MarkdownArticleProps = { content: Record<"id" | "en", ArticleContent>; relatedSlug?: string };
 const whatsappHref = "https://wa.me/6281122210303?text=" + encodeURIComponent("Halo Jodohmu, saya ingin memahami Joble dan paket yang cocok untuk saya.");
 const defaultHeroImage = "/images/blog/default-article-hero.png";
 
 function renderInlineText(text: string) {
-  return text.split(/(\*\*.*?\*\*)/g).map((part, index) =>
-    part.startsWith("**") && part.endsWith("**")
-      ? <strong key={index} className="font-bold text-[#263b6b]">{part.slice(2, -2)}</strong>
-      : part,
-  );
+  return text.split(/(\*\*.*?\*\*|\[[^\]]+\]\([^\)]+\))/g).map((part, index) => {
+    if (part.startsWith("**") && part.endsWith("**")) return <strong key={index} className="font-bold text-[#263b6b]">{part.slice(2, -2)}</strong>;
+    const link = part.match(/^\[([^\]]+)\]\((\/[^\)]+)\)$/);
+    if (link) return <Link key={index} href={link[2]} className="font-bold text-[#263b6b] transition hover:text-[#263b6b]">{link[1]}</Link>;
+    return part;
+  });
 }
 
 export function MarkdownArticle({ content, relatedSlug }: MarkdownArticleProps) {
@@ -47,6 +49,7 @@ export function MarkdownArticle({ content, relatedSlug }: MarkdownArticleProps) 
         </aside>
         <div>
           <div className="space-y-16">{article.sections.map((section, index) => <section id={`section-${index + 1}`} key={section.heading} className="scroll-mt-24"><h2 className="font-serif text-3xl font-bold leading-tight text-[#11275b] sm:text-4xl">{renderInlineText(section.heading)}</h2><div className="mt-6 space-y-5 text-base leading-8 text-[#53617d] sm:text-lg">{section.paragraphs.map((paragraph) => <p key={paragraph}>{renderInlineText(paragraph)}</p>)}</div>{section.list && <ul className="mt-7 space-y-3 border-l-2 border-[#f1a0ba] pl-5 text-base leading-7 text-[#43516d]">{section.list.map((item) => <li key={item}>{renderInlineText(item)}</li>)}</ul>}{section.image && <Image src={section.image} alt={section.imageAlt ?? ""} width={1536} height={1024} sizes="(max-width: 768px) 100vw, 768px" className="mt-10 aspect-[3/2] w-full rounded-3xl object-cover shadow-[0_18px_50px_rgba(27,52,107,.12)]" />}</section>)}</div>
+          {article.faqs && <section className="mt-20"><p className="text-xs font-extrabold uppercase tracking-[.2em] text-[#c52d5a]">{lang === "id" ? "Pertanyaan umum" : "Common questions"}</p><h2 className="mt-3 font-serif text-3xl font-bold text-[#11275b] sm:text-4xl">{lang === "id" ? "Jawaban sebelum Anda memulai" : "Answers before you begin"}</h2><div className="mt-8 divide-y divide-[#dce5f2] overflow-hidden rounded-3xl border border-[#dce5f2] bg-white">{article.faqs.map((faq) => <details key={faq.question} className="group"><summary className="flex cursor-pointer list-none items-center justify-between gap-5 px-6 py-5 text-left text-base font-bold text-[#263b6b] marker:content-none hover:bg-[#f8faff] sm:px-7 sm:text-lg"><span>{faq.question}</span><span aria-hidden className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#fff0f5] text-xl leading-none text-[#c52d5a] transition-transform group-open:rotate-45">+</span></summary><p className="border-t border-[#edf1f7] px-6 py-5 text-base leading-8 text-[#53617d] sm:px-7">{renderInlineText(faq.answer)}</p></details>)}</div></section>}
           <section className="mt-20 rounded-3xl bg-[linear-gradient(120deg,#11275b,#285aaa_55%,#cf3466)] p-8 text-white shadow-[0_20px_55px_rgba(35,73,151,.2)] sm:p-10"><h2 className="font-serif text-3xl font-bold">{article.ctaTitle}</h2><p className="mt-4 max-w-xl leading-7 text-white/85">{article.ctaBody}</p><Button asChild className="mt-7 h-12 rounded-full bg-white px-6 font-extrabold text-[#153778] hover:bg-[#fff1f5]"><Link href={whatsappHref} target="_blank" rel="noopener noreferrer"><MessageCircle className="mr-2 h-4 w-4" />{lang === "id" ? "Mulai via WhatsApp" : "Start on WhatsApp"}</Link></Button></section>
           {relatedPosts.length > 0 && <section className="mt-20"><p className="text-xs font-extrabold uppercase tracking-[.2em] text-[#c52d5a]">{lang === "id" ? "Baca Selanjutnya" : "Read Next"}</p><h2 className="mt-3 font-serif text-3xl font-bold text-[#11275b]">{lang === "id" ? "Artikel terkait" : "Related articles"}</h2><div className="mt-7 grid gap-4 md:grid-cols-3">{relatedPosts.map((post) => <Link key={post.slug} href={post.slug} className="rounded-2xl border border-[#dce5f2] bg-white p-5 transition hover:-translate-y-1 hover:shadow-lg"><p className="text-xs font-bold uppercase tracking-[.14em] text-[#c52d5a]">{t(`${post.articleKey}.tag`)}</p><h3 className="mt-3 font-serif text-lg font-bold leading-snug text-[#11275b]">{t(`${post.articleKey}.title`)}</h3><span className="mt-5 block text-sm font-bold text-[#2457ad]">{lang === "id" ? "Baca artikel" : "Read article"} →</span></Link>)}</div></section>}
         </div>

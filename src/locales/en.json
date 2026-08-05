@@ -44,13 +44,20 @@
   "homepage": {
     "about": {
       "title": "About Us",
-      "description": "Jodohmu exists because everyone deserves a dignified path to a real, lasting partnership. We're not an algorithm — we're real people, guiding you offline through a serious, structured matchmaking process toward a marriage built to last."
+      "heading": "The future you are building deserves a personal beginning.",
+      "description": "Jodohmu exists because finding a life partner should feel personal, private, and full of possibility. We are real people who take the time to know you, facilitate thoughtful introductions, and guide every next step—so a meaningful connection has room to grow into a shared future.",
+      "manifesto": "Every meaningful future starts with being truly understood.",
+      "pillars": {
+        "personal": { "title": "Your story first", "description": "We listen before we introduce." },
+        "thoughtful": { "title": "Thoughtful by design", "description": "Each step has purpose and care." },
+        "present": { "title": "Present throughout", "description": "Guidance stays close when it matters." }
+      }
     },
     "hero": {
       "badge": "SERIOUS MATCHMAKING",
-      "title": "Offline Marriage Matchmaking & Ta'aruf in Indonesia",
+      "title": "Personal Guidance & Intentional Connections in Indonesia",
       "description": "Jodohmu guides serious, marriage-intent singles with offline, faith-aligned matchmaking, ta'aruf facilitation, and family-friendly vetting across Indonesia.",
-      "tagline": "Halal, offline introductions for sincere hearts ready for marriage.",
+      "tagline": "For people seeking a meaningful connection and a shared future.",
       "cta": "Begin Your Journey",
       "secondaryCta": "Talk to an Advisor",
       "highlight": {
@@ -151,28 +158,47 @@
       "description": "Finding a life partner is one of the most important journeys you'll ever take. At Jodohmu, we don't leave it to chance. Our matchmakers work with you like a dedicated team, providing guidance, support, and a human touch that algorithms can't replicate."
     },
     "meetings": {
-      "badge": "Safe & Respectful",
-      "title": "Meetings with Intention",
-      "description": "Your comfort and safety are our top priorities. We arrange meetings in a controlled, respectful environment—be it our office or a trusted public space—often with the presence of an imam or family members, ensuring every interaction is dignified and purposeful.",
-      "secondary": "Every introduction is coordinated by our team, with regular check-ins to keep feelings, expectations, and next steps aligned for both families.",
+      "badge": "Why Jodohmu exists",
+      "title": "Finding a life partner should not feel this hard.",
+      "description": "People are not lacking ways to meet. They are lacking a private, human path towards someone who wants the same future.",
+      "secondary": "",
       "promises": {
-        "safe": "Private lounges, respectful venues, and the option for chaperones with every meeting.",
-        "transparent": "Clear expectations, guided conversations, and structured follow-up so no moment feels uncertain.",
-        "family": "Family members and spiritual advisors can be involved at every stage to keep the process anchored in faith."
+        "safe": "Personal guidance, not an algorithm.",
+        "transparent": "Introductions with shared intention.",
+        "family": "A clear, private way forward."
       },
+      "feelingLabel": "What it can feel like",
       "steps": {
         "intake": {
-          "title": "Intentional Intake",
-          "description": "We learn your story, faith priorities, and comfort level to design meetings that feel safe and tailored to you."
+          "title": "Dating apps",
+          "description": "You match, talk for days, and begin to hope—then the conversation fades or you realise you were looking for different things.",
+          "feeling": "“Am I building something real, or simply passing time?”"
         },
         "curated": {
-          "title": "Curated Introductions",
-          "description": "Our matchmakers coordinate respectful encounters with candidates who share your values and long-term vision."
+          "title": "Family introductions",
+          "description": "They want the best for you, but it can be hard to explain the person you have become and what you truly need in a partner.",
+          "feeling": "“How do I honour them and still be understood?”"
         },
         "checkins": {
-          "title": "Compassionate Check-ins",
-          "description": "After each meeting we listen, support, and guide next steps so you always feel confident moving forward."
+          "title": "Community guidance",
+          "description": "You may trust their advice, yet still not feel fully free to share the private hopes, doubts, and fears that matter most.",
+          "feeling": "“I need guidance, but I also need a safe space to be honest.”"
+        },
+        "natural": {
+          "title": "Waiting to meet naturally",
+          "description": "You wait for the right moment at work, through friends, or while studying—only to discover the feeling or timing is one-sided.",
+          "feeling": "“What if I keep waiting and nothing becomes clear?”"
         }
+      },
+      "mission": {
+        "label": "Our mission",
+        "title": "A more human way to find your person.",
+        "description": "Jodohmu is a personal introduction service for people who want to build a shared future. We take time to understand the person behind the profile, facilitate thoughtful introductions, and stay close as you decide what comes next.",
+        "closing": "Not more profiles. A more meaningful way forward."
+      },
+      "about": {
+        "label": "Who we are",
+        "title": "Personal introductions, thoughtfully guided."
       },
       "us": "Contact Us"
     },
@@ -196,9 +222,15 @@
       }
     },
     "cta": {
-      "title": "Ready to Find 'The One'?",
-      "description": "Your search for a meaningful, lasting partnership starts here. Let us be your guide on the beautiful journey to marriage.",
-      "button": "Register now"
+      "label": "A private place to begin",
+      "title": "When you are ready, we are here.",
+      "description": "Start with a simple conversation. Tell us a little about yourself and the future you hope to build; our team will guide you from there.",
+      "button": "Register now",
+      "reassurance": {
+        "private": "Your details are handled with care and kept private.",
+        "conversation": "A real person will follow up with you—not an automated reply.",
+        "pace": "There is no pressure. Move only when the timing feels right."
+      }
     }
   },
   "register": {
@@ -1298,6 +1330,13 @@
       "ctaPrimary": "Message us on WhatsApp",
       "ctaSecondary": "Back to blog"
     },
+    "paketDiamondJodohmu": { "tag": "The Jodohmu Diamond package", "title": "The Jodohmu Diamond Package: private support built around you", "subtitle": "The most personal and discreet support for finding a life partner, with a private strategy over twelve months." },
+    "paketRubyJodohmu": { "tag": "The Jodohmu Ruby package", "title": "The Jodohmu Ruby Package: a deeper process", "subtitle": "Six months of support to get to know someone, check what matters, and involve family at the right time." },
+    "paketPearlJodohmu": {
+      "tag": "The Jodohmu Pearl package",
+      "title": "The Jodohmu Pearl Package: an intentional step toward marriage",
+      "subtitle": "Three months of guided support to help you look for a partner with more clarity, humanity, and direction."
+    },
     "jobleJodohmuTable": {
       "tag": "The Joble guide",
       "title": "Joble: a planned meeting for marriage",
@@ -1323,9 +1362,9 @@
       "scenario": "A Joble is designed to create clarity, not performance. You arrive knowing the purpose, the format, who will be present, and what happens after the conversation.",
       "whatWeHandleTitle": "The three Joble formats",
       "whatWeHandle": [
-        "Pearl Joble: one planned meeting with a prepared meal, not a buffet. Each person may bring one trusted guest and choose one facilitator.",
+        "Pearl Joble: one planned meeting with a prepared meal. Each person may bring one trusted guest and choose one facilitator.",
         "Ruby Joble: two planned meetings with buffet dining. Each person may bring up to two trusted guests and choose one facilitator.",
-        "Diamond Signature Joble: three private meetings at a 4- or 5-star hotel with buffet dining. Each person may bring up to two trusted guests and one facilitator is included.",
+        "Diamond Joble: three private meetings at a 4- or 5-star hotel with buffet dining. Each person may bring up to two trusted guests and one facilitator is included.",
         "The package sets the hospitality level. Jodohmu coordinates the practical details so both people can focus on the conversation."
       ],
       "facilitationTitle": "One facilitator, if you want one",
@@ -1524,7 +1563,7 @@
             "60-minute founder intake call",
             "Your profile built and reviewed by our team",
             "Weekly matchmaking progress update",
-            "1 Joble Essential with a prepared meal (not buffet)",
+            "1 Pearl Joble with a prepared meal",
             "Bring up to 1 trusted guest",
             "Choose 1 facilitator for your Joble",
             "ID & social verification plus team guidance"

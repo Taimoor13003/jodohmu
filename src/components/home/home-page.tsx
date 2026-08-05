@@ -77,24 +77,30 @@ export default function HomePage() {
 
   const [primaryStory, ...secondaryStories] = matchingStories;
 
-  const meetingPhases = [
+  const meetingScenarios = [
     {
       icon: ShieldCheck,
       title: t("homepage.meetings.steps.intake.title"),
       description: t("homepage.meetings.steps.intake.description"),
-      accent: "from-[#9B2242]/80 to-[#c1486c]/90"
+      feeling: t("homepage.meetings.steps.intake.feeling")
     },
     {
       icon: HeartHandshake,
       title: t("homepage.meetings.steps.curated.title"),
       description: t("homepage.meetings.steps.curated.description"),
-      accent: "from-[#0b3a86]/85 to-[#4364c7]/95"
+      feeling: t("homepage.meetings.steps.curated.feeling")
     },
     {
       icon: MessageCircle,
       title: t("homepage.meetings.steps.checkins.title"),
       description: t("homepage.meetings.steps.checkins.description"),
-      accent: "from-[#f7a4c7]/90 to-[#f4c2d8]/95"
+      feeling: t("homepage.meetings.steps.checkins.feeling")
+    },
+    {
+      icon: Calendar,
+      title: t("homepage.meetings.steps.natural.title"),
+      description: t("homepage.meetings.steps.natural.description"),
+      feeling: t("homepage.meetings.steps.natural.feeling")
     }
   ];
 
@@ -468,107 +474,134 @@ export default function HomePage() {
           </div>
         </AnimatedSection>
 
-        <AnimatedSection className="relative overflow-hidden w-full py-20 md:py-28 lg:py-36 bg-gradient-to-br from-[#dfe9ff] via-[#f3f7ff] to-[#e4f0ff]">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute -top-24 right-16 h-60 w-60 rounded-full bg-[#c0d5ff]/60 blur-[160px]" />
-            <div className="absolute bottom-0 left-10 h-64 w-64 rounded-full bg-[#a9caff]/55 blur-[150px]" />
-            <div className="absolute top-1/3 right-1/3 h-36 w-36 rounded-full bg-white/58 blur-3xl" />
-          </div>
-          <div className="container relative z-10 grid items-center gap-16 px-4 md:px-6 lg:grid-cols-[1.1fr_1fr]">
+        <AnimatedSection className="relative w-full overflow-hidden bg-[#f8f5f2] py-20 md:py-28 lg:py-32">
+          <div className="absolute -left-28 top-16 h-72 w-72 rounded-full bg-[#f5d8df]/55 blur-3xl" />
+          <div className="absolute -right-28 bottom-0 h-80 w-80 rounded-full bg-[#dce7fc]/65 blur-3xl" />
+          <div className="container relative px-4 md:px-6">
             <motion.div 
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="space-y-8"
+              transition={{ duration: 0.55 }}
+              className="mx-auto max-w-3xl text-center"
             >
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="inline-flex items-center gap-2 rounded-full bg-white/82 px-5 py-2 text-xs font-semibold uppercase tracking-[0.28em] text-[#264380] shadow-sm shadow-white/40"
-              >
+              <div className="inline-flex items-center gap-2 rounded-full bg-[#f8e6ec] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.22em] text-[#9B2242]">
+                <Sparkles className="h-4 w-4" />
                 {t("homepage.meetings.badge")}
-              </motion.div>
-              <h2 className="text-4xl font-bold font-serif tracking-tighter sm:text-5xl bg-gradient-to-r from-[#1f3f7f] via-[#4a6cf7] to-[#1f3f7f] bg-clip-text text-transparent">
+              </div>
+              <h2 className="mt-6 font-serif text-4xl font-bold tracking-[-0.055em] text-[#102b61] sm:text-5xl md:text-6xl">
                 {t("homepage.meetings.title")}
               </h2>
-              <p className="max-w-[620px] text-lg md:text-xl leading-relaxed text-[#1b2f52]/88">
-                {t("homepage.meetings.description")}
-              </p>
-              <p className="max-w-[620px] text-base md:text-lg leading-relaxed text-[#1b2f52]/72">
-                {t("homepage.meetings.secondary")}
-              </p>
-
-              <div className="grid gap-3">
-                {meetingPromises.map((promise) => (
-                  <div key={promise} className="flex items-start gap-3 rounded-2xl bg-white/82 p-4 shadow-sm shadow-[#27407a]/10 border border-white/70">
-                    <CheckCircle2 className="mt-0.5 h-5 w-5 text-[#3655c5]" />
-                    <p className="text-sm md:text-base leading-relaxed text-[#1b2f52]/84">{promise}</p>
-                  </div>
-                ))}
-              </div>
+              <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-[#52617c]">{t("homepage.meetings.description")}</p>
             </motion.div>
 
-            <motion.div 
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative flex flex-col gap-6"
-            >
-              <div className="absolute -top-10 -right-6 h-32 w-32 rounded-full bg-[#4a6cf7]/18 blur-3xl" />
-              {meetingPhases.map(({ icon: Icon, title, description, accent }, index) => (
-                <div
+            <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {meetingScenarios.map(({ icon: Icon, title, description, feeling }) => (
+                <motion.article
                   key={title}
-                  className="relative overflow-hidden rounded-3xl border border-white/70 bg-white/80 p-6 backdrop-blur-xl shadow-xl shadow-[#0b3a86]/10"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.45 }}
+                  className="group relative flex min-h-[295px] flex-col overflow-hidden rounded-[1.6rem] border border-[#173d82]/10 bg-white p-6 shadow-[0_12px_28px_rgba(16,43,97,0.06)] transition-transform duration-300 hover:-translate-y-1 hover:shadow-[0_18px_34px_rgba(16,43,97,0.12)] sm:p-7"
                 >
-                  <div className={`absolute inset-x-6 -top-20 h-32 rounded-full bg-gradient-to-br ${accent} opacity-35 blur-3xl`} />
-                  <div className="relative flex items-start gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/86 shadow-lg shadow-[#27407a]/12">
-                      <Icon className="h-6 w-6 text-[#1f3f7f]" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#2f4a8a]/78">{String(index + 1).padStart(2, '0')}</p>
-                      <h3 className="mt-1 text-lg font-semibold text-[#12213f]">{title}</h3>
-                      <p className="mt-2 text-sm leading-relaxed text-[#23365a]/82">{description}</p>
-                    </div>
+                  <div className="absolute -right-10 -top-12 h-32 w-32 rounded-full bg-[#f8e7ed] transition-transform duration-500 group-hover:scale-125" />
+                  <div className="flex items-center">
+                    <div className="relative flex h-11 w-11 items-center justify-center rounded-2xl bg-[#f7edf0] text-[#9B2242]"><Icon className="h-5 w-5" /></div>
                   </div>
-                </div>
+                  <h3 className="relative mt-7 text-xl font-semibold tracking-tight text-[#152f62]">{title}</h3>
+                  <p className="relative mt-3 text-sm leading-relaxed text-[#66738b]">{description}</p>
+                  <div className="relative mt-auto border-t border-[#173d82]/10 pt-4">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.17em] text-[#9B2242]/70">{t("homepage.meetings.feelingLabel")}</p>
+                    <p className="mt-1.5 text-sm font-medium leading-relaxed text-[#304775]">{feeling}</p>
+                  </div>
+                </motion.article>
               ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55, delay: 0.12 }}
+              className="mt-8 grid overflow-hidden rounded-[1.9rem] bg-[#102b61] shadow-[0_24px_65px_rgba(16,43,97,0.22)] lg:grid-cols-[1.05fr_0.95fr]"
+            >
+              <div className="relative min-h-[360px] lg:min-h-[480px]">
+                <Image src="/images/home/jodohmu-mission-guided-introduction.png" alt="A warm guided introduction with family support" fill className="object-cover" sizes="(max-width: 1023px) 100vw, 52vw" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#102b61]/78 via-[#102b61]/5 to-transparent" />
+                <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/20 bg-[#102b61]/75 p-5 text-white backdrop-blur-md sm:bottom-8 sm:left-8 sm:right-auto sm:max-w-[320px]">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#f7bfd0]">{t("homepage.meetings.about.label")}</p>
+                  <p className="mt-2 font-serif text-xl font-bold leading-tight tracking-[-0.03em]">{t("homepage.meetings.about.title")}</p>
+                </div>
+              </div>
+              <div className="relative flex flex-col justify-center overflow-hidden px-7 py-10 text-white sm:px-12 lg:px-14">
+                <div className="absolute -right-28 -top-24 h-72 w-72 rounded-full border border-white/10" />
+                <div className="absolute -bottom-28 left-1/4 h-56 w-56 rounded-full bg-[#9B2242]/55 blur-3xl" />
+                <div className="relative">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#f7bfd0]">{t("homepage.meetings.mission.label")}</p>
+                  <h3 className="mt-5 max-w-lg font-serif text-3xl font-bold leading-[1.06] tracking-[-0.045em] sm:text-4xl">{t("homepage.meetings.mission.title")}</h3>
+                  <p className="mt-5 max-w-lg text-base leading-relaxed text-white/72">{t("homepage.meetings.mission.description")}</p>
+                  <div className="mt-7 space-y-3">
+                    {meetingPromises.map((promise) => (
+                      <div key={promise} className="flex items-start gap-3 text-sm leading-relaxed text-white/88"><CheckCircle2 className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#f7bfd0]" />{promise}</div>
+                    ))}
+                  </div>
+                  <p className="mt-8 border-t border-white/15 pt-5 text-sm font-medium leading-relaxed text-[#f7bfd0]">{t("homepage.meetings.mission.closing")}</p>
+                </div>
+              </div>
             </motion.div>
           </div>
         </AnimatedSection>
 
-        <AnimatedSection className="relative w-full overflow-hidden py-20 md:py-28 lg:py-36">
-          <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-[#9B2242]/10 blur-3xl" />
-            <div className="absolute -bottom-24 left-10 h-80 w-80 rounded-full bg-[#0b3a86]/10 blur-3xl" />
-            <div className="absolute top-1/3 right-10 h-64 w-64 rounded-full bg-[#9B2242]/10 blur-3xl" />
-          </div>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="container relative"
-          >
-            <div className="mx-auto max-w-5xl rounded-3xl border border-[#0b3a86]/10 bg-white/80 p-8 shadow-xl shadow-[#0b3a86]/10 backdrop-blur sm:p-12">
-              <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-                <span className="inline-flex items-center gap-2 rounded-full border border-[#9B2242]/15 bg-[#9B2242]/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-[#9B2242]">
-                  {t("homepage.about.title")}
-                </span>
-                <h2 className="mt-6 font-serif text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl bg-gradient-to-r from-foreground via-[#9B2242] to-foreground bg-clip-text text-transparent">
-                  {t("homepage.about.title")}
-                </h2>
-                <div className="mt-6 h-px w-24 bg-gradient-to-r from-transparent via-[#9B2242]/50 to-transparent" />
-                <p className="mt-8 text-base leading-relaxed text-muted-foreground sm:text-lg md:text-xl">
-                  {t("homepage.about.description")}
-                </p>
+        <AnimatedSection className="relative w-full overflow-hidden bg-[#fffaf7] py-20 md:py-28 lg:py-32">
+          <div className="absolute -right-28 top-12 h-96 w-96 rounded-full bg-[#f8dfe6]/70 blur-3xl" />
+          <div className="absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-[#e1ebff]/75 blur-3xl" />
+          <div className="container relative grid gap-12 px-4 md:px-6 lg:grid-cols-[1fr_0.92fr] lg:items-center lg:gap-20">
+            <motion.div
+              initial={{ opacity: 0, x: -28 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55 }}
+            >
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#f8e7ed] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.23em] text-[#9B2242]">
+                <Heart className="h-4 w-4" /> {t("homepage.about.title")}
+              </span>
+              <h2 className="mt-6 max-w-xl font-serif text-4xl font-bold leading-[1.04] tracking-[-0.055em] text-[#102b61] sm:text-5xl md:text-6xl">
+                {t("homepage.about.heading")}
+              </h2>
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-[#52617c]">{t("homepage.about.description")}</p>
+              <div className="mt-9 grid max-w-xl gap-4 sm:grid-cols-3">
+                {['personal', 'thoughtful', 'present'].map((pillar) => (
+                  <div key={pillar} className="border-l-2 border-[#9B2242]/45 pl-3">
+                    <p className="text-sm font-bold tracking-tight text-[#203a70]">{t(`homepage.about.pillars.${pillar}.title`)}</p>
+                    <p className="mt-1 text-xs leading-relaxed text-[#6a7690]">{t(`homepage.about.pillars.${pillar}.description`)}</p>
+                  </div>
+                ))}
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 28 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55, delay: 0.1 }}
+              className="relative mx-auto h-[440px] w-full max-w-[490px] sm:h-[500px]"
+            >
+              <div className="absolute inset-x-7 top-4 bottom-4 rounded-[2rem] bg-[#102b61]" />
+              <div className="absolute left-0 top-0 h-[82%] w-[78%] overflow-hidden rounded-[2rem] border-4 border-[#fffaf7] shadow-[0_20px_44px_rgba(16,43,97,0.2)]">
+                <Image src="/images/home/jodohmu-about-guidance.png" alt="Two Jodohmu guides having a thoughtful conversation" fill className="object-cover" sizes="(max-width: 1023px) 78vw, 380px" />
+              </div>
+              <div className="absolute bottom-0 right-0 h-[44%] w-[48%] rounded-[2rem] border-4 border-[#fffaf7] bg-[#9B2242] shadow-[0_20px_44px_rgba(16,43,97,0.2)]">
+                <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full border border-white/20" />
+                <div className="absolute bottom-7 left-7 right-7 text-white">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/65">Jodohmu</p>
+                  <p className="mt-2 font-serif text-xl font-bold leading-tight">{t("homepage.about.title")}</p>
+                </div>
+              </div>
+              <div className="absolute left-[10%] top-[61%] z-10 max-w-[260px] rounded-2xl bg-white px-5 py-4 shadow-[0_12px_30px_rgba(16,43,97,0.16)]">
+                <p className="font-serif text-lg font-bold leading-tight tracking-[-0.025em] text-[#102b61]">{t("homepage.about.manifesto")}</p>
+              </div>
+            </motion.div>
+          </div>
         </AnimatedSection>
 
         {/* ── Hiring strip ── */}
@@ -586,23 +619,36 @@ export default function HomePage() {
           </div>
         </div>
 
-        <AnimatedSection className="w-full py-20 md:py-28 lg:py-32 bg-gradient-to-br from-[#9B2242] via-[#9B2242]/90 to-[#0b3a86] text-white relative overflow-hidden">
-          <div className="absolute inset-0">
-            <div className="absolute top-0 left-0 w-64 h-64 bg-white/5 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-          </div>
+        <AnimatedSection className="relative w-full overflow-hidden bg-[#fff2f6] py-20 md:py-28 lg:py-32">
+          <div className="absolute -top-40 right-0 h-96 w-96 rounded-full bg-[#f6cedc] blur-3xl" />
+          <div className="absolute -bottom-40 left-0 h-96 w-96 rounded-full bg-[#f4d7e2] blur-3xl" />
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="container flex flex-col items-center justify-center px-4 text-center md:px-6 relative z-10"
+            className="container relative px-4 md:px-6"
           >
-            <h2 className="text-4xl font-extrabold tracking-tight font-serif">{t("homepage.cta.title")}</h2>
-            <p className="max-w-[600px] text-lg leading-relaxed text-white/90 mt-4">
-              {t("homepage.cta.description")}
-            </p>
-            <HomeContactForm />
+            <div className="relative overflow-hidden rounded-[2.25rem] bg-gradient-to-br from-[#9B2242] via-[#8a1f42] to-[#641631] px-6 py-10 text-white shadow-[0_24px_60px_rgba(125,26,61,0.24)] sm:px-10 sm:py-12 lg:grid lg:grid-cols-[0.82fr_1.18fr] lg:gap-14 lg:px-16 lg:py-16">
+              <div className="absolute -left-32 -top-32 h-80 w-80 rounded-full border border-white/10" />
+              <div className="absolute -bottom-40 right-0 h-96 w-96 rounded-full bg-[#f7aac5]/35 blur-3xl" />
+              <div className="relative flex flex-col justify-center">
+                <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-[#ffd3e0]">{t("homepage.cta.label")}</p>
+                <h2 className="mt-5 max-w-lg font-serif text-4xl font-bold leading-[1.04] tracking-[-0.05em] sm:text-5xl">{t("homepage.cta.title")}</h2>
+                <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/72">{t("homepage.cta.description")}</p>
+                <div className="mt-9 space-y-4 border-t border-white/15 pt-7">
+                  {["private", "conversation", "pace"].map((item) => (
+                    <div key={item} className="flex items-start gap-3 text-sm leading-relaxed text-white/84">
+                      <CheckCircle2 className="mt-0.5 h-[18px] w-[18px] shrink-0 text-[#ffd3e0]" />
+                      {t(`homepage.cta.reassurance.${item}`)}
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="relative mt-10 rounded-[1.7rem] border border-white/20 bg-[#651631]/35 px-5 py-1 shadow-inner shadow-black/10 sm:px-8 lg:mt-0">
+                <HomeContactForm />
+              </div>
+            </div>
           </motion.div>
         </AnimatedSection>
       </main>

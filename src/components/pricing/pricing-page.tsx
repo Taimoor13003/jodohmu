@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   BadgeCheck,
@@ -41,8 +42,15 @@ const packages: PkgConfig[] = [
   { key: "istimewa", featuresCount: 13, months: 12 },
 ];
 
+const packageBlogHref: Record<PkgConfig["key"], string> = {
+  awal: "/blog/paket-pearl-jodohmu",
+  serius: "/blog/paket-ruby-jodohmu",
+  istimewa: "/blog/paket-diamond-jodohmu",
+};
+
 export function PricingPage() {
   const { t, lang } = useLanguage();
+  const router = useRouter();
   const id = lang === "id";
   const l = (idText: string, enText: string) => (id ? idText : enText);
   const [jobleStyle, setJobleStyle] = useState("");
@@ -361,11 +369,21 @@ export function PricingPage() {
               return (
                 <article
                   key={pkg.key}
+                  role="link"
+                  tabIndex={0}
+                  aria-label={l(`Baca selengkapnya tentang paket ${name}`, `Learn more about the ${name} package`)}
+                  onClick={() => router.push(packageBlogHref[pkg.key])}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      router.push(packageBlogHref[pkg.key]);
+                    }
+                  }}
                   className={`relative flex flex-col rounded-[2rem] bg-white p-7 transition-transform duration-300 hover:-translate-y-1 sm:p-8 ${
                     popular
                       ? "border-2 border-transparent shadow-[0_24px_70px_rgba(65,79,150,.18)] [background:linear-gradient(white,white)_padding-box,linear-gradient(145deg,#ef4779,#397ee8)_border-box]"
                       : "border border-[#dce5f5] shadow-[0_16px_45px_rgba(24,51,111,.08)]"
-                  }`}
+                  } cursor-pointer focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#e48aa7]/40`}
                 >
                   {popular && (
                     <span className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-[#df3268] to-[#356fd4] px-5 py-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-white shadow-lg">
@@ -400,7 +418,7 @@ export function PricingPage() {
                   </ul>
 
                   <Button asChild className={`mt-8 h-12 w-full rounded-full text-sm font-extrabold text-white ${popular ? "bg-gradient-to-r from-[#df3268] to-[#356fd4] hover:opacity-90" : "bg-[#102457] hover:bg-[#1a3b83]"}`}>
-                    <Link href={packageWhatsappHref(name)} target="_blank" rel="noopener noreferrer" onClick={() => analytics.whatsappClick(`package_${pkg.key}`)}>
+                    <Link href={packageWhatsappHref(name)} target="_blank" rel="noopener noreferrer" onClick={(event) => { event.stopPropagation(); analytics.whatsappClick(`package_${pkg.key}`); }}>
                       {l("Jadwalkan Panggilan", "Schedule a Call")}
                     </Link>
                   </Button>

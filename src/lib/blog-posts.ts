@@ -8,6 +8,16 @@ export type BlogPost = {
 };
 
 export const blogPosts: BlogPost[] = [
+  { slug: "/blog/paket-diamond-jodohmu", articleKey: "blogArticle.paketDiamondJodohmu", datePublished: "2026-08-04", dateModified: "2026-08-04", heroImage: "/images/blog/diamond-joble-hero.png", readTime: 12 },
+  { slug: "/blog/paket-ruby-jodohmu", articleKey: "blogArticle.paketRubyJodohmu", datePublished: "2026-08-04", dateModified: "2026-08-04", heroImage: "/images/blog/ruby-joble-hero-v2.png", readTime: 11 },
+  {
+    slug: "/blog/paket-pearl-jodohmu",
+    articleKey: "blogArticle.paketPearlJodohmu",
+    datePublished: "2026-08-04",
+    dateModified: "2026-08-04",
+    heroImage: "/images/blog/pearl-joble-hero.png",
+    readTime: 12,
+  },
   {
     slug: "/blog/joble-jodohmu-table",
     articleKey: "blogArticle.jobleJodohmuTable",

@@ -44,13 +44,20 @@
   "homepage": {
     "about": {
       "title": "Tentang Kami",
-      "description": "Jodohmu ada karena setiap orang berhak mendapatkan jalan yang bermartabat menuju pernikahan yang nyata dan tahan lama. Kami bukan algoritma — kami orang-orang nyata, mendampingi Anda secara offline melalui proses matchmaking yang serius dan terstruktur, menuju pernikahan yang dibangun untuk jangka panjang."
+      "heading": "Masa depan yang ingin Anda bangun layak dimulai secara personal.",
+      "description": "Jodohmu hadir karena mencari pasangan hidup seharusnya terasa personal, privat, dan penuh harapan. Kami adalah tim nyata yang meluangkan waktu untuk mengenal Anda, memfasilitasi perkenalan yang penuh pertimbangan, dan mendampingi setiap langkah—agar koneksi yang bermakna dapat tumbuh menjadi masa depan bersama.",
+      "manifesto": "Setiap masa depan yang bermakna dimulai dari benar-benar dipahami.",
+      "pillars": {
+        "personal": { "title": "Cerita Anda lebih dulu", "description": "Kami mendengarkan sebelum memperkenalkan." },
+        "thoughtful": { "title": "Penuh pertimbangan", "description": "Setiap langkah memiliki tujuan dan kepedulian." },
+        "present": { "title": "Hadir sepanjang proses", "description": "Pendampingan tetap dekat saat dibutuhkan." }
+      }
     },
     "hero": {
       "badge": "PENCARIAN JODOH SERIUS",
-      "title": "Perjodohan Offline & Ta'aruf Serius di Indonesia",
+      "title": "Bimbingan Personal & Koneksi yang Terarah di Indonesia",
       "description": "Jodohmu membimbing lajang berniat menikah dengan perjodohan offline yang halal, fasilitasi ta'aruf, serta penyaringan keluarga di seluruh Indonesia.",
-      "tagline": "Perkenalan offline yang halal untuk hati-hati tulus yang siap menikah.",
+      "tagline": "Untuk Anda yang mencari hubungan bermakna dan masa depan bersama.",
       "cta": "Mulai Perjalanan Anda",
       "secondaryCta": "Bicara dengan Advisor",
       "highlight": {
@@ -151,28 +158,47 @@
       "description": "Mencari pasangan hidup adalah perjalanan penting. Di Jodohmu, kami tidak membiarkannya berjalan sendiri. Matchmaker kami mendampingi Anda secara personal, memberi panduan dan dukungan dengan sentuhan manusiawi yang tidak dapat digantikan algoritma."
     },
     "meetings": {
-      "badge": "Aman & Penuh Hormat",
-      "title": "Pertemuan Penuh Niat",
-      "description": "Kenyamanan dan keamanan Anda adalah prioritas utama kami. Kami mengatur pertemuan di lingkungan yang terkendali dan penuh hormat—baik di kantor kami maupun ruang publik terpercaya—sering kali dengan kehadiran imam atau anggota keluarga, memastikan setiap interaksi berlangsung bermartabat dan penuh tujuan.",
-      "secondary": "Setiap perkenalan dikordinasikan tim kami, dengan check-in berkala untuk menyelaraskan perasaan, harapan, dan langkah berikutnya bagi kedua keluarga.",
+      "badge": "Mengapa Jodohmu ada",
+      "title": "Mencari pasangan hidup seharusnya tidak sesulit ini.",
+      "description": "Bukan karena orang tidak punya cara untuk bertemu. Yang sering kurang adalah jalan yang privat dan manusiawi untuk menemukan seseorang dengan tujuan masa depan yang sama.",
+      "secondary": "",
       "promises": {
-        "safe": "Ruang privat, lokasi yang sopan, serta opsi pendamping di setiap pertemuan.",
-        "transparent": "Ekspektasi yang jelas, percakapan terarah, dan tindak lanjut terstruktur sehingga tak ada momen yang terasa membingungkan.",
-        "family": "Anggota keluarga dan pembimbing rohani dapat dilibatkan pada setiap tahap agar proses tetap berlandaskan iman."
+        "safe": "Pendampingan personal, bukan algoritma.",
+        "transparent": "Perkenalan dengan niat yang sejalan.",
+        "family": "Jalan yang jelas dan tetap privat."
       },
+      "feelingLabel": "Yang mungkin Anda rasakan",
       "steps": {
         "intake": {
-          "title": "Intake yang Penuh Niat",
-          "description": "Kami memahami cerita, prioritas iman, dan batas kenyamanan Anda untuk merancang pertemuan yang aman dan sesuai kebutuhan."
+          "title": "Aplikasi kencan",
+          "description": "Sudah cocok, berbincang berhari-hari, lalu mulai berharap—namun percakapan perlahan menghilang atau ternyata tujuan kalian berbeda.",
+          "feeling": "“Apakah ini benar-benar nyata, atau hanya menghabiskan waktu?”"
         },
         "curated": {
-          "title": "Perkenalan yang Dikurasi",
-          "description": "Matchmaker kami mengatur pertemuan yang penuh hormat dengan kandidat yang sevisi, seiman, dan siap membangun masa depan."
+          "title": "Perkenalan dari keluarga",
+          "description": "Mereka menginginkan yang terbaik untuk Anda, tetapi tidak selalu mudah menjelaskan siapa diri Anda sekarang dan apa yang benar-benar Anda butuhkan.",
+          "feeling": "“Bagaimana menghormati mereka sekaligus tetap dipahami?”"
         },
         "checkins": {
-          "title": "Pendampingan Hangat",
-          "description": "Setelah setiap pertemuan kami mendengarkan, mendukung, dan memandu langkah berikutnya agar Anda selalu mantap melangkah."
+          "title": "Bimbingan komunitas",
+          "description": "Anda mungkin mempercayai arahannya, tetapi tetap belum tentu leluasa membagikan harapan, keraguan, dan kekhawatiran yang sangat pribadi.",
+          "feeling": "“Saya butuh arahan, tetapi juga ruang aman untuk jujur.”"
+        },
+        "natural": {
+          "title": "Menunggu bertemu secara alami",
+          "description": "Anda menunggu momen yang tepat lewat pekerjaan, teman, atau masa studi—lalu menyadari perasaan atau waktunya ternyata hanya satu arah.",
+          "feeling": "“Bagaimana jika saya terus menunggu dan semuanya tetap tidak jelas?”"
         }
+      },
+      "mission": {
+        "label": "Misi kami",
+        "title": "Cara yang lebih manusiawi untuk menemukan orang yang tepat.",
+        "description": "Jodohmu adalah layanan perkenalan personal bagi Anda yang ingin membangun masa depan bersama. Kami memahami pribadi di balik profil, memfasilitasi perkenalan yang penuh pertimbangan, dan mendampingi Anda saat menentukan langkah berikutnya.",
+        "closing": "Bukan lebih banyak profil. Melainkan jalan ke depan yang lebih bermakna."
+      },
+      "about": {
+        "label": "Tentang kami",
+        "title": "Perkenalan personal, dengan pendampingan penuh pertimbangan."
       },
       "us": "Hubungi Kami"
     },
@@ -191,9 +217,15 @@
       }
     },
     "cta": {
-      "title": "Siap Menemukan 'Belahan Jiwa'?",
-      "description": "Perjalanan menuju pernikahan yang penuh makna dimulai di sini. Biarkan kami mendampingi langkah Anda menuju kebahagiaan.",
-      "button": "Buat Profil Anda"
+      "label": "Ruang privat untuk memulai",
+      "title": "Saat Anda siap, kami ada di sini.",
+      "description": "Mulailah dengan percakapan sederhana. Ceritakan sedikit tentang diri Anda dan masa depan yang ingin dibangun; tim kami akan memandu langkah berikutnya.",
+      "button": "Buat Profil Anda",
+      "reassurance": {
+        "private": "Data Anda ditangani dengan baik dan tetap privat.",
+        "conversation": "Orang nyata dari tim kami akan menghubungi Anda—bukan balasan otomatis.",
+        "pace": "Tidak ada tekanan. Melangkahlah saat waktunya terasa tepat."
+      }
     },
     "whatsappCta": {
       "caption": "Ingin dibimbing langsung? Isi Google Form kami dan tim kami akan menghubungi Anda.",
@@ -1302,6 +1334,13 @@
       "ctaPrimary": "Hubungi kami di WhatsApp",
       "ctaSecondary": "Kembali ke blog"
     },
+    "paketDiamondJodohmu": { "tag": "Paket Diamond Jodohmu", "title": "Paket Diamond Jodohmu: pendampingan privat yang dibangun di sekitar Anda", "subtitle": "Dukungan paling personal dan diskret untuk mencari pasangan hidup dengan strategi privat selama dua belas bulan." },
+    "paketRubyJodohmu": { "tag": "Paket Ruby Jodohmu", "title": "Paket Ruby Jodohmu: proses yang lebih mendalam", "subtitle": "Enam bulan pendampingan untuk mengenal, memeriksa hal penting, dan melibatkan keluarga pada saat yang tepat." },
+    "paketPearlJodohmu": {
+      "tag": "Paket Pearl Jodohmu",
+      "title": "Paket Pearl Jodohmu: langkah penuh niat menuju pernikahan",
+      "subtitle": "Pendampingan selama tiga bulan yang membantu Anda mencari pasangan dengan lebih jelas, manusiawi, dan terarah."
+    },
     "jobleJodohmuTable": {
       "tag": "Panduan Joble",
       "title": "Joble: pertemuan terencana untuk menikah",
@@ -1327,9 +1366,9 @@
       "scenario": "Joble dirancang untuk memberi kejelasan, bukan untuk tampil sempurna. Anda datang dengan memahami tujuan, format, siapa yang hadir, dan apa langkah setelah percakapan.",
       "whatWeHandleTitle": "Tiga format Joble",
       "whatWeHandle": [
-        "Pearl Joble: satu pertemuan terencana dengan hidangan terpilih, bukan buffet. Setiap orang dapat membawa satu pendamping tepercaya dan memilih satu fasilitator.",
+        "Pearl Joble: satu pertemuan terencana dengan hidangan terpilih. Setiap orang dapat membawa satu pendamping tepercaya dan memilih satu fasilitator.",
         "Ruby Joble: dua pertemuan terencana dengan makan buffet. Setiap orang dapat membawa maksimal dua pendamping tepercaya dan memilih satu fasilitator.",
-        "Diamond Signature Joble: tiga pertemuan privat di hotel bintang 4 atau 5 dengan makan buffet. Setiap orang dapat membawa maksimal dua pendamping tepercaya dan satu fasilitator.",
+        "Diamond Joble: tiga pertemuan privat di hotel bintang 4 atau 5 dengan makan buffet. Setiap orang dapat membawa maksimal dua pendamping tepercaya dan satu fasilitator.",
         "Paket menentukan tingkat hospitality. Jodohmu mengoordinasikan detail praktis agar kedua orang dapat fokus pada percakapan."
       ],
       "facilitationTitle": "Satu fasilitator, bila Anda menginginkannya",
@@ -1528,7 +1567,7 @@
             "Panggilan intake 60 menit bersama founder",
             "Profil Anda dibangun dan ditinjau oleh tim kami",
             "Update progres matchmaking setiap minggu",
-            "1 Joble Essential dengan hidangan terpilih (bukan buffet)",
+            "1 Pearl Joble dengan hidangan terpilih",
             "Bawa maksimal 1 pendamping tepercaya",
             "Pilih 1 fasilitator untuk Joble Anda",
             "Verifikasi KTP & media sosial serta pendampingan tim"

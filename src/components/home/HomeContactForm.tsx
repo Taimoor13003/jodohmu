@@ -120,8 +120,8 @@ export function HomeContactForm() {
       </div>
 
       {/* Phone + City */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-x-8">
+        <div className="min-w-0">
           <label className="block text-sm font-semibold text-white/90 mb-1">{id ? "Nomor Telepon" : "Phone Number"}</label>
           <div className="flex gap-2">
             <select
@@ -139,12 +139,12 @@ export function HomeContactForm() {
               value={displayPhone}
               onChange={handlePhoneInput}
               placeholder="8123-4567-890"
-              className="h-12 flex-1 rounded-xl border border-white/20 bg-white/15 px-3 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
+              className="h-12 min-w-0 flex-1 rounded-xl border border-white/20 bg-white/15 px-3 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/20"
             />
           </div>
           {errors.phoneNumber && <p className="mt-1 text-sm text-white/70">{errors.phoneNumber.message}</p>}
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="block text-sm font-semibold text-white/90 mb-1">{id ? "Kota" : "City"}</label>
           <Input {...register("city")} placeholder={id ? "cth. Jakarta" : "e.g. Jakarta"} className={inp} />
           {errors.city && <p className="mt-1 text-sm text-white/70">{errors.city.message}</p>}
