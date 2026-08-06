@@ -698,6 +698,14 @@
     }
   },
   "blogArticle": {
+    "registrasiJodohmu": {
+      "tag": "Jodohmu Registration",
+      "title": "Jodohmu Registration: join the private introduction pool from Rp500k",
+      "summary": "A simple step to join Jodohmu's private introduction pool without an active support service.",
+      "author": "Jodohmu Team",
+      "date": "August 6, 2026",
+      "readTime": "5 min read"
+    },
     "related": {
       "faq": "See frequently asked questions",
       "register": "Register now",

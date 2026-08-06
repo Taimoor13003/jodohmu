@@ -702,6 +702,14 @@
     }
   },
   "blogArticle": {
+    "registrasiJodohmu": {
+      "tag": "Registrasi Jodohmu",
+      "title": "Registrasi Jodohmu: masuk ke pool perkenalan privat mulai Rp500 ribu",
+      "summary": "Langkah sederhana untuk masuk ke pool perkenalan privat Jodohmu tanpa layanan pendampingan aktif.",
+      "author": "Tim Jodohmu",
+      "date": "6 Agustus 2026",
+      "readTime": "5 menit baca"
+    },
     "related": {
       "faq": "Lihat pertanyaan yang sering diajukan",
       "register": "Daftar sekarang",

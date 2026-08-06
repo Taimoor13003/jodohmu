@@ -66,6 +66,13 @@ export function PricingPage() {
     )
   )}`;
 
+  const registrationWhatsappHref = `${whatsappBase}?text=${encodeURIComponent(
+    l(
+      "Halo Jodohmu, saya ingin mengetahui Registrasi Jodohmu mulai Rp500 ribu untuk masuk ke pool perkenalan privat.",
+      "Hello Jodohmu, I would like to learn about Jodohmu Registration from Rp500k to join the private introduction pool."
+    )
+  )}`;
+
   const jobleStyles = id
     ? ["Santai & alami", "Terarah", "Hangat & kekeluargaan", "Fleksibel"]
     : ["Relaxed & natural", "Structured", "Warm & family-oriented", "Flexible"];
@@ -176,6 +183,23 @@ export function PricingPage() {
               <Headphones className="h-4 w-4 text-[#2f68cc]" />
               {l("Panggilan awal gratis, tanpa kewajiban membeli paket.", "The first call is free, with no obligation to purchase.")}
             </p>
+            <div className="mt-7 flex max-w-2xl flex-col gap-5 rounded-3xl border border-[#e7c5d0] bg-white/85 p-5 shadow-[0_16px_36px_rgba(88,42,78,.1)] backdrop-blur sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-5">
+              <div className="flex items-center gap-4">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#fff0f5] to-[#eaf2ff] text-[#c62d5c]"><UserRound className="h-6 w-6" /></span>
+                <div>
+                  <p className="text-lg font-extrabold tracking-tight text-[#102457]">{l("Mulai dari Rp500 ribu", "Start from Rp500k")}</p>
+                  <p className="mt-1 text-sm leading-5 text-[#69758e]">{l("Registrasi untuk masuk ke pool perkenalan privat.", "Registration to join the private introduction pool.")}</p>
+                </div>
+              </div>
+              <div className="flex shrink-0 flex-wrap gap-2">
+                <Link href={registrationWhatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.whatsappClick("hero_registration")} className="inline-flex items-center justify-center gap-1 rounded-full bg-[#fff0f5] px-4 py-2.5 text-sm font-extrabold text-[#c62d5c] transition hover:bg-[#ffe3ec] hover:text-[#a91f4c]">
+                  {l("Tentang registrasi", "About registration")} <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link href="/blog/registrasi-jodohmu" className="inline-flex items-center justify-center gap-1 rounded-full border border-[#d8e2f4] bg-white px-4 py-2.5 text-sm font-extrabold text-[#173778] transition hover:border-[#9db8e4] hover:bg-[#f6f9ff]">
+                  {l("Pelajari lengkap", "Learn more")} <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
           </div>
 
           <div className="relative mx-auto w-full max-w-xl">
