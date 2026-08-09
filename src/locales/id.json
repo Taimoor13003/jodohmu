@@ -157,6 +157,26 @@
       "heading": "Lebih dari Sekadar Aplikasi, Kami Mitra Anda",
       "description": "Mencari pasangan hidup adalah perjalanan penting. Di Jodohmu, kami tidak membiarkannya berjalan sendiri. Matchmaker kami mendampingi Anda secara personal, memberi panduan dan dukungan dengan sentuhan manusiawi yang tidak dapat digantikan algoritma."
     },
+    "locations": {
+      "badge": "JARINGAN KANTOR KAMI",
+      "title": "Hadir lebih dekat untuk Anda, di seluruh Indonesia.",
+      "description": "Kantor kami akan menjadi tempat yang hangat bagi klien untuk bertemu langsung dengan tim kami, berbincang dengan nyaman, dan mendapatkan dukungan secara tatap muka. Mengunjungi kantor sepenuhnya pilihan: Jodohmu sudah melayani klien di seluruh Indonesia, dan tim kami selalu hanya sejauh pesan dari Anda.",
+      "comingSoon": "Segera hadir",
+      "nextPhase": "Segera hadir — fase berikutnya",
+      "phaseThree": "Segera hadir — fase 3",
+      "phaseOneLabel": "Fase 1",
+      "phaseOneDescription": "Kantor akan segera dibuka",
+      "phaseTwoLabel": "Fase 2",
+      "phaseTwoDescription": "Lokasi berikutnya dalam rencana kami",
+      "phaseThreeLabel": "Fase 3",
+      "phaseThreeDescription": "Ekspansi regional di masa mendatang",
+      "mapLabel": "Lokasi kantor Jodohmu yang akan segera hadir di Indonesia",
+      "cities": {
+        "jakarta": "Jakarta", "bandung": "Bandung", "yogyakarta": "Yogyakarta", "surabaya": "Surabaya",
+        "medan": "Medan", "samarinda": "Samarinda, Kalimantan", "makassar": "Makassar",
+        "jayapura": "Jayapura, Papua", "kualaLumpur": "Kuala Lumpur, Malaysia", "singapore": "Singapura"
+      }
+    },
     "meetings": {
       "badge": "Mengapa Jodohmu ada",
       "title": "Mencari pasangan hidup seharusnya tidak sesulit ini.",

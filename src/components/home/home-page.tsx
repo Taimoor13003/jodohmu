@@ -2,11 +2,12 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/components/layout/animated-section";
 import { ParallaxHero } from "@/components/layout/parallax-hero";
 import { useLanguage } from "@/context/LanguageContext";
-import { Heart, Users, Star, Calendar, ShieldCheck, Handshake, Sparkles, HeartHandshake, MessageCircle, CheckCircle2 } from "lucide-react";
+import { Heart, Users, Star, Calendar, ShieldCheck, Handshake, Sparkles, HeartHandshake, MessageCircle, CheckCircle2, MapPin, MapPinned } from "lucide-react";
 import Link from "next/link";
 import { motion } from 'framer-motion';
 import { analytics } from "@/lib/analytics";
@@ -17,6 +18,11 @@ import indoGroomImage from "@/assets/indo-groom.png";
 import sundaneseGroomImage from "@/assets/sundanese-groom.png";
 import sundaneseBrideImage from "@/assets/sundanese-bride.png";
 import indoGroomImage2 from "@/assets/indo-groom2.png";
+
+const OfficeLocationMap = dynamic(
+  () => import("@/components/home/office-location-map").then((module) => module.OfficeLocationMap),
+  { ssr: false }
+);
 
 export default function HomePage() {
   const { t } = useLanguage();
@@ -108,6 +114,19 @@ export default function HomePage() {
     t("homepage.meetings.promises.safe"),
     t("homepage.meetings.promises.transparent"),
     t("homepage.meetings.promises.family")
+  ];
+
+  const officeLocations = [
+    { name: t("homepage.locations.cities.jakarta"), x: 218, y: 278, mapX: "26.7%", mapY: "64.8%", position: [-6.2088, 106.8456] as [number, number], phase: "soon" as const },
+    { name: t("homepage.locations.cities.bandung"), x: 231, y: 292, mapX: "28.3%", mapY: "67.8%", position: [-6.9175, 107.6191] as [number, number], phase: "soon" as const },
+    { name: t("homepage.locations.cities.yogyakarta"), x: 279, y: 311, mapX: "34.2%", mapY: "71.7%", position: [-7.7956, 110.3695] as [number, number], phase: "soon" as const },
+    { name: t("homepage.locations.cities.surabaya"), x: 319, y: 300, mapX: "39.1%", mapY: "69.4%", position: [-7.2575, 112.7521] as [number, number], phase: "soon" as const },
+    { name: t("homepage.locations.cities.medan"), x: 79, y: 72, mapX: "9.7%", mapY: "24.2%", position: [3.5952, 98.6722] as [number, number], phase: "next" as const },
+    { name: t("homepage.locations.cities.samarinda"), x: 394, y: 158, mapX: "48.1%", mapY: "41.1%", position: [-0.5022, 117.1536] as [number, number], phase: "next" as const },
+    { name: t("homepage.locations.cities.makassar"), x: 432, y: 255, mapX: "52.9%", mapY: "60.4%", position: [-5.1477, 119.4327] as [number, number], phase: "next" as const },
+    { name: t("homepage.locations.cities.jayapura"), x: 795, y: 201, mapX: "99.4%", mapY: "50.3%", position: [-2.5337, 140.7181] as [number, number], phase: "third" as const },
+    { name: t("homepage.locations.cities.kualaLumpur"), x: 130, y: 81, mapX: "16.3%", mapY: "20.3%", position: [3.139, 101.6869] as [number, number], phase: "third" as const },
+    { name: t("homepage.locations.cities.singapore"), x: 167, y: 119, mapX: "20.9%", mapY: "29.8%", position: [1.3521, 103.8198] as [number, number], phase: "third" as const },
   ];
 
   const [showForm, setShowForm] = useState(false);
@@ -600,6 +619,66 @@ export default function HomePage() {
               <div className="absolute left-[10%] top-[61%] z-10 max-w-[260px] rounded-2xl bg-white px-5 py-4 shadow-[0_12px_30px_rgba(16,43,97,0.16)]">
                 <p className="font-serif text-lg font-bold leading-tight tracking-[-0.025em] text-[#102b61]">{t("homepage.about.manifesto")}</p>
               </div>
+            </motion.div>
+          </div>
+        </AnimatedSection>
+
+        <AnimatedSection className="relative w-full overflow-hidden bg-[#f5f8ff] py-20 md:py-28 lg:py-32">
+          <div className="absolute -left-24 top-12 h-72 w-72 rounded-full bg-[#dce7fc]/80 blur-3xl" />
+          <div className="absolute -right-24 bottom-0 h-80 w-80 rounded-full bg-[#f8dfe6]/70 blur-3xl" />
+          <div className="container relative grid gap-12 px-4 md:px-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:gap-16">
+            <motion.div initial={{ opacity: 0, x: -28 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.55 }}>
+              <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[11px] font-bold uppercase tracking-[0.23em] text-[#9B2242] shadow-sm"><MapPinned className="h-4 w-4" /> {t("homepage.locations.badge")}</span>
+              <h2 className="mt-6 max-w-xl font-serif text-4xl font-bold leading-[1.04] tracking-[-0.055em] text-[#102b61] sm:text-5xl">{t("homepage.locations.title")}</h2>
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-[#52617c]">{t("homepage.locations.description")}</p>
+              <div className="mt-8 grid gap-3">
+                {[
+                  { phase: t("homepage.locations.phaseOneLabel"), description: t("homepage.locations.phaseOneDescription"), color: "text-[#9B2242]", background: "bg-[#9B2242]" },
+                  { phase: t("homepage.locations.phaseTwoLabel"), description: t("homepage.locations.phaseTwoDescription"), color: "text-[#5271ad]", background: "bg-[#5271ad]" },
+                  { phase: t("homepage.locations.phaseThreeLabel"), description: t("homepage.locations.phaseThreeDescription"), color: "text-[#7b4bb7]", background: "bg-[#7b4bb7]" },
+                ].map(({ phase, description, color, background }) => (
+                  <div key={phase} className="flex items-center gap-3 rounded-2xl border border-[#173d82]/10 bg-white/80 p-4 shadow-sm">
+                    <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${background} text-white shadow-sm`}><MapPin className="h-4 w-4" fill="currentColor" /></span>
+                    <div><p className={`font-semibold ${color}`}>{phase}</p><p className="mt-0.5 text-sm text-[#52617c]">{description}</p></div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, x: 28 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.55, delay: 0.1 }} className="relative overflow-hidden rounded-[2rem] border border-white/80 bg-white/75 p-4 shadow-[0_24px_60px_rgba(16,43,97,0.14)] backdrop-blur-xl sm:p-7">
+              <OfficeLocationMap
+                label={t("homepage.locations.mapLabel")}
+                locations={officeLocations.map(({ name, phase, position }) => ({
+                  name,
+                  phase,
+                  position,
+                  status: phase === "soon" ? t("homepage.locations.comingSoon") : phase === "next" ? t("homepage.locations.nextPhase") : t("homepage.locations.phaseThree"),
+                }))}
+              />
+              {false && <div className="relative aspect-[2/1] overflow-hidden rounded-[1.25rem] border border-[#173d82]/10 bg-[#dce7fc]">
+                <iframe
+                  title={t("homepage.locations.mapLabel")}
+                  src="https://www.openstreetmap.org/export/embed.html?bbox=94%2C-12%2C142%2C7&layer=mapnik"
+                  className="absolute inset-0 h-full w-full border-0"
+                  loading="lazy"
+                />
+                <div className="pointer-events-none absolute inset-0" aria-label={t("homepage.locations.mapLabel")}>
+                  {officeLocations.map(({ name, mapX, mapY, phase }) => (
+                    <div key={name} className="absolute -translate-x-1/2 -translate-y-full" style={{ left: mapX, top: mapY }}>
+                      <span className={`flex h-7 w-7 items-center justify-center rounded-full border-2 border-white shadow-lg ${phase === "soon" ? "bg-[#9B2242] text-white" : "bg-[#5271ad] text-white"}`}>
+                        <MapPin className="h-4 w-4" fill="currentColor" />
+                      </span>
+                      <span className={`absolute left-1/2 top-full h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white ${phase === "soon" ? "bg-[#9B2242]" : "bg-[#5271ad]"}`} />
+                    </div>
+                  ))}
+                </div>
+              </div>}
+              <p className="mt-3 text-center text-[11px] text-[#52617c]">© <a className="underline underline-offset-2 hover:text-[#102b61]" href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors</p>
+              {false && <svg viewBox="0 0 800 400" className="h-auto w-full" role="img" aria-label={t("homepage.locations.mapLabel")}>
+                <defs><linearGradient id="islandFill" x1="0" x2="1" y1="0" y2="1"><stop stopColor="#dce7fc" /><stop offset="1" stopColor="#f7dce6" /></linearGradient></defs>
+                <path d="M454.7 362.9L447.6 363.3 425 348.6 440.9 344.4 449.8 350.9 455.8 357.3ZM518.1 360.8L503.5 365.5 501.4 362.9 503 355.8 510.3 342.9 527.1 334.6 528.9 338.7 529.2 345.1ZM406.8 317.8L412.9 323.4 423.5 321.7 427.7 330.6 408 334.9 396.2 337.7 387.1 337.5 392.9 325.4 402.2 325.2ZM492 317.8L489.5 329.5 463.9 335.4 441.3 332.9 441.2 325.2 454.7 320.8 465.4 327.1 476.7 325.5ZM248.9 290.1L281.5 292.2 285.3 283.5 316.8 293.6 323 307.2 348.6 311.1 369.5 323.6 350 331.6 331.3 323.1 315.9 323.7 298.2 322.2 282.3 318.4 262.6 310.3 250.1 308.2 243 310.9 212 302.2 209 293.2 193.5 291.6 205.1 271.5 225.8 272.7 239.5 281 246.6 282.6ZM693.2 278.2L684.4 292.5 682.8 276.7 685.8 269.1 689.4 262 693.2 268.2ZM565.9 220.2L559.6 227.2 547.8 223.3 544.5 214.3 561.7 213.2ZM620.8 212.5L627 228.6 612.6 219.9 598.4 218.2 588.8 219.6 577 218.8 581 207.2 602.1 206.4ZM683.3 171.6L688 205.7 705.7 218.3 719.9 195.9 739.4 183.2 754.5 183.2 769.1 190.6 781.7 198.1 800 202.1 800.3 270.7 800.6 339.3 785.4 322 768.1 317.8 763.9 323.8 742.4 324.5 749.6 307.3 760.3 301.5 755.9 278.6 747.7 260.9 714.7 243.1 700.7 241.3 675.1 221.9 670.1 232.1 663.6 234 659.7 226.2 659.6 217.1 646.6 206.7 665 199.2 677.1 199.6 675.7 194 650.8 193.9 644 181.4 628.8 177.5 621.6 167.1 644.6 162 653.3 155.1 680.6 163.8ZM531.8 117.5L518.1 138.4 505.3 142.4 488.9 138.3 460.5 139.3 445.7 142.4 443.2 158.3 458.5 177 467.7 167.5 499.4 160.3 498 170 490.6 167 483.2 179.3 468.2 187.5 484.3 214.4 481.2 221.7 496.5 246 496.4 259.8 487.3 266 480.6 258.6 488.8 241.4 472.1 249.5 467.9 243.7 470.1 235.5 457.8 223.2 459.1 202.7 447.8 209.1 449.2 233.6 449.9 263.8 439.1 266.8 431.8 260.6 436.7 241.3 434 220.9 426.9 220.8 421.6 206.4 428.6 192.6 431 175.9 439.6 144.1 443.2 135.4 457.6 119.8 470.9 126 492.4 128.9 512 128.1 528.8 112.8ZM590.4 123.5L589.5 141.9 580.8 139.9 578.2 152.7 585.2 163.8 580.4 166.3 573.6 153 568.5 126.1 571.9 109.2 577.6 101.6 578.8 113.1 588.8 114.9ZM406.4 108.9L425.5 128.4 405.3 130.9 399.6 145.2 400.4 164.3 384 178.7 383.6 199.7 377 231.8 374.5 224.4 355.1 233.8 348.4 221 336.3 219.8 327.8 213 307.5 220.6 301.3 210.4 290.2 211.6 276.2 209.1 273.5 180.9 265.1 175.1 256.9 157 254.5 138.6 256.5 119.1 266.6 105.1 269.5 119.2 281.1 131.1 292.1 126.8 302.9 128.3 312.9 117.7 321 115.8 337.1 121.7 351 117.2 359.7 88 366.3 80.6 372.2 56.7 391.7 56.7 406.5 60.3 396.8 79.3 409.3 99.2ZM201.2 270.6L182.3 271 168 253.4 146.1 236.2 138.8 223.5 125.9 206.3 117.5 190.5 104.5 161.1 89.6 143.5 84.6 125.4 78.3 109 63 95.7 54.1 77.7 41.3 65.9 23.5 42.7 22 32 33 32.9 59.3 36.9 74.4 57.5 87.5 71.8 96.9 80.5 113 103.2 130.3 103.5 144.7 117.9 154.5 135.6 167.5 145.2 160.6 162.4 170.4 169.7 176.5 170.2 179.4 184.9 185.3 196.6 197.8 198.5 206.1 211.8 201.8 238Z" fill="url(#islandFill)" fillRule="evenodd" stroke="#9bb2dc" strokeWidth="3" strokeLinejoin="round" />
+                {officeLocations.map(({ name, x, y, phase }) => <g key={name} transform={`translate(${x} ${y})`}><circle r="13" fill={phase === "soon" ? "#9B2242" : "#5271ad"} opacity="0.15" /><circle r="7" fill={phase === "soon" ? "#9B2242" : "#5271ad"} stroke="white" strokeWidth="3" /></g>)}
+              </svg>}
+              <div className="mt-3 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs font-semibold text-[#52617c]"><span className="flex items-center gap-2"><i className="h-2.5 w-2.5 rounded-full bg-[#9B2242]" />{t("homepage.locations.comingSoon")}</span><span className="flex items-center gap-2"><i className="h-2.5 w-2.5 rounded-full bg-[#5271ad]" />{t("homepage.locations.nextPhase")}</span><span className="flex items-center gap-2"><i className="h-2.5 w-2.5 rounded-full bg-[#7b4bb7]" />{t("homepage.locations.phaseThree")}</span></div>
             </motion.div>
           </div>
         </AnimatedSection>

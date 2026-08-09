@@ -125,3 +125,40 @@
   mask-composite: exclude;
   pointer-events: none;
 }
+
+.office-location-marker {
+  background: transparent;
+  border: 0;
+}
+
+.office-location-marker__pin {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border: 3px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  box-shadow: 0 5px 14px rgba(16, 43, 97, 0.28);
+  transform: rotate(-45deg);
+}
+
+.office-location-marker__pin::after {
+  content: '';
+  display: block;
+  width: 8px;
+  height: 8px;
+  margin: 8px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.office-location-marker__pin--soon {
+  background: #9b2242;
+}
+
+.office-location-marker__pin--next {
+  background: #5271ad;
+}
+
+.office-location-marker__pin--third {
+  background: #7b4bb7;
+}

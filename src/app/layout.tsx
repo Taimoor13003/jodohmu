@@ -3,6 +3,7 @@ import { Playfair_Display, Nunito, Roboto } from "next/font/google";
 import Script from "next/script";
 import { Toaster } from "sonner";
 import "./globals.css";
+import "leaflet/dist/leaflet.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { PublicShell } from "@/components/layout/public-shell";

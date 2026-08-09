@@ -157,6 +157,26 @@
       "heading": "More Than an App, We're Your Partners",
       "description": "Finding a life partner is one of the most important journeys you'll ever take. At Jodohmu, we don't leave it to chance. Our matchmakers work with you like a dedicated team, providing guidance, support, and a human touch that algorithms can't replicate."
     },
+    "locations": {
+      "badge": "OUR OFFICE NETWORK",
+      "title": "Growing closer to you.",
+      "description": "Our offices will give clients a welcoming place to meet our team in person, have meaningful conversations, and receive support face-to-face. Visiting an office is completely optional: Jodohmu already serves clients across Indonesia, and our team is always only a message away.",
+      "comingSoon": "Coming soon",
+      "nextPhase": "Coming soon — next phase",
+      "phaseThree": "Coming soon — phase 3",
+      "phaseOneLabel": "Phase 1",
+      "phaseOneDescription": "Offices opening soon",
+      "phaseTwoLabel": "Phase 2",
+      "phaseTwoDescription": "Next locations in our rollout",
+      "phaseThreeLabel": "Phase 3",
+      "phaseThreeDescription": "Future regional expansion",
+      "mapLabel": "Jodohmu upcoming office locations in Indonesia",
+      "cities": {
+        "jakarta": "Jakarta", "bandung": "Bandung", "yogyakarta": "Yogyakarta", "surabaya": "Surabaya",
+        "medan": "Medan", "samarinda": "Samarinda, Kalimantan", "makassar": "Makassar",
+        "jayapura": "Jayapura, Papua", "kualaLumpur": "Kuala Lumpur, Malaysia", "singapore": "Singapore"
+      }
+    },
     "meetings": {
       "badge": "Why Jodohmu exists",
       "title": "Finding a life partner should not feel this hard.",
