@@ -183,6 +183,10 @@ export function PricingPage() {
               <Headphones className="h-4 w-4 text-[#2f68cc]" />
               {l("Panggilan awal gratis, tanpa kewajiban membeli paket.", "The first call is free, with no obligation to purchase.")}
             </p>
+            <Link href="/plan-your-jodohmu-way" className="mt-4 inline-flex items-center gap-2 text-sm font-extrabold text-[#c62d5c] hover:underline">
+              <SlidersHorizontal className="h-4 w-4" />
+              {l("Rancang layanan Anda sendiri", "Build your own service plan")}
+            </Link>
             <div className="mt-7 flex max-w-2xl flex-col gap-5 rounded-3xl border border-[#e7c5d0] bg-white/85 p-5 shadow-[0_16px_36px_rgba(88,42,78,.1)] backdrop-blur sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-5">
               <div className="flex items-center gap-4">
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#fff0f5] to-[#eaf2ff] text-[#c62d5c]"><UserRound className="h-6 w-6" /></span>
