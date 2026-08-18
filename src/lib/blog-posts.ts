@@ -8,7 +8,7 @@ export type BlogPost = {
 };
 
 export const blogPosts: BlogPost[] = [
-  { slug: "/blog/international-marriage-facilitation", articleKey: "blogArticle.internationalMarriageFacilitation", datePublished: "2026-08-18", dateModified: "2026-08-18", heroImage: "/images/blog/default-article-hero.png", readTime: 8 },
+  { slug: "/blog/international-marriage-facilitation", articleKey: "blogArticle.internationalMarriageFacilitation", datePublished: "2026-08-18", dateModified: "2026-08-18", heroImage: "/images/blog/international-marriage-indonesia-hero.png", readTime: 8 },
   { slug: "/blog/registrasi-jodohmu", articleKey: "blogArticle.registrasiJodohmu", datePublished: "2026-08-06", dateModified: "2026-08-06", heroImage: "/images/blog/registrasi-jodohmu-hero-v5.png", readTime: 5 },
   { slug: "/blog/apa-itu-jodohmu", articleKey: "blogArticle.apaItuJodohmu", datePublished: "2026-08-05", dateModified: "2026-08-05", heroImage: "/images/blog/apa-itu-jodohmu-hero-v4.png", readTime: 10 },
   { slug: "/blog/paket-diamond-jodohmu", articleKey: "blogArticle.paketDiamondJodohmu", datePublished: "2026-08-04", dateModified: "2026-08-04", heroImage: "/images/blog/diamond-joble-hero.png", readTime: 12 },

@@ -4,7 +4,7 @@ import article from "@/content/blog/international-marriage-facilitation.json";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
 const articleUrl = `${siteUrl}/blog/international-marriage-facilitation`;
-const image = `${siteUrl}/images/blog/default-article-hero.png`;
+const image = `${siteUrl}/images/blog/international-marriage-indonesia-hero.png`;
 const datePublished = "2026-08-18";
 
 export const metadata: Metadata = {
