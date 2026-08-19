@@ -28,8 +28,7 @@ const whatsappHref =
 const safar = [
   "Onboarding: your story & who you're looking for",
   "Profile built + identity, passport & employment verified",
-  "Up to 10 online meetings",
-  "At least 3 strong, curated matches",
+  "Up to 3 online meetings",
   "1 psychology assessment + 1 background check",
   "1 family gathering",
   "2 Joble meetings in Indonesia",
@@ -38,11 +37,10 @@ const safar = [
 const amanah = [
   "Deep onboarding + personality assessment",
   "Dedicated matchmaker, priority search",
-  "Up to 30 online meetings",
-  "At least 7 strong, curated matches",
-  "1 psychology assessment + 1 background check",
+  "Up to 10 online meetings",
+  "2 psychology assessments + 2 background checks",
   "1 family gathering",
-  "5 Joble meetings in Indonesia",
+  "4 Joble meetings in Indonesia",
 ];
 
 const steps = [
