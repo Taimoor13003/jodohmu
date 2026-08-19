@@ -5,7 +5,7 @@ import { Header } from "./header";
 import { Footer } from "./footer";
 import { WhatsAppFab } from "./whatsapp-fab";
 
-const APP_PREFIXES = ["/dashboard", "/admin", "/profile/", "/presentations/"];
+const APP_PREFIXES = ["/dashboard", "/admin", "/profile/", "/presentations/foreign"];
 
 export function PublicShell({
   children,
@@ -18,7 +18,7 @@ export function PublicShell({
 
   const isAppRoute = APP_PREFIXES.some((p) => pathname.startsWith(p));
 
-  // App and private presentation routes manage their own shell.
+  // App and the private foreign-presentation route manage their own shell.
   if (isAppRoute) return <>{children}</>;
 
   // The shell must render during SSR too — header/footer carry the site-wide
