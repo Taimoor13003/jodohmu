@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Check, ChevronDown, Expand, Heart, MessageCircle, Settings2, ShieldCheck, Users, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronDown, Expand, Heart, MessageCircle, Settings2, ShieldCheck, Users, X } from "lucide-react";
 
 type Package = { name: string; label: string; window: string; price: string; description: string; features: string[]; accent: string; savings?: string };
 const safar: Package = { name: "Safar", label: "The Journey", window: "6-month active matching window", price: "$1,200", accent: "#d6ac57", description: "A guided journey from a clear understanding of you to a thoughtful meeting in Indonesia.", features: ["Onboarding: your story & who you're looking for", "Profile built + identity, passport & employment verified", "Up to 3 online meetings", "1 psychology assessment + 1 background check", "1 family gathering", "2 Joble meetings in Indonesia"], savings: "22% off list price" };

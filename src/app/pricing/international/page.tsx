@@ -292,7 +292,7 @@ export default function InternationalPricingPage() {
               <span className="h-px w-14 bg-[#e8147a]/50" />
             </div>
             <p className="mx-auto max-w-xl text-base text-white/60">
-              To begin your journey, a minimum 20% payment confirms your place — we'll agree a clear payment plan together. From that moment, our team is fully dedicated to you.
+              To begin your journey, a minimum 20% payment confirms your place — we&apos;ll agree a clear payment plan together. From that moment, our team is fully dedicated to you.
             </p>
           </div>
 
