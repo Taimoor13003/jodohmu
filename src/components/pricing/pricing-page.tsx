@@ -8,6 +8,7 @@ import {
   BadgeCheck,
   CalendarHeart,
   Check,
+  Globe2,
   HeartHandshake,
   Headphones,
   MessageCircle,
@@ -454,6 +455,26 @@ export function PricingPage() {
               );
             })}
           </div>
+
+          <section className="relative mx-auto mt-10 max-w-5xl overflow-hidden rounded-[2rem] border border-[#c9d9f2] bg-[#eef5ff] p-6 shadow-[0_16px_40px_rgba(30,78,154,.10)] sm:p-8">
+            <div className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-[#f7bad0]/45 blur-3xl" />
+            <div className="absolute -bottom-24 left-1/3 h-44 w-44 rounded-full bg-[#8bb9f8]/35 blur-3xl" />
+            <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex max-w-2xl gap-4 sm:gap-5">
+                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white text-[#2457ad] shadow-sm sm:h-14 sm:w-14">
+                  <Globe2 className="h-6 w-6" />
+                </span>
+                <div>
+                  <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#c62d5c]">{l("Untuk warga negara asing", "For international clients")}</p>
+                  <h3 className="mt-2 font-serif text-2xl font-bold text-[#102457] sm:text-3xl">{l("Paket kami untuk Anda berbeda", "We have different packages for you")}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[#52627f] sm:text-base">{l("Layanan perjodohan internasional kami dirancang khusus untuk kebutuhan lintas negara, termasuk proses verifikasi dan pendampingan yang lebih personal.", "Our international matchmaking service is tailored to cross-border needs, with dedicated verification and more personal guidance.")}</p>
+                </div>
+              </div>
+              <Button asChild className="h-12 shrink-0 rounded-full bg-[#102457] px-6 font-extrabold text-white hover:bg-[#1a3b83]">
+                <Link href="/pricing/international">{l("Lihat paket internasional", "View international packages")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              </Button>
+            </div>
+          </section>
 
           <div className="mx-auto mt-12 grid max-w-5xl overflow-hidden rounded-3xl border border-[#dce5f5] bg-white shadow-sm sm:grid-cols-2 sm:divide-x sm:divide-[#e4eaf5]">
             <div className="p-7 sm:p-8">

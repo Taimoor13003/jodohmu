@@ -26,30 +26,30 @@ const whatsappHref =
   );
 
 const safar = [
-  "Profile built, verified & locked by our team",
-  "Passport, employment & social media verification",
-  "Video call verification with family member",
-  "Clinical psychology assessment",
-  "3 supervised online ta'aruf sessions",
-  "Matched with verified Indonesian candidates",
-  "In-person meeting in Indonesia arranged upon match",
-  "Contact details exchanged only after Indonesia visit",
+  "Onboarding: your story & who you're looking for",
+  "Profile built + identity, passport & employment verified",
+  "Up to 10 online meetings",
+  "At least 3 strong, curated matches",
+  "1 psychology assessment + 1 background check",
+  "1 family gathering",
+  "2 Joble meetings in Indonesia",
 ];
 
 const amanah = [
-  "Everything in Safar",
-  "10 supervised online ta'aruf sessions",
-  "2 clinical psychology sessions",
-  "Deep background check including references",
-  "Priority matching",
-  "Dedicated personal facilitator throughout",
+  "Deep onboarding + personality assessment",
+  "Dedicated matchmaker, priority search",
+  "Up to 30 online meetings",
+  "At least 7 strong, curated matches",
+  "1 psychology assessment + 1 background check",
+  "1 family gathering",
+  "5 Joble meetings in Indonesia",
 ];
 
 const steps = [
   {
     num: "01",
     title: "Apply",
-    desc: "Fill out our intake form and complete your full package payment to begin your journey.",
+    desc: "Fill out our intake form and confirm your place with a minimum 20% payment to begin your journey.",
   },
   {
     num: "02",
@@ -217,7 +217,7 @@ export default function InternationalPricingPage() {
             {[
               { icon: "✈️", text: "When both hearts are ready, we arrange a beautiful first meeting in Indonesia" },
               { icon: "🎥", text: "All ta'aruf sessions are online via video call with a facilitator present" },
-              { icon: "💳", text: "Your journey begins with a single step — full package payment confirms your place" },
+              { icon: "💳", text: "Your journey begins with a minimum 20% payment — we agree a clear payment plan together" },
               { icon: "📅", text: "Every service is delivered with full care within your package window — we give our best from day one" },
             ].map((p, i) => (
               <div key={i} className="flex items-start gap-3 rounded-2xl bg-white px-4 py-4 shadow-sm">
@@ -294,7 +294,7 @@ export default function InternationalPricingPage() {
               <span className="h-px w-14 bg-[#e8147a]/50" />
             </div>
             <p className="mx-auto max-w-xl text-base text-white/60">
-              To begin your journey, full payment is made upfront. From that moment, our team is fully dedicated to you.
+              To begin your journey, a minimum 20% payment confirms your place — we'll agree a clear payment plan together. From that moment, our team is fully dedicated to you.
             </p>
           </div>
 
@@ -305,7 +305,7 @@ export default function InternationalPricingPage() {
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest text-[#e8147a]">The Journey</p>
                   <h3 className="mt-1 font-serif text-3xl font-bold text-white">Safar</h3>
-                  <p className="mt-1 text-sm italic text-white/50">3-month window</p>
+                  <p className="mt-1 text-sm italic text-white/50">6-month active matching window</p>
                 </div>
                 <div className="text-right">
                   <p className="font-serif text-4xl font-extrabold text-[#e8147a]">$1,200</p>
@@ -334,6 +334,7 @@ export default function InternationalPricingPage() {
               >
                 Enquire about Safar
               </a>
+              <p className="mt-4 text-center text-xs leading-5 text-white/40">Travel, visas, accommodation, legal services, and third-party professional fees are not included.</p>
             </div>
 
             {/* AMANAH */}
@@ -347,7 +348,7 @@ export default function InternationalPricingPage() {
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest text-white/70">The Trust</p>
                   <h3 className="mt-1 font-serif text-3xl font-bold text-white">Amanah</h3>
-                  <p className="mt-1 text-sm italic text-white/60">6-month window</p>
+                  <p className="mt-1 text-sm italic text-white/60">12-month active matching window</p>
                 </div>
                 <div className="text-right">
                   <p className="font-serif text-4xl font-extrabold text-white">$3,000</p>
@@ -376,6 +377,7 @@ export default function InternationalPricingPage() {
               >
                 Enquire about Amanah
               </a>
+              <p className="mt-4 text-center text-xs leading-5 text-white/65">Travel, visas, accommodation, legal services, and third-party professional fees are not included.</p>
             </div>
           </div>
 
