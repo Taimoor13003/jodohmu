@@ -28,7 +28,7 @@ export function Footer() {
           {/* Quick Links */}
           <div className="space-y-4">
             <h3 className="font-bold text-brand-blue">{t("footer.quickLinks.title")}</h3>
-            <div className="flex flex-col gap-2 text-sm font-semibold">
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm font-semibold">
               <Link href="/blog" className="hover:text-brand-rose transition-colors">{t("header.blog")}</Link>
               <Link href="/pricing" className="hover:text-brand-rose transition-colors">{t("header.pricing")}</Link>
               <Link href="/presentations" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.presentations")}</Link>
