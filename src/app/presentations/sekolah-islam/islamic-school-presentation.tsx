@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import Image from "next/image";
 import Link from "next/link";
@@ -582,74 +583,6 @@ function CustomPlanBuilder({ language }: { language: "id" | "en" }) {
   return <div className="mx-auto mt-4 max-w-6xl rounded-3xl border border-[#a88ae6]/50 bg-[#a88ae6]/[.09] p-4 text-left sm:p-5"><div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-[#c9b6ff]">{isIndonesian ? "Rancang perjalanan Anda" : "Build your journey"}</p><h3 className="mt-1 font-serif text-2xl font-bold">{isIndonesian ? "Pilih yang Anda butuhkan." : "Choose what you need."}</h3><p className="mt-1 text-sm text-white/60">{isIndonesian ? "Pilih layanan, atur jumlah sesi atau Joble, lalu lihat harga yang dihitung langsung." : "Select support, set the number of sessions or Joble meetings, and see the price calculated live."}</p></div><p className="text-sm font-bold text-[#c9b6ff]">{chosen.length} {isIndonesian ? "area dipilih" : "areas selected"}</p></div><div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">{options.map((option) => { const selected = chosen.includes(option.id); const counterId = isCounted(option.id) ? option.id : null; const hasCounter = selected && counterId; return <div key={option.id} className={`rounded-xl border transition ${selected ? "border-[#c9b6ff] bg-[#a88ae6]/25" : "border-white/10 bg-white/[.04] hover:border-white/35"}`}><button onClick={() => toggle(option.id)} className="flex min-h-[52px] w-full items-center gap-3 px-3 py-2 text-left"><span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full text-xs font-bold ${selected ? "bg-[#c9b6ff] text-[#211a3b]" : "bg-white/10 text-white/45"}`}>{selected ? "✓" : "+"}</span><span><p className="text-xs font-bold leading-4">{option.title}</p><p className="mt-0.5 text-[11px] font-bold text-[#c9b6ff]">{formatRupiah(option.price)}{counterId ? (isIndonesian ? " / sesi" : " each") : ""}</p></span></button>{hasCounter && <div className="flex items-center justify-between border-t border-[#c9b6ff]/25 px-3 py-2"><span className="text-[10px] font-bold uppercase tracking-[.12em] text-[#c9b6ff]">{isIndonesian ? "Berapa kali?" : "How many?"}</span><div className="flex items-center gap-2"><button onClick={() => changeCount(counterId, -1)} className="grid h-6 w-6 place-items-center rounded-full bg-white/10 text-sm font-bold hover:bg-white/20" aria-label={isIndonesian ? `Kurangi ${option.title}` : `Reduce ${option.title}`}>−</button><span className="w-4 text-center text-sm font-bold text-[#c9b6ff]">{quantity(option.id)}</span><button onClick={() => changeCount(counterId, 1)} className="grid h-6 w-6 place-items-center rounded-full bg-[#c9b6ff] text-sm font-bold text-[#211a3b]" aria-label={isIndonesian ? `Tambah ${option.title}` : `Increase ${option.title}`}>+</button></div></div>}</div>; })}</div><div className="mt-3 rounded-2xl bg-[#101d3b]/70 px-4 py-3"><div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-bold uppercase tracking-[.16em] text-white/45">{isIndonesian ? "Perjalanan sesuai kebutuhan Anda" : "Your tailored journey"}</p><p className="mt-1 text-sm leading-5 text-white/80">{summary.length ? summary.join(" → ") : (isIndonesian ? "Pilih dukungan yang ingin Anda sertakan." : "Choose the support you would like to include.")}</p></div>{chosen.length > 0 && <div className="sm:text-right"><p className="text-xs font-bold uppercase tracking-[.14em] text-white/45">{isIndonesian ? "Harga sesuai pilihan" : "Price for your selection"}</p><p className="font-serif text-2xl font-bold text-[#c9b6ff]">{formatRupiah(total)}</p></div>}</div></div></div>;
 }
 
-function MusaMarriageSlide({ language }: { language: "id" | "en" }) {
-  const isIndonesian = language === "id";
-  const details = isIndonesian
-    ? [
-        ["28:26", "ٱلْقَوِيُّ ٱلْأَمِينُ", "Dua ukuran yang dipilih Al-Qur’an: kuat/berkemampuan dan amanah. Kecocokan tidak dibangun hanya dari rasa tertarik."],
-        ["28:27", "إِنِّي أُرِيدُ أَنْ أُنكِحَكَ", "Sang ayah menyatakan maksud nikah dengan bahasa yang terang. Arah hubungan tidak dibiarkan menjadi tebakan."],
-        ["28:27", "عَلَىٰ أَنْ تَأْجُرَنِي ثَمَانِيَ حِجَجٍ", "Ada syarat yang disebut jelas: delapan tahun pelayanan. Ayat ini menyebut syarat kerja; jangan menamakannya mahar tanpa penjelasan fiqih lebih lanjut."],
-        ["28:27", "فَإِنْ أَتْمَمْتَ عَشْرًا فَمِنْ عِندِكَ", "Tambahan dua tahun bukan kewajiban—ia pilihan Musa. Al-Qur’an membedakan komitmen yang wajib dari kebaikan sukarela."],
-        ["28:27", "وَمَا أُرِيدُ أَنْ أَشُقَّ عَلَيْكَ", "Pihak keluarga juga menyatakan tidak ingin mempersulit. Kejelasan tidak boleh berubah menjadi tekanan atau beban yang zalim."],
-        ["28:28", "ذَٰلِكَ بَيْنِي وَبَيْنَكَ", "Musa memberi persetujuan yang eksplisit. Lalu: ‘Allah atas apa yang kami ucapkan adalah Wakil’—komitmen diberi bobot amanah di hadapan Allah."],
-      ]
-    : [
-        ["28:26", "ٱلْقَوِيُّ ٱلْأَمِينُ", "The Qur’an chooses two measures: capable/strong and trustworthy. Suitability is not built on attraction alone."],
-        ["28:27", "إِنِّي أُرِيدُ أَنْ أُنكِحَكَ", "The father states the intention of marriage plainly. The direction of the relationship is not left for people to guess."],
-        ["28:27", "عَلَىٰ أَنْ تَأْجُرَنِي ثَمَانِيَ حِجَجٍ", "A condition is stated plainly: eight years of service. The verse calls this a service term; do not simply call it mahr without further fiqh discussion."],
-        ["28:27", "فَإِنْ أَتْمَمْتَ عَشْرًا فَمِنْ عِندِكَ", "The extra two years are not obligatory—they are Musa’s choice. The Qur’an distinguishes a binding commitment from voluntary excellence."],
-        ["28:27", "وَمَا أُرِيدُ أَنْ أَشُقَّ عَلَيْكَ", "The family side also says it does not wish to make matters difficult. Clarity must not become pressure or unjust burden."],
-        ["28:28", "ذَٰلِكَ بَيْنِي وَبَيْنَكَ", "Musa gives explicit agreement. Then: Allah is Trustee over what they say—commitment carries the weight of an amanah before Allah."],
-      ];
-
-  return <div className="mx-auto w-full max-w-6xl">
-    <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isIndonesian ? "Membaca akad kata demi kata · QS. Al-Qasas 28:26–28" : "Reading the agreement word by word · Qur’an 28:26–28"}</p>
-    <h2 className="mx-auto mt-4 max-w-5xl text-center font-serif text-4xl font-bold leading-tight sm:text-6xl">{isIndonesian ? <>Al-Qur’an tidak hanya menceritakan nikah Musa—<span className="italic text-[#ef91b1]">ia memperlihatkan bahasanya.</span></> : <>The Qur’an does not only tell us that Musa married—<span className="italic text-[#ef91b1]">it lets us hear the language.</span></>}</h2>
-    <div className="mt-7 grid gap-3 md:grid-cols-2 lg:grid-cols-3">{details.map(([reference, title, detail]) => <div key={`${reference}-${title}`} className="rounded-3xl border border-white/15 bg-white/[.07] p-5"><p className="text-xs font-bold uppercase tracking-[.14em] text-[#e6bd69]">{reference}</p><h3 dir="rtl" className="mt-2 font-serif text-2xl leading-relaxed text-[#f3c5d4]">{title}</h3><p className="mt-3 text-sm leading-6 text-white/65">{detail}</p></div>)}</div>
-    <p className="mx-auto mt-6 max-w-5xl rounded-2xl border border-[#e6bd69]/30 bg-[#e6bd69]/10 px-5 py-3 text-center text-sm font-semibold leading-6 text-[#f5dfaa]">{isIndonesian ? "Ini kisah seorang nabi dalam syariat sebelum kita; ia memberi adab dan prinsip, bukan pengganti rujukan fiqih untuk akad masa kini." : "This is a prophet’s story in a law before ours; it offers adab and principles, not a replacement for fiqh guidance on a nikah today."}</p>
-  </div>;
-}
-
-function MusaStorySlide({ language }: { language: "id" | "en" }) {
-  const isIndonesian = language === "id";
-  const verses = isIndonesian
-    ? [
-        ["QS. Al-Qasas 28:23", "مِن دُونِهِمُ ٱمْرَأَتَيْنِ تَذُودَانِ", "‘Di luar/terpisah dari mereka, dua perempuan menahan ternak.’ تَذُودَانِ bukan sekadar berdiri: para mufassir menjelaskannya sebagai menahan ternak agar tidak bercampur di kerumunan."],
-        ["QS. Al-Qasas 28:23", "مَا خَطْبُكُمَا", "‘Apa keadaan kalian berdua?’ Pertanyaan Musa singkat, relevan dengan situasi, dan tidak melampaui kebutuhan."],
-        ["QS. Al-Qasas 28:24", "فَسَقَىٰ لَهُمَا ثُمَّ تَوَلَّىٰ إِلَى ٱلظِّلِّ", "Susunan ayatnya penting: فَ—Musa segera menolong; lalu ثُمَّ—ia menepi ke teduh. Pertolongan tidak diubah menjadi alasan untuk berlama-lama."],
-        ["QS. Al-Qasas 28:25", "تَمْشِى عَلَى ٱسْتِحْيَآءٍ", "Secara harfiah: ‘berjalan di atas/dengan haya.’ Al-Qur’an menyebut keadaan dan adabnya, bukan memberi rincian gerak atau pakaian."],
-        ["QS. Al-Qasas 28:25", "إِنَّ أَبِى يَدْعُوكَ لِيَجْزِيَكَ", "Pesannya terukur: ‘Ayahku mengundangmu untuk membalas jasamu.’ Ia menyebut pengundang, tujuan, dan alasan—tanpa kata yang membuka keraguan."],
-      ]
-    : [
-        ["Qur’an 28:23", "مِن دُونِهِمُ ٱمْرَأَتَيْنِ تَذُودَانِ", "‘Apart from them, two women were holding back their flock.’ تَذُودَانِ is more than standing aside: the exegetes explain it as keeping their flock back from the crowd."],
-        ["Qur’an 28:23", "مَا خَطْبُكُمَا", "‘What is your situation?’ Musa’s question is brief, relevant to what he sees, and does not move beyond what the moment requires."],
-        ["Qur’an 28:24", "فَسَقَىٰ لَهُمَا ثُمَّ تَوَلَّىٰ إِلَى ٱلظِّلِّ", "The sequence matters: فَ—Musa immediately helps; then ثُمَّ—he withdraws to the shade. Service is not turned into an excuse to linger."],
-        ["Qur’an 28:25", "تَمْشِى عَلَى ٱسْتِحْيَآءٍ", "Literally: ‘walking upon/with haya.’ The Qur’an names her manner and adab; it does not specify a particular garment or physical movement."],
-        ["Qur’an 28:25", "إِنَّ أَبِى يَدْعُوكَ لِيَجْزِيَكَ", "Her message is measured: ‘My father invites you to reward you.’ It identifies the inviter, purpose, and reason—without wording that opens doubt."],
-      ];
-  const notes = isIndonesian
-    ? [
-        ["Apa yang dikatakan tafsir klasik", "Ibn Kathir mengutip riwayat dari ‘Umar r.a. yang menggambarkan perempuan itu berjalan tertutup dan penuh malu. Ini adalah tafsir riwayat—bukan lafaz Al-Qur’an itu sendiri."],
-        ["Haya bukan bisu atau pasif", "Pada ayat yang sama, perempuan itu berbicara, membawa pesan, lalu ayat berikutnya mencatat ia menilai Musa sebagai ٱلْقَوِيُّ ٱلْأَمِينُ. Haya mengatur cara, bukan menghapus akal dan suara."],
-        ["Batas ketelitian", "Al-Qur’an tidak menyebut nama dua perempuan itu atau memastikan perempuan pada ayat 25 adalah yang kemudian dinikahi Musa. Kita tidak menambahkan rincian seolah-olah ia teks Al-Qur’an."],
-      ]
-    : [
-        ["What classical tafsir adds", "Ibn Kathir cites reports from ‘Umar that describe her as walking covered and with restraint. That is reported tafsir—not the Qur’an’s exact wording itself."],
-        ["Haya is not silence or passivity", "In the same verse she speaks, carries a message, and the next verse records a woman evaluating Musa as ٱلْقَوِيُّ ٱلْأَمِينُ. Haya governs the manner; it does not erase intellect or voice."],
-        ["The boundary of accuracy", "The Qur’an does not name the women or confirm that the woman in verse 25 was the one Musa later married. We should not add details as though they were Qur’anic text."],
-      ];
-
-  return <div className="mx-auto w-full max-w-6xl">
-    <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isIndonesian ? "Membaca urutan kisah · QS. Al-Qasas 28:23–25" : "Reading the narrative sequence · Qur’an 28:23–25"}</p>
-    <h2 className="mx-auto mt-4 max-w-5xl text-center font-serif text-4xl font-bold leading-tight sm:text-6xl">{isIndonesian ? <>Perhatikan <span className="italic text-[#ef91b1]">kata yang dipilih Al-Qur’an</span>—dan urutannya.</> : <>Notice <span className="italic text-[#ef91b1]">the Qur’an’s chosen words</span>—and their sequence.</>}</h2>
-    <div className="mt-7 grid gap-5 lg:grid-cols-[1.04fr_.96fr]">
-      <div className="space-y-3">{verses.map(([reference, arabic, meaning]) => <article key={reference} className="rounded-3xl border border-[#e6bd69]/30 bg-[linear-gradient(145deg,rgba(230,189,105,.15),rgba(255,255,255,.05))] p-5"><div className="flex items-start justify-between gap-4"><p className="text-xs font-bold uppercase tracking-[.16em] text-[#e6bd69]">{reference}</p><p dir="rtl" className="font-serif text-xl leading-relaxed text-[#f5dfaa] sm:text-2xl">{arabic}</p></div><p className="mt-3 text-sm leading-6 text-white/75">{meaning}</p></article>)}</div>
-      <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">{notes.map(([title, detail]) => <article key={title} className="rounded-3xl border border-white/15 bg-white/[.07] p-5"><h3 className="font-serif text-xl font-bold text-[#f3c5d4]">{title}</h3><p className="mt-2 text-sm leading-6 text-white/65">{detail}</p></article>)}</div>
-    </div>
-    <p className="mx-auto mt-5 max-w-5xl text-center text-sm font-semibold leading-6 text-[#f5dfaa]">{isIndonesian ? "Bacalah terlebih dahulu apa yang Allah firmankan; kemudian bedakan antara tafsir yang dapat dipercaya dan detail yang tidak pernah disebut Al-Qur’an." : "Read first what Allah says; then distinguish sound tafsir from details the Qur’an itself never states."}</p>
-  </div>;
-}
-
 function StatisticsSlide({ content }: { content: StatisticsContent }) {
   return <div className="mx-auto w-full max-w-6xl">
     <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{content.eyebrow}</p>
@@ -699,16 +632,6 @@ function PrinciplesSlide({ content }: { content: PrinciplesContent }) {
     <h2 className="mx-auto mt-4 max-w-5xl text-center font-serif text-4xl font-bold leading-tight sm:text-6xl">{content.title}</h2>
     <p className="mx-auto mt-5 max-w-3xl text-center text-lg leading-8 text-white/70">{content.lead}</p>
     <div className="mt-9 grid gap-4 md:grid-cols-2">{content.principles.map((principle, index) => <div key={principle.title} className="flex gap-5 rounded-3xl border border-white/15 bg-white/[.07] p-6"><span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#e6bd69] font-serif text-lg font-bold text-[#101d3b]">0{index + 1}</span><div><h3 className="text-xl font-bold text-[#f3c5d4]">{principle.title}</h3><p className="mt-2 leading-7 text-white/70">{principle.detail}</p></div></div>)}</div>
-    <p className="mx-auto mt-7 max-w-4xl text-center text-sm leading-6 text-white/55">{content.note}</p>
-  </div>;
-}
-
-function PackagesSlide({ content }: { content: PackagesContent }) {
-  return <div className="mx-auto w-full max-w-6xl">
-    <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{content.eyebrow}</p>
-    <h2 className="mt-4 text-center font-serif text-4xl font-bold sm:text-6xl">{content.title}</h2>
-    <p className="mx-auto mt-5 max-w-3xl text-center text-lg leading-8 text-white/70">{content.lead}</p>
-    <div className="mt-9 grid gap-4 md:grid-cols-3">{content.packages.map((item, index) => <div key={item.name} className="rounded-[2rem] border border-white/15 bg-white/[.07] p-7"><p className="font-serif text-4xl font-bold" style={{ color: ["#7ed6c1", "#ef91b1", "#c9b6ff"][index] }}>{item.name}</p><p className="mt-5 text-base leading-7 text-white/80">{item.detail}</p><p className="mt-6 border-t border-white/15 pt-5 text-sm font-bold leading-6 text-[#f3c5d4]">{item.fit}</p></div>)}</div>
     <p className="mx-auto mt-7 max-w-4xl text-center text-sm leading-6 text-white/55">{content.note}</p>
   </div>;
 }
