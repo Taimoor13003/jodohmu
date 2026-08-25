@@ -307,6 +307,7 @@ export default function InternationalPricingPage() {
                 </div>
                 <div className="text-right">
                   <p className="font-serif text-4xl font-extrabold text-[#e8147a]">$1,200</p>
+                  <p className="mt-0.5 text-xs font-bold text-white/40">22% off list price</p>
                 </div>
               </div>
 
@@ -350,6 +351,7 @@ export default function InternationalPricingPage() {
                 </div>
                 <div className="text-right">
                   <p className="font-serif text-4xl font-extrabold text-white">$3,000</p>
+                  <p className="mt-0.5 text-xs font-bold text-white/65">18% off list price</p>
                 </div>
               </div>
 

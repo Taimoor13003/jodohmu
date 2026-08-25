@@ -36,7 +36,71 @@ export function PresentationsPage() {
         <h2 className="mt-3 font-serif text-4xl font-bold text-[#10275b] sm:text-5xl">
           {id ? "Pilih presentasi" : "Choose a presentation"}
         </h2>
-        <div className="mt-9 grid max-w-md gap-6">
+        <div className="mt-9 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Link
+            href="/presentations/sekolah-islam"
+            className="group overflow-hidden rounded-[2rem] border border-[#dce5f5] bg-white shadow-[0_12px_35px_rgba(24,51,111,.08)] transition hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(24,51,111,.16)]"
+          >
+            <div className="relative aspect-[16/10] overflow-hidden bg-[#10275b]">
+              <Image
+                src="/presentations-sekolah-islam-study-space-v2.png"
+                alt="A quiet study space for reflecting on values and the future"
+                fill
+                sizes="(max-width: 640px) 100vw, 420px"
+                className="object-cover transition duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#10275b]/65 via-transparent to-transparent" />
+              <span className="absolute bottom-5 left-5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-extrabold text-[#173b81]">
+                {id ? "Untuk Muslim" : "For Muslims"}
+              </span>
+            </div>
+            <div className="p-6 sm:p-7">
+              <h3 className="font-serif text-2xl font-bold text-[#10275b]">
+                {id ? "Menemukan Pasangan Tanpa Mengorbankan Nilai" : "Finding the Right Partner Without Compromising Your Values"}
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-[#65718a]">
+                {id
+                  ? "Jalan Muslim untuk menemukan pasangan yang tepat sambil menjaga kehormatan, nilai, dan arah menuju pernikahan."
+                  : "A Muslim path to finding the right partner while protecting modesty, values, and the direction of marriage."}
+              </p>
+              <span className="mt-6 inline-flex items-center gap-2 text-sm font-extrabold text-[#c62d5c]">
+                {id ? "Lihat presentasi" : "View presentation"} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </div>
+          </Link>
+
+          <Link
+            href="/presentations/indonesia"
+            className="group overflow-hidden rounded-[2rem] border border-[#dce5f5] bg-white shadow-[0_12px_35px_rgba(24,51,111,.08)] transition hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(24,51,111,.16)]"
+          >
+            <div className="relative aspect-[16/10] overflow-hidden bg-[#10275b]">
+              <Image
+                src="/presentations-foreign-muslim-journey.png"
+                alt="A couple beginning their marriage journey with Jodohmu in Indonesia"
+                fill
+                sizes="(max-width: 640px) 100vw, 420px"
+                className="object-cover transition duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#10275b]/65 via-transparent to-transparent" />
+              <span className="absolute bottom-5 left-5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-extrabold text-[#173b81]">
+                {id ? "Indonesia" : "Indonesia"}
+              </span>
+            </div>
+            <div className="p-6 sm:p-7">
+              <h3 className="font-serif text-2xl font-bold text-[#10275b]">
+                {id ? "Perjalanan Jodohmu Anda" : "Your Jodohmu Journey"}
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-[#65718a]">
+                {id
+                  ? "Kenali paket Pearl, Ruby, dan Diamond serta proses matchmaking Jodohmu yang terarah, terverifikasi, dan ramah keluarga."
+                  : "Discover the Pearl, Ruby, and Diamond packages and Jodohmu's guided, verified, family-friendly matchmaking process."}
+              </p>
+              <span className="mt-6 inline-flex items-center gap-2 text-sm font-extrabold text-[#c62d5c]">
+                {id ? "Lihat presentasi" : "View presentation"} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </div>
+          </Link>
+
           <Link
             href="/presentations/foreign"
             className="group overflow-hidden rounded-[2rem] border border-[#dce5f5] bg-white shadow-[0_12px_35px_rgba(24,51,111,.08)] transition hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(24,51,111,.16)]"
