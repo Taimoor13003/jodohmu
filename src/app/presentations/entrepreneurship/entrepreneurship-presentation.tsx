@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, ChevronDown, Expand, Heart, Languages, ShieldCheck, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight, ChevronDown, Coins, Expand, Heart, Languages, Scale, ShieldCheck, Users } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type TopicContent = { eyebrow: string; title: string; lead: string; points: string[]; closing?: string };
@@ -374,58 +374,60 @@ const quranAgreementVerses: QuranVerse[] = [
 
 
 const indonesianSlides = [
-  <TitleSlide key="title" />,
+  <EntrepreneurshipTitleSlide key="title" language="id" />,
+  <OpeningQuestionSlide key="opening-question" language="id" />,
+  <EvidenceSlide key="wealth-burden" language="id" side="burden" />,
+  <AbdurrahmanSlide key="abdurrahman" language="id" />,
+  <EvidenceSlide key="wealth-good" language="id" side="good" />,
+  <ConfusionSlide key="confusion" language="id" />,
+  <PhilosophySlide key="philosophy" language="id" />,
+  <PurposeBridgeSlide key="purpose-bridge" language="id" />,
   <QuranExplorerSlide key="musa-quran-reader" language="id" />,
   <IndonesiaRealitySlide key="indonesia-reality" language="id" />,
   <StatisticsSlide key="statistics" content={indonesianContent.statistics} />,
-  <WaysPeopleSearchSlide key="ways-people-search" language="id" />,
-  <RouteSlide key="apps" content={indonesianContent.apps} />,
-  <RouteSlide key="family" content={indonesianContent.family} />,
-  <RouteSlide key="community" content={indonesianContent.community} />,
-  <RouteSlide key="natural" content={indonesianContent.natural} />,
+  <ExpandableCardsSlide key="route-comparison" language="id" variant="routes" />,
   <TopicSlide key="missing-system" content={indonesianContent.missingSystem} />,
-  <IslamQuoteSlide key="islam" language="id" />,
-  <TopicSlide key="consequences" content={indonesianContent.consequences} />,
-  <TaarufQuestionSlide key="taaruf-question" language="id" />,
-  <TaarufSlide key="taaruf" />,
-  <TopicSlide key="need" content={indonesianContent.need} />,
   <JodohmuSolutionSlide key="jodohmu-solution" language="id" />,
-  <JodohmuSlide key="jodohmu" />,
-  <HowItWorksSlide key="how-it-works" content={indonesianContent.howItWorks} />,
-  <TopicSlide key="solutions" content={indonesianContent.solutions} />,
+  <ExpandableCardsSlide key="how-it-works" language="id" variant="process" />,
   <PrinciplesSlide key="principles" content={indonesianContent.principles} />,
+  <BusinessModelIntroSlide key="business-model-intro" language="id" />,
+  <BusinessModelSlide key="business-model" language="id" />,
+  <SalesMethodSlide key="sales-method" language="id" />,
   <InteractivePackagesSlide key="packages" language="id" />,
-  <BenefitsSlide key="benefits" content={indonesianContent.benefits} />,
-  <CloseSlide key="close" />,
+  <ColdStartSlide key="cold-start" language="id" />,
+  <TractionSlide key="traction" language="id" />,
+  <LessonsSlide key="lessons" language="id" />,
+  <EntrepreneurshipCloseSlide key="close" language="id" />,
 ];
 
 const englishSlides = [
-  <EnglishTitleSlide key="title" />,
+  <EntrepreneurshipTitleSlide key="title" language="en" />,
+  <OpeningQuestionSlide key="opening-question" language="en" />,
+  <EvidenceSlide key="wealth-burden" language="en" side="burden" />,
+  <AbdurrahmanSlide key="abdurrahman" language="en" />,
+  <EvidenceSlide key="wealth-good" language="en" side="good" />,
+  <ConfusionSlide key="confusion" language="en" />,
+  <PhilosophySlide key="philosophy" language="en" />,
+  <PurposeBridgeSlide key="purpose-bridge" language="en" />,
   <QuranExplorerSlide key="musa-quran-reader" language="en" />,
   <IndonesiaRealitySlide key="indonesia-reality" language="en" />,
   <StatisticsSlide key="statistics" content={englishContent.statistics} />,
-  <WaysPeopleSearchSlide key="ways-people-search" language="en" />,
-  <RouteSlide key="apps" content={englishContent.apps} />,
-  <RouteSlide key="family" content={englishContent.family} />,
-  <RouteSlide key="community" content={englishContent.community} />,
-  <RouteSlide key="natural" content={englishContent.natural} />,
+  <ExpandableCardsSlide key="route-comparison" language="en" variant="routes" />,
   <TopicSlide key="missing-system" content={englishContent.missingSystem} />,
-  <IslamQuoteSlide key="islam" language="en" />,
-  <TopicSlide key="consequences" content={englishContent.consequences} />,
-  <TaarufQuestionSlide key="taaruf-question" language="en" />,
-  <EnglishTaarufSlide key="taaruf" />,
-  <TopicSlide key="need" content={englishContent.need} />,
   <JodohmuSolutionSlide key="jodohmu-solution" language="en" />,
-  <EnglishJodohmuSlide key="jodohmu" />,
-  <HowItWorksSlide key="how-it-works" content={englishContent.howItWorks} />,
-  <TopicSlide key="solutions" content={englishContent.solutions} />,
+  <ExpandableCardsSlide key="how-it-works" language="en" variant="process" />,
   <PrinciplesSlide key="principles" content={englishContent.principles} />,
+  <BusinessModelIntroSlide key="business-model-intro" language="en" />,
+  <BusinessModelSlide key="business-model" language="en" />,
+  <SalesMethodSlide key="sales-method" language="en" />,
   <InteractivePackagesSlide key="packages" language="en" />,
-  <BenefitsSlide key="benefits" content={englishContent.benefits} />,
-  <EnglishCloseSlide key="close" />,
+  <ColdStartSlide key="cold-start" language="en" />,
+  <TractionSlide key="traction" language="en" />,
+  <LessonsSlide key="lessons" language="en" />,
+  <EntrepreneurshipCloseSlide key="close" language="en" />,
 ];
 
-export function IslamicSchoolPresentation() {
+export function EntrepreneurshipPresentation() {
   const [slide, setSlide] = useState(0);
   const [language, setLanguage] = useState<"id" | "en">("id");
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -456,7 +458,7 @@ export function IslamicSchoolPresentation() {
     <div className="relative flex h-full flex-col">
       <header className="z-20 flex items-center justify-between px-6 py-5 sm:px-10">
         <Link href="/presentations" aria-label={language === "id" ? "Kembali ke semua presentasi" : "Back to all presentations"}><Image src="/jodohmu-logo.png" alt="Jodohmu" width={45} height={45} className="h-10 w-10 object-contain brightness-0 invert" priority /></Link>
-        <p className="hidden text-xs font-bold uppercase tracking-[.24em] text-white/55 sm:block">{language === "id" ? "Jodohmu · Jalan menuju pernikahan yang menjaga nilai" : "Jodohmu · A values-led path to marriage"}</p>
+        <p className="hidden text-xs font-bold uppercase tracking-[.24em] text-white/55 sm:block">{language === "id" ? "Jodohmu · Uang, tujuan, dan membangun usaha yang jujur" : "Jodohmu · Money, purpose, and building honestly"}</p>
         <div className="flex gap-2"><button onClick={() => { setLanguage(language === "id" ? "en" : "id"); setSlide(0); }} className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-2 text-xs font-semibold text-white/75 transition hover:bg-white/10 hover:text-white" aria-label={language === "id" ? "Switch to English" : "Ganti ke Bahasa Indonesia"}><Languages className="h-4 w-4" /><span className="hidden sm:inline">{language === "id" ? "English" : "Indonesia"}</span></button><button onClick={() => void toggleFullscreen()} className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-2 text-xs font-semibold text-white/75 transition hover:bg-white/10 hover:text-white" aria-label={language === "id" ? "Layar penuh" : "Full screen"}><Expand className="h-4 w-4" /><span className="hidden sm:inline">{isFullscreen ? (language === "id" ? "Keluar layar penuh" : "Exit full screen") : (language === "id" ? "Layar penuh" : "Full screen")}</span></button></div>
       </header>
       <div className="relative flex flex-1 items-center overflow-hidden"><div className="flex h-full w-full transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)]" style={{ transform: `translateX(-${slide * 100}%)` }}>{slides.map((content, index) => <section key={index} aria-hidden={slide !== index} className="flex h-full w-full shrink-0 items-center justify-center px-7 pb-20 pt-2 sm:px-16 lg:px-24">{content}</section>)}</div></div>
@@ -684,3 +686,556 @@ function EnglishTaarufSlide() { const values = [["What is ta’aruf?", "Getting 
 function EnglishJodohmuSlide() { const steps = [["Listen to your story", "Your goals, values, boundaries, and hopes for the future are discussed personally."], ["Consider an introduction", "A possibility is shared privately, with time to consider it and say no."], ["Consent from both people", "Contact or a meeting is not pushed without the willingness of both people involved."], ["Meet with purpose", "A meeting can be structured more clearly, including trusted support if desired."]]; return <div className="mx-auto w-full max-w-6xl"><p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">When you choose to be serious</p><h2 className="mx-auto mt-4 max-w-5xl text-center font-serif text-4xl font-bold leading-tight sm:text-6xl">What is Jodohmu? <span className="italic text-[#ef91b1]">A process that structures your choices.</span></h2><p className="mx-auto mt-5 max-w-3xl text-center text-lg leading-8 text-white/65">Jodohmu is a personal introduction service for adults who want to move towards marriage. You do not need to be perfect to begin—but you do need to choose a process with honesty and responsibility.</p><div className="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{steps.map(([title, text], index) => <div key={title} className="rounded-3xl border border-white/15 bg-white/[.07] p-5"><p className="font-serif text-3xl text-[#e6bd69]">0{index + 1}</p><h3 className="mt-4 text-lg font-bold">{title}</h3><p className="mt-3 text-sm leading-6 text-white/65">{text}</p></div>)}</div><p className="mt-8 text-center text-sm font-bold text-[#f3c5d4]">Good structure creates room to think—not pressure to choose quickly.</p></div>; }
 
 function EnglishCloseSlide() { return <div className="relative mx-auto w-full max-w-6xl overflow-hidden rounded-[2rem] border border-white/15 text-center shadow-2xl shadow-black/30"><Image src="/presentations-sekolah-islam-mosque-courtyard-v2.png" alt="A quiet mosque courtyard in the morning" fill className="object-cover" sizes="(max-width: 1024px) 95vw, 1152px" /><div className="relative flex min-h-[500px] items-center bg-[linear-gradient(90deg,rgba(16,29,59,.96)_0%,rgba(16,29,59,.82)_46%,rgba(16,29,59,.20)_100%)] p-8 sm:min-h-[540px] sm:p-12"><div className="mx-auto max-w-4xl"><p className="text-xs font-bold uppercase tracking-[.28em] text-[#e6bd69]">Closing reflection</p><h2 className="mt-7 font-serif text-5xl font-bold leading-tight sm:text-7xl">Marriage needs <span className="italic text-[#ef91b1]">seriousness—not endless delay.</span></h2><p className="mx-auto mt-8 max-w-3xl text-xl leading-9 text-white/85">Do not spend years in conversations that never move. When intention is good and compatibility is present, move from introduction towards clarity—with adab and responsibility.</p><div className="mx-auto mt-10 h-1.5 w-24 rounded-full bg-[#e6bd69]" /><p className="mt-9 text-2xl font-bold text-[#e6bd69] sm:text-3xl">Guard your heart. Move with purpose. Build a bigger future.</p><Link href="/presentations" className="mt-12 inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-3 text-sm font-bold text-white/90 transition hover:bg-white/10"><ArrowLeft className="h-4 w-4" /> View all presentations</Link></div></div></div>; }
+
+type Bilingual = { id: string; en: string };
+type Evidence = { ref: string; grade: Bilingual; narration: Bilingual; takeaway: Bilingual };
+
+const wealthGoodEvidence: Evidence[] = [
+  {
+    ref: "Tirmidhī 3701",
+    grade: { id: "Ḥasan", en: "Ḥasan" },
+    narration: {
+      id: "Tahun 9 Hijriah. Pasukan berangkat ke Tabūk di musim panas yang terik, jarak lebih dari 700 km, saat kurma sedang siap dipanen. Pasukan ini dikenal sebagai Jaysh al-ʿUsrah—pasukan masa sulit—karena perbekalan, unta, dan dana benar-benar tidak cukup. Rasulullah ﷺ berdiri meminta sumbangan. ʿUthmān bin ʿAffān رضي الله عنه menyerahkan 1.000 dinar ke pangkuan beliau. Rasulullah ﷺ membalik-balikkan harta itu di tangannya dan bersabda bahwa apa pun yang dilakukan ʿUthmān setelah hari ini tidak akan membahayakannya. Dalam riwayat lain, ia juga menyumbang ratusan unta lengkap dengan pelananya.",
+      en: "Year 9 AH. The army set out for Tabūk in blistering summer heat, more than 700 km, exactly when the date harvest was ready. It became known as Jaysh al-ʿUsrah—the army of hardship—because provisions, camels, and funds were genuinely insufficient. The Prophet ﷺ stood and called for contributions. ʿUthmān ibn ʿAffān رضي الله عنه placed 1,000 dinars into his lap. The Prophet ﷺ turned the wealth over in his hands and said that nothing ʿUthmān did after that day would harm him. Other reports add hundreds of camels, fully saddled and equipped.",
+    },
+    takeaway: {
+      id: "Perhatikan apa yang sebenarnya terjadi: iman seluruh pasukan sudah ada, niat sudah ada, keberanian sudah ada. Yang tidak ada hanyalah uang. Harta ʿUthmān membeli satu-satunya hal yang tidak bisa dibeli oleh salat dan puasa siapa pun pada hari itu—kemampuan untuk berangkat.",
+      en: "Notice what was actually missing. The faith of the whole army was there, the intention was there, the courage was there. Only the money was not. ʿUthmān's wealth bought the one thing nobody's prayer or fasting could buy that day—the ability to actually depart.",
+    },
+  },
+  {
+    ref: "Ṣaḥīḥ Muslim 595",
+    grade: { id: "Ṣaḥīḥ", en: "Ṣaḥīḥ" },
+    narration: {
+      id: "Para sahabat yang miskin datang kepada Rasulullah ﷺ dan mengadu: “Orang-orang kaya telah memborong derajat yang tinggi dan kenikmatan yang abadi. Mereka salat seperti kami salat, mereka puasa seperti kami puasa—tetapi mereka punya kelebihan harta untuk berhaji, berumrah, berjihad, dan bersedekah, sedangkan kami tidak.” Rasulullah ﷺ tidak menyalahkan mereka karena iri, dan tidak berkata bahwa harta itu tidak berarti. Beliau justru mengajarkan zikir setelah salat sebagai amal yang bisa mengejar ketertinggalan itu.",
+      en: "The poor Companions came to the Prophet ﷺ and complained: “The wealthy have taken the higher ranks and the lasting blessings. They pray as we pray, they fast as we fast—but they have surplus wealth to perform hajj, ʿumrah, jihād, and charity, and we do not.” The Prophet ﷺ did not scold them for envy, and did not tell them wealth was meaningless. He taught them a dhikr after prayer as a deed that could close the gap.",
+    },
+    takeaway: {
+      id: "Dua hal penting di sini. Pertama, yang mengeluh adalah sahabat Nabi ﷺ—bukan orang yang lemah imannya. Kedua, jawabannya bukan “harta itu tidak penting”, melainkan sebuah amalan pengganti. Artinya kesenjangan itu diakui: harta memang membuka pintu yang tertutup bagi orang yang tidak punya.",
+      en: "Two things matter here. First, the ones complaining were the Companions—not people weak in faith. Second, the answer was not “wealth does not matter”; it was a substitute deed. The gap was acknowledged: wealth genuinely opens doors that stay shut for those without it.",
+    },
+  },
+];
+
+const wealthBurdenEvidence: Evidence[] = [
+  {
+    ref: "Ṣaḥīḥ al-Bukhārī · Kitāb al-Janāʾiz",
+    grade: { id: "Ṣaḥīḥ", en: "Ṣaḥīḥ" },
+    narration: {
+      id: "ʿAbd al-Raḥmān bin ʿAwf رضي الله عنه sedang berpuasa. Ketika hidangan datang, ia teringat Muṣʿab bin ʿUmayr—pemuda paling perlente di Makkah sebelum Islam, yang kemudian syahid di Uhud dan dikafani dengan satu kain yang begitu pendek: bila kepalanya ditutup, kakinya terbuka; bila kakinya ditutup, kepalanya terbuka. Rasulullah ﷺ memerintahkan agar kepalanya ditutup dan kakinya ditutupi dengan rerumputan idhkhir. ʿAbd al-Raḥmān berkata bahwa Muṣʿab lebih baik darinya, lalu berkata: “Kemudian dibentangkan untuk kami dunia sebagaimana ia dibentangkan.” Ia menangis, dan meninggalkan makanannya.",
+      en: "ʿAbd al-Raḥmān ibn ʿAwf رضي الله عنه was fasting. When food was brought, he remembered Muṣʿab ibn ʿUmayr—the best-dressed youth in Makkah before Islam, later martyred at Uḥud and shrouded in a single cloth so short that covering his head exposed his feet, and covering his feet exposed his head. The Prophet ﷺ ordered his head covered and his feet draped with idhkhir grass. ʿAbd al-Raḥmān said Muṣʿab was better than him, then said: “Then the world was spread out for us as it was spread out.” He wept, and left his food untouched.",
+    },
+    takeaway: {
+      id: "Kalimat “dunia dibentangkan untuk kami” bukan ucapan syukur. Itu ucapan takut. Ia khawatir bahwa apa yang seharusnya ia terima nanti, sudah dibayarkan kepadanya sekarang—dan yang mengucapkannya adalah orang yang sudah dijamin surga.",
+      en: "The phrase “the world was spread out for us” is not gratitude. It is fear. He worried that what he was meant to receive later had already been paid out to him now—and the man saying it had already been guaranteed Paradise.",
+    },
+  },
+  {
+    ref: "Ṣaḥīḥ al-Bukhārī 3158 · Ṣaḥīḥ Muslim 2961",
+    grade: { id: "Muttafaq ʿalayh", en: "Agreed upon" },
+    narration: {
+      id: "Abū ʿUbaydah رضي الله عنه kembali dari Bahrain membawa harta. Kaum Anṣār mendengar kabar itu, lalu berbondong-bondong hadir di salat Subuh. Seusai salat, Rasulullah ﷺ hendak beranjak, tetapi mereka menghadang jalan beliau. Beliau tersenyum melihat mereka dan bersabda: “Aku kira kalian sudah mendengar bahwa Abū ʿUbaydah datang membawa sesuatu.” Mereka membenarkan. Maka beliau bersabda: «فَوَاللَّهِ مَا الْفَقْرَ أَخْشَى عَلَيْكُمْ» — “Demi Allah, bukan kefakiran yang aku takutkan atas kalian. Yang aku takutkan adalah dunia dibentangkan untuk kalian sebagaimana ia dibentangkan untuk orang-orang sebelum kalian, lalu kalian berlomba memperebutkannya sebagaimana mereka berlomba—dan ia membinasakan kalian sebagaimana ia membinasakan mereka.”",
+      en: "Abū ʿUbaydah رضي الله عنه returned from Bahrain carrying wealth. The Anṣār heard, and crowded the Fajr prayer. When the Prophet ﷺ finished and moved to leave, they blocked his path. He smiled at them and said: “I think you have heard that Abū ʿUbaydah has arrived with something.” They said yes. So he said: «فَوَاللَّهِ مَا الْفَقْرَ أَخْشَى عَلَيْكُمْ» — “By Allah, it is not poverty that I fear for you. What I fear is that the world will be spread out before you as it was spread out before those before you, and that you will compete for it as they competed—and it will destroy you as it destroyed them.”",
+    },
+    takeaway: {
+      id: "Perhatikan satu kata. ʿAbd al-Raḥmān menangis sambil berkata “kemudian dunia dibentangkan untuk kami”—kata yang sama persis dengan yang dipakai Rasulullah ﷺ dalam peringatan ini. ʿAbd al-Raḥmān sedang mengutip peringatan ini tentang dirinya sendiri. Dan lihat siapa yang berdesakan pagi itu karena kabar harta: para sahabat.",
+      en: "Notice one word. ʿAbd al-Raḥmān wept and said “then the world was spread out for us”—the very word the Prophet ﷺ uses in this warning. ʿAbd al-Raḥmān was quoting this warning, about himself. And look who crowded the mosque that morning over news of money: the Companions.",
+    },
+  },
+];
+
+function EntrepreneurshipTitleSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  return <div className="mx-auto grid w-full max-w-6xl gap-9 lg:grid-cols-[1.05fr_.95fr] lg:items-center">
+    <div className="text-left">
+      <p className="text-xs font-bold uppercase tracking-[.28em] text-[#e6bd69]">{isId ? "Kelas Kewirausahaan · IPAI" : "Entrepreneurship Class · IPAI"}</p>
+      <h1 className="mt-7 font-serif text-5xl font-bold leading-[1.05] tracking-tight sm:text-7xl">{isId ? <>Uang, Tujuan,<br />dan Cara<br /><span className="mt-3 block text-3xl italic text-[#ef91b1] sm:text-5xl">Sebuah Startup Lahir</span></> : <>Money, Purpose,<br />and How a<br /><span className="mt-3 block text-3xl italic text-[#ef91b1] sm:text-5xl">Startup Was Born</span></>}</h1>
+      <p className="mt-8 max-w-lg text-lg leading-8 text-white/70">{isId ? "Sebelum kita bicara tentang bisnis, kita harus jujur dulu tentang satu hal yang paling sering disalahpahami: harta." : "Before we talk about business, we have to be honest about the one thing most often misunderstood: wealth."}</p>
+      <div className="mt-9 flex items-center gap-3 text-sm font-semibold text-[#e6bd69]"><Coins className="h-5 w-5" /> {isId ? "Mulai dari pertanyaan, bukan dari jawaban." : "We start with a question, not an answer."}</div>
+      <ChevronDown className="mt-9 h-6 w-6 animate-bounce text-[#e6bd69]" />
+    </div>
+    <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-[2rem] border border-white/15 shadow-2xl shadow-black/30">
+      <Image src="/presentations-sekolah-islam-study-space-v2.png" alt={isId ? "Ruang tenang untuk berpikir tentang harta dan tujuan" : "A quiet space for thinking about wealth and purpose"} fill className="object-cover" priority sizes="(max-width: 1024px) 86vw, 460px" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#101d3b]/70 to-transparent" />
+    </div>
+  </div>;
+}
+
+function OpeningQuestionSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  return <div className="mx-auto w-full max-w-5xl text-center">
+    <p className="text-xs font-bold uppercase tracking-[.28em] text-[#e6bd69]">{isId ? "Pertanyaan pembuka" : "Opening question"}</p>
+    <h2 className="mt-7 font-serif text-5xl font-bold leading-[1.08] sm:text-7xl">{isId ? <>Menurut kalian,<br /><span className="italic text-[#ef91b1]">uang itu baik atau buruk?</span></> : <>In your view,<br /><span className="italic text-[#ef91b1]">is money good or bad?</span></>}</h2>
+    <p className="mx-auto mt-9 max-w-2xl text-xl leading-9 text-white/70">{isId ? "Jangan jawab dulu. Saya akan bacakan empat riwayat—dua yang memuji harta, dua yang membuat kita takut memilikinya. Semuanya sahih." : "Do not answer yet. I will read four narrations—two that praise wealth, two that make us afraid to own it. All of them authentic."}</p>
+    <div className="mx-auto mt-11 flex max-w-3xl items-center gap-5">
+      <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#e6bd69]/60" />
+      <span className="font-serif text-6xl text-[#e6bd69]">?</span>
+      <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#e6bd69]/60" />
+    </div>
+  </div>;
+}
+
+function EvidenceSlide({ language, side }: { language: "id" | "en"; side: "good" | "burden" }) {
+  const isId = language === "id";
+  const isGood = side === "good";
+  const items = isGood ? wealthGoodEvidence : wealthBurdenEvidence;
+  const Icon = isGood ? Coins : Scale;
+  return <div className="mx-auto w-full max-w-6xl">
+    <div className="flex items-center justify-center gap-3">
+      <span className={`grid h-8 w-8 place-items-center rounded-full ${isGood ? "bg-[#e6bd69]/15 text-[#e6bd69]" : "bg-[#ef91b1]/15 text-[#f3c5d4]"}`}><Icon className="h-4 w-4" /></span>
+      <p className="text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isGood ? (isId ? "Sisi 02 · Harta sebagai sarana kebaikan" : "Side 02 · Wealth as a means of good") : (isId ? "Sisi 01 · Harta sebagai beban" : "Side 01 · Wealth as a burden")}</p>
+    </div>
+    <h2 className="mx-auto mt-4 max-w-4xl text-center font-serif text-3xl font-bold leading-tight sm:text-5xl">
+      {isGood ? (isId ? <>Harta membuat kebaikan <span className="italic text-[#ef91b1]">bisa bergerak.</span></> : <>Wealth is what lets good <span className="italic text-[#ef91b1]">actually move.</span></>)
+              : (isId ? <>Yang beliau takutkan <span className="italic text-[#ef91b1]">bukan kefakiran.</span></> : <>What he feared for us <span className="italic text-[#ef91b1]">was not poverty.</span></>)}
+    </h2>
+    <div className="mt-7 grid gap-4 lg:grid-cols-2">
+      {items.map((item, index) => <div key={item.ref} className="flex flex-col rounded-3xl border border-white/15 bg-white/[.07] p-5 sm:p-6">
+        <div className="flex items-baseline justify-between gap-3 border-b border-white/12 pb-3">
+          <span className="font-serif text-2xl text-[#e6bd69]">0{index + 1}</span>
+          <div className="text-right">
+            <p className="text-[.7rem] font-bold uppercase tracking-[.14em] text-[#f3c5d4]">{item.ref}</p>
+            <p className="mt-0.5 text-[.6rem] font-bold uppercase tracking-[.2em] text-white/45">{isId ? item.grade.id : item.grade.en}</p>
+          </div>
+        </div>
+        <p className="mt-4 text-[.9rem] leading-6 text-white/80">{isId ? item.narration.id : item.narration.en}</p>
+        <p className="mt-4 border-l-2 border-[#e6bd69] pl-4 text-[.82rem] font-bold leading-6 text-[#f3c5d4] sm:mt-auto sm:pt-4">{isId ? item.takeaway.id : item.takeaway.en}</p>
+      </div>)}
+    </div>
+    <p className="mt-5 text-center text-xs leading-5 text-white/50">
+      {isGood
+        ? (isId ? "Kesimpulan sementara: tanpa harta, sebagian pintu amal memang tertutup rapat." : "Provisional conclusion: without wealth, some doors of good simply stay shut.")
+        : (isId ? "Keduanya ṣaḥīḥ, dan keduanya berputar pada satu kata yang sama: dunia “dibentangkan”. Dua riwayat lain yang populer di tema ini—ʿAbd al-Raḥmān masuk surga dengan merangkak (al-Ṭabarānī) dan doa agar hidup sebagai miskīn (Tirmidhī 2352)—lemah atau diperselisihkan, jadi tidak kami pakai." : "Both are ṣaḥīḥ, and both turn on the same word: the world being “spread out”. Two other popular reports on this theme—ʿAbd al-Raḥmān entering Paradise crawling (al-Ṭabarānī) and the duʿāʾ to live as a miskīn (Tirmidhī 2352)—are weak or disputed, so we do not use them.")}
+    </p>
+  </div>;
+}
+
+function AbdurrahmanSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  const credentials = isId
+    ? [["ʿAsharah Mubasharah", "Termasuk sepuluh orang yang dijamin surga ketika masih hidup dan masih bisa salah."], ["Imam di depan Nabi ﷺ", "Di Tabūk ia mengimami salat Subuh—dan Rasulullah ﷺ salat di belakangnya. (Ṣaḥīḥ Muslim)"], ["Salah satu terkaya", "Datang ke Madinah tanpa apa-apa, menolak pemberian, hanya minta ditunjukkan pasar."]]
+    : [["ʿAsharah Mubasharah", "One of ten promised Paradise while still alive and still able to err."], ["Imām before the Prophet ﷺ", "At Tabūk he led the Fajr prayer—and the Messenger of Allah ﷺ prayed behind him. (Ṣaḥīḥ Muslim)"], ["Among the wealthiest", "Arrived in Madinah with nothing, refused charity, and asked only to be shown the marketplace."]];
+  const chain = isId
+    ? [["Harta warisan", "± 2,56 juta dinar emas"], ["Berat emas", "1 dinar ≈ 4,25 gram → ± 10,9 ton"], ["Nilai hari ini", "≈ USD 980 juta · ± Rp 15,7 triliun"]]
+    : [["Estate at death", "± 2.56 million gold dinars"], ["Weight in gold", "1 dinar ≈ 4.25 g → ± 10.9 tonnes"], ["Value today", "≈ USD 980 million · ± IDR 15.7 trillion"]];
+  return <div className="mx-auto w-full max-w-6xl">
+    <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isId ? "Studi kasus · berhenti di satu orang" : "Case study · pause on one man"}</p>
+    <h2 className="mx-auto mt-3 max-w-5xl text-center font-serif text-3xl font-bold leading-tight sm:text-5xl">{isId ? <>ʿAbd al-Raḥmān bin ʿAwf <span className="italic text-[#ef91b1]">takut pada hartanya sendiri.</span></> : <>ʿAbd al-Raḥmān ibn ʿAwf <span className="italic text-[#ef91b1]">feared his own wealth.</span></>}</h2>
+    <div className="mt-7 grid gap-3 md:grid-cols-3">
+      {credentials.map(([title, detail], index) => <div key={title} className="rounded-2xl border border-white/15 bg-white/[.07] p-5">
+        <p className="font-serif text-2xl text-[#e6bd69]">0{index + 1}</p>
+        <h3 className="mt-3 text-lg font-bold">{title}</h3>
+        <p className="mt-2 text-[.82rem] leading-6 text-white/65">{detail}</p>
+      </div>)}
+    </div>
+    <div className="mt-5 rounded-2xl border border-[#e6bd69]/35 bg-[#e6bd69]/[.08] p-5">
+      <p className="text-xs font-bold uppercase tracking-[.2em] text-[#e6bd69]">{isId ? "Seberapa kaya, dalam ukuran hari ini?" : "How wealthy, in today's terms?"}</p>
+      <div className="mt-4 grid gap-3 sm:grid-cols-3">
+        {chain.map(([label, value], index) => <div key={label} className="flex items-baseline gap-3">
+          <span className="font-serif text-xl text-[#e6bd69]/60">{index + 1}</span>
+          <div><p className="text-[.68rem] font-bold uppercase tracking-[.16em] text-white/50">{label}</p><p className="mt-1 font-serif text-lg font-bold text-[#f3c5d4]">{value}</p></div>
+        </div>)}
+      </div>
+      <p className="mt-4 text-[.68rem] leading-5 text-white/45">{isId ? "Perkiraan, bukan neraca. Dihitung dari riwayat bahwa tiap istri menerima 80.000 sebagai bagian dari seperdelapan warisan, dengan asumsi emas ≈ USD 90/gram dan kurs Rp 16.000. Riwayat tentang angka ini berbeda-beda, jadi perlakukan ini sebagai gambaran skala—bukan angka pasti." : "An estimate, not a ledger. Derived from the report that each wife received 80,000 as her portion of the one-eighth share, assuming gold ≈ USD 90/gram and IDR 16,000 to the dollar. Reports on these figures differ, so treat this as an order of magnitude—not a precise number."}</p>
+    </div>
+    <div className="mt-5 rounded-2xl border border-white/15 bg-white/[.05] p-5 text-center">
+      <p className="mx-auto max-w-4xl text-base leading-7 text-white/85">{isId ? "Orang ini dijamin surga. Rasulullah ﷺ pernah salat di belakangnya. Kekayaannya setara hampir satu miliar dolar hari ini—dan justru itulah yang membuatnya menangis dan meninggalkan makanannya." : "This man was guaranteed Paradise. The Messenger of Allah ﷺ once prayed behind him. His wealth was worth close to a billion dollars today—and that is precisely what made him weep and leave his food."}</p>
+      <p className="mt-4 font-serif text-2xl font-bold text-[#e6bd69] sm:text-3xl">{isId ? "Kalau beliau saja begitu—bagaimana dengan kita?" : "If that was him—then where does that leave us?"}</p>
+    </div>
+  </div>;
+}
+
+function ConfusionSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  const left = isId ? ["ʿUthmān membiayai pasukan—dan dijamin aman selamanya.", "Sahabat yang miskin iri kepada yang kaya karena sedekah."] : ["ʿUthmān funded an army—and was guaranteed safety forever.", "The poor Companions envied the rich because of their charity."];
+  const right = isId ? ["ʿAbd al-Raḥmān—yang dijamin surga—menangis karena hartanya.", "Nabi ﷺ: yang beliau takutkan atas kita bukan kefakiran, melainkan dunia."] : ["ʿAbd al-Raḥmān—guaranteed Paradise—wept because of his wealth.", "The Prophet ﷺ: what he feared for us was not poverty, but the world."];
+  return <div className="mx-auto w-full max-w-6xl">
+    <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isId ? "Jadi—yang mana?" : "So—which is it?"}</p>
+    <h2 className="mx-auto mt-4 max-w-4xl text-center font-serif text-4xl font-bold leading-tight sm:text-6xl">{isId ? <>Semua riwayat ini benar. <span className="italic text-[#ef91b1]">Dan semuanya bertabrakan.</span></> : <>All of these are authentic. <span className="italic text-[#ef91b1]">And they collide.</span></>}</h2>
+    <div className="mt-10 grid items-stretch gap-4 lg:grid-cols-[1fr_auto_1fr]">
+      <div className="rounded-3xl border border-[#e6bd69]/35 bg-[#e6bd69]/[.08] p-7">
+        <p className="text-sm font-bold uppercase tracking-[.18em] text-[#e6bd69]">{isId ? "Kejarlah harta" : "Chase wealth"}</p>
+        <ul className="mt-6 space-y-4">{left.map((item) => <li key={item} className="flex gap-3 text-base leading-7 text-white/80"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#e6bd69]" />{item}</li>)}</ul>
+      </div>
+      <div className="grid place-items-center px-2"><span className="font-serif text-7xl text-white/30">?</span></div>
+      <div className="rounded-3xl border border-[#ef91b1]/35 bg-[#ef91b1]/[.08] p-7">
+        <p className="text-sm font-bold uppercase tracking-[.18em] text-[#f3c5d4]">{isId ? "Jauhilah harta" : "Avoid wealth"}</p>
+        <ul className="mt-6 space-y-4">{right.map((item) => <li key={item} className="flex gap-3 text-base leading-7 text-white/80"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#ef91b1]" />{item}</li>)}</ul>
+      </div>
+    </div>
+    <p className="mt-9 text-center text-xl font-bold leading-9 text-[#f3c5d4]">{isId ? "Kalau dalilnya sama-sama kuat, berarti pertanyaannya yang salah." : "If both sides are equally strong, then the question itself is wrong."}</p>
+  </div>;
+}
+
+function PhilosophySlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  const rows = isId
+    ? [["Harta tanpa tujuan", "Menjadi angka yang harus dijaga. Ia tumbuh, lalu menuntut waktu, perhatian, dan akhirnya hisab—tanpa memberi arah apa pun."], ["Tujuan tanpa harta", "Menjadi niat baik yang berhenti di kepala. Kita tahu apa yang rusak di masyarakat, tetapi tidak punya kemampuan untuk menyentuhnya."], ["Harta yang disatukan dengan tujuan", "Menjadi alat. ʿUthmān tidak dipuji karena punya 1.000 dinar—ia dipuji karena 1.000 dinar itu memberangkatkan pasukan."]]
+    : [["Wealth without purpose", "Becomes a number you must defend. It grows, then demands your time, your attention, and finally your reckoning—while giving you no direction."], ["Purpose without wealth", "Becomes a good intention that stops inside your head. You can see what is broken in society, but you have no capacity to touch it."], ["Wealth joined to purpose", "Becomes an instrument. ʿUthmān was not praised for owning 1,000 dinars—he was praised because those 1,000 dinars moved an army."]];
+  return <div className="mx-auto w-full max-w-6xl">
+    <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isId ? "Cara saya melihatnya" : "How I see it"}</p>
+    <h2 className="mx-auto mt-4 max-w-5xl text-center font-serif text-4xl font-bold leading-tight sm:text-6xl">{isId ? <>Uang bukan baik atau buruk. <span className="italic text-[#ef91b1]">Uang adalah pengganda.</span></> : <>Money is not good or bad. <span className="italic text-[#ef91b1]">Money is a multiplier.</span></>}</h2>
+    <p className="mx-auto mt-5 max-w-3xl text-center text-lg leading-8 text-white/65">{isId ? "Pengganda selalu mengalikan sesuatu yang sudah ada. Kalau tidak ada tujuan di sana, yang dikalikan hanyalah diri kita sendiri." : "A multiplier always multiplies something that is already there. If there is no purpose there, the only thing it multiplies is yourself."}</p>
+    <div className="mt-9 divide-y divide-white/15 border-y border-white/15">
+      {rows.map(([title, detail]) => <div key={title} className="grid gap-3 py-6 sm:grid-cols-[15rem_1fr]">
+        <h3 className="font-serif text-2xl font-bold text-[#e6bd69]">{title}</h3>
+        <p className="text-base leading-7 text-white/70">{detail}</p>
+      </div>)}
+    </div>
+    <p className="mt-8 text-center text-xl font-bold text-[#f3c5d4]">{isId ? "Maka pertanyaannya bukan “berapa yang saya hasilkan?” tetapi “apa yang sedang dikalikan oleh uang saya?”" : "So the question is not “how much am I earning?” but “what is my money multiplying?”"}</p>
+  </div>;
+}
+
+function PurposeBridgeSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  return <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[1.05fr_.95fr] lg:items-center">
+    <div>
+      <p className="text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isId ? "Dari filosofi ke keputusan" : "From philosophy to a decision"}</p>
+      <h2 className="mt-5 font-serif text-4xl font-bold leading-tight sm:text-6xl">{isId ? <>Lalu saya bertanya:<br /><span className="italic text-[#ef91b1]">apa yang ingin saya kalikan?</span></> : <>So I asked myself:<br /><span className="italic text-[#ef91b1]">what do I want to multiply?</span></>}</h2>
+      <p className="mt-7 max-w-xl text-lg leading-8 text-white/70">{isId ? "Saya tidak mencari masalah yang paling menguntungkan. Saya mencari masalah yang kalau dibiarkan, akan terus merusak—dan yang hampir tidak ada orang bangun untuk memperbaikinya secara serius." : "I was not looking for the most profitable problem. I was looking for a problem that keeps damaging people if left alone—and that almost nobody is seriously building to fix."}</p>
+      <p className="mt-8 border-l-2 border-[#e6bd69] pl-5 text-base font-bold leading-7 text-[#f3c5d4]">{isId ? "Salah satu kerusakan terbesar di masyarakat Muslim hari ini terjadi di tempat yang paling awal: cara orang bertemu dan menikah." : "One of the deepest fractures in Muslim society today happens at the very first step: how people meet and marry."}</p>
+    </div>
+    <div className="rounded-[2rem] border border-white/15 bg-white/[.07] p-8">
+      <p className="text-sm font-bold uppercase tracking-[.18em] text-[#e6bd69]">{isId ? "Ujian untuk sebuah ide" : "The test for an idea"}</p>
+      <div className="mt-7 space-y-6">
+        {(isId
+          ? [["Apakah ia benar-benar rusak?", "Bukan ketidaknyamanan kecil—kerusakan yang bisa diukur."], ["Apakah nilai saya relevan di sana?", "Kalau solusinya menuntut saya melanggar prinsip, itu bukan pintu saya."], ["Apakah uang bisa memperbaikinya?", "Sebagian masalah butuh dakwah. Sebagian butuh operasional, tim, dan modal."]]
+          : [["Is it genuinely broken?", "Not a small inconvenience—damage you can measure."], ["Are my values relevant here?", "If the fix requires me to break a principle, it is not my door."], ["Can money actually repair it?", "Some problems need preaching. Some need operations, a team, and capital."]]
+        ).map(([q, a], index) => <div key={q}>
+          <p className="font-serif text-2xl font-bold text-[#e6bd69]">0{index + 1} · {q}</p>
+          <p className="mt-2 text-sm leading-6 text-white/65">{a}</p>
+        </div>)}
+      </div>
+    </div>
+  </div>;
+}
+
+function RouteComparisonSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  const routes = isId
+    ? [["Aplikasi kencan", "Cepat, luas, mudah dimulai.", "Niat tidak jelas, verifikasi lemah, kedekatan tumbuh sebelum komitmen."], ["Referensi keluarga", "Kepercayaan dan niat baik sejak awal.", "Kandidat sangat sedikit; menolak terasa canggung, menerima terasa dipaksa."], ["Ustaz & tokoh komunitas", "Nilai sejalan dan dipercaya.", "Waktu terbatas, tidak ada pool terverifikasi, tidak ada sistem tindak lanjut."], ["Bertemu alami", "Terasa spontan dan tidak dibuat-buat.", "Bergantung pada kebetulan; latar belakang dan kesiapan tidak pernah diuji."]]
+    : [["Dating apps", "Fast, wide, easy to start.", "Unclear intent, weak verification, attachment grows before commitment."], ["Family referrals", "Trust and good intention from day one.", "Tiny candidate pool; saying no is awkward, saying yes feels forced."], ["Ustaz & community leaders", "Aligned values and real trust.", "Limited time, no verified pool, no system for follow-up."], ["Meeting naturally", "Feels spontaneous and unforced.", "Depends on chance; background and readiness are never tested."]];
+  return <div className="mx-auto w-full max-w-6xl">
+    <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isId ? "Lanskap kompetitif" : "The competitive landscape"}</p>
+    <h2 className="mx-auto mt-4 max-w-5xl text-center font-serif text-4xl font-bold leading-tight sm:text-6xl">{isId ? <>Empat cara yang sudah ada—<span className="italic text-[#ef91b1]">dan celah di keempatnya.</span></> : <>Four existing routes—<span className="italic text-[#ef91b1]">and the gap in all four.</span></>}</h2>
+    <div className="mt-9 overflow-hidden rounded-3xl border border-white/15">
+      <div className="hidden bg-white/[.09] px-6 py-4 text-xs font-bold uppercase tracking-[.18em] text-[#e6bd69] sm:grid sm:grid-cols-[13rem_1fr_1.25fr] sm:gap-5">
+        <span>{isId ? "Jalur" : "Route"}</span><span>{isId ? "Yang dijanjikan" : "What it promises"}</span><span>{isId ? "Yang hilang" : "What is missing"}</span>
+      </div>
+      <div className="divide-y divide-white/12">
+        {routes.map(([name, promise, gap]) => <div key={name} className="grid gap-2 bg-white/[.04] px-6 py-5 sm:grid-cols-[13rem_1fr_1.25fr] sm:gap-5">
+          <h3 className="font-bold text-[#f3c5d4]">{name}</h3>
+          <p className="text-sm leading-6 text-white/55">{promise}</p>
+          <p className="text-sm leading-6 text-white/80">{gap}</p>
+        </div>)}
+      </div>
+    </div>
+    <p className="mt-8 text-center text-lg font-bold text-[#f3c5d4]">{isId ? "Tidak ada satu pun yang menggabungkan akses, verifikasi, adab, dan keluarga dalam satu proses. Di situlah ruang usahanya." : "Not one of them combines access, verification, adab, and family in a single process. That gap is the business."}</p>
+  </div>;
+}
+
+function BusinessModelSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  const lines = isId
+    ? [["Onboarding & profil", "Rp 1.250.000", "Wawancara mendalam, penyusunan profil, penentuan kriteria."], ["Asesmen psikologi", "Rp 1.250.000", "Kesiapan menikah diuji, bukan diklaim sendiri."], ["Background check", "Rp 2.750.000", "Biaya terbesar per klien—dan alasan utama orang percaya."], ["Paket pendampingan", "Rp 1,5jt – 6jt", "Pearl, Ruby, Diamond: kedalaman pendampingan dan sourcing aktif."], ["Pertemuan & keluarga", "Rp 300rb – 4,5jt", "Pertemuan online sampai pertemuan keluarga yang difasilitasi."]]
+    : [["Onboarding & profile", "Rp 1,250,000", "Deep interview, profile construction, criteria definition."], ["Psychological assessment", "Rp 1,250,000", "Marriage readiness is tested, not self-declared."], ["Background check", "Rp 2,750,000", "Our largest cost per client—and the main reason people trust us."], ["Guidance packages", "Rp 1.5m – 6m", "Pearl, Ruby, Diamond: depth of guidance and active sourcing."], ["Meetings & family", "Rp 300k – 4.5m", "From online introductions to facilitated family gatherings."]];
+  return <div className="mx-auto w-full max-w-6xl">
+    <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isId ? "Model bisnis" : "The business model"}</p>
+    <h2 className="mx-auto mt-4 max-w-5xl text-center font-serif text-4xl font-bold leading-tight sm:text-5xl">{isId ? <>Kami tidak menjual jodoh. <span className="italic text-[#ef91b1]">Kami menjual proses yang mahal untuk dijalankan.</span></> : <>We do not sell a match. <span className="italic text-[#ef91b1]">We sell a process that is expensive to run.</span></>}</h2>
+    <div className="mt-8 divide-y divide-white/15 border-y border-white/15">
+      {lines.map(([name, price, why]) => <div key={name} className="grid gap-2 py-4 sm:grid-cols-[14rem_9rem_1fr] sm:items-baseline sm:gap-5">
+        <h3 className="font-bold text-[#f3c5d4]">{name}</h3>
+        <p className="font-serif text-xl text-[#e6bd69]">{price}</p>
+        <p className="text-sm leading-6 text-white/65">{why}</p>
+      </div>)}
+    </div>
+    <div className="mt-8 grid gap-4 md:grid-cols-3">
+      {(isId
+        ? [["Kenapa berlapis?", "Klien membayar sesuai kedalaman dukungan yang benar-benar mereka butuhkan—bukan satu harga untuk semua."], ["Kenapa mahal?", "Biayanya manusia: waktu wawancara, verifikasi, fasilitasi. Ini bukan software dengan biaya marginal nol."], ["Kenapa tidak iklan?", "Kanal kami adalah rujukan ustaz dan KUA. Kepercayaan tidak bisa dibeli dengan iklan Facebook."]]
+        : [["Why tiered?", "Clients pay for the depth of support they actually need—not one price for everyone."], ["Why expensive?", "The cost is human: interview hours, verification, facilitation. This is not software with zero marginal cost."], ["Why no ads?", "Our channel is ustaz and KUA referrals. Trust cannot be bought with Facebook ads."]]
+      ).map(([title, detail]) => <div key={title} className="rounded-3xl border border-white/15 bg-white/[.07] p-6">
+        <h3 className="font-serif text-xl font-bold text-[#e6bd69]">{title}</h3>
+        <p className="mt-3 text-sm leading-6 text-white/65">{detail}</p>
+      </div>)}
+    </div>
+  </div>;
+}
+
+function ColdStartSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  return <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
+    <div>
+      <p className="text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isId ? "Masalah tersulit" : "The hardest problem"}</p>
+      <h2 className="mt-5 font-serif text-4xl font-bold leading-tight sm:text-6xl">{isId ? <>Klien pertama membayar untuk <span className="italic text-[#ef91b1]">pool yang belum ada.</span></> : <>The first client pays for <span className="italic text-[#ef91b1]">a pool that does not exist yet.</span></>}</h2>
+      <p className="mt-7 max-w-xl text-lg leading-8 text-white/70">{isId ? "Di Jodohmu, klien yang membayar itulah yang membentuk pool. Artinya nilai layanan kami naik seiring jumlah klien—tetapi klien pertama menerima nilai paling kecil." : "At Jodohmu, the paying clients are the pool. That means our value rises with every client we add—but the earliest clients receive the least of it."}</p>
+      <p className="mt-7 border-l-2 border-[#e6bd69] pl-5 text-base font-bold leading-7 text-[#f3c5d4]">{isId ? "Ini masalah klasik marketplace: sisi penawaran dan permintaan adalah orang yang sama." : "This is the classic marketplace problem: supply and demand are the same person."}</p>
+    </div>
+    <div className="rounded-[2rem] border border-white/15 bg-white/[.07] p-8">
+      <p className="text-sm font-bold uppercase tracking-[.18em] text-[#e6bd69]">{isId ? "Cara kami menanganinya" : "How we handle it"}</p>
+      <div className="mt-7 space-y-6">
+        {(isId
+          ? [["Jangan pernah melebih-lebihkan pool", "Tidak menjanjikan jumlah profil yang tidak bisa kami penuhi. Sekali berbohong soal ini, kepercayaan habis."], ["Jendela layanan dimulai saat profil dikirim", "Bukan saat pembayaran. Klien tidak kehilangan waktu karena pool kami masih tumbuh."], ["Masuk lewat perantara tepercaya", "Ustaz dan KUA membawa kepercayaan yang tidak bisa kami bangun sendiri dari nol."]]
+          : [["Never overstate the pool", "We do not promise profile volume we cannot deliver. Lie about this once and the trust is gone."], ["The service window starts when profiles are sent", "Not at payment. A client does not lose time because our pool is still growing."], ["Enter through trusted intermediaries", "Ustaz and KUA carry a trust we could never manufacture from zero."]]
+        ).map(([title, detail], index) => <div key={title}>
+          <p className="font-serif text-xl font-bold text-[#e6bd69]">0{index + 1} · {title}</p>
+          <p className="mt-2 text-sm leading-6 text-white/65">{detail}</p>
+        </div>)}
+      </div>
+    </div>
+  </div>;
+}
+
+function TractionSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  const built = isId
+    ? [["Produk & operasional", "Paket, alur onboarding, standar verifikasi, dan pipeline lead sudah berjalan."], ["Kanal distribusi", "Jalur rujukan ustaz/KUA dan kehadiran masjid, bukan iklan berbayar."], ["Kebijakan yang tidak ditawar", "Ruby minimum untuk klien internasional; background check sebelum ta'aruf; tanpa pembayaran, tanpa profil."]]
+    : [["Product & operations", "Packages, onboarding flow, verification standards, and lead pipeline are running."], ["Distribution channel", "Ustaz/KUA referral routes and mosque presence—not paid advertising."], ["Non-negotiable policies", "Ruby minimum for international clients; background check before any ta'aruf; no payment, no profiles."]];
+  return <div className="mx-auto w-full max-w-6xl">
+    <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isId ? "Di mana kami sekarang" : "Where we are now"}</p>
+    <h2 className="mx-auto mt-4 max-w-5xl text-center font-serif text-4xl font-bold leading-tight sm:text-6xl">{isId ? <>Kami masih pra-pendapatan. <span className="italic text-[#ef91b1]">Dan saya akan jujur soal itu.</span></> : <>We are still pre-revenue. <span className="italic text-[#ef91b1]">And I will be honest about that.</span></>}</h2>
+    <p className="mx-auto mt-5 max-w-3xl text-center text-lg leading-8 text-white/65">{isId ? "Belum ada perjodohan yang selesai. Pool masih dibangun. Kalau saya berdiri di sini dan menyebut angka besar, saya sedang melakukan persis hal yang membuat industri ini tidak dipercaya." : "There are no completed matches yet. The pool is still being built. If I stood here and quoted big numbers, I would be doing exactly what makes this industry untrustworthy."}</p>
+    <div className="mt-9 grid gap-4 md:grid-cols-3">
+      {built.map(([title, detail], index) => <div key={title} className="rounded-3xl border border-white/15 bg-white/[.07] p-6">
+        <p className="font-serif text-3xl text-[#e6bd69]">0{index + 1}</p>
+        <h3 className="mt-4 text-lg font-bold">{title}</h3>
+        <p className="mt-3 text-sm leading-6 text-white/65">{detail}</p>
+      </div>)}
+    </div>
+    <p className="mt-8 text-center text-lg font-bold text-[#f3c5d4]">{isId ? "Yang sudah terbukti bukan pendapatannya—melainkan bahwa masalahnya nyata dan orang bersedia membayar untuk proses yang benar." : "What is proven is not the revenue—it is that the problem is real and people are willing to pay for a process done properly."}</p>
+  </div>;
+}
+
+function LessonsSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  const lessons = isId
+    ? [["Kepercayaan adalah produknya", "Bukan algoritma pencocokan. Orang membayar karena percaya pada verifikasi dan adab kami—teknologi hanya pendukung."], ["Pendapatan tidak linier", "Bisnis rujukan datang bergelombang. Merencanakan biaya seolah pendapatan stabil adalah cara tercepat untuk mati."], ["Tunda pengeluaran besar", "Tidak ada sewa kantor sampai klien yang membayar memintanya. Tidak ada perekrutan sebelum pendapatan membenarkannya."], ["Menolak klien adalah strategi", "Kami menolak paket Pearl untuk klien internasional walaupun mereka mendesak. Kasus yang salah merusak reputasi lebih mahal dari nilai transaksinya."]]
+    : [["Trust is the product", "Not a matching algorithm. People pay because they believe our verification and our adab—technology is only support."], ["Revenue is not linear", "Referral businesses arrive in waves. Planning your costs as if income were steady is the fastest way to die."], ["Delay the big spending", "No office lease until paying clients ask for one. No hiring before revenue justifies it."], ["Refusing clients is a strategy", "We deny Pearl to international clients even when they push. A wrong-fit case costs more in reputation than it earns in revenue."]];
+  return <div className="mx-auto w-full max-w-6xl">
+    <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isId ? "Yang saya pelajari" : "What I have learned"}</p>
+    <h2 className="mx-auto mt-4 max-w-5xl text-center font-serif text-4xl font-bold leading-tight sm:text-6xl">{isId ? <>Empat pelajaran yang <span className="italic text-[#ef91b1]">tidak diajarkan di buku.</span></> : <>Four lessons that <span className="italic text-[#ef91b1]">the textbooks do not teach.</span></>}</h2>
+    <div className="mt-9 grid gap-4 sm:grid-cols-2">
+      {lessons.map(([title, detail], index) => <div key={title} className="flex gap-5 rounded-3xl border border-white/15 bg-white/[.07] p-6">
+        <span className="font-serif text-3xl text-[#e6bd69]">0{index + 1}</span>
+        <div><h3 className="text-xl font-bold">{title}</h3><p className="mt-2 leading-7 text-white/65">{detail}</p></div>
+      </div>)}
+    </div>
+  </div>;
+}
+
+function EntrepreneurshipCloseSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  return <div className="relative mx-auto w-full max-w-6xl overflow-hidden rounded-[2rem] border border-white/15 text-center shadow-2xl shadow-black/30">
+    <Image src="/presentations-sekolah-islam-mosque-courtyard-v2.png" alt={isId ? "Halaman masjid yang tenang di pagi hari" : "A quiet mosque courtyard in the morning"} fill className="object-cover" sizes="(max-width: 1024px) 95vw, 1152px" />
+    <div className="relative flex min-h-[500px] items-center bg-[linear-gradient(90deg,rgba(16,29,59,.96)_0%,rgba(16,29,59,.82)_46%,rgba(16,29,59,.20)_100%)] p-8 sm:min-h-[540px] sm:p-12">
+      <div className="mx-auto max-w-4xl">
+        <p className="text-xs font-bold uppercase tracking-[.28em] text-[#e6bd69]">{isId ? "Penutup" : "Closing"}</p>
+        <h2 className="mt-7 font-serif text-5xl font-bold leading-tight sm:text-7xl">{isId ? <>Jangan tanya berapa yang akan kalian hasilkan. <span className="italic text-[#ef91b1]">Tanyakan apa yang akan dikalikan.</span></> : <>Do not ask how much you will earn. <span className="italic text-[#ef91b1]">Ask what it will multiply.</span></>}</h2>
+        <p className="mx-auto mt-8 max-w-3xl text-xl leading-9 text-white/85">{isId ? "ʿUthmān punya harta dan punya tujuan, lalu keduanya bertemu di Tabūk. ʿAbd al-Raḥmān punya harta dan tetap menangis, karena ia tahu harta selalu menuntut jawaban. Keduanya benar. Yang membedakan bukan jumlahnya—melainkan untuk apa." : "ʿUthmān had wealth and he had purpose, and the two met at Tabūk. ʿAbd al-Raḥmān had wealth and still wept, because he knew wealth always demands an answer. Both were right. The difference was never the amount—it was what it was for."}</p>
+        <div className="mx-auto mt-10 h-1.5 w-24 rounded-full bg-[#e6bd69]" />
+        <p className="mt-9 text-2xl font-bold text-[#e6bd69] sm:text-3xl">{isId ? "Cari masalah yang layak dikalikan. Lalu bangun dengan jujur." : "Find a problem worth multiplying. Then build it honestly."}</p>
+        <Link href="/presentations" className="mt-12 inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-3 text-sm font-bold text-white/90 transition hover:bg-white/10"><ArrowLeft className="h-4 w-4" /> {isId ? "Lihat semua presentasi" : "View all presentations"}</Link>
+      </div>
+    </div>
+  </div>;
+}
+
+function SalesMethodSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  const funnel = isId
+    ? [["Rujukan tepercaya", "Ustaz, KUA, dan klien lama. Perkenalan datang bersama kepercayaan yang sudah jadi—bukan dari orang asing."], ["Percakapan, bukan penawaran", "WhatsApp dibalas manusia. Kami bertanya tentang keadaan mereka sebelum menyebut satu pun harga."], ["Diagnosis dulu", "Kesiapan, kriteria, dan situasi keluarga digali. Baru setelah itu paket yang cocok muncul dengan sendirinya."], ["Harga sesuai kebutuhan", "Klien memilih kedalaman dukungan. Kami tidak menaikkan paket yang tidak mereka butuhkan."], ["Berani menolak", "Kalau tidak cocok, kami katakan tidak cocok. Satu klien yang salah lebih mahal daripada kehilangan satu penjualan."]]
+    : [["Trusted referral", "Ustaz, KUA, and past clients. The introduction arrives with trust already attached—not from a stranger."], ["A conversation, not a pitch", "A human answers the WhatsApp. We ask about their situation before naming a single price."], ["Diagnose first", "Readiness, criteria, and family situation are explored. Only then does the right package become obvious."], ["Price the need", "The client chooses the depth of support. We do not upsell a tier they do not need."], ["Willing to refuse", "If it is not a fit, we say so. One wrong client costs more than one lost sale."]];
+  return <div className="mx-auto w-full max-w-6xl">
+    <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isId ? "Cara kami menjual" : "How we sell"}</p>
+    <h2 className="mx-auto mt-4 max-w-5xl text-center font-serif text-3xl font-bold leading-tight sm:text-5xl">{isId ? <>Kami tidak mengejar pelanggan. <span className="italic text-[#ef91b1]">Kami dibawa kepada mereka.</span></> : <>We do not chase customers. <span className="italic text-[#ef91b1]">We are carried to them.</span></>}</h2>
+    <p className="mx-auto mt-4 max-w-3xl text-center text-base leading-7 text-white/65">{isId ? "Di produk yang menyentuh kehormatan keluarga, iklan tidak bekerja. Yang bekerja adalah kepercayaan yang dipinjamkan oleh orang yang sudah dipercaya." : "In a product that touches family honour, advertising does not work. What works is trust lent to you by someone already trusted."}</p>
+    <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      {funnel.map(([title, detail], index) => <div key={title} className="rounded-2xl border border-white/15 bg-white/[.07] p-5">
+        <p className="font-serif text-2xl text-[#e6bd69]">0{index + 1}</p>
+        <h3 className="mt-3 text-base font-bold leading-6">{title}</h3>
+        <p className="mt-2 text-[.8rem] leading-6 text-white/65">{detail}</p>
+      </div>)}
+    </div>
+    <div className="mt-7 grid gap-4 md:grid-cols-2">
+      <div className="rounded-2xl border border-[#ef91b1]/35 bg-[#ef91b1]/[.08] p-6">
+        <p className="text-sm font-bold uppercase tracking-[.18em] text-[#f3c5d4]">{isId ? "Yang kami hindari" : "What we avoid"}</p>
+        <p className="mt-3 text-sm leading-6 text-white/75">{isId ? "Iklan Facebook, outreach dingin, penemuan lewat aplikasi, dan janji jumlah profil yang tidak bisa kami penuhi. Semua itu murah di awal dan mahal di akhir." : "Facebook ads, cold outreach, app-based discovery, and promising profile volume we cannot deliver. All of it is cheap at the start and expensive at the end."}</p>
+      </div>
+      <div className="rounded-2xl border border-[#e6bd69]/35 bg-[#e6bd69]/[.08] p-6">
+        <p className="text-sm font-bold uppercase tracking-[.18em] text-[#e6bd69]">{isId ? "Pelajaran untuk kalian" : "The lesson for you"}</p>
+        <p className="mt-3 text-sm leading-6 text-white/75">{isId ? "Semakin sensitif produkmu, semakin pendek jalur kepercayaan yang dibutuhkan. Cari siapa yang sudah dipercaya oleh pasarmu—lalu layani mereka, jangan beli mereka." : "The more sensitive your product, the shorter the trust path it needs. Find who your market already trusts—then serve them, do not buy them."}</p>
+      </div>
+    </div>
+  </div>;
+}
+
+type ExpandableItem = { label: Bilingual; teaser: Bilingual; heading: Bilingual; body: Bilingual; bullets: { id: string[]; en: string[] } };
+
+const routeItems: ExpandableItem[] = [
+  {
+    label: { id: "Aplikasi kencan", en: "Dating apps" },
+    teaser: { id: "Cepat, luas, mudah dimulai.", en: "Fast, wide, easy to start." },
+    heading: { id: "Banyak match, sedikit arah menuju nikah.", en: "Many matches, little direction towards marriage." },
+    body: {
+      id: "Aplikasi kencan menyelesaikan masalah akses—dan hanya itu. Model bisnisnya menuntut kalian tetap berada di dalam aplikasi, bukan keluar dari aplikasi karena sudah menikah. Insentifnya berlawanan dengan tujuan penggunanya.",
+      en: "Dating apps solve the access problem—and only that. Their business model requires you to stay inside the app, not to leave it because you got married. The incentives run against the user's own goal.",
+    },
+    bullets: {
+      id: ["Niat tidak pernah diverifikasi: orang yang ingin menikah dan orang yang hanya ingin diperhatikan berada di kolam yang sama.", "Verifikasi identitas dangkal; latar belakang, penghasilan, dan status pernikahan tidak pernah diperiksa.", "Swipe tanpa henti membuat manusia terasa seperti pilihan yang bisa dibuang.", "Kedekatan emosional tumbuh lewat chat berminggu-minggu sebelum ada komitmen apa pun.", "Keluarga baru muncul di akhir—ketika masalah sudah terjadi."],
+      en: ["Intent is never verified: someone seeking marriage and someone seeking attention sit in the same pool.", "Identity checks are shallow; background, income, and marital status are never examined.", "Endless swiping makes human beings feel like disposable options.", "Emotional closeness grows over weeks of chat before any commitment exists.", "Family appears only at the end—once a problem has already happened."],
+    },
+  },
+  {
+    label: { id: "Referensi keluarga", en: "Family referrals" },
+    teaser: { id: "Kepercayaan dan niat baik sejak hari pertama.", en: "Trust and good intention from day one." },
+    heading: { id: "Aman dan tepercaya—tetapi sangat terbatas.", en: "Safe and trusted—but severely limited." },
+    body: {
+      id: "Jalur ini punya kualitas yang tidak dimiliki aplikasi mana pun: orang yang memperkenalkan menanggung reputasinya sendiri. Masalahnya bukan kepercayaan—masalahnya adalah skala dan kejujuran saat menolak.",
+      en: "This route has a quality no app can buy: the person introducing you is staking their own reputation. The problem is not trust—it is scale, and the honesty of saying no.",
+    },
+    bullets: {
+      id: ["Jumlah kandidat biasanya bisa dihitung dengan jari.", "Kecocokan nilai, komunikasi, dan kesiapan hampir tidak pernah dinilai secara terstruktur.", "Menolak terasa seperti menghina keluarga yang memperkenalkan.", "Menerima bisa terjadi karena tekanan sosial, bukan karena keyakinan.", "Kalau gagal, hubungan antar keluarga ikut menanggung akibatnya."],
+      en: ["The candidate pool can usually be counted on one hand.", "Values, communication, and readiness are almost never assessed in a structured way.", "Saying no feels like insulting the family who made the introduction.", "Saying yes can happen from social pressure rather than conviction.", "If it fails, the relationship between the two families carries the damage."],
+    },
+  },
+  {
+    label: { id: "Ustaz & tokoh komunitas", en: "Ustaz & community leaders" },
+    teaser: { id: "Nilai yang sejalan dan kepercayaan nyata.", en: "Aligned values and real trust." },
+    heading: { id: "Dipercaya—tetapi bukan sebuah sistem.", en: "Trusted—but not a system." },
+    body: {
+      id: "Ini adalah jalur dengan kepercayaan tertinggi di masyarakat kita, dan justru karena itu ia menjadi kanal distribusi kami. Tetapi kepercayaan bukan kapasitas. Seorang ustaz punya jamaah ribuan orang dan waktu dua puluh empat jam sehari.",
+      en: "This is the highest-trust route in our society, which is exactly why it became our distribution channel. But trust is not capacity. An ustaz has thousands of congregants and twenty-four hours in a day.",
+    },
+    bullets: {
+      id: ["Matchmaking bukan pekerjaan utama mereka dan tidak dibayar sebagai pekerjaan.", "Tidak ada pool kandidat yang terverifikasi—hanya orang-orang yang kebetulan mereka kenal.", "Tidak ada standar untuk menilai kesiapan atau kecocokan.", "Tidak ada sistem tindak lanjut: setelah diperkenalkan, prosesnya berhenti.", "Beban koordinasi jatuh pada satu orang yang sudah kelebihan beban."],
+      en: ["Matchmaking is not their main job and is not paid as one.", "There is no verified candidate pool—only the people they happen to know.", "There is no standard for assessing readiness or compatibility.", "There is no follow-up system: after the introduction, the process stops.", "The coordination burden falls on one already-overloaded person."],
+    },
+  },
+  {
+    label: { id: "Bertemu alami", en: "Meeting naturally" },
+    teaser: { id: "Terasa spontan dan tidak dibuat-buat.", en: "Feels spontaneous and unforced." },
+    heading: { id: "Harapan tanpa proses.", en: "Hope without a process." },
+    body: {
+      id: "Ini bukan sebuah strategi—ini adalah ketiadaan strategi yang diberi nama indah. Kampus, kantor, atau perjalanan memang bisa mempertemukan orang, tetapi tidak ada satu pun mekanisme yang memastikan orang itu layak dinikahi.",
+      en: "This is not a strategy—it is the absence of one, given a beautiful name. Campus, work, or travel genuinely can bring people together, but nothing in it verifies that the person is worth marrying.",
+    },
+    bullets: {
+      id: ["Sepenuhnya bergantung pada kebetulan dan lingkaran sosial yang sempit.", "Niat hampir tidak pernah dinyatakan di awal—keduanya menebak.", "Perasaan tumbuh lebih dulu, nilai dan kesiapan dibicarakan belakangan.", "Latar belakang dan karakter tidak pernah diuji oleh siapa pun.", "Karena tidak ada bingkai yang jelas, prosesnya mudah berubah menjadi rahasia."],
+      en: ["It depends entirely on chance and a narrow social circle.", "Intent is almost never stated up front—both sides are guessing.", "Feelings grow first; values and readiness are discussed later.", "Background and character are never tested by anyone.", "With no clear frame, the process easily turns into something secret."],
+    },
+  },
+];
+
+const processItems: ExpandableItem[] = [
+  {
+    label: { id: "01 · Dengarkan cerita", en: "01 · Listen to your story" },
+    teaser: { id: "Wawancara mendalam, bukan formulir.", en: "A deep interview, not a form." },
+    heading: { id: "Kami mulai dari orangnya, bukan dari kriterianya.", en: "We start with the person, not the checklist." },
+    body: { id: "Sebelum ada satu profil pun, kami duduk bersama klien secara privat. Tujuan menikah, nilai, batasan, kondisi keluarga, dan gambaran hidup lima tahun ke depan dibicarakan. Dari sini profil dibangun—bukan dari daftar keinginan yang ditulis sendiri.", en: "Before a single profile exists, we sit privately with the client. Marriage goals, values, boundaries, family situation, and their picture of life five years from now are all discussed. The profile is built from this—not from a self-written wish list." },
+    bullets: { id: ["Menyelesaikan: proses yang dimulai dari tebakan atau profil dangkal.", "Biaya nyata: waktu manusia, bukan formulir otomatis."], en: ["Solves: a process that begins with guessing or a shallow profile.", "Real cost: human hours, not an automated form."] },
+  },
+  {
+    label: { id: "02 · Uji kesiapan", en: "02 · Test readiness" },
+    teaser: { id: "Asesmen psikologi, bukan klaim sendiri.", en: "Psychological assessment, not self-declaration." },
+    heading: { id: "Siap menikah adalah sesuatu yang diuji, bukan dinyatakan.", en: "Readiness is something tested, not announced." },
+    body: { id: "Hampir semua orang mengatakan dirinya siap menikah. Asesmen psikologi memberi gambaran yang lebih jujur tentang kematangan, cara mengelola konflik, dan harapan yang realistis—dan hasilnya dibicarakan kembali dengan klien.", en: "Nearly everyone says they are ready for marriage. A psychological assessment gives a more honest picture of maturity, conflict handling, and realistic expectations—and the result is discussed back with the client." },
+    bullets: { id: ["Menyelesaikan: pernikahan yang gagal karena kesiapan tidak pernah diperiksa.", "Ini juga melindungi pihak lain di dalam pool kami."], en: ["Solves: marriages that fail because readiness was never examined.", "It also protects the other side inside our pool."] },
+  },
+  {
+    label: { id: "03 · Verifikasi", en: "03 · Verify" },
+    teaser: { id: "Background check sebelum bertemu siapa pun.", en: "Background check before meeting anyone." },
+    heading: { id: "Standar kami: verifikasi selesai sebelum ada pertemuan.", en: "Our standard: verification completes before any meeting." },
+    body: { id: "Identitas, status pernikahan, pekerjaan, dan informasi penting lain ditinjau sesuai paket. Ini adalah biaya terbesar kami per klien—dan aturan yang tidak pernah kami tawar: tidak ada ta'aruf sebelum verifikasi selesai.", en: "Identity, marital status, employment, and other critical information are reviewed according to the package. This is our largest cost per client—and the rule we never bend: no ta'aruf before verification is complete." },
+    bullets: { id: ["Menyelesaikan: risiko profil palsu, status yang disembunyikan, dan janji yang tidak bisa dipercaya.", "Alasan utama keluarga bersedia mempercayai kami."], en: ["Solves: fake profiles, hidden marital status, and promises that cannot be trusted.", "The main reason families are willing to trust us."] },
+  },
+  {
+    label: { id: "04 · Bagikan profil", en: "04 · Share profiles" },
+    teaser: { id: "Privat, dan hanya setelah pembayaran.", en: "Private, and only after payment." },
+    heading: { id: "Di sinilah jam layanan klien mulai berjalan.", en: "This is where the client's service window begins." },
+    body: { id: "Profil yang cocok dibagikan secara privat kepada kedua pihak. Jendela layanan klien dimulai saat profil pertama dikirim—bukan saat mereka membayar—sehingga tidak ada yang kehilangan waktu karena pool kami masih bertumbuh.", en: "Matching profiles are shared privately with both sides. The client's service window starts when the first profiles are sent—not when they pay—so nobody loses time because our pool is still growing." },
+    bullets: { id: ["Menyelesaikan: klien yang membayar lalu menunggu tanpa kejelasan.", "Aturan tetap: tanpa pembayaran, tidak ada profil yang dibagikan."], en: ["Solves: clients who pay and then wait with no clarity.", "Standing rule: no payment, no profiles shared."] },
+  },
+  {
+    label: { id: "05 · Persetujuan dua pihak", en: "05 · Both sides consent" },
+    teaser: { id: "Tidak ada kontak yang dipaksakan.", en: "No contact is ever forced." },
+    heading: { id: "Menolak harus semudah menerima.", en: "Saying no must be as easy as saying yes." },
+    body: { id: "Kedua pihak menilai secara privat dan menjawab kepada kami, bukan kepada satu sama lain. Penolakan disampaikan tanpa konfrontasi dan tanpa rasa malu. Tidak ada nomor telepon yang berpindah tangan sebelum keduanya setuju.", en: "Each side considers privately and answers to us, not to each other. A refusal is delivered without confrontation and without embarrassment. No phone number changes hands before both agree." },
+    bullets: { id: ["Menyelesaikan: rasa canggung yang membuat orang menerima sesuatu yang tidak mereka inginkan.", "Ini persis kelemahan terbesar jalur referensi keluarga."], en: ["Solves: the awkwardness that makes people accept what they do not want.", "This is precisely the biggest weakness of the family-referral route."] },
+  },
+  {
+    label: { id: "06 · Pertemuan online", en: "06 · Meet online first" },
+    teaser: { id: "Langkah kecil sebelum langkah besar.", en: "A small step before the big one." },
+    heading: { id: "Pertemuan berbiaya rendah sebelum berkomitmen lebih jauh.", en: "A low-cost meeting before committing further." },
+    body: { id: "Sebuah pertemuan online singkat yang terjadwal dan terarah. Tujuannya bukan mengobrol berminggu-minggu, melainkan memastikan bahwa pertemuan tatap muka memang layak diadakan untuk kedua belah pihak.", en: "A short, scheduled, purposeful online meeting. The goal is not weeks of chatting—it is to confirm that an in-person meeting is genuinely worth holding for both people." },
+    bullets: { id: ["Menyelesaikan: biaya dan tekanan pertemuan besar yang ternyata tidak cocok sejak menit pertama.", "Opsional, dan ditagih terpisah dengan harga rendah."], en: ["Solves: the cost and pressure of a large meeting that was mismatched from the first minute.", "Optional, and billed separately at a low price."] },
+  },
+  {
+    label: { id: "07 · Joble — Jodohmu Table", en: "07 · Joble — the Jodohmu Table" },
+    teaser: { id: "Pertemuan nyata yang dirancang, bukan kencan.", en: "A designed real-world meeting, not a date." },
+    heading: { id: "Joble adalah inti dari layanan kami.", en: "The Joble is the heart of what we sell." },
+    body: { id: "Joble berarti Jodohmu Table: pertemuan tatap muka yang direncanakan penuh—tempat privat, waktu, hidangan, format percakapan, tamu tepercaya, dan fasilitator bila diinginkan. Semua detail disepakati kedua pihak sebelum siapa pun bertemu. Kalian datang sudah tahu tujuannya, formatnya, siapa yang hadir, dan apa yang terjadi setelahnya.", en: "Joble means Jodohmu Table: a fully planned in-person meeting—private venue, timing, food, conversation format, trusted guests, and a facilitator if wanted. Every detail is agreed by both sides before anyone meets. You arrive already knowing the purpose, the format, who will be present, and what happens afterwards." },
+    bullets: { id: ["Pearl Joble: satu pertemuan dengan hidangan yang disiapkan; satu tamu tepercaya dan satu fasilitator pilihan.", "Ruby Joble: dua pertemuan dengan buffet; hingga dua tamu tepercaya dan satu fasilitator pilihan.", "Diamond Joble: tiga pertemuan privat di hotel bintang 4–5 dengan buffet; hingga dua tamu dan fasilitator sudah termasuk.", "Fasilitator adalah satu orang—imam, pemuka agama, tim Jodohmu, atau tidak sama sekali. Pilihan kalian, dengan persetujuan pihak lain."], en: ["Pearl Joble: one meeting with a prepared meal; one trusted guest and one chosen facilitator.", "Ruby Joble: two meetings with buffet dining; up to two trusted guests and one chosen facilitator.", "Diamond Joble: three private meetings at a 4- or 5-star hotel with buffet dining; up to two guests and a facilitator included.", "A facilitator is one person—an imam, a faith leader, the Jodohmu team, or none at all. Your choice, subject to the other side's agreement."] },
+  },
+  {
+    label: { id: "08 · Ruang untuk memilih", en: "08 · Space to decide" },
+    teaser: { id: "Merenung sendiri, menjawab secara privat.", en: "Reflect alone, answer privately." },
+    heading: { id: "Keputusan diambil tanpa ada orang yang menunggu di depan wajah kalian.", en: "The decision is made with nobody waiting in your face." },
+    body: { id: "Setelah Joble, masing-masing pulang dan merenung sendiri. Jawaban disampaikan kepada kami secara privat, lalu kami sampaikan dengan cara yang menjaga kehormatan kedua pihak. Tidak ada yang dipaksa melanjutkan.", en: "After the Joble, each person goes home and reflects alone. The answer is given to us privately, and we deliver it in a way that protects the dignity of both sides. Nobody is pushed to continue." },
+    bullets: { id: ["Menyelesaikan: tekanan dari keluarga, fasilitator, atau dari proses itu sendiri.", "Umpan balik penolakan disampaikan jujur—dan sering menjadi alasan klien naik ke paket yang lebih dalam."], en: ["Solves: pressure from family, facilitators, or the process itself.", "Rejection feedback is given honestly—and often becomes the reason a client moves to a deeper package."] },
+  },
+  {
+    label: { id: "09 · Pertemuan keluarga", en: "09 · The family gathering" },
+    teaser: { id: "Keluarga hadir saat waktunya tepat.", en: "Family joins at the right time." },
+    heading: { id: "Keluarga masuk untuk mendukung—bukan untuk mengambil alih.", en: "Family enters to support—not to take over." },
+    body: { id: "Ketika kedua orang siap melangkah lebih serius, kami memfasilitasi pertemuan keluarga. Waktunya sengaja diletakkan di sini: cukup awal agar keluarga tidak merasa dilangkahi, cukup lambat agar pilihan tetap milik dua orang yang akan menikah.", en: "When both people are ready to move to a more serious stage, we facilitate the family gathering. Its timing is deliberate: early enough that families do not feel bypassed, late enough that the choice still belongs to the two people who will marry." },
+    bullets: { id: ["Menyelesaikan: keluarga yang datang terlambat, atau yang datang terlalu awal lalu mengambil alih.", "Ini juga langkah dengan nilai transaksi tertinggi dalam layanan kami."], en: ["Solves: families arriving too late, or arriving too early and taking over.", "It is also the highest-value single step in our service."] },
+  },
+];
+
+function ExpandableCardsSlide({ language, variant }: { language: "id" | "en"; variant: "routes" | "process" }) {
+  const isId = language === "id";
+  const isRoutes = variant === "routes";
+  const items = isRoutes ? routeItems : processItems;
+  const [open, setOpen] = useState(0);
+  const active = items[open];
+  return <div className="mx-auto w-full max-w-6xl">
+    <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isRoutes ? (isId ? "Lanskap kompetitif" : "The competitive landscape") : (isId ? "Proses Jodohmu" : "The Jodohmu process")}</p>
+    <h2 className={`mx-auto mt-3 max-w-5xl text-center font-serif font-bold leading-tight ${isRoutes ? "text-3xl sm:text-5xl" : "text-2xl sm:text-4xl"}`}>
+      {isRoutes ? (isId ? <>Empat cara yang sudah ada—<span className="italic text-[#ef91b1]">dan celah di keempatnya.</span></> : <>Four existing routes—<span className="italic text-[#ef91b1]">and the gap in all four.</span></>)
+                : (isId ? <>Sembilan langkah, <span className="italic text-[#ef91b1]">dari cerita sampai keluarga.</span></> : <>Nine steps, <span className="italic text-[#ef91b1]">from story to family.</span></>)}
+    </h2>
+    <p className="mt-2 text-center text-[.65rem] font-semibold uppercase tracking-[.18em] text-white/40">{isId ? "Klik kartu untuk membuka detail" : "Click a card to open the detail"}</p>
+    <div className={`grid gap-2.5 ${isRoutes ? "mt-6 sm:grid-cols-2 lg:grid-cols-4" : "mt-4 sm:grid-cols-3 lg:grid-cols-5"}`}>
+      {items.map((item, index) => {
+        const isOpen = index === open;
+        return <button key={item.label.en} onClick={() => setOpen(index)} className={`rounded-2xl border p-4 text-left transition ${isOpen ? "border-[#e6bd69] bg-[#e6bd69]/[.14]" : "border-white/15 bg-white/[.06] hover:border-white/35 hover:bg-white/[.1]"}`}>
+          <h3 className={`text-sm font-bold leading-5 ${isOpen ? "text-[#e6bd69]" : "text-white"}`}>{isId ? item.label.id : item.label.en}</h3>
+          <p className="mt-1.5 text-[.72rem] leading-5 text-white/55">{isId ? item.teaser.id : item.teaser.en}</p>
+        </button>;
+      })}
+    </div>
+    <div className={`rounded-3xl border border-[#e6bd69]/30 bg-white/[.06] p-6 sm:p-7 ${isRoutes ? "mt-5 min-h-[15rem]" : "mt-4 min-h-[11rem]"}`}>
+      <h3 className="font-serif text-2xl font-bold text-[#e6bd69] sm:text-3xl">{isId ? active.heading.id : active.heading.en}</h3>
+      <p className="mt-3 max-w-4xl text-[.92rem] leading-7 text-white/80">{isId ? active.body.id : active.body.en}</p>
+      <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+        {(isId ? active.bullets.id : active.bullets.en).map((point) => <li key={point} className="flex gap-3 text-[.82rem] leading-6 text-white/65">
+          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#ef91b1]" />{point}
+        </li>)}
+      </ul>
+    </div>
+    {isRoutes && <p className="mt-4 text-center text-sm font-bold text-[#f3c5d4]">{isId ? "Tidak ada satu pun yang menggabungkan akses, verifikasi, adab, dan keluarga dalam satu proses. Celah itulah usahanya." : "Not one of them combines access, verification, adab, and family in a single process. That gap is the business."}</p>}
+  </div>;
+}
+
+function BusinessModelIntroSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  return <div className="mx-auto w-full max-w-4xl text-center">
+    <p className="text-xs font-bold uppercase tracking-[.28em] text-[#e6bd69]">{isId ? "Bagian dua" : "Part two"}</p>
+    <h2 className="mt-7 font-serif text-5xl font-bold leading-[1.08] sm:text-7xl">{isId ? <>Sekarang,<br /><span className="italic text-[#ef91b1]">mari lihat model bisnisnya.</span></> : <>Now,<br /><span className="italic text-[#ef91b1]">let&rsquo;s look at the business model.</span></>}</h2>
+    <p className="mx-auto mt-9 max-w-2xl text-xl leading-9 text-white/70">{isId ? "Kalian sudah melihat masalahnya dan melihat prosesnya. Pertanyaan berikutnya adalah pertanyaan kelas kewirausahaan: bagaimana semua ini menghasilkan uang—dan berapa biayanya untuk dijalankan?" : "You have seen the problem and you have seen the process. The next question is the entrepreneurship question: how does any of this make money—and what does it cost to run?"}</p>
+    <div className="mx-auto mt-11 flex max-w-2xl items-center gap-5">
+      <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#e6bd69]/60" />
+      <Coins className="h-8 w-8 text-[#e6bd69]" />
+      <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#e6bd69]/60" />
+    </div>
+  </div>;
+}

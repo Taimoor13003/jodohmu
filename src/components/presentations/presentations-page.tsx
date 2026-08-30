@@ -38,7 +38,7 @@ export function PresentationsPage() {
         </h2>
         <div className="mt-9 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <Link
-            href="/presentations/sekolah-islam"
+            href="/presentations/entrepreneurship"
             className="group overflow-hidden rounded-[2rem] border border-[#dce5f5] bg-white shadow-[0_12px_35px_rgba(24,51,111,.08)] transition hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(24,51,111,.16)]"
           >
             <div className="relative aspect-[16/10] overflow-hidden bg-[#10275b]">
@@ -51,17 +51,17 @@ export function PresentationsPage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#10275b]/65 via-transparent to-transparent" />
               <span className="absolute bottom-5 left-5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-extrabold text-[#173b81]">
-                {id ? "Untuk Muslim" : "For Muslims"}
+                {id ? "Kewirausahaan" : "Entrepreneurship"}
               </span>
             </div>
             <div className="p-6 sm:p-7">
               <h3 className="font-serif text-2xl font-bold text-[#10275b]">
-                {id ? "Menemukan Pasangan Tanpa Mengorbankan Nilai" : "Finding the Right Partner Without Compromising Your Values"}
+                {id ? "Uang, Tujuan, dan Membangun Jodohmu" : "Money, Purpose, and Building Jodohmu"}
               </h3>
               <p className="mt-3 text-sm leading-6 text-[#65718a]">
                 {id
-                  ? "Jalan Muslim untuk menemukan pasangan yang tepat sambil menjaga kehormatan, nilai, dan arah menuju pernikahan."
-                  : "A Muslim path to finding the right partner while protecting modesty, values, and the direction of marriage."}
+                  ? "Bagaimana Islam memandang harta, mengapa uang harus disatukan dengan tujuan, dan bagaimana pemikiran itu menjadi sebuah startup nyata."
+                  : "How Islam frames wealth, why money must be joined to purpose, and how that thinking became a real startup."}
               </p>
               <span className="mt-6 inline-flex items-center gap-2 text-sm font-extrabold text-[#c62d5c]">
                 {id ? "Lihat presentasi" : "View presentation"} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

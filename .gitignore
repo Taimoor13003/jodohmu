@@ -10,3 +10,8 @@ src/*adminsdk*.json
 src/*service*account*.json
 src/* copy.json
 src/fb.json
+
+# local scratch / generated
+output/
+tmp/
+build_contract*.py
