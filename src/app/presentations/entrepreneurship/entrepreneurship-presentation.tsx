@@ -391,12 +391,12 @@ const indonesianSlides = [
   <ExpandableCardsSlide key="how-it-works" language="id" variant="process" />,
   <PrinciplesSlide key="principles" content={indonesianContent.principles} />,
   <BusinessModelIntroSlide key="business-model-intro" language="id" />,
-  <BusinessModelSlide key="business-model" language="id" />,
   <SalesMethodSlide key="sales-method" language="id" />,
   <InteractivePackagesSlide key="packages" language="id" />,
   <ColdStartSlide key="cold-start" language="id" />,
   <BusinessRulesSlide key="business-rules" language="id" />,
   <EntrepreneurshipCloseSlide key="close" language="id" />,
+  <ContactSlide key="contact" language="id" />,
 ];
 
 const englishSlides = [
@@ -417,12 +417,12 @@ const englishSlides = [
   <ExpandableCardsSlide key="how-it-works" language="en" variant="process" />,
   <PrinciplesSlide key="principles" content={englishContent.principles} />,
   <BusinessModelIntroSlide key="business-model-intro" language="en" />,
-  <BusinessModelSlide key="business-model" language="en" />,
   <SalesMethodSlide key="sales-method" language="en" />,
   <InteractivePackagesSlide key="packages" language="en" />,
   <ColdStartSlide key="cold-start" language="en" />,
   <BusinessRulesSlide key="business-rules" language="en" />,
   <EntrepreneurshipCloseSlide key="close" language="en" />,
+  <ContactSlide key="contact" language="en" />,
 ];
 
 export function EntrepreneurshipPresentation() {
@@ -456,7 +456,7 @@ export function EntrepreneurshipPresentation() {
     <div className="relative flex h-full flex-col">
       <header className="z-20 flex items-center justify-between px-6 py-5 sm:px-10">
         <Link href="/presentations" aria-label={language === "id" ? "Kembali ke semua presentasi" : "Back to all presentations"}><Image src="/jodohmu-logo.png" alt="Jodohmu" width={45} height={45} className="h-10 w-10 object-contain brightness-0 invert" priority /></Link>
-        <p className="hidden text-xs font-bold uppercase tracking-[.24em] text-white/55 sm:block">{language === "id" ? "Jodohmu · Uang, tujuan, dan membangun usaha yang jujur" : "Jodohmu · Money, purpose, and building honestly"}</p>
+        <p className="hidden text-xs font-bold uppercase tracking-[.24em] text-white/55 sm:block">{language === "id" ? "Uang, tujuan, dan membangun usaha yang jujur" : "Money, purpose, and building honestly"}</p>
         <div className="flex gap-2"><button onClick={() => { setLanguage(language === "id" ? "en" : "id"); setSlide(0); }} className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-2 text-xs font-semibold text-white/75 transition hover:bg-white/10 hover:text-white" aria-label={language === "id" ? "Switch to English" : "Ganti ke Bahasa Indonesia"}><Languages className="h-4 w-4" /><span className="hidden sm:inline">{language === "id" ? "English" : "Indonesia"}</span></button><button onClick={() => void toggleFullscreen()} className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-2 text-xs font-semibold text-white/75 transition hover:bg-white/10 hover:text-white" aria-label={language === "id" ? "Layar penuh" : "Full screen"}><Expand className="h-4 w-4" /><span className="hidden sm:inline">{isFullscreen ? (language === "id" ? "Keluar layar penuh" : "Exit full screen") : (language === "id" ? "Layar penuh" : "Full screen")}</span></button></div>
       </header>
       <div className="relative flex flex-1 items-center overflow-hidden"><div className="flex h-full w-full transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)]" style={{ transform: `translateX(-${slide * 100}%)` }}>{slides.map((content, index) => <section key={index} aria-hidden={slide !== index} className="flex h-full w-full shrink-0 items-center justify-center px-7 pb-20 pt-2 sm:px-16 lg:px-24">{content}</section>)}</div></div>
@@ -1350,5 +1350,30 @@ function BusinessRulesSlide({ language }: { language: "id" | "en" }) {
       </div>)}
     </div>
     <p className="mt-7 text-center text-base font-bold text-[#f3c5d4]">{isId ? "Aturan-aturan ini tidak akan menyelamatkan usaha yang tidak punya tujuan. Ia hanya mempercepat usaha yang sudah punya." : "None of these will save a business with no purpose behind it. They only speed up one that already has it."}</p>
+  </div>;
+}
+
+function ContactSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  const cards = [
+    { src: "/qr-instagram-jodohmu.svg", label: "Instagram", handle: "@jodohmu_official", hint: isId ? "Cerita, edukasi, dan kabar terbaru." : "Stories, education, and updates." },
+    { src: "/qr-website-jodohmu.svg", label: "Website", handle: "www.jodohmu.com", hint: isId ? "Paket, proses, dan cara memulai." : "Packages, process, and how to begin." },
+    { src: "/qr-whatsapp-jodohmu.svg", label: "WhatsApp", handle: "0811 2221 0303", hint: isId ? "Bicara langsung dengan tim kami." : "Talk to our team directly." },
+  ];
+  return <div className="mx-auto w-full max-w-6xl">
+    <p className="text-center text-xs font-bold uppercase tracking-[.28em] text-[#e6bd69]">{isId ? "Terima kasih" : "Thank you"}</p>
+    <h2 className="mx-auto mt-3 max-w-4xl text-center font-serif text-3xl font-bold leading-tight sm:text-5xl">{isId ? <>Mari tetap <span className="italic text-[#ef91b1]">terhubung.</span></> : <>Let&rsquo;s stay <span className="italic text-[#ef91b1]">connected.</span></>}</h2>
+    <p className="mx-auto mt-4 max-w-2xl text-center text-base leading-7 text-white/65">{isId ? "Pindai salah satu kode di bawah ini—untuk bertanya, untuk belajar, atau kalau nanti kalian membangun sesuatu dan ingin berdiskusi." : "Scan any of these—to ask a question, to keep learning, or when you build something of your own and want to talk it through."}</p>
+    <div className="mt-8 grid gap-5 sm:grid-cols-3">
+      {cards.map((card) => <div key={card.label} className="flex flex-col items-center rounded-3xl border border-white/15 bg-white/[.07] p-6">
+        <div className="rounded-2xl bg-white p-3">
+          <Image src={card.src} alt={`${card.label} QR — ${card.handle}`} width={168} height={168} className="h-[10.5rem] w-[10.5rem]" unoptimized />
+        </div>
+        <p className="mt-5 text-xs font-bold uppercase tracking-[.22em] text-[#e6bd69]">{card.label}</p>
+        <p className="mt-2 text-lg font-bold text-white">{card.handle}</p>
+        <p className="mt-2 text-center text-[.8rem] leading-5 text-white/60">{card.hint}</p>
+      </div>)}
+    </div>
+    <p className="mt-8 text-center text-lg font-bold text-[#f3c5d4]">{isId ? "Cari masalah yang layak dikerjakan. Lalu bangun dengan jujur." : "Find a problem worth doing. Then build it honestly."}</p>
   </div>;
 }
