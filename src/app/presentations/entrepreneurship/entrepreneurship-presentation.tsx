@@ -395,8 +395,7 @@ const indonesianSlides = [
   <SalesMethodSlide key="sales-method" language="id" />,
   <InteractivePackagesSlide key="packages" language="id" />,
   <ColdStartSlide key="cold-start" language="id" />,
-  <TractionSlide key="traction" language="id" />,
-  <LessonsSlide key="lessons" language="id" />,
+  <BusinessRulesSlide key="business-rules" language="id" />,
   <EntrepreneurshipCloseSlide key="close" language="id" />,
 ];
 
@@ -422,8 +421,7 @@ const englishSlides = [
   <SalesMethodSlide key="sales-method" language="en" />,
   <InteractivePackagesSlide key="packages" language="en" />,
   <ColdStartSlide key="cold-start" language="en" />,
-  <TractionSlide key="traction" language="en" />,
-  <LessonsSlide key="lessons" language="en" />,
+  <BusinessRulesSlide key="business-rules" language="en" />,
   <EntrepreneurshipCloseSlide key="close" language="en" />,
 ];
 
@@ -688,58 +686,122 @@ function EnglishJodohmuSlide() { const steps = [["Listen to your story", "Your g
 function EnglishCloseSlide() { return <div className="relative mx-auto w-full max-w-6xl overflow-hidden rounded-[2rem] border border-white/15 text-center shadow-2xl shadow-black/30"><Image src="/presentations-sekolah-islam-mosque-courtyard-v2.png" alt="A quiet mosque courtyard in the morning" fill className="object-cover" sizes="(max-width: 1024px) 95vw, 1152px" /><div className="relative flex min-h-[500px] items-center bg-[linear-gradient(90deg,rgba(16,29,59,.96)_0%,rgba(16,29,59,.82)_46%,rgba(16,29,59,.20)_100%)] p-8 sm:min-h-[540px] sm:p-12"><div className="mx-auto max-w-4xl"><p className="text-xs font-bold uppercase tracking-[.28em] text-[#e6bd69]">Closing reflection</p><h2 className="mt-7 font-serif text-5xl font-bold leading-tight sm:text-7xl">Marriage needs <span className="italic text-[#ef91b1]">seriousness—not endless delay.</span></h2><p className="mx-auto mt-8 max-w-3xl text-xl leading-9 text-white/85">Do not spend years in conversations that never move. When intention is good and compatibility is present, move from introduction towards clarity—with adab and responsibility.</p><div className="mx-auto mt-10 h-1.5 w-24 rounded-full bg-[#e6bd69]" /><p className="mt-9 text-2xl font-bold text-[#e6bd69] sm:text-3xl">Guard your heart. Move with purpose. Build a bigger future.</p><Link href="/presentations" className="mt-12 inline-flex items-center gap-2 rounded-full border border-white/25 px-5 py-3 text-sm font-bold text-white/90 transition hover:bg-white/10"><ArrowLeft className="h-4 w-4" /> View all presentations</Link></div></div></div>; }
 
 type Bilingual = { id: string; en: string };
-type Evidence = { ref: string; grade: Bilingual; narration: Bilingual; takeaway: Bilingual };
+type Evidence = { ref: string; grade: Bilingual; narration: Bilingual; points?: { id: string[]; en: string[] }; takeaway: Bilingual };
 
 const wealthGoodEvidence: Evidence[] = [
   {
-    ref: "Tirmidhī 3701",
-    grade: { id: "Ḥasan", en: "Ḥasan" },
+    ref: "Jāmiʿ al-Tirmidhī 3701 · Musnad Aḥmad 20630",
+    grade: { id: "Ḥasan gharīb (al-Tirmidhī)", en: "Ḥasan gharīb (al-Tirmidhī)" },
     narration: {
-      id: "Tahun 9 Hijriah. Pasukan berangkat ke Tabūk di musim panas yang terik, jarak lebih dari 700 km, saat kurma sedang siap dipanen. Pasukan ini dikenal sebagai Jaysh al-ʿUsrah—pasukan masa sulit—karena perbekalan, unta, dan dana benar-benar tidak cukup. Rasulullah ﷺ berdiri meminta sumbangan. ʿUthmān bin ʿAffān رضي الله عنه menyerahkan 1.000 dinar ke pangkuan beliau. Rasulullah ﷺ membalik-balikkan harta itu di tangannya dan bersabda bahwa apa pun yang dilakukan ʿUthmān setelah hari ini tidak akan membahayakannya. Dalam riwayat lain, ia juga menyumbang ratusan unta lengkap dengan pelananya.",
-      en: "Year 9 AH. The army set out for Tabūk in blistering summer heat, more than 700 km, exactly when the date harvest was ready. It became known as Jaysh al-ʿUsrah—the army of hardship—because provisions, camels, and funds were genuinely insufficient. The Prophet ﷺ stood and called for contributions. ʿUthmān ibn ʿAffān رضي الله عنه placed 1,000 dinars into his lap. The Prophet ﷺ turned the wealth over in his hands and said that nothing ʿUthmān did after that day would harm him. Other reports add hundreds of camels, fully saddled and equipped.",
+      id: "ʿAbd al-Raḥmān bin Samurah رضي الله عنه berkata: “ʿUthmān رضي الله عنه datang kepada Nabi ﷺ membawa 1.000 dinar.” Riwayat menyebut bahwa ia membawanya di dalam lipatan bajunya ketika Jaysh al-ʿUsrah—Pasukan Masa Sulit—sedang dipersiapkan, lalu ia menuangkannya ke pangkuan Nabi ﷺ. ʿAbd al-Raḥmān melanjutkan: “Aku melihat Nabi ﷺ membalik-balikkan dinar itu di pangkuannya sambil bersabda: **‘Tidak ada lagi yang membahayakan ʿUthmān setelah hari ini.’**” Beliau ﷺ mengucapkannya dua kali.",
+      en: "ʿAbd al-Raḥmān ibn Samurah رضي الله عنه said: “ʿUthmān رضي الله عنه came to the Prophet ﷺ with 1,000 dinars.” The report adds that he carried them in his garment while the Jaysh al-ʿUsrah—the Army of Distress—was being prepared, and poured them into the Prophet's ﷺ lap. ʿAbd al-Raḥmān continued: “I saw the Prophet ﷺ turning them over in his lap and saying: **‘Nothing ʿUthmān does after today will harm him.’**” He ﷺ said it twice.",
+    },
+    points: {
+      id: [
+        "**Perawi:** ʿAbd al-Raḥmān bin Samurah—saksi mata. Ia tidak berkata “dikabarkan kepadaku”, tetapi “aku melihat”.",
+        "**Konteks:** persiapan Tabūk, saat perbekalan dan dana pasukan benar-benar kurang.",
+        "**Jumlah:** 1.000 dinar, dibawa di lipatan baju dan dituangkan ke pangkuan Nabi ﷺ.",
+        "**Riwayat Aḥmad 20630** menambahkan detailnya: beliau ﷺ membalik-balikkannya **dengan tangannya**, dan berulang kali bersabda: “Tidak ada yang membahayakan Ibn ʿAffān setelah hari ini.”",
+        "**Derajat:** al-Tirmidhī menilainya **ḥasan gharīb** dari jalur ini—kuat untuk disampaikan, dan kami sebutkan apa adanya.",
+      ],
+      en: [
+        "**Narrator:** ʿAbd al-Raḥmān ibn Samurah—an eyewitness. He does not say “it reached me”, he says “I saw”.",
+        "**Context:** the preparation for Tabūk, when the army's provisions and funds were genuinely short.",
+        "**Amount:** 1,000 dinars, carried in his garment and poured into the Prophet's ﷺ lap.",
+        "**Musnad Aḥmad 20630** supplies the detail: he ﷺ turned them over **with his hand**, repeating: “Nothing will harm Ibn ʿAffān after today.”",
+        "**Grading:** al-Tirmidhī graded it **ḥasan gharīb** from this route—strong enough to present, and we say so plainly.",
+      ],
     },
     takeaway: {
-      id: "Perhatikan apa yang sebenarnya terjadi: iman seluruh pasukan sudah ada, niat sudah ada, keberanian sudah ada. Yang tidak ada hanyalah uang. Harta ʿUthmān membeli satu-satunya hal yang tidak bisa dibeli oleh salat dan puasa siapa pun pada hari itu—kemampuan untuk berangkat.",
-      en: "Notice what was actually missing. The faith of the whole army was there, the intention was there, the courage was there. Only the money was not. ʿUthmān's wealth bought the one thing nobody's prayer or fasting could buy that day—the ability to actually depart.",
+      id: "Perhatikan apa yang sebenarnya kurang hari itu. Iman pasukan sudah ada, niat sudah ada, keberanian sudah ada. Yang tidak ada hanyalah uang. Harta ʿUthmān membeli satu hal yang tidak bisa dibeli oleh salat dan puasa siapa pun pagi itu—kemampuan untuk berangkat.",
+      en: "Notice what was actually missing that day. The army's faith was there, the intention was there, the courage was there. Only the money was not. ʿUthmān's wealth bought the one thing nobody's prayer or fasting could buy that morning—the ability to actually depart.",
     },
   },
   {
-    ref: "Ṣaḥīḥ Muslim 595",
-    grade: { id: "Ṣaḥīḥ", en: "Ṣaḥīḥ" },
+    ref: "Ṣaḥīḥ al-Bukhārī 5354 · Ṣaḥīḥ Muslim 1628",
+    grade: { id: "Muttafaq ʿalayh", en: "Agreed upon" },
     narration: {
-      id: "Para sahabat yang miskin datang kepada Rasulullah ﷺ dan mengadu: “Orang-orang kaya telah memborong derajat yang tinggi dan kenikmatan yang abadi. Mereka salat seperti kami salat, mereka puasa seperti kami puasa—tetapi mereka punya kelebihan harta untuk berhaji, berumrah, berjihad, dan bersedekah, sedangkan kami tidak.” Rasulullah ﷺ tidak menyalahkan mereka karena iri, dan tidak berkata bahwa harta itu tidak berarti. Beliau justru mengajarkan zikir setelah salat sebagai amal yang bisa mengejar ketertinggalan itu.",
-      en: "The poor Companions came to the Prophet ﷺ and complained: “The wealthy have taken the higher ranks and the lasting blessings. They pray as we pray, they fast as we fast—but they have surplus wealth to perform hajj, ʿumrah, jihād, and charity, and we do not.” The Prophet ﷺ did not scold them for envy, and did not tell them wealth was meaningless. He taught them a dhikr after prayer as a deed that could close the gap.",
+      id: "Saʿd bin Abī Waqqāṣ رضي الله عنه jatuh sakit keras di Makkah pada tahun Haji Wadaʿ, dan ia mengira dirinya akan meninggal. Ia bertanya kepada Rasulullah ﷺ: “Bolehkah aku menyedekahkan dua pertiga hartaku?” Beliau menjawab: **“Tidak.”** “Setengahnya?” Beliau menjawab: **“Tidak.”** “Sepertiga?” Beliau bersabda: **“Sepertiga—dan sepertiga itu sudah banyak.”** Lalu beliau ﷺ menjelaskan alasannya: **“Sesungguhnya engkau meninggalkan ahli warismu dalam keadaan berkecukupan itu lebih baik daripada engkau meninggalkan mereka miskin, meminta-minta kepada manusia.”**",
+      en: "Saʿd ibn Abī Waqqāṣ رضي الله عنه fell gravely ill in Makkah during the year of the Farewell Pilgrimage, and thought he was dying. He asked the Messenger of Allah ﷺ: “May I give two-thirds of my wealth in charity?” He said: **“No.”** “Half?” He said: **“No.”** “A third?” He said: **“A third—and a third is a lot.”** Then he ﷺ gave the reason: **“It is better that you leave your heirs wealthy than that you leave them poor, begging from people.”**",
+    },
+    points: {
+      id: [
+        "**Konteks:** Haji Wadaʿ di Makkah. Saʿd sedang sakit parah dan menyangka ajalnya dekat—ini keputusan warisan, bukan wacana.",
+        "**Tawar-menawarnya:** dua pertiga ditolak, setengah ditolak, sepertiga diizinkan—**dan itu pun disebut “banyak”**.",
+        "**Alasannya bukan zuhud:** Rasulullah ﷺ justru menahan sedekahnya demi melindungi keluarga yang ditinggalkan.",
+        "**“Meminta-minta kepada manusia”**—inilah yang beliau ﷺ cegah: keluarga yang menjadi beban orang lain.",
+        "**Dari sinilah** para ulama menetapkan batas wasiat maksimal sepertiga harta.",
+      ],
+      en: [
+        "**Context:** the Farewell Pilgrimage in Makkah. Saʿd was gravely ill and believed he was dying—this was an estate decision, not a theory.",
+        "**The negotiation:** two-thirds refused, half refused, one-third permitted—**and even that was called “a lot”**.",
+        "**The reason was not asceticism:** the Prophet ﷺ restrained his charity in order to protect the family he would leave behind.",
+        "**“Begging from people”**—that is the outcome he ﷺ was preventing: a family that becomes a burden on others.",
+        "**From this hadith** the scholars derive the one-third ceiling on bequests.",
+      ],
     },
     takeaway: {
-      id: "Dua hal penting di sini. Pertama, yang mengeluh adalah sahabat Nabi ﷺ—bukan orang yang lemah imannya. Kedua, jawabannya bukan “harta itu tidak penting”, melainkan sebuah amalan pengganti. Artinya kesenjangan itu diakui: harta memang membuka pintu yang tertutup bagi orang yang tidak punya.",
-      en: "Two things matter here. First, the ones complaining were the Companions—not people weak in faith. Second, the answer was not “wealth does not matter”; it was a substitute deed. The gap was acknowledged: wealth genuinely opens doors that stay shut for those without it.",
+      id: "Perhatikan siapa yang menahan siapa. Seorang sahabat ingin memberikan hampir seluruh hartanya, dan Rasulullah ﷺ melarangnya—dua kali. Di sini harta yang **ditahan** justru lebih bernilai daripada harta yang diberikan. Meninggalkan keluarga yang tidak bergantung pada belas kasihan orang lain adalah kebaikan itu sendiri.",
+      en: "Notice who restrained whom. A Companion wanted to give away nearly everything, and the Prophet ﷺ stopped him—twice. Here the wealth **kept** was worth more than the wealth given. Leaving behind a family that depends on nobody's mercy is itself the good deed.",
     },
   },
 ];
 
 const wealthBurdenEvidence: Evidence[] = [
   {
-    ref: "Ṣaḥīḥ al-Bukhārī · Kitāb al-Janāʾiz",
+    ref: "Ṣaḥīḥ al-Bukhārī 1275",
     grade: { id: "Ṣaḥīḥ", en: "Ṣaḥīḥ" },
     narration: {
-      id: "ʿAbd al-Raḥmān bin ʿAwf رضي الله عنه sedang berpuasa. Ketika hidangan datang, ia teringat Muṣʿab bin ʿUmayr—pemuda paling perlente di Makkah sebelum Islam, yang kemudian syahid di Uhud dan dikafani dengan satu kain yang begitu pendek: bila kepalanya ditutup, kakinya terbuka; bila kakinya ditutup, kepalanya terbuka. Rasulullah ﷺ memerintahkan agar kepalanya ditutup dan kakinya ditutupi dengan rerumputan idhkhir. ʿAbd al-Raḥmān berkata bahwa Muṣʿab lebih baik darinya, lalu berkata: “Kemudian dibentangkan untuk kami dunia sebagaimana ia dibentangkan.” Ia menangis, dan meninggalkan makanannya.",
-      en: "ʿAbd al-Raḥmān ibn ʿAwf رضي الله عنه was fasting. When food was brought, he remembered Muṣʿab ibn ʿUmayr—the best-dressed youth in Makkah before Islam, later martyred at Uḥud and shrouded in a single cloth so short that covering his head exposed his feet, and covering his feet exposed his head. The Prophet ﷺ ordered his head covered and his feet draped with idhkhir grass. ʿAbd al-Raḥmān said Muṣʿab was better than him, then said: “Then the world was spread out for us as it was spread out.” He wept, and left his food untouched.",
+      id: "ʿAbd al-Raḥmān bin ʿAwf رضي الله عنه sedang berpuasa. Ketika hidangan datang, ia menyebut dua orang yang ia nilai lebih baik darinya: Muṣʿab bin ʿUmayr dan Ḥamzah رضي الله عنهما—keduanya syahid, dan kain kafan mereka begitu pendek sehingga bila kepala ditutup kaki terbuka, bila kaki ditutup kepala terbuka. Kemudian dunia dibentangkan bagi orang-orang yang tersisa. Maka ia berkata: **“Kami khawatir kebaikan-kebaikan kami telah disegerakan untuk kami di dunia ini.”** Lalu ia menangis dan meninggalkan makanannya.",
+      en: "ʿAbd al-Raḥmān ibn ʿAwf رضي الله عنه was fasting. When food was brought, he named two men he considered better than himself: Muṣʿab ibn ʿUmayr and Ḥamzah رضي الله عنهما—both martyred, and shrouded in cloth so short that covering the head exposed the feet, and covering the feet exposed the head. Then the world was opened up for those who remained. So he said: **“We fear that our good deeds have been hastened for us in this world.”** Then he wept, and left his food untouched.",
+    },
+    points: {
+      id: [
+        "**Perawi & keadaan:** ʿAbd al-Raḥmān bin ʿAwf sendiri, dalam keadaan berpuasa, saat makanan dihidangkan.",
+        "**Pembandingnya:** Muṣʿab bin ʿUmayr dan Ḥamzah—dua orang yang ia sebut lebih baik daripada dirinya, dan keduanya wafat tanpa harta.",
+        "**Kalimat kuncinya adalah kekhawatiran, bukan kepastian:** “kami khawatir kebaikan kami telah **disegerakan**.” Beliau tidak memvonis dirinya sendiri.",
+        "**Reaksinya:** menangis, lalu meninggalkan makanan yang sudah terhidang.",
+        "**Derajat:** Ṣaḥīḥ al-Bukhārī 1275—jauh lebih kuat daripada riwayat “masuk surga dengan merangkak” yang sering dikutip.",
+      ],
+      en: [
+        "**Narrator & setting:** ʿAbd al-Raḥmān ibn ʿAwf himself, while fasting, as food was placed before him.",
+        "**His comparison:** Muṣʿab ibn ʿUmayr and Ḥamzah—two men he called better than himself, both of whom died owning nothing.",
+        "**The key phrase is a fear, not a verdict:** “we fear our good deeds have been **hastened** for us.” He does not pronounce judgement on himself.",
+        "**His reaction:** he wept, and left food that was already served.",
+        "**Grading:** Ṣaḥīḥ al-Bukhārī 1275—far stronger than the widely-quoted “entering Paradise crawling” report.",
+      ],
     },
     takeaway: {
-      id: "Kalimat “dunia dibentangkan untuk kami” bukan ucapan syukur. Itu ucapan takut. Ia khawatir bahwa apa yang seharusnya ia terima nanti, sudah dibayarkan kepadanya sekarang—dan yang mengucapkannya adalah orang yang sudah dijamin surga.",
-      en: "The phrase “the world was spread out for us” is not gratitude. It is fear. He worried that what he was meant to receive later had already been paid out to him now—and the man saying it had already been guaranteed Paradise.",
+      id: "Perhatikan kata-katanya yang persis: **“kami khawatir”**—bukan “kami tahu”. Inilah yang membuatnya berat. Seorang sahabat sekelas beliau dapat memandang hartanya sendiri lalu bertanya-tanya apakah itu ganjaran yang datang terlalu cepat. Bukan sebuah kesimpulan, melainkan sebuah kegelisahan yang tidak pernah hilang.",
+      en: "Notice his exact words: **“we fear”**—not “we know”. That is what makes it heavy. A Companion of his rank could look at his own wealth and wonder whether it was his reward arriving early. Not a conclusion—an unease he never resolved.",
     },
   },
   {
-    ref: "Ṣaḥīḥ al-Bukhārī 3158 · Ṣaḥīḥ Muslim 2961",
-    grade: { id: "Muttafaq ʿalayh", en: "Agreed upon" },
+    ref: "Jāmiʿ al-Tirmidhī 2354",
+    grade: { id: "Ḥasan ṣaḥīḥ (al-Tirmidhī)", en: "Ḥasan ṣaḥīḥ (al-Tirmidhī)" },
     narration: {
-      id: "Abū ʿUbaydah رضي الله عنه kembali dari Bahrain membawa harta. Kaum Anṣār mendengar kabar itu, lalu berbondong-bondong hadir di salat Subuh. Seusai salat, Rasulullah ﷺ hendak beranjak, tetapi mereka menghadang jalan beliau. Beliau tersenyum melihat mereka dan bersabda: “Aku kira kalian sudah mendengar bahwa Abū ʿUbaydah datang membawa sesuatu.” Mereka membenarkan. Maka beliau bersabda: «فَوَاللَّهِ مَا الْفَقْرَ أَخْشَى عَلَيْكُمْ» — “Demi Allah, bukan kefakiran yang aku takutkan atas kalian. Yang aku takutkan adalah dunia dibentangkan untuk kalian sebagaimana ia dibentangkan untuk orang-orang sebelum kalian, lalu kalian berlomba memperebutkannya sebagaimana mereka berlomba—dan ia membinasakan kalian sebagaimana ia membinasakan mereka.”",
-      en: "Abū ʿUbaydah رضي الله عنه returned from Bahrain carrying wealth. The Anṣār heard, and crowded the Fajr prayer. When the Prophet ﷺ finished and moved to leave, they blocked his path. He smiled at them and said: “I think you have heard that Abū ʿUbaydah has arrived with something.” They said yes. So he said: «فَوَاللَّهِ مَا الْفَقْرَ أَخْشَى عَلَيْكُمْ» — “By Allah, it is not poverty that I fear for you. What I fear is that the world will be spread out before you as it was spread out before those before you, and that you will compete for it as they competed—and it will destroy you as it destroyed them.”",
+      id: "Dari Abū Hurayrah رضي الله عنه, Rasulullah ﷺ bersabda: **“Orang-orang miskin dari kaum muslimin masuk surga mendahului orang-orang kaya di antara mereka setengah hari—dan itu adalah lima ratus tahun.”** Perhatikan bahwa ukurannya disebutkan langsung di dalam hadis itu sendiri: setengah hari di sisi Allah, lalu diterjemahkan menjadi lima ratus tahun menurut hitungan kita.",
+      en: "From Abū Hurayrah رضي الله عنه, the Messenger of Allah ﷺ said: **“The poor Muslims will enter Paradise before the rich among them by half a day—and that is five hundred years.”** Note that the measure is stated inside the hadith itself: half a day with Allah, then converted into five hundred years by our reckoning.",
+    },
+    points: {
+      id: [
+        "**Keduanya masuk surga.** Hadis ini tidak mengeluarkan orang kaya—ia hanya menempatkan mereka di antrean yang lebih belakang.",
+        "**Ukurannya eksplisit:** “setengah hari” langsung ditafsirkan di dalam hadis sebagai lima ratus tahun.",
+        "**Riwayat sejajar** menyebut empat puluh musim gugur bagi kaum fakir Muhājirīn (Ṣaḥīḥ Muslim 2979); para ulama menjelaskannya sebagai kelompok dan tingkatan yang berbeda.",
+        "**Penjelasan ulama:** jeda itu adalah waktu perhitungan—semakin banyak yang dimiliki, semakin panjang yang harus dipertanggungjawabkan.",
+        "**Derajat:** al-Tirmidhī menilainya **ḥasan ṣaḥīḥ**; diriwayatkan pula oleh Ibn Mājah.",
+      ],
+      en: [
+        "**Both groups enter.** This hadith does not exclude the wealthy—it places them further back in the queue.",
+        "**The measure is explicit:** “half a day” is interpreted inside the hadith itself as five hundred years.",
+        "**A parallel report** gives forty autumns for the poor Muhājirūn (Ṣaḥīḥ Muslim 2979); scholars explain these as different groups and degrees.",
+        "**The scholars' explanation:** the delay is the accounting—the more you owned, the longer the account you must answer for.",
+        "**Grading:** al-Tirmidhī graded it **ḥasan ṣaḥīḥ**; also narrated by Ibn Mājah.",
+      ],
     },
     takeaway: {
-      id: "Perhatikan satu kata. ʿAbd al-Raḥmān menangis sambil berkata “kemudian dunia dibentangkan untuk kami”—kata yang sama persis dengan yang dipakai Rasulullah ﷺ dalam peringatan ini. ʿAbd al-Raḥmān sedang mengutip peringatan ini tentang dirinya sendiri. Dan lihat siapa yang berdesakan pagi itu karena kabar harta: para sahabat.",
-      en: "Notice one word. ʿAbd al-Raḥmān wept and said “then the world was spread out for us”—the very word the Prophet ﷺ uses in this warning. ʿAbd al-Raḥmān was quoting this warning, about himself. And look who crowded the mosque that morning over news of money: the Companions.",
+      id: "Tidak ada seorang pun yang dicela di sini. Orang kaya tetap masuk surga. Tetapi mereka menunggu—dan lamanya menunggu itu diukur dari apa yang mereka miliki. Harta tidak merampas surga dari kalian; harta menagih waktu kalian di depan pintunya.",
+      en: "Nobody is condemned here. The wealthy still enter. But they wait—and the length of that wait is measured against what they owned. Wealth does not cost you Paradise; it charges you time at the gate.",
     },
   },
 ];
@@ -766,13 +828,17 @@ function OpeningQuestionSlide({ language }: { language: "id" | "en" }) {
   return <div className="mx-auto w-full max-w-5xl text-center">
     <p className="text-xs font-bold uppercase tracking-[.28em] text-[#e6bd69]">{isId ? "Pertanyaan pembuka" : "Opening question"}</p>
     <h2 className="mt-7 font-serif text-5xl font-bold leading-[1.08] sm:text-7xl">{isId ? <>Menurut kalian,<br /><span className="italic text-[#ef91b1]">uang itu baik atau buruk?</span></> : <>In your view,<br /><span className="italic text-[#ef91b1]">is money good or bad?</span></>}</h2>
-    <p className="mx-auto mt-9 max-w-2xl text-xl leading-9 text-white/70">{isId ? "Jangan jawab dulu. Saya akan bacakan empat riwayat—dua yang memuji harta, dua yang membuat kita takut memilikinya. Semuanya sahih." : "Do not answer yet. I will read four narrations—two that praise wealth, two that make us afraid to own it. All of them authentic."}</p>
+    <p className="mx-auto mt-9 max-w-2xl text-xl leading-9 text-white/70">{isId ? "Jangan jawab dulu. Saya akan bacakan empat riwayat—dua yang membuat kita takut memiliki harta, dua yang memuji harta. Semuanya kuat." : "Do not answer yet. I will read four narrations—two that make us afraid to own wealth, two that praise it. All of them strong."}</p>
     <div className="mx-auto mt-11 flex max-w-3xl items-center gap-5">
       <div className="h-px flex-1 bg-gradient-to-r from-transparent to-[#e6bd69]/60" />
       <span className="font-serif text-6xl text-[#e6bd69]">?</span>
       <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#e6bd69]/60" />
     </div>
   </div>;
+}
+
+function richText(value: string) {
+  return value.split("**").map((part, index) => index % 2 === 1 ? <strong key={index} className="font-bold text-white">{part}</strong> : <span key={index}>{part}</span>);
 }
 
 function EvidenceSlide({ language, side }: { language: "id" | "en"; side: "good" | "burden" }) {
@@ -785,27 +851,33 @@ function EvidenceSlide({ language, side }: { language: "id" | "en"; side: "good"
       <span className={`grid h-8 w-8 place-items-center rounded-full ${isGood ? "bg-[#e6bd69]/15 text-[#e6bd69]" : "bg-[#ef91b1]/15 text-[#f3c5d4]"}`}><Icon className="h-4 w-4" /></span>
       <p className="text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isGood ? (isId ? "Sisi 02 · Harta sebagai sarana kebaikan" : "Side 02 · Wealth as a means of good") : (isId ? "Sisi 01 · Harta sebagai beban" : "Side 01 · Wealth as a burden")}</p>
     </div>
-    <h2 className="mx-auto mt-4 max-w-4xl text-center font-serif text-3xl font-bold leading-tight sm:text-5xl">
+    <h2 className="mx-auto mt-3 max-w-4xl text-center font-serif text-2xl font-bold leading-tight sm:text-4xl">
       {isGood ? (isId ? <>Harta membuat kebaikan <span className="italic text-[#ef91b1]">bisa bergerak.</span></> : <>Wealth is what lets good <span className="italic text-[#ef91b1]">actually move.</span></>)
-              : (isId ? <>Yang beliau takutkan <span className="italic text-[#ef91b1]">bukan kefakiran.</span></> : <>What he feared for us <span className="italic text-[#ef91b1]">was not poverty.</span></>)}
+              : (isId ? <>Harta juga <span className="italic text-[#ef91b1]">punya harga di akhirat.</span></> : <>Wealth also <span className="italic text-[#ef91b1]">carries a price in the ākhirah.</span></>)}
     </h2>
-    <div className="mt-7 grid gap-4 lg:grid-cols-2">
+    <div className="mt-5 grid gap-4 lg:grid-cols-2">
       {items.map((item, index) => <div key={item.ref} className="flex flex-col rounded-3xl border border-white/15 bg-white/[.07] p-5 sm:p-6">
         <div className="flex items-baseline justify-between gap-3 border-b border-white/12 pb-3">
           <span className="font-serif text-2xl text-[#e6bd69]">0{index + 1}</span>
           <div className="text-right">
-            <p className="text-[.7rem] font-bold uppercase tracking-[.14em] text-[#f3c5d4]">{item.ref}</p>
-            <p className="mt-0.5 text-[.6rem] font-bold uppercase tracking-[.2em] text-white/45">{isId ? item.grade.id : item.grade.en}</p>
+            <p className="text-sm font-bold tracking-[.03em] text-[#f3c5d4] sm:text-base">{item.ref}</p>
+            <p className="mt-1 text-[.65rem] font-bold uppercase tracking-[.2em] text-white/50">{isId ? item.grade.id : item.grade.en}</p>
           </div>
         </div>
-        <p className="mt-4 text-[.9rem] leading-6 text-white/80">{isId ? item.narration.id : item.narration.en}</p>
-        <p className="mt-4 border-l-2 border-[#e6bd69] pl-4 text-[.82rem] font-bold leading-6 text-[#f3c5d4] sm:mt-auto sm:pt-4">{isId ? item.takeaway.id : item.takeaway.en}</p>
+        <p className="mt-3 text-[.85rem] leading-[1.4rem] text-white/75">{richText(isId ? item.narration.id : item.narration.en)}</p>
+        {item.points && <ul className="mt-3 space-y-1.5 border-t border-white/12 pt-3">
+          {(isId ? item.points.id : item.points.en).map((point) => <li key={point} className="flex gap-2.5 text-[.78rem] leading-[1.45rem] text-white/70">
+            <span className="mt-[.55rem] h-1.5 w-1.5 shrink-0 rounded-full bg-[#e6bd69]" />
+            <span>{richText(point)}</span>
+          </li>)}
+        </ul>}
+        <p className="mt-3 border-l-2 border-[#e6bd69] pl-4 text-[.8rem] font-bold leading-[1.4rem] text-[#f3c5d4] sm:mt-auto sm:pt-3">{richText(isId ? item.takeaway.id : item.takeaway.en)}</p>
       </div>)}
     </div>
     <p className="mt-5 text-center text-xs leading-5 text-white/50">
       {isGood
         ? (isId ? "Kesimpulan sementara: tanpa harta, sebagian pintu amal memang tertutup rapat." : "Provisional conclusion: without wealth, some doors of good simply stay shut.")
-        : (isId ? "Keduanya ṣaḥīḥ, dan keduanya berputar pada satu kata yang sama: dunia “dibentangkan”. Dua riwayat lain yang populer di tema ini—ʿAbd al-Raḥmān masuk surga dengan merangkak (al-Ṭabarānī) dan doa agar hidup sebagai miskīn (Tirmidhī 2352)—lemah atau diperselisihkan, jadi tidak kami pakai." : "Both are ṣaḥīḥ, and both turn on the same word: the world being “spread out”. Two other popular reports on this theme—ʿAbd al-Raḥmān entering Paradise crawling (al-Ṭabarānī) and the duʿāʾ to live as a miskīn (Tirmidhī 2352)—are weak or disputed, so we do not use them.")}
+        : (isId ? "Keduanya kuat: Bukhārī 1275 ṣaḥīḥ, dan Tirmidhī 2354 dinilai ḥasan ṣaḥīḥ. Dua riwayat populer lain di tema ini—ʿAbd al-Raḥmān masuk surga dengan merangkak (al-Ṭabarānī) dan doa agar hidup sebagai miskīn (Tirmidhī 2352)—lemah atau diperselisihkan, jadi tidak kami pakai." : "Both are strong: Bukhārī 1275 is ṣaḥīḥ, and Tirmidhī 2354 was graded ḥasan ṣaḥīḥ. Two other popular reports on this theme—ʿAbd al-Raḥmān entering Paradise crawling (al-Ṭabarānī) and the duʿāʾ to live as a miskīn (Tirmidhī 2352)—are weak or disputed, so we do not use them.")}
     </p>
   </div>;
 }
@@ -847,8 +919,8 @@ function AbdurrahmanSlide({ language }: { language: "id" | "en" }) {
 
 function ConfusionSlide({ language }: { language: "id" | "en" }) {
   const isId = language === "id";
-  const left = isId ? ["ʿUthmān membiayai pasukan—dan dijamin aman selamanya.", "Sahabat yang miskin iri kepada yang kaya karena sedekah."] : ["ʿUthmān funded an army—and was guaranteed safety forever.", "The poor Companions envied the rich because of their charity."];
-  const right = isId ? ["ʿAbd al-Raḥmān—yang dijamin surga—menangis karena hartanya.", "Nabi ﷺ: yang beliau takutkan atas kita bukan kefakiran, melainkan dunia."] : ["ʿAbd al-Raḥmān—guaranteed Paradise—wept because of his wealth.", "The Prophet ﷺ: what he feared for us was not poverty, but the world."];
+  const left = isId ? ["ʿUthmān membiayai pasukan—dan dijamin aman selamanya.", "Nabi ﷺ melarang Saʿd menyedekahkan lebih dari sepertiga hartanya."] : ["ʿUthmān funded an army—and was guaranteed safety forever.", "The Prophet ﷺ forbade Saʿd from giving away more than a third."];
+  const right = isId ? ["ʿAbd al-Raḥmān khawatir kebaikannya telah disegerakan di dunia.", "Kaum miskin masuk surga lima ratus tahun mendahului orang kaya."] : ["ʿAbd al-Raḥmān feared his good deeds had been hastened into this world.", "The poor enter Paradise five hundred years before the rich."];
   return <div className="mx-auto w-full max-w-6xl">
     <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isId ? "Jadi—yang mana?" : "So—which is it?"}</p>
     <h2 className="mx-auto mt-4 max-w-4xl text-center font-serif text-4xl font-bold leading-tight sm:text-6xl">{isId ? <>Semua riwayat ini benar. <span className="italic text-[#ef91b1]">Dan semuanya bertabrakan.</span></> : <>All of these are authentic. <span className="italic text-[#ef91b1]">And they collide.</span></>}</h2>
@@ -870,19 +942,19 @@ function ConfusionSlide({ language }: { language: "id" | "en" }) {
 function PhilosophySlide({ language }: { language: "id" | "en" }) {
   const isId = language === "id";
   const rows = isId
-    ? [["Harta tanpa tujuan", "Menjadi angka yang harus dijaga. Ia tumbuh, lalu menuntut waktu, perhatian, dan akhirnya hisab—tanpa memberi arah apa pun."], ["Tujuan tanpa harta", "Menjadi niat baik yang berhenti di kepala. Kita tahu apa yang rusak di masyarakat, tetapi tidak punya kemampuan untuk menyentuhnya."], ["Harta yang disatukan dengan tujuan", "Menjadi alat. ʿUthmān tidak dipuji karena punya 1.000 dinar—ia dipuji karena 1.000 dinar itu memberangkatkan pasukan."]]
-    : [["Wealth without purpose", "Becomes a number you must defend. It grows, then demands your time, your attention, and finally your reckoning—while giving you no direction."], ["Purpose without wealth", "Becomes a good intention that stops inside your head. You can see what is broken in society, but you have no capacity to touch it."], ["Wealth joined to purpose", "Becomes an instrument. ʿUthmān was not praised for owning 1,000 dinars—he was praised because those 1,000 dinars moved an army."]];
+    ? [["Uang sebagai tujuan", "Angkanya tidak pernah cukup. Kalian mencapai target, lalu targetnya bergeser. Ia menuntut waktu, perhatian, dan akhirnya hisab—tanpa pernah memberi tahu untuk apa semua itu."], ["Uang sebagai sesuatu yang dihindari", "Niat baik yang berhenti di kepala. Kalian bisa melihat apa yang rusak di masyarakat, tetapi tidak punya kemampuan untuk menyentuhnya."], ["Uang sebagai alat", "Alat dinilai dari apa yang dibangunnya. ʿUthmān tidak dipuji karena memiliki 1.000 dinar—beliau dipuji karena 1.000 dinar itu memberangkatkan pasukan."]]
+    : [["Money as the goal", "The number is never enough. You hit the target and the target moves. It demands your time, your attention, and finally your reckoning—without ever telling you what it was all for."], ["Money as something to avoid", "A good intention that stops inside your head. You can see what is broken in society, but you have no capacity to touch it."], ["Money as a tool", "A tool is judged by what it builds. ʿUthmān was not praised for owning 1,000 dinars—he was praised because those 1,000 dinars moved an army."]];
   return <div className="mx-auto w-full max-w-6xl">
     <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isId ? "Cara saya melihatnya" : "How I see it"}</p>
-    <h2 className="mx-auto mt-4 max-w-5xl text-center font-serif text-4xl font-bold leading-tight sm:text-6xl">{isId ? <>Uang bukan baik atau buruk. <span className="italic text-[#ef91b1]">Uang adalah pengganda.</span></> : <>Money is not good or bad. <span className="italic text-[#ef91b1]">Money is a multiplier.</span></>}</h2>
-    <p className="mx-auto mt-5 max-w-3xl text-center text-lg leading-8 text-white/65">{isId ? "Pengganda selalu mengalikan sesuatu yang sudah ada. Kalau tidak ada tujuan di sana, yang dikalikan hanyalah diri kita sendiri." : "A multiplier always multiplies something that is already there. If there is no purpose there, the only thing it multiplies is yourself."}</p>
+    <h2 className="mx-auto mt-4 max-w-5xl text-center font-serif text-4xl font-bold leading-tight sm:text-6xl">{isId ? <>Uang itu alat. <span className="italic text-[#ef91b1]">Bukan tujuan hidup.</span></> : <>Money is a tool. <span className="italic text-[#ef91b1]">Not a life goal.</span></>}</h2>
+    <p className="mx-auto mt-5 max-w-3xl text-center text-lg leading-8 text-white/65">{isId ? "Tidak ada orang yang menggantung palu di dinding lalu memujanya. Palu hanya bernilai ketika ada sesuatu yang sedang dibangun. Uang bekerja dengan cara yang sama." : "Nobody hangs a hammer on the wall and admires it. A hammer only means anything when something is being built. Money works the same way."}</p>
     <div className="mt-9 divide-y divide-white/15 border-y border-white/15">
-      {rows.map(([title, detail]) => <div key={title} className="grid gap-3 py-6 sm:grid-cols-[15rem_1fr]">
+      {rows.map(([title, detail]) => <div key={title} className="grid gap-3 py-6 sm:grid-cols-[16rem_1fr]">
         <h3 className="font-serif text-2xl font-bold text-[#e6bd69]">{title}</h3>
         <p className="text-base leading-7 text-white/70">{detail}</p>
       </div>)}
     </div>
-    <p className="mt-8 text-center text-xl font-bold text-[#f3c5d4]">{isId ? "Maka pertanyaannya bukan “berapa yang saya hasilkan?” tetapi “apa yang sedang dikalikan oleh uang saya?”" : "So the question is not “how much am I earning?” but “what is my money multiplying?”"}</p>
+    <p className="mt-8 text-center text-xl font-bold text-[#f3c5d4]">{isId ? "Maka pertanyaannya bukan “berapa banyak yang saya inginkan?” tetapi “alat ini saya pegang untuk apa?”" : "So the question is not “how much do I want?” but “what am I holding this tool for?”"}</p>
   </div>;
 }
 
@@ -891,16 +963,16 @@ function PurposeBridgeSlide({ language }: { language: "id" | "en" }) {
   return <div className="mx-auto grid w-full max-w-6xl gap-10 lg:grid-cols-[1.05fr_.95fr] lg:items-center">
     <div>
       <p className="text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isId ? "Dari filosofi ke keputusan" : "From philosophy to a decision"}</p>
-      <h2 className="mt-5 font-serif text-4xl font-bold leading-tight sm:text-6xl">{isId ? <>Lalu saya bertanya:<br /><span className="italic text-[#ef91b1]">apa yang ingin saya kalikan?</span></> : <>So I asked myself:<br /><span className="italic text-[#ef91b1]">what do I want to multiply?</span></>}</h2>
-      <p className="mt-7 max-w-xl text-lg leading-8 text-white/70">{isId ? "Saya tidak mencari masalah yang paling menguntungkan. Saya mencari masalah yang kalau dibiarkan, akan terus merusak—dan yang hampir tidak ada orang bangun untuk memperbaikinya secara serius." : "I was not looking for the most profitable problem. I was looking for a problem that keeps damaging people if left alone—and that almost nobody is seriously building to fix."}</p>
+      <h2 className="mt-5 font-serif text-4xl font-bold leading-tight sm:text-6xl">{isId ? <>Lalu saya bertanya:<br /><span className="italic text-[#ef91b1]">apa yang harus saya kerjakan—yang juga membutuhkan uang?</span></> : <>So I asked myself:<br /><span className="italic text-[#ef91b1]">what should I do that also needs money?</span></>}</h2>
+      <p className="mt-7 max-w-xl text-lg leading-8 text-white/70">{isId ? "Bukan “apa yang paling menguntungkan”, dan bukan pula “apa yang paling mulia”. Saya mencari pertemuan keduanya: pekerjaan yang memang layak dikerjakan—dan yang tidak bisa diselesaikan tanpa uang." : "Not “what is most profitable”, and not “what is most noble” either. I was looking for where the two meet: work that genuinely deserves doing—and that cannot be done without money."}</p>
       <p className="mt-8 border-l-2 border-[#e6bd69] pl-5 text-base font-bold leading-7 text-[#f3c5d4]">{isId ? "Salah satu kerusakan terbesar di masyarakat Muslim hari ini terjadi di tempat yang paling awal: cara orang bertemu dan menikah." : "One of the deepest fractures in Muslim society today happens at the very first step: how people meet and marry."}</p>
     </div>
     <div className="rounded-[2rem] border border-white/15 bg-white/[.07] p-8">
-      <p className="text-sm font-bold uppercase tracking-[.18em] text-[#e6bd69]">{isId ? "Ujian untuk sebuah ide" : "The test for an idea"}</p>
+      <p className="text-sm font-bold uppercase tracking-[.18em] text-[#e6bd69]">{isId ? "Tiga ujian untuk sebuah ide" : "Three tests for an idea"}</p>
       <div className="mt-7 space-y-6">
         {(isId
-          ? [["Apakah ia benar-benar rusak?", "Bukan ketidaknyamanan kecil—kerusakan yang bisa diukur."], ["Apakah nilai saya relevan di sana?", "Kalau solusinya menuntut saya melanggar prinsip, itu bukan pintu saya."], ["Apakah uang bisa memperbaikinya?", "Sebagian masalah butuh dakwah. Sebagian butuh operasional, tim, dan modal."]]
-          : [["Is it genuinely broken?", "Not a small inconvenience—damage you can measure."], ["Are my values relevant here?", "If the fix requires me to break a principle, it is not my door."], ["Can money actually repair it?", "Some problems need preaching. Some need operations, a team, and capital."]]
+          ? [["Apakah ini benar-benar rusak?", "Bukan ketidaknyamanan kecil—kerusakan yang bisa diukur dan dirasakan orang."], ["Apakah nilai saya bertahan di dalamnya?", "Kalau solusinya menuntut saya melanggar prinsip, itu bukan pintu saya."], ["Apakah memperbaikinya benar-benar butuh uang?", "Sebagian masalah cukup dengan nasihat dan waktu. Sebagian butuh tim, verifikasi, operasional, dan modal—dan itulah yang menjadi usaha."]]
+          : [["Is it genuinely broken?", "Not a small inconvenience—damage you can measure and people can feel."], ["Do my values survive inside it?", "If the fix requires me to break a principle, it is not my door."], ["Does fixing it actually require money?", "Some problems need advice and time. Some need a team, verification, operations, and capital—and those are the ones that become a business."]]
         ).map(([q, a], index) => <div key={q}>
           <p className="font-serif text-2xl font-bold text-[#e6bd69]">0{index + 1} · {q}</p>
           <p className="mt-2 text-sm leading-6 text-white/65">{a}</p>
@@ -1237,5 +1309,46 @@ function BusinessModelIntroSlide({ language }: { language: "id" | "en" }) {
       <Coins className="h-8 w-8 text-[#e6bd69]" />
       <div className="h-px flex-1 bg-gradient-to-l from-transparent to-[#e6bd69]/60" />
     </div>
+  </div>;
+}
+
+function BusinessRulesSlide({ language }: { language: "id" | "en" }) {
+  const isId = language === "id";
+  const rules = isId
+    ? [
+        ["Kecepatan", "Bergeraklah cepat; jangan biarkan penundaan yang tidak perlu mematikan momentum."],
+        ["Uang Masuk", "Sebuah usaha ada untuk memasukkan uang. Itu ukuran pertamanya."],
+        ["Mulai Murah", "Mulailah dengan uang sesedikit mungkin."],
+        ["Keluarga & Teman", "Mereka bisa menjadi tenaga kerja awal yang sangat berguna."],
+        ["Bangun Wibawa", "Tegakkan otoritas dan standar sejak awal."],
+        ["Jual Lagi ke Pelanggan Lama", "Menjual kembali kepada orang yang sudah pernah membeli jauh lebih murah."],
+        ["Jangan Urus Legal Sebelum Kaya", "Jangan merumitkan diri dengan urusan formal sebelum usahanya terbukti."],
+        ["Pakai yang Sudah Ada", "Manfaatkan sumber daya yang kalian miliki—jangan menunggu yang sempurna."],
+        ["Beri Target yang Jelas", "Staf membutuhkan sasaran dan hasil yang spesifik, bukan instruksi kabur."],
+        ["Kelola Orang", "Kelola tim kalian, dan keluarkan produktivitas yang lebih besar dari mereka."],
+      ]
+    : [
+        ["Speed", "Move fast; do not let unnecessary delays kill momentum."],
+        ["Money In", "A business exists to bring money in. That is the first measure."],
+        ["Start Cheap", "Start the business with as little money as possible."],
+        ["Family & Friends", "They can be genuinely useful as early staff."],
+        ["Command Respect", "Establish authority and standards from the beginning."],
+        ["Resell to Existing Customers", "Selling again to someone who already bought is far cheaper."],
+        ["Don't Get Legal Before You Get Rich", "Do not overcomplicate with setup before the business is proven."],
+        ["Use What You've Got", "Leverage the resources you already have—do not wait for perfect ones."],
+        ["Staff Need a Clear Objective", "People need a specific target and result, not vague instructions."],
+        ["Manage Your Staff", "Manage your people, and get more productivity out of them."],
+      ];
+  return <div className="mx-auto w-full max-w-6xl">
+    <p className="text-center text-xs font-bold uppercase tracking-[.25em] text-[#e6bd69]">{isId ? "Bekal untuk kalian" : "What to take with you"}</p>
+    <h2 className="mx-auto mt-3 max-w-5xl text-center font-serif text-3xl font-bold leading-tight sm:text-5xl">{isId ? <>Sepuluh aturan <span className="italic text-[#ef91b1]">yang benar-benar dipakai.</span></> : <>Ten rules <span className="italic text-[#ef91b1]">that actually get used.</span></>}</h2>
+    <div className="mt-7 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-5">
+      {rules.map(([title, detail], index) => <div key={title} className="rounded-2xl border border-white/15 bg-white/[.07] p-4">
+        <p className="font-serif text-xl text-[#e6bd69]">{String(index + 1).padStart(2, "0")}</p>
+        <h3 className="mt-2.5 text-[.9rem] font-bold leading-5">{title}</h3>
+        <p className="mt-2 text-[.75rem] leading-5 text-white/65">{detail}</p>
+      </div>)}
+    </div>
+    <p className="mt-7 text-center text-base font-bold text-[#f3c5d4]">{isId ? "Aturan-aturan ini tidak akan menyelamatkan usaha yang tidak punya tujuan. Ia hanya mempercepat usaha yang sudah punya." : "None of these will save a business with no purpose behind it. They only speed up one that already has it."}</p>
   </div>;
 }
