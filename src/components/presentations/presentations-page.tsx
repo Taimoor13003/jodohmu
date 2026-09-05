@@ -139,8 +139,8 @@ export function PresentationsPage() {
           >
             <div className="relative aspect-[16/10] overflow-hidden bg-[#10275b]">
               <Image
-                src="/presentations-sekolah-islam-route-community-guide.png"
-                alt="A facilitator listening closely to understand a client's story"
+                src="/images/home/jodohmu-about-guidance.png"
+                alt="A warm one-on-one conversation, listening closely to understand a client's story"
                 fill
                 sizes="(max-width: 640px) 100vw, 420px"
                 className="object-cover transition duration-500 group-hover:scale-105"
