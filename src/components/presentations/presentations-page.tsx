@@ -132,6 +132,38 @@ export function PresentationsPage() {
               </span>
             </div>
           </Link>
+
+          <Link
+            href="/presentations/discovery"
+            className="group overflow-hidden rounded-[2rem] border border-[#dce5f5] bg-white shadow-[0_12px_35px_rgba(24,51,111,.08)] transition hover:-translate-y-1 hover:shadow-[0_20px_45px_rgba(24,51,111,.16)]"
+          >
+            <div className="relative aspect-[16/10] overflow-hidden bg-[#10275b]">
+              <Image
+                src="/presentations-sekolah-islam-route-community-guide.png"
+                alt="A facilitator listening closely to understand a client's story"
+                fill
+                sizes="(max-width: 640px) 100vw, 420px"
+                className="object-cover transition duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#10275b]/65 via-transparent to-transparent" />
+              <span className="absolute bottom-5 left-5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-extrabold text-[#173b81]">
+                {id ? "Penjajakan" : "Discovery"}
+              </span>
+            </div>
+            <div className="p-6 sm:p-7">
+              <h3 className="font-serif text-2xl font-bold text-[#10275b]">
+                {id ? "Mengenal Anda Lebih Dekat" : "Getting to Know You"}
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-[#65718a]">
+                {id
+                  ? "Percakapan singkat dan hangat agar tim kami memahami kisah, nilai, dan apa yang sesungguhnya Anda cari sebelum perkenalan pertama."
+                  : "A short, warm conversation to help our team understand your story, your values, and what you're truly looking for before any introduction is made."}
+              </p>
+              <span className="mt-6 inline-flex items-center gap-2 text-sm font-extrabold text-[#c62d5c]">
+                {id ? "Lihat presentasi" : "View presentation"} <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </span>
+            </div>
+          </Link>
         </div>
       </section>
     </div>
