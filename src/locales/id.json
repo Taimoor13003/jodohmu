@@ -88,8 +88,8 @@
     "whyChoose": {
       "badge": "KENAPA JODOHMU",
       "title": "Mengapa Memilih Jodohmu?",
-      "description": "Kami bukan sekadar aplikasi. Kami tim perjodohan offline yang sejalan iman untuk pencari ta'aruf serius.",
-      "secondary": "Setiap perkenalan dikurasi penuh niat baik, hormat, dan nilai syariah—dibimbing matchmaker yang paham adab ta'aruf.",
+      "description": "Kami bukan sekadar aplikasi. Kami tim perjodohan offline yang sejalan iman untuk mereka yang sungguh-sungguh berkomitmen menuju pernikahan.",
+      "secondary": "Setiap perkenalan dikurasi penuh niat baik, hormat, dan nilai syariah—dibimbing matchmaker yang paham adab perkenalan yang halal.",
       "highlights": {
         "trust": {
           "title": "Komunitas Serius & Terverifikasi",
@@ -108,7 +108,7 @@
     "features": {
       "badge": "PENCARIAN PERSONAL",
       "title": "Matchmaking concierge yang dirancang khusus untuk Anda",
-      "subtitle": "Perkenalan offline terpilih untuk lajang siap nikah—panduan ta'aruf, pelibatan keluarga, dan venue yang terhormat di seluruh Indonesia.",
+      "subtitle": "Perkenalan offline terpilih untuk lajang siap nikah—pendampingan penuh, pelibatan keluarga, dan venue yang terhormat di seluruh Indonesia.",
       "tagline": "Layanan Premium",
       "cta": "Pelajari cara kami membimbing Anda",
       "storyTitle": "SEPERTI APA RASANYA",
@@ -746,6 +746,11 @@
       "tag": "Layanan Internasional",
       "title": "Menemukan Jalan Menuju Pernikahan Lintas Negara Bersama Jodohmu",
       "subtitle": "Proses personal dari onboarding berbayar dan discovery hingga Safar, Amanah, pencarian mendalam, dan pertemuan di Indonesia."
+    },
+    "keuanganMuslimAmanahRezeki": {
+      "tag": "Refleksi Muslim",
+      "title": "Keuangan Muslim: Bukan Sekadar Mencari Rezeki, tetapi Menjadi Jalan bagi Kebaikan",
+      "subtitle": "Tentang ikhtiar halal, hidup sederhana, amanah harta, dan bagaimana rezeki dapat mengalirkan manfaat bagi umat."
     },
     "stepByStepProcess": {
       "metaTitle": "Alur ta'aruf offline langkah demi langkah | Panduan Jodohmu menuju pernikahan",

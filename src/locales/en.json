@@ -88,7 +88,7 @@
     "whyChoose": {
       "badge": "WHY JODOHMU",
       "title": "Why Choose Jodohmu?",
-      "description": "We are more than an app. We are your offline, faith-aligned marriage matchmaking team for serious ta'aruf seekers.",
+      "description": "We are more than an app. We are your offline, faith-aligned matchmaking team for people who are committed to marriage.",
       "secondary": "Every introduction is curated with care, intention, and deep respect for your values—guided by matchmakers who understand halal courtship.",
       "highlights": {
         "trust": {
@@ -108,7 +108,7 @@
     "features": {
       "badge": "PERSONAL MATCHING",
       "title": "Concierge matchmaking crafted around you",
-      "subtitle": "Handpicked offline introductions for serious, marriage-ready singles—ta'aruf guidance, family involvement, and respectful venues across Indonesia.",
+      "subtitle": "Handpicked offline introductions for serious, marriage-ready singles—full guidance, family involvement, and respectful venues across Indonesia.",
       "tagline": "Premium Service",
       "cta": "Discover how we guide you",
       "storyTitle": "HOW IT FEELS",
@@ -742,6 +742,11 @@
       "tag": "International Service",
       "title": "Finding Your Way to Marriage Across Borders with Jodohmu",
       "subtitle": "A personal path from paid onboarding and discovery to Safar, Amanah, a deep search, and meeting in Indonesia."
+    },
+    "keuanganMuslimAmanahRezeki": {
+      "tag": "Muslim Reflection",
+      "title": "Muslim Finances: Becoming a Channel for Good",
+      "subtitle": "A reflection on lawful effort, simple living, stewardship of wealth, and provision that benefits the Ummah."
     },
     "stepByStepProcess": {
       "metaTitle": "Offline ta'aruf step-by-step | How Jodohmu guides you to marriage",

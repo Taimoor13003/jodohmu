@@ -161,14 +161,6 @@ export default function HomePage() {
               >
                 {t("homepage.hero.badge")}
               </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.25, ease: "easeOut" }}
-                className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.45em] text-white opacity-60"
-              >
-                Berbasis di Bandung, Indonesia
-              </motion.span>
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
