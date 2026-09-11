@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     // Filter by role and sort in memory — user count is small.
     const snap = await adminDb().collection("user_roles").get();
 
-    let users = snap.docs
+    const users = snap.docs
       .map(doc => {
         const data = doc.data();
         return {
@@ -55,18 +55,14 @@ export async function GET(req: NextRequest) {
       );
       for (const u of users) {
         const intake = intakeByUid.get(u.uid);
+        const assigned = (intake?.assignedWorkers as string[] | undefined) ?? [];
         (u as Record<string, unknown>).personStatus = intake?.personStatus ?? null;
         (u as Record<string, unknown>).phone = intake?.whatsappNumber ?? null;
-      }
-
-      // Workers only ever see candidates assigned to them
-      if (requesterRole === "worker") {
-        const assignedUids = new Set(
-          intakeSnaps
-            .filter(s => ((s.data()?.assignedWorkers as string[] | undefined) ?? []).includes(decoded.uid))
-            .map(s => s.id)
-        );
-        users = users.filter(u => assignedUids.has(u.uid));
+        (u as Record<string, unknown>).location = intake?.location ?? null;
+        (u as Record<string, unknown>).age = intake?.age ?? null;
+        (u as Record<string, unknown>).gender = intake?.gender ?? null;
+        // Workers see every candidate but may only edit the ones assigned to them
+        (u as Record<string, unknown>).canEdit = requesterRole === "admin" || assigned.includes(decoded.uid);
       }
     }
 

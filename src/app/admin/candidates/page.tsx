@@ -19,12 +19,26 @@ interface UserRow {
   phone: string | null;
   personStatus: string | null;
   createdAt: Date | null;
+  location: string | null;
+  age: string | number | null;
+  gender: string | null;
+  canEdit: boolean;
 }
 
-const STATUS_BADGE: Record<string, { label: string; className: string }> = {
-  new_lead:                { label: "New Lead",              className: "bg-amber-50 text-amber-700 border-amber-200" },
-  awaiting_discovery_call: { label: "Discovery Call Pending", className: "bg-sky-50 text-sky-700 border-sky-200" },
-};
+const STATUS_OPTIONS: { value: string; label: string; className: string }[] = [
+  { value: "new_lead",                label: "New Lead",               className: "bg-amber-50 text-amber-700 border-amber-200" },
+  { value: "awaiting_discovery_call", label: "Discovery Call Pending", className: "bg-sky-50 text-sky-700 border-sky-200" },
+  { value: "registered_looking",      label: "Searching Matches",      className: "bg-amber-50 text-amber-700 border-amber-200" },
+  { value: "matched",                 label: "Matched",                className: "bg-indigo-50 text-indigo-700 border-indigo-200" },
+  { value: "in_taaruf",               label: "In Ta'aruf",             className: "bg-violet-50 text-violet-700 border-violet-200" },
+  { value: "family_meeting",          label: "Family Meeting Stage",   className: "bg-rose-50 text-rose-700 border-rose-200" },
+  { value: "closed_success",          label: "Closed — Success",       className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+  { value: "closed_withdrawn",        label: "Closed — Withdrawn",     className: "bg-gray-100 text-gray-500 border-gray-200" },
+];
+
+const STATUS_BADGE: Record<string, { label: string; className: string }> = Object.fromEntries(
+  STATUS_OPTIONS.map(s => [s.value, { label: s.label, className: s.className }])
+);
 
 const LEAD_STATUSES = new Set(["new_lead", "awaiting_discovery_call"]);
 
@@ -33,6 +47,11 @@ export default function CandidatesPage() {
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "leads">("all");
+  const [cityFilter, setCityFilter] = useState<string>("all");
+  const [genderFilter, setGenderFilter] = useState<string>("all");
+  const [minAge, setMinAge] = useState<string>("");
+  const [maxAge, setMaxAge] = useState<string>("");
+  const [savingStatusUid, setSavingStatusUid] = useState<string | null>(null);
   const router = useRouter();
 
   const fetchUsers = useCallback(async () => {
@@ -47,7 +66,8 @@ export default function CandidatesPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Failed");
       setUsers(
-        (data.users as Array<{ uid: string; name: string; email: string; role: string; phone: string | null; personStatus: string | null; createdAt: string | null }>).map(u => ({
+        (data.users as Array<{ uid: string; name: string; email: string; role: string; phone: string | null; personStatus: string | null; createdAt: string | null; location: string | null; age: string | number | null; gender: string | null; canEdit?: boolean }>).map(u => ({
+          canEdit: false,
           ...u,
           createdAt: u.createdAt ? new Date(u.createdAt) : null,
         }))
@@ -59,8 +79,53 @@ export default function CandidatesPage() {
     }
   }, []);
 
+  const updateStatus = async (uid: string, personStatus: string) => {
+    const previous = users;
+    setUsers(prev => prev.map(u => (u.uid === uid ? { ...u, personStatus } : u)));
+    setSavingStatusUid(uid);
+    try {
+      const current = auth.currentUser;
+      if (!current) throw new Error("Not signed in");
+      const token = await current.getIdToken();
+      const res = await fetch(`/api/admin/candidate/${uid}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ personStatus }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed to update status");
+    } catch (err) {
+      console.error(err);
+      setUsers(previous);
+      alert(err instanceof Error ? err.message : "Failed to update status");
+    } finally {
+      setSavingStatusUid(null);
+    }
+  };
+
   const leadCount = users.filter(u => LEAD_STATUSES.has(u.personStatus ?? "")).length;
-  const visibleUsers = filter === "leads" ? users.filter(u => LEAD_STATUSES.has(u.personStatus ?? "")) : users;
+
+  const cityOptions = Array.from(
+    new Set(users.map(u => u.location?.trim()).filter((v): v is string => !!v))
+  ).sort((a, b) => a.localeCompare(b));
+
+  const visibleUsers = users.filter(u => {
+    if (filter === "leads" && !LEAD_STATUSES.has(u.personStatus ?? "")) return false;
+    if (cityFilter !== "all" && (u.location ?? "").trim() !== cityFilter) return false;
+    if (genderFilter !== "all" && (u.gender ?? "") !== genderFilter) return false;
+    const age = u.age != null ? Number(u.age) : NaN;
+    if (minAge && (Number.isNaN(age) || age < Number(minAge))) return false;
+    if (maxAge && (Number.isNaN(age) || age > Number(maxAge))) return false;
+    return true;
+  });
+
+  const hasActiveFilters = cityFilter !== "all" || genderFilter !== "all" || minAge !== "" || maxAge !== "";
+  const resetFilters = () => {
+    setCityFilter("all");
+    setGenderFilter("all");
+    setMinAge("");
+    setMaxAge("");
+  };
 
   useEffect(() => {
     if (role === "admin" || role === "worker") fetchUsers();
@@ -123,6 +188,71 @@ export default function CandidatesPage() {
         </button>
       </div>
 
+      <div className="flex flex-wrap items-end gap-3 rounded-xl border border-slate-200 bg-white p-4">
+        <div className="flex flex-col gap-1">
+          <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">City</label>
+          <select
+            value={cityFilter}
+            onChange={e => setCityFilter(e.target.value)}
+            className="h-9 rounded-lg border border-slate-200 px-2.5 text-sm text-slate-700"
+          >
+            <option value="all">All cities</option>
+            {cityOptions.map(city => (
+              <option key={city} value={city}>{city}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Gender</label>
+          <select
+            value={genderFilter}
+            onChange={e => setGenderFilter(e.target.value)}
+            className="h-9 rounded-lg border border-slate-200 px-2.5 text-sm text-slate-700"
+          >
+            <option value="all">All</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Age range</label>
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min={0}
+              placeholder="Min"
+              value={minAge}
+              onChange={e => setMinAge(e.target.value)}
+              className="h-9 w-20 rounded-lg border border-slate-200 px-2.5 text-sm text-slate-700"
+            />
+            <span className="text-slate-400 text-sm">–</span>
+            <input
+              type="number"
+              min={0}
+              placeholder="Max"
+              value={maxAge}
+              onChange={e => setMaxAge(e.target.value)}
+              className="h-9 w-20 rounded-lg border border-slate-200 px-2.5 text-sm text-slate-700"
+            />
+          </div>
+        </div>
+
+        {hasActiveFilters && (
+          <button
+            onClick={resetFilters}
+            className="h-9 rounded-lg border border-slate-200 px-3 text-xs font-semibold text-slate-500 hover:bg-slate-50"
+          >
+            Clear filters
+          </button>
+        )}
+
+        <div className="ml-auto text-xs text-muted-foreground self-end pb-1.5">
+          Showing {visibleUsers.length} of {users.length}
+        </div>
+      </div>
+
       <Card className="border-0 shadow-xl">
         <CardContent className="p-0">
           {loading ? (
@@ -138,6 +268,9 @@ export default function CandidatesPage() {
                   <TableHead>Name</TableHead>
                   <TableHead>Email</TableHead>
                   <TableHead>Phone</TableHead>
+                  <TableHead>City</TableHead>
+                  <TableHead>Age</TableHead>
+                  <TableHead>Gender</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead></TableHead>
@@ -151,14 +284,22 @@ export default function CandidatesPage() {
                       <TableCell className="font-medium">{u.name}</TableCell>
                       <TableCell className="text-muted-foreground">{u.email}</TableCell>
                       <TableCell className="text-muted-foreground">{u.phone ?? "—"}</TableCell>
+                      <TableCell className="text-muted-foreground">{u.location ?? "—"}</TableCell>
+                      <TableCell className="text-muted-foreground">{u.age ?? "—"}</TableCell>
+                      <TableCell className="text-muted-foreground capitalize">{u.gender ?? "—"}</TableCell>
                       <TableCell>
-                        {badge ? (
-                          <span className={`px-2.5 py-1 rounded-full border text-[11px] font-bold whitespace-nowrap ${badge.className}`}>
-                            {badge.label}
-                          </span>
-                        ) : (
-                          <span className="text-muted-foreground text-sm">—</span>
-                        )}
+                        <select
+                          value={u.personStatus ?? ""}
+                          disabled={!u.canEdit || savingStatusUid === u.uid}
+                          title={u.canEdit ? undefined : "Only the assigned worker or an admin can change this"}
+                          onChange={e => updateStatus(u.uid, e.target.value)}
+                          className={`px-2 py-1 rounded-full border text-[11px] font-bold whitespace-nowrap disabled:opacity-50 ${badge ? badge.className : "bg-gray-100 text-gray-400 border-gray-200"}`}
+                        >
+                          {!u.personStatus && <option value="" disabled>— Set status —</option>}
+                          {STATUS_OPTIONS.map(opt => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                          ))}
+                        </select>
                       </TableCell>
                       <TableCell className="text-muted-foreground text-sm">
                         {u.createdAt ? u.createdAt.toLocaleDateString() : "—"}
