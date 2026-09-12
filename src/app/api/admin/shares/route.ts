@@ -5,7 +5,8 @@ import { adminDb } from "@/lib/firebase-admin";
 import { authenticateTeam, canManageCandidate } from "@/lib/team-access";
 import { questionsSchema } from "@/lib/share-questions";
 import { candidateDisplayName, normalizeAudiences } from "@/lib/share-sections";
-import { accessSchema, audiencesSchema, photoSelectionSchema } from "@/lib/share-schemas";
+import { defaultAvatarFor } from "@/lib/share-avatars";
+import { accessSchema, audiencesSchema, avatarSelectionSchema, photoSelectionSchema } from "@/lib/share-schemas";
 import {
   DEFAULT_SESSION_MINUTES,
   MAX_PROFILES_PER_SHARE,
@@ -27,6 +28,7 @@ const createSchema = z.object({
   access: accessSchema,
   audiences: audiencesSchema,
   photoSelection: photoSelectionSchema.default({}),
+  avatarSelection: avatarSelectionSchema.default({}),
   /** null = never expires */
   expiresInHours: z.number().int().positive().max(24 * 365).nullable(),
   /** null = unlimited */
@@ -122,6 +124,12 @@ export async function POST(req: NextRequest) {
     const photoSelection = Object.fromEntries(
       input.candidateIds.map(id => [id, input.photoSelection[id] ?? null]),
     );
+    const avatarSelection = Object.fromEntries(
+      input.candidateIds.map((id, i) => [
+        id,
+        input.avatarSelection[id] ?? defaultAvatarFor((snaps[i].data() ?? {}) as Record<string, unknown>),
+      ]),
+    );
 
     const token = generateShareToken();
     await adminDb().collection(SHARES_COLLECTION).doc(token).set({
@@ -133,6 +141,7 @@ export async function POST(req: NextRequest) {
       access: input.access,
       audiences,
       photoSelection,
+      avatarSelection,
       expiresAt: input.expiresInHours ? Timestamp.fromMillis(Date.now() + input.expiresInHours * 3600_000) : null,
       maxOpens: input.maxOpens,
       maxOpensPerViewer: input.maxOpensPerViewer,

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 import { adminDb } from "@/lib/firebase-admin";
 import { describeVisit } from "@/lib/share-analytics";
+import { defaultAvatarFor } from "@/lib/share-avatars";
 import { projectProfile } from "@/lib/share-sections";
 import {
   ANON_COOKIE,
@@ -14,6 +15,7 @@ import {
   anonymousLabel,
   evaluateShare,
   generateAnonId,
+  isTeamViewer,
   readShare,
   resolveViewer,
   sessionCookieName,
@@ -26,7 +28,7 @@ import {
   verifySession,
   viewerKeyFor,
 } from "@/lib/shares";
-import type { ShareGatePayload, ShareGateState, ShareViewPayload, ShareViewResponse } from "@/lib/share-types";
+import type { ShareGatePayload, ShareGateState, ShareProgress, ShareViewPayload } from "@/lib/share-types";
 
 export const dynamic = "force-dynamic";
 
@@ -68,9 +70,32 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ toke
     if (linkState !== "active") return gate(linkState);
 
     const viewer = await resolveViewer(req.headers.get("authorization"));
-    const blocked = accessGate(share.access, viewer);
+    const blocked = accessGate(share, viewer);
     if (blocked) {
       return gate(blocked, {
+        purpose: share.purpose,
+        recipientLabel: share.recipientLabel,
+        profileCount: share.candidateIds.length,
+      });
+    }
+
+    /* Where this viewer got to. Someone who already swiped the whole deck
+       cannot reopen it — the team always can, to check what was sent. */
+    let progress: ShareProgress = { decidedSlots: [], completed: false, finalNote: "" };
+    if (viewer && share.questionnaire.enabled) {
+      const responseSnap = await ref.collection(SHARE_RESPONSES_SUBCOLLECTION).doc(viewer.uid).get();
+      if (responseSnap.exists) {
+        const data = responseSnap.data()!;
+        const decisions = (data.decisions ?? {}) as Record<string, string>;
+        progress = {
+          decidedSlots: share.candidateIds.map((id, i) => (decisions[id] ? i : -1)).filter(i => i >= 0),
+          completed: share.candidateIds.length > 0 && share.candidateIds.every(id => decisions[id]),
+          finalNote: data.finalNote ?? "",
+        };
+      }
+    }
+    if (progress.completed && !isTeamViewer(viewer)) {
+      return gate("completed", {
         purpose: share.purpose,
         recipientLabel: share.recipientLabel,
         profileCount: share.candidateIds.length,
@@ -168,36 +193,19 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ toke
       ? await adminDb().getAll(...share.candidateIds.map(id => adminDb().collection("candidate_intake").doc(id)))
       : [];
 
-    const profiles = share.candidateIds.map((candidateId, slot) =>
-      projectProfile({
+    const profiles = share.candidateIds.map((candidateId, slot) => {
+      const candidate = (candidateSnaps[slot]?.data() ?? {}) as Record<string, unknown>;
+      return projectProfile({
         slot,
-        candidate: (candidateSnaps[slot]?.data() ?? {}) as Record<string, unknown>,
+        candidate,
         audiences: share.audiences,
         tier,
+        avatar: share.avatarSelection[candidateId] ?? defaultAvatarFor(candidate),
         photoSelection: share.photoSelection[candidateId] ?? null,
         anonymousLabel: anonymousLabel(token, slot),
         photoSrc: index => `/api/share/${token}/photo/${slot}/${index}`,
-      }),
-    );
-
-    let response: ShareViewResponse | null = null;
-    if (viewer && share.questionnaire.enabled) {
-      const responseSnap = await ref.collection(SHARE_RESPONSES_SUBCOLLECTION).doc(viewer.uid).get();
-      if (responseSnap.exists) {
-        const data = responseSnap.data()!;
-        const stored = (data.answers ?? {}) as Record<string, Record<string, string>>;
-        const slotOf = (candidateId: string) => String(share.candidateIds.indexOf(candidateId));
-        response = {
-          answers: Object.fromEntries(
-            share.candidateIds.map((candidateId, slot) => [String(slot), stored[candidateId] ?? {}]),
-          ),
-          finalChoice:
-            data.finalChoice === "none" ? "none" : data.finalChoice ? slotOf(data.finalChoice as string) : null,
-          finalNote: data.finalNote ?? "",
-          submittedAt: toIso(data.submittedAt),
-        };
-      }
-    }
+      });
+    });
 
     const sessionExpiresAtMs = hasSession ? claims!.exp : now + share.sessionMinutes * 60_000;
 
@@ -212,7 +220,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ toke
       viewer: viewer ? { name: viewer.name, email: viewer.email } : null,
       profiles,
       questionnaire: share.questionnaire,
-      response,
+      progress,
       expiresAt: toIso(share.expiresAt),
       opensRemaining: share.maxOpens == null ? null : Math.max(0, share.maxOpens - totalOpens),
       opensRemainingForYou: share.maxOpensPerViewer == null ? null : Math.max(0, share.maxOpensPerViewer - viewerOpens),

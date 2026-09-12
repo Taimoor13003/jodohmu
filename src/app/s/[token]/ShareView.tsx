@@ -6,18 +6,16 @@ import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { signInWithPopup, signOut } from "firebase/auth";
 import { toast } from "sonner";
-import {
-  AlertCircle, ArrowLeft, ArrowRight, Check, ChevronLeft, ChevronRight, Clock, Globe, Lock,
-  LogOut, ShieldCheck, Sparkles, X,
-} from "lucide-react";
+import { AlertCircle, ArrowRight, Check, ChevronLeft, ChevronRight, Clock, Globe, Heart, Lock, LogOut, Sparkles, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { auth, googleProvider } from "@/lib/firebase";
-import { FINAL_CHOICE_NONE, checkProfileAnswers, type ProfileAnswers } from "@/lib/share-questions";
+import { checkProfileAnswers, swipeQuestionId, type ProfileAnswers } from "@/lib/share-questions";
 import type { Lang } from "@/lib/share-display";
 import type { ShareGatePayload, ShareGateState, ShareViewPayload } from "@/lib/share-types";
-import { ProfileCard, profileTitle } from "@/components/share/profile-card";
+import { profileTitle } from "@/components/share/profile-card";
 import { ReflectionForm } from "@/components/share/reflection-form";
+import { SwipeDeck, type Decision } from "@/components/share/swipe-deck";
 import { Eyebrow, GeometricPattern, GoogleMark, T, cardShadow, serif } from "@/components/share/share-theme";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 
@@ -28,20 +26,22 @@ type View =
   | { kind: "gate"; gate: ShareGatePayload }
   | { kind: "ready"; data: ShareViewPayload };
 
+type Stage = { kind: "deck" } | { kind: "form"; slot: number; decision: Decision } | { kind: "done" };
+
 /* ── copy ─────────────────────────────────────────────── */
 
-const GATE_COPY: Record<ShareGateState, Record<Lang, { title: string; body: string }>> = {
-  signin_required: {
-    id: { title: "Perkenalan pribadi untuk Anda", body: "Untuk menjaga amanah setiap kandidat, profil ini hanya dapat dibuka setelah Anda masuk. Kami tidak akan membagikan data Anda." },
-    en: { title: "A private introduction for you", body: "To honour each candidate's trust, this profile opens only after you sign in. Your details are never shared." },
+const GATE_COPY: Record<Exclude<ShareGateState, "signin_required">, Record<Lang, { title: string; body: string }>> = {
+  completed: {
+    id: { title: "Terima kasih, sudah selesai", body: "Anda telah memberikan penilaian untuk semua profil di tautan ini. Matchmaker Anda akan menghubungi Anda untuk langkah berikutnya, insyaAllah." },
+    en: { title: "Thank you — all done", body: "You've shared your thoughts on every profile in this link. Your matchmaker will be in touch about the next step, insyaAllah." },
   },
   not_invited: {
     id: { title: "Tautan ini untuk orang lain", body: "Akun yang Anda gunakan tidak termasuk penerima tautan ini. Coba masuk dengan akun yang menerima undangan dari tim Jodohmu." },
     en: { title: "This link was meant for someone else", body: "The account you're using isn't on this link's invitation. Try the account the Jodohmu team invited." },
   },
   exhausted_for_you: {
-    id: { title: "Anda sudah membuka tautan ini", body: "Tautan ini hanya dapat dibuka sejumlah kali per orang. Hubungi matchmaker Anda jika ingin melihatnya kembali." },
-    en: { title: "You've already viewed this", body: "This link can only be opened a limited number of times per person. Ask your matchmaker if you'd like another look." },
+    id: { title: "Anda sudah membuka tautan ini", body: "Tautan ini hanya dapat dibuka sejumlah kali per orang. Hubungi matchmaker Anda bila ingin melihatnya kembali." },
+    en: { title: "You've already viewed this", body: "This link can only be opened a limited number of times per person. Ask your matchmaker for another look." },
   },
   expired: {
     id: { title: "Masa berlaku telah berakhir", body: "Tautan perkenalan ini sudah tidak aktif. Silakan hubungi tim Jodohmu untuk meminta akses baru." },
@@ -69,7 +69,7 @@ function useCountdown(target: string | null, lang: Lang): string | null {
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     if (!target) return;
-    const id = setInterval(() => setNow(Date.now()), 30_000);
+    const id = setInterval(() => setNow(Date.now()), 60_000);
     return () => clearInterval(id);
   }, [target]);
   if (!target) return null;
@@ -77,69 +77,72 @@ function useCountdown(target: string | null, lang: Lang): string | null {
   const d = Math.floor(diff / 86_400_000);
   const h = Math.floor((diff % 86_400_000) / 3_600_000);
   const m = Math.floor((diff % 3_600_000) / 60_000);
-  const [dd, hh, mm] = lang === "id" ? ["h", "j", "m"] : ["d", "h", "m"];
-  if (d > 0) return `${d}${dd} ${h}${hh}`;
-  if (h > 0) return `${h}${hh} ${m}${mm}`;
-  return `${m}${mm}`;
+  if (d > 0) return lang === "id" ? `${d} hari` : `${d}d`;
+  if (h > 0) return lang === "id" ? `${h} jam` : `${h}h`;
+  return lang === "id" ? `${m} menit` : `${m}m`;
 }
 
-/* ── chrome ───────────────────────────────────────────── */
+/* ── chrome: a logo, not a navbar ─────────────────────── */
 
-function TopBar({ lang, onToggleLang, viewer, onSignOut, expiry }: {
+function TopStrip({ lang, onToggleLang, viewer, onSignOut, expiry, progress }: {
   lang: Lang;
   onToggleLang: () => void;
   viewer?: { name: string; email: string } | null;
   onSignOut?: () => void;
   expiry?: string | null;
+  progress?: { current: number; total: number } | null;
 }) {
   return (
-    <header className="sticky top-0 z-40 backdrop-blur-md" style={{ background: `${T.paper}E6`, borderBottom: `1px solid ${T.hairline}` }}>
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-5 sm:px-8">
-        <Link href="/" className="flex items-center" aria-label="Jodohmu">
-          <Image src={LogoIcon} alt="Jodohmu" height={30} style={{ width: "auto" }} priority />
+    <header className="sticky top-0 z-30" style={{ background: `${T.paper}F2`, backdropFilter: "blur(10px)", borderBottom: `1px solid ${T.hairline}` }}>
+      <div className="mx-auto flex h-[58px] max-w-2xl items-center gap-3 px-5">
+        <Link href="/" aria-label="Jodohmu" className="flex items-center">
+          <Image src={LogoIcon} alt="Jodohmu" height={26} style={{ width: "auto" }} priority />
         </Link>
-        <span className="hidden items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold sm:flex" style={{ background: T.sage, color: T.sageInk }}>
-          <ShieldCheck className="h-3.5 w-3.5" />
-          {lang === "id" ? "Rahasia & terbatas" : "Confidential & limited"}
-        </span>
         <div className="flex-1" />
         {expiry && (
-          <span className="hidden items-center gap-1.5 text-[12px] font-semibold md:flex" style={{ color: T.muted }}>
+          <span className="hidden items-center gap-1.5 text-[11.5px] font-semibold sm:flex" style={{ color: T.faint }}>
             <Clock className="h-3.5 w-3.5" />
-            {lang === "id" ? `Berakhir dalam ${expiry}` : `Ends in ${expiry}`}
+            {lang === "id" ? `${expiry} lagi` : expiry}
           </span>
-        )}
-        {viewer && (
-          <div className="hidden items-center gap-2 rounded-full py-1 pl-3 pr-1 sm:flex" style={{ border: `1px solid ${T.hairline}`, background: T.card }}>
-            <span className="max-w-[160px] truncate text-[12px] font-semibold" style={{ color: T.body }}>{viewer.email || viewer.name}</span>
-            <button onClick={onSignOut} title={lang === "id" ? "Keluar" : "Sign out"} className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-stone-100">
-              <LogOut className="h-3.5 w-3.5" style={{ color: T.muted }} />
-            </button>
-          </div>
         )}
         <button
           onClick={onToggleLang}
-          className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-bold"
+          className="flex items-center gap-1 rounded-full px-2.5 py-1 text-[11.5px] font-bold"
           style={{ border: `1px solid ${T.hairline}`, background: T.card, color: T.navy }}
         >
-          <Globe className="h-3.5 w-3.5" />
+          <Globe className="h-3 w-3" />
           {lang === "id" ? "EN" : "ID"}
         </button>
+        {viewer && (
+          <button
+            onClick={onSignOut}
+            title={`${viewer.email} — ${lang === "id" ? "keluar" : "sign out"}`}
+            className="flex items-center gap-1.5 rounded-full py-1 pl-1 pr-2"
+            style={{ border: `1px solid ${T.hairline}`, background: T.card }}
+          >
+            <span className="flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-bold text-white" style={{ background: T.navyDeep }}>
+              {(viewer.name || viewer.email || "?").slice(0, 1).toUpperCase()}
+            </span>
+            <LogOut className="h-3 w-3" style={{ color: T.faint }} />
+          </button>
+        )}
       </div>
+      {progress && progress.total > 1 && (
+        <div className="mx-auto max-w-2xl px-5 pb-3">
+          <div className="mb-1.5 flex items-center justify-between text-[11px] font-bold uppercase" style={{ color: T.faint, letterSpacing: "0.14em" }}>
+            <span>{lang === "id" ? `Profil ${progress.current} dari ${progress.total}` : `Profile ${progress.current} of ${progress.total}`}</span>
+          </div>
+          <div className="h-[3px] overflow-hidden rounded-full" style={{ background: T.hairline }}>
+            <motion.div
+              className="h-full rounded-full"
+              style={{ background: `linear-gradient(90deg, ${T.accent}, ${T.rose})` }}
+              animate={{ width: `${(progress.current / progress.total) * 100}%` }}
+              transition={{ duration: 0.4 }}
+            />
+          </div>
+        </div>
+      )}
     </header>
-  );
-}
-
-function Footer({ lang }: { lang: Lang }) {
-  return (
-    <footer className="mt-16 px-6 pb-14 pt-10 text-center" style={{ borderTop: `1px solid ${T.hairline}` }}>
-      <Image src={LogoIcon} alt="Jodohmu" height={26} style={{ width: "auto", margin: "0 auto 14px" }} />
-      <p className="mx-auto max-w-md text-[12px] leading-relaxed" style={{ color: T.faint }}>
-        {lang === "id"
-          ? "Profil ini bersifat rahasia dan diberikan atas dasar amanah. Mohon tidak menyalin, menyimpan, atau meneruskannya tanpa izin Jodohmu."
-          : "This profile is confidential and shared in trust. Please don't copy, save, or forward it without Jodohmu's permission."}
-      </p>
-    </footer>
   );
 }
 
@@ -148,108 +151,148 @@ function GoogleButton({ onClick, busy, lang, label }: { onClick: () => void; bus
     <button
       onClick={onClick}
       disabled={busy}
-      className="inline-flex h-12 items-center justify-center gap-3 rounded-full px-6 text-[14.5px] font-bold transition-shadow hover:shadow-md disabled:opacity-60"
-      style={{ background: T.card, color: T.ink, border: `1px solid ${T.hairline}`, boxShadow: "0 1px 2px rgba(28,25,23,0.06)" }}
+      className="inline-flex h-[52px] w-full items-center justify-center gap-3 rounded-full px-6 text-[15px] font-bold transition-shadow hover:shadow-md disabled:opacity-60"
+      style={{ background: T.card, color: T.ink, border: `1px solid ${T.hairline}`, boxShadow: "0 2px 10px -4px rgba(28,25,23,0.25)" }}
     >
       {busy ? (
         <span className="h-4 w-4 animate-spin rounded-full border-2" style={{ borderColor: T.faint, borderTopColor: "transparent" }} />
       ) : (
-        <GoogleMark />
+        <GoogleMark size={20} />
       )}
       {label ?? (lang === "id" ? "Lanjutkan dengan Google" : "Continue with Google")}
     </button>
   );
 }
 
-/* ── gate ─────────────────────────────────────────────── */
+/* ── signed out: blurred deck behind a sign-in modal ──── */
 
-function GateScreen({ gate, lang, onToggleLang, onSignIn, onSwitchAccount, signingIn, viewerEmail }: {
+function SignInGate({ gate, lang, onToggleLang, onSignIn, busy }: {
   gate: ShareGatePayload;
   lang: Lang;
   onToggleLang: () => void;
   onSignIn: () => void;
-  onSwitchAccount: () => void;
-  signingIn: boolean;
-  viewerEmail: string | null;
+  busy: boolean;
 }) {
-  const copy = GATE_COPY[gate.state][lang];
-  const isSignIn = gate.state === "signin_required";
-  const isAccount = gate.state === "not_invited";
+  const count = gate.profileCount ?? 0;
+  return (
+    <div className="relative min-h-screen overflow-hidden" style={{ background: T.paper }}>
+      {/* blurred decoy — no real profile data is ever sent before sign-in */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 flex items-center justify-center" style={{ filter: "blur(16px)", opacity: 0.75 }}>
+        <div className="relative" style={{ width: 380, maxWidth: "86vw", aspectRatio: "3 / 4" }}>
+          <div className="absolute inset-0 overflow-hidden rounded-[28px]" style={{ background: T.paperDeep, transform: "scale(0.94) translateY(18px)" }}>
+            <GeometricPattern opacity={0.3} />
+          </div>
+          <div className="absolute inset-0 overflow-hidden rounded-[28px]" style={{ background: T.paperDeep, boxShadow: cardShadow }}>
+            <GeometricPattern opacity={0.4} />
+            <div className="absolute inset-x-0 bottom-0 h-1/2" style={{ background: `linear-gradient(to top, ${T.navyDeep}CC, transparent)` }} />
+            <div className="absolute inset-x-0 bottom-0 space-y-3 p-7">
+              <div className="h-7 w-2/3 rounded-full" style={{ background: "rgba(255,255,255,0.5)" }} />
+              <div className="h-4 w-1/2 rounded-full" style={{ background: "rgba(255,255,255,0.35)" }} />
+              <div className="flex gap-2 pt-1">
+                <div className="h-6 w-20 rounded-full" style={{ background: "rgba(255,255,255,0.3)" }} />
+                <div className="h-6 w-24 rounded-full" style={{ background: "rgba(255,255,255,0.3)" }} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <div className="absolute inset-0" style={{ background: `${T.paper}5C` }} />
+
+      <div className="relative flex min-h-screen flex-col">
+        <div className="flex items-center px-5 py-4">
+          <Link href="/" aria-label="Jodohmu" className="flex items-center">
+            <Image src={LogoIcon} alt="Jodohmu" height={26} style={{ width: "auto" }} priority />
+          </Link>
+          <div className="flex-1" />
+          <button
+            onClick={onToggleLang}
+            className="flex items-center gap-1 rounded-full px-2.5 py-1 text-[11.5px] font-bold"
+            style={{ border: `1px solid ${T.hairline}`, background: T.card, color: T.navy }}
+          >
+            <Globe className="h-3 w-3" />
+            {lang === "id" ? "EN" : "ID"}
+          </button>
+        </div>
+
+        <div className="flex flex-1 items-center justify-center px-5 pb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 16, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            className="w-full max-w-[420px] rounded-[30px] px-7 pb-8 pt-9 text-center sm:px-9"
+            style={{ background: T.card, border: `1px solid ${T.hairline}`, boxShadow: "0 30px 70px -30px rgba(28,25,23,0.45)" }}
+          >
+            <div
+              className="mx-auto mb-6 flex h-[68px] w-[68px] items-center justify-center rounded-full"
+              style={{ background: T.paper, boxShadow: `0 0 0 1px ${T.accent}55, 0 0 0 8px ${T.paper}` }}
+            >
+              <Sparkles className="h-7 w-7" style={{ color: T.accent }} />
+            </div>
+
+            {gate.recipientLabel && <Eyebrow>{lang === "id" ? `Untuk ${gate.recipientLabel}` : `For ${gate.recipientLabel}`}</Eyebrow>}
+            <h1 className="mb-3 mt-3 text-[26px] leading-tight" style={{ fontFamily: serif, color: T.ink }}>
+              {lang === "id" ? "Perkenalan pribadi untuk Anda" : "A private introduction for you"}
+            </h1>
+            <p className="mb-7 text-[14.5px] leading-relaxed" style={{ color: T.muted }}>
+              {count > 0
+                ? lang === "id"
+                  ? `${count} profil pilihan menunggu. Masuk untuk membukanya — demi menjaga amanah setiap kandidat.`
+                  : `${count} selected profiles are waiting. Sign in to open them — this protects each candidate's trust.`
+                : lang === "id"
+                  ? "Masuk untuk membuka perkenalan ini — demi menjaga amanah setiap kandidat."
+                  : "Sign in to open this introduction — this protects each candidate's trust."}
+            </p>
+
+            <GoogleButton onClick={onSignIn} busy={busy} lang={lang} />
+
+            <p className="mt-6 flex items-center justify-center gap-1.5 text-[11.5px]" style={{ color: T.faint }}>
+              <Lock className="h-3 w-3" />
+              {lang === "id" ? "Rahasia, terbatas, dan tercatat." : "Confidential, limited, and logged."}
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GateScreen({ state, lang, onToggleLang }: { state: Exclude<ShareGateState, "signin_required">; lang: Lang; onToggleLang: () => void }) {
+  const copy = GATE_COPY[state][lang];
+  const done = state === "completed";
   return (
     <div className="flex min-h-screen flex-col" style={{ background: T.paper }}>
-      <TopBar lang={lang} onToggleLang={onToggleLang} />
-      <main className="flex flex-1 items-center justify-center px-5 py-16">
+      <TopStrip lang={lang} onToggleLang={onToggleLang} />
+      <main className="flex flex-1 items-center justify-center px-5 py-14">
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="relative w-full max-w-[460px] overflow-hidden rounded-[32px] px-8 pb-10 pt-12 text-center sm:px-12"
+          transition={{ duration: 0.45 }}
+          className="relative w-full max-w-[430px] overflow-hidden rounded-[30px] px-8 pb-10 pt-12 text-center"
           style={{ background: T.card, border: `1px solid ${T.hairline}`, boxShadow: cardShadow }}
         >
-          <div className="absolute inset-x-0 top-0 h-28 overflow-hidden" style={{ background: T.paperDeep }}>
+          <div className="absolute inset-x-0 top-0 h-24 overflow-hidden" style={{ background: T.paperDeep }}>
             <GeometricPattern opacity={0.22} />
           </div>
           <div
-            className="relative mx-auto mb-7 flex h-[76px] w-[76px] items-center justify-center rounded-full"
-            style={{ background: T.card, boxShadow: `0 0 0 1px ${T.gold}66, 0 0 0 7px ${T.card}` }}
+            className="relative mx-auto mb-6 flex h-[72px] w-[72px] items-center justify-center rounded-full"
+            style={{ background: T.card, boxShadow: `0 0 0 1px ${T.accent}66, 0 0 0 7px ${T.card}` }}
           >
-            {gate.state === "error" ? (
-              <AlertCircle className="h-7 w-7" style={{ color: T.rose }} />
-            ) : isSignIn ? (
-              <Sparkles className="h-7 w-7" style={{ color: T.gold }} />
-            ) : (
-              <Lock className="h-7 w-7" style={{ color: T.navy }} />
-            )}
+            {state === "error" ? <AlertCircle className="h-7 w-7" style={{ color: T.rose }} />
+              : done ? <Check className="h-7 w-7" style={{ color: T.successInk }} />
+              : <Lock className="h-7 w-7" style={{ color: T.navy }} />}
           </div>
-
-          {isSignIn && gate.recipientLabel && (
-            <div className="mb-3"><Eyebrow>{lang === "id" ? `Untuk ${gate.recipientLabel}` : `For ${gate.recipientLabel}`}</Eyebrow></div>
-          )}
-          <h1 className="mb-4 text-[27px] leading-tight" style={{ fontFamily: serif, color: T.ink }}>{copy.title}</h1>
+          <h1 className="mb-3 text-[25px] leading-tight" style={{ fontFamily: serif, color: T.ink }}>{copy.title}</h1>
           <p className="mb-8 text-[14.5px] leading-relaxed" style={{ color: T.muted }}>{copy.body}</p>
-
-          {isSignIn && (
-            <>
-              {!!gate.profileCount && (
-                <p className="mb-6 text-[13px] font-semibold" style={{ color: T.body }}>
-                  {lang === "id"
-                    ? `${gate.profileCount} profil pilihan menunggu Anda`
-                    : `${gate.profileCount} selected profile${gate.profileCount > 1 ? "s" : ""} await${gate.profileCount > 1 ? "" : "s"} you`}
-                </p>
-              )}
-              <GoogleButton onClick={onSignIn} busy={signingIn} lang={lang} />
-            </>
-          )}
-
-          {isAccount && (
-            <>
-              {viewerEmail && (
-                <p className="mb-5 text-[13px]" style={{ color: T.body }}>
-                  {lang === "id" ? "Masuk sebagai" : "Signed in as"} <strong>{viewerEmail}</strong>
-                </p>
-              )}
-              <GoogleButton onClick={onSwitchAccount} busy={signingIn} lang={lang} label={lang === "id" ? "Gunakan akun lain" : "Use another account"} />
-            </>
-          )}
-
-          {!isSignIn && !isAccount && (
-            <a
-              href={WHATSAPP}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-12 items-center rounded-full px-7 text-[14px] font-bold text-white"
-              style={{ background: T.navyDeep }}
-            >
-              {lang === "id" ? "Hubungi Tim Jodohmu" : "Contact the Jodohmu team"}
-            </a>
-          )}
-
-          <p className="mt-8 text-[11.5px] leading-relaxed" style={{ color: T.faint }}>
-            {lang === "id"
-              ? "Setiap profil Jodohmu dibagikan secara pribadi, terbatas, dan tercatat."
-              : "Every Jodohmu profile is shared privately, on limited terms, and logged."}
-          </p>
+          <a
+            href={WHATSAPP}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-12 items-center rounded-full px-7 text-[14px] font-bold text-white"
+            style={{ background: T.navyDeep }}
+          >
+            {lang === "id" ? "Hubungi Tim Jodohmu" : "Contact the Jodohmu team"}
+          </a>
         </motion.div>
       </main>
     </div>
@@ -267,15 +310,14 @@ export default function ShareView({ token }: { token: string }) {
 
   const [view, setView] = useState<View>({ kind: "loading" });
   const [signingIn, setSigningIn] = useState(false);
-  const [step, setStep] = useState(0);
+  const [decided, setDecided] = useState<number[]>([]);
+  const [stage, setStage] = useState<Stage>({ kind: "deck" });
+  const [answers, setAnswers] = useState<ProfileAnswers>({});
+  const [saving, setSaving] = useState(false);
+  const [highlight, setHighlight] = useState<string | null>(null);
   const [lightbox, setLightbox] = useState<{ slot: number; index: number } | null>(null);
-
-  const [answers, setAnswers] = useState<Record<string, ProfileAnswers>>({});
-  const [finalChoice, setFinalChoice] = useState<string | null>(null);
   const [finalNote, setFinalNote] = useState("");
-  const [submittedAt, setSubmittedAt] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const [highlight, setHighlight] = useState<{ slot: number; questionId: string } | null>(null);
+  const [noteSaved, setNoteSaved] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -306,70 +348,28 @@ export default function ShareView({ token }: { token: string }) {
   }, [authLoading, user?.uid, load]);
 
   const data = view.kind === "ready" ? view.data : null;
-  const draftKey = data?.viewer && user ? `jm_share_draft_${token}_${user.uid}` : null;
 
-  /* hydrate answers: local draft first, then the saved response */
   useEffect(() => {
     if (!data) return;
-    let draft: { answers?: Record<string, ProfileAnswers>; finalChoice?: string | null; finalNote?: string } | null = null;
-    try {
-      if (draftKey) draft = JSON.parse(localStorage.getItem(draftKey) ?? "null");
-    } catch { /* storage unavailable */ }
-    const saved = data.response;
-    setAnswers(draft?.answers ?? saved?.answers ?? {});
-    setFinalChoice(draft?.finalChoice ?? saved?.finalChoice ?? null);
-    setFinalNote(draft?.finalNote ?? saved?.finalNote ?? "");
-    setSubmittedAt(saved?.submittedAt ?? null);
-  }, [data, draftKey]);
-
-  useEffect(() => {
-    if (!draftKey) return;
-    try {
-      localStorage.setItem(draftKey, JSON.stringify({ answers, finalChoice, finalNote }));
-    } catch { /* storage unavailable */ }
-  }, [draftKey, answers, finalChoice, finalNote]);
-
-  const signIn = async () => {
-    setSigningIn(true);
-    try {
-      const cred = await signInWithPopup(auth, googleProvider);
-      loadedFor.current = cred.user.uid;
-      const idToken = await cred.user.getIdToken();
-      await fetch("/api/auth/bootstrap", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
-        body: JSON.stringify({ name: cred.user.displayName ?? "", shareToken: token }),
-      });
-      await load();
-    } catch (err) {
-      const code = (err as { code?: string })?.code ?? "";
-      if (!code.includes("popup-closed") && !code.includes("cancelled-popup")) {
-        toast.error(l === "id" ? "Gagal masuk dengan Google. Coba lagi." : "Google sign-in failed. Please try again.");
-      }
-    } finally {
-      setSigningIn(false);
-    }
-  };
-
-  const switchAccount = async () => {
-    await signOut(auth);
-    await signIn();
-  };
-
-  const handleSignOut = async () => {
-    await signOut(auth);
-    setView({ kind: "loading" });
-  };
-
-  const expiry = useCountdown(data?.expiresAt ?? null, l);
+    setDecided(data.progress.decidedSlots);
+    setFinalNote(data.progress.finalNote);
+  }, [data]);
 
   const profiles = useMemo(() => data?.profiles ?? [], [data]);
-  const questionnaire = data?.purpose === "matchmaking" && data.questionnaire.enabled ? data.questionnaire : null;
-  const hasDecision = !!questionnaire && profiles.length > 1;
-  const stepCount = profiles.length + (hasDecision ? 1 : 0);
-  const onDecisionStep = hasDecision && step === profiles.length;
+  const questionnaire = data?.questionnaire.enabled ? data.questionnaire : null;
+  const swipeId = useMemo(() => (questionnaire ? swipeQuestionId(questionnaire.questions) : null), [questionnaire]);
 
-  /* ── engagement metrics for the team: visible time per step + photo opens ── */
+  const index = useMemo(() => {
+    const next = profiles.findIndex(p => !decided.includes(p.slot));
+    return next === -1 ? profiles.length : next;
+  }, [profiles, decided]);
+
+  useEffect(() => {
+    if (!data) return;
+    if (index >= profiles.length && profiles.length > 0 && stage.kind === "deck") setStage({ kind: "done" });
+  }, [index, profiles.length, data, stage.kind]);
+
+  /* ── engagement: visible seconds per profile + photo opens ── */
   const beacon = useCallback((body: { slot: number; seconds?: number; photo?: boolean }) => {
     const url = `/api/share/${encodeURIComponent(token)}/activity`;
     const payload = JSON.stringify(body);
@@ -379,7 +379,7 @@ export default function ShareView({ token }: { token: string }) {
     fetch(url, { method: "POST", body: payload, keepalive: true }).catch(() => {});
   }, [token]);
 
-  const activeSlot = data ? (onDecisionStep ? -1 : profiles[Math.min(step, profiles.length - 1)]?.slot ?? null) : null;
+  const activeSlot = data ? (stage.kind === "form" ? stage.slot : profiles[index]?.slot ?? -1) : null;
 
   useEffect(() => {
     if (activeSlot === null) return;
@@ -403,62 +403,119 @@ export default function ShareView({ token }: { token: string }) {
     };
   }, [activeSlot, beacon]);
 
-  const completion = useMemo(
-    () => profiles.map(p => !!questionnaire && checkProfileAnswers(questionnaire.questions, answers[String(p.slot)], p.photosHidden).ok),
-    [profiles, questionnaire, answers],
-  );
+  /* ── auth ── */
+  const signIn = async () => {
+    setSigningIn(true);
+    try {
+      const cred = await signInWithPopup(auth, googleProvider);
+      loadedFor.current = cred.user.uid;
+      const idToken = await cred.user.getIdToken();
+      await fetch("/api/auth/bootstrap", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
+        body: JSON.stringify({ name: cred.user.displayName ?? "", shareToken: token }),
+      });
+      await load();
+    } catch (err) {
+      const code = (err as { code?: string })?.code ?? "";
+      if (!code.includes("popup-closed") && !code.includes("cancelled-popup")) {
+        toast.error(l === "id" ? "Gagal masuk dengan Google. Coba lagi." : "Google sign-in failed. Please try again.");
+      }
+    } finally {
+      setSigningIn(false);
+    }
+  };
 
-  const goTo = (next: number) => {
-    setStep(Math.max(0, Math.min(stepCount - 1, next)));
+  const handleSignOut = async () => {
+    await signOut(auth);
+    loadedFor.current = null;
+    setView({ kind: "loading" });
+  };
+
+  /* ── swiping ── */
+  const onDecide = (decision: Decision) => {
+    const profile = profiles[index];
+    if (!profile) return;
+    if (!questionnaire) {
+      setDecided(prev => [...prev, profile.slot]);
+      return;
+    }
+    setAnswers(swipeId ? { [swipeId]: decision } : {});
+    setHighlight(null);
+    setStage({ kind: "form", slot: profile.slot, decision });
     window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
   };
 
-  const submit = async () => {
-    if (!questionnaire || !data) return;
-    for (const p of profiles) {
-      const check = checkProfileAnswers(questionnaire.questions, answers[String(p.slot)], p.photosHidden);
-      if (!check.ok) {
-        setHighlight({ slot: p.slot, questionId: check.questionId! });
-        goTo(p.slot);
-        toast.error(l === "id" ? "Masih ada pertanyaan yang belum dijawab." : "A few questions still need an answer.");
-        return;
-      }
-    }
-    if (hasDecision && !finalChoice) {
-      goTo(profiles.length);
-      toast.error(l === "id" ? "Pilih profil yang ingin Anda lanjutkan." : "Choose which profile you'd like to continue with.");
+  /** Step back to the profile just decided so it can be swiped again. */
+  const undo = () => {
+    if (!decided.length) return;
+    setDecided(prev => prev.slice(0, -1));
+    setAnswers({});
+    setHighlight(null);
+    setStage({ kind: "deck" });
+  };
+
+  const saveDecision = async () => {
+    if (stage.kind !== "form" || !questionnaire) return;
+    const profile = profiles.find(p => p.slot === stage.slot);
+    if (!profile) return;
+
+    const seeded = swipeId ? { ...answers, [swipeId]: stage.decision } : answers;
+    const check = checkProfileAnswers(questionnaire.questions, seeded, profile.photosHidden);
+    if (!check.ok) {
+      setHighlight(check.questionId ?? null);
+      toast.error(l === "id" ? "Masih ada pertanyaan yang belum dijawab." : "A few questions still need an answer.");
       return;
     }
 
-    setSubmitting(true);
+    setSaving(true);
     try {
       const current = auth.currentUser;
       if (!current) throw new Error("auth");
       const res = await fetch(`/api/share/${encodeURIComponent(token)}/responses`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${await current.getIdToken()}` },
-        body: JSON.stringify({ answers, finalChoice, finalNote }),
+        body: JSON.stringify({ kind: "decision", slot: stage.slot, decision: stage.decision, answers }),
       });
       const json = await res.json().catch(() => ({}));
       if (!res.ok) {
-        if (typeof json.slot === "number" && json.questionId) {
-          setHighlight({ slot: json.slot, questionId: json.questionId });
-          goTo(json.slot);
-        }
+        if (json.questionId) setHighlight(json.questionId);
         throw new Error(json.error ?? "failed");
       }
-      setSubmittedAt(new Date().toISOString());
-      setHighlight(null);
-      try { if (draftKey) localStorage.removeItem(draftKey); } catch { /* ignore */ }
-      toast.success(l === "id" ? "Jazakumullahu khairan — refleksi Anda telah terkirim." : "Jazakumullahu khairan — your reflections have been sent.");
+      setDecided(json.decidedSlots ?? [...decided, stage.slot]);
+      setAnswers({});
+      setStage({ kind: "deck" });
+      window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
     } catch {
-      toast.error(l === "id" ? "Belum berhasil mengirim. Coba lagi." : "Couldn't send yet. Please try again.");
+      toast.error(l === "id" ? "Belum berhasil menyimpan. Coba lagi." : "Couldn't save yet. Please try again.");
     } finally {
-      setSubmitting(false);
+      setSaving(false);
     }
   };
 
-  /* keyboard for lightbox */
+  const saveNote = async () => {
+    setSaving(true);
+    try {
+      const current = auth.currentUser;
+      if (!current) throw new Error("auth");
+      const res = await fetch(`/api/share/${encodeURIComponent(token)}/responses`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${await current.getIdToken()}` },
+        body: JSON.stringify({ kind: "note", finalNote }),
+      });
+      if (!res.ok) throw new Error("failed");
+      setNoteSaved(true);
+      toast.success(l === "id" ? "Catatan terkirim. Jazakumullahu khairan." : "Note sent. Jazakumullahu khairan.");
+    } catch {
+      toast.error(l === "id" ? "Belum berhasil mengirim." : "Couldn't send it yet.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const expiry = useCountdown(data?.expiresAt ?? null, l);
+
+  /* lightbox keys */
   useEffect(() => {
     if (!lightbox || !data) return;
     const photos = data.profiles[lightbox.slot]?.photos ?? [];
@@ -477,11 +534,11 @@ export default function ShareView({ token }: { token: string }) {
     return (
       <div className="flex min-h-screen items-center justify-center" style={{ background: T.paper }}>
         <div className="flex flex-col items-center gap-5">
-          <Image src={LogoIcon} alt="Jodohmu" height={34} style={{ width: "auto" }} priority />
-          <div className="h-[2px] w-28 overflow-hidden rounded-full" style={{ background: T.hairline }}>
+          <Image src={LogoIcon} alt="Jodohmu" height={32} style={{ width: "auto" }} priority />
+          <div className="h-[2px] w-24 overflow-hidden rounded-full" style={{ background: T.hairline }}>
             <motion.div
               className="h-full w-1/2 rounded-full"
-              style={{ background: T.gold }}
+              style={{ background: T.accent }}
               animate={reduceMotion ? undefined : { x: ["-100%", "200%"] }}
               transition={{ repeat: Infinity, duration: 1.2, ease: "easeInOut" }}
             />
@@ -492,309 +549,202 @@ export default function ShareView({ token }: { token: string }) {
   }
 
   if (view.kind === "gate") {
-    return (
-      <GateScreen
-        gate={view.gate}
-        lang={l}
-        onToggleLang={toggleLang}
-        onSignIn={signIn}
-        onSwitchAccount={switchAccount}
-        signingIn={signingIn}
-        viewerEmail={user?.email ?? null}
-      />
-    );
+    return view.gate.state === "signin_required"
+      ? <SignInGate gate={view.gate} lang={l} onToggleLang={toggleLang} onSignIn={signIn} busy={signingIn} />
+      : <GateScreen state={view.gate.state} lang={l} onToggleLang={toggleLang} />;
   }
 
   const d = view.data;
-  const current = profiles[Math.min(step, profiles.length - 1)];
-  const lockedAny = !onDecisionStep && current && (current.locked.fields > 0 || current.locked.photos > 0 || current.locked.name);
-  const isLast = step === stepCount - 1;
+  const formProfile = stage.kind === "form" ? profiles.find(p => p.slot === stage.slot) : null;
 
-  const notice = lockedAny ? (
-    <div className="flex flex-col items-start gap-4 rounded-[24px] px-6 py-5 sm:flex-row sm:items-center sm:px-8" style={{ background: T.goldSoft, border: `1px solid ${T.gold}33` }}>
-      <Lock className="h-5 w-5 shrink-0" style={{ color: T.gold }} />
-      <p className="flex-1 text-[13.5px] leading-relaxed" style={{ color: "#5B4A2E" }}>
-        {d.tier === "public"
-          ? l === "id"
-            ? "Sebagian detail dan foto disimpan dengan penuh amanah. Masuk untuk melihat lebih banyak."
-            : "Some details and photos are held in trust. Sign in to see more."
-          : l === "id"
-            ? "Detail dan foto lainnya terbuka bagi kandidat terdaftar Jodohmu."
-            : "Further details and photos are open to registered Jodohmu candidates."}
-      </p>
-      {d.tier === "public" ? (
-        <GoogleButton onClick={signIn} busy={signingIn} lang={l} label={l === "id" ? "Masuk dengan Google" : "Sign in with Google"} />
-      ) : (
-        <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="rounded-full px-5 py-2.5 text-[13px] font-bold text-white" style={{ background: T.navyDeep }}>
-          {l === "id" ? "Daftar sebagai kandidat" : "Become a candidate"}
-        </a>
-      )}
-    </div>
-  ) : null;
-
-  const motionProps = reduceMotion
-    ? {}
-    : { initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -8 }, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const } };
+  // The deck fills the screen like a dating app; the form and finish screens scroll normally.
+  const deckMode = stage.kind === "deck" && index < profiles.length;
 
   return (
-    <div className="min-h-screen" style={{ background: T.paper }}>
-      <TopBar lang={l} onToggleLang={toggleLang} viewer={d.viewer} onSignOut={handleSignOut} expiry={expiry} />
+    <div
+      className={deckMode ? "flex h-screen flex-col overflow-hidden" : "min-h-screen"}
+      style={deckMode ? { background: T.paper, height: "100dvh" } : { background: T.paper }}
+    >
+      <TopStrip
+        lang={l}
+        onToggleLang={toggleLang}
+        viewer={d.viewer}
+        onSignOut={handleSignOut}
+        expiry={expiry}
+        progress={stage.kind === "done" ? null : { current: Math.min(index + 1, profiles.length), total: profiles.length }}
+      />
 
-      {/* ── intro ── */}
-      <section className="mx-auto max-w-6xl px-5 pb-8 pt-12 sm:px-8 sm:pt-16">
-        <Eyebrow>{d.purpose === "matchmaking" ? (l === "id" ? "Perkenalan dari Jodohmu" : "An introduction from Jodohmu") : (l === "id" ? "Profil pilihan Jodohmu" : "Selected by Jodohmu")}</Eyebrow>
-        <h1 className="mt-3 max-w-3xl text-[34px] leading-[1.08] sm:text-[48px]" style={{ fontFamily: serif, color: T.ink }}>
-          {d.recipientLabel
-            ? l === "id" ? <>Untuk <em style={{ color: T.rose }}>{d.recipientLabel}</em></> : <>For <em style={{ color: T.rose }}>{d.recipientLabel}</em></>
-            : l === "id" ? "Seseorang yang layak Anda kenal" : "Someone worth getting to know"}
-        </h1>
-        {d.recipientNote && (
-          <div className="mt-7 max-w-2xl rounded-[22px] px-6 py-5" style={{ background: T.card, border: `1px solid ${T.hairline}` }}>
-            <p className="whitespace-pre-line text-[15px] leading-[1.8]" style={{ color: T.body }}>{d.recipientNote}</p>
-            <p className="mt-3 text-[13px] italic" style={{ fontFamily: serif, color: T.gold }}>— {l === "id" ? "Tim Jodohmu" : "The Jodohmu team"}</p>
-          </div>
-        )}
-      </section>
-
-      {/* ── stepper ── */}
-      {stepCount > 1 && (
-        <nav className="sticky top-16 z-30 backdrop-blur-md" style={{ background: `${T.paper}E6`, borderBottom: `1px solid ${T.hairline}` }}>
-          <div className="mx-auto flex max-w-6xl gap-2 overflow-x-auto px-5 py-3 sm:px-8">
-            {profiles.map((p, i) => {
-              const active = step === i;
-              return (
-                <button
-                  key={p.slot}
-                  onClick={() => goTo(i)}
-                  className="flex shrink-0 items-center gap-2.5 rounded-full py-1.5 pl-1.5 pr-4 text-[13px] font-bold transition-colors"
-                  style={active ? { background: T.navyDeep, color: "#fff" } : { background: T.card, color: T.body, border: `1px solid ${T.hairline}` }}
-                >
-                  <span
-                    className="flex h-7 w-7 items-center justify-center rounded-full text-[12px]"
-                    style={active ? { background: "rgba(255,255,255,0.16)" } : { background: T.paperDeep, color: T.navy }}
-                  >
-                    {completion[i] ? <Check className="h-3.5 w-3.5" /> : i + 1}
-                  </span>
-                  <span className="max-w-[140px] truncate">{profileTitle(p, l)}</span>
-                </button>
-              );
-            })}
-            {hasDecision && (
-              <button
-                onClick={() => goTo(profiles.length)}
-                className="flex shrink-0 items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-bold"
-                style={onDecisionStep ? { background: T.rose, color: "#fff" } : { background: T.card, color: T.rose, border: `1px solid ${T.rose}40` }}
-              >
-                <Sparkles className="h-3.5 w-3.5" />
-                {l === "id" ? "Keputusan Anda" : "Your decision"}
-              </button>
-            )}
-          </div>
-          <div className="h-[2px]" style={{ background: T.hairline }}>
-            <motion.div className="h-full" style={{ background: T.gold }} animate={{ width: `${((step + 1) / stepCount) * 100}%` }} transition={{ duration: 0.4 }} />
-          </div>
-        </nav>
-      )}
-
-      <main className="mx-auto max-w-6xl px-5 pt-8 sm:px-8">
+      {deckMode ? (
+        <main className="relative min-h-0 flex-1">
+          <SwipeDeck
+            profiles={profiles}
+            index={index}
+            lang={l}
+            askQuestions={!!questionnaire}
+            note={index === 0 ? d.recipientNote || undefined : undefined}
+            onDecide={onDecide}
+            onUndo={undo}
+            canUndo={decided.length > 0}
+            onOpenPhoto={(slot, photoIndex) => {
+              setLightbox({ slot, index: photoIndex });
+              beacon({ slot, photo: true });
+            }}
+          />
+        </main>
+      ) : (
+      <main className="mx-auto max-w-2xl px-5 pb-16 pt-4">
         <AnimatePresence mode="wait">
-          <motion.div key={step} {...motionProps}>
-            {!onDecisionStep && current && (
-              <>
-                <ProfileCard
-                  profile={current}
+          {/* ── the form that follows a swipe ── */}
+          {stage.kind === "form" && formProfile && questionnaire && (
+            <motion.div
+              key={`form-${stage.slot}`}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden rounded-[28px]"
+              style={{ background: T.card, border: `1px solid ${T.hairline}`, boxShadow: cardShadow }}
+            >
+              <div className="flex items-center gap-3 px-6 py-5 sm:px-8" style={{ background: T.paperDeep }}>
+                <span
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[15px] font-bold"
+                  style={{ background: stage.decision === "yes" ? "#ECFDF5" : T.roseSoft, color: stage.decision === "yes" ? T.successInk : T.rose }}
+                >
+                  {stage.decision === "yes" ? <Heart className="h-5 w-5 fill-current" /> : <X className="h-5 w-5" />}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[16px]" style={{ fontFamily: serif, color: T.ink }}>{profileTitle(formProfile, l)}</p>
+                  <p className="text-[12.5px]" style={{ color: T.muted }}>
+                    {stage.decision === "yes"
+                      ? l === "id" ? "Anda merasa cocok" : "You felt it's a match"
+                      : l === "id" ? "Anda merasa belum cocok" : "You felt it's not a match"}
+                  </p>
+                </div>
+                <button
+                  onClick={() => { setStage({ kind: "deck" }); setAnswers({}); }}
+                  className="rounded-full px-3 py-1.5 text-[12px] font-bold"
+                  style={{ border: `1px solid ${T.hairline}`, background: T.card, color: T.body }}
+                >
+                  {l === "id" ? "Ubah" : "Change"}
+                </button>
+              </div>
+
+              <div className="px-6 py-7 sm:px-8">
+                <p className="mb-7 text-[14px] leading-relaxed" style={{ color: T.muted }}>
+                  {l === "id"
+                    ? "Ceritakan sedikit alasannya. Jawaban jujur membantu matchmaker Anda — hanya tim Jodohmu yang membacanya."
+                    : "Tell us a little about why. Honest answers help your matchmaker — only the Jodohmu team reads them."}
+                </p>
+
+                <ReflectionForm
+                  questions={questionnaire.questions.filter(q => q.id !== swipeId)}
+                  answers={swipeId ? { ...answers, [swipeId]: stage.decision } : answers}
+                  onChange={setAnswers}
+                  photosHidden={formProfile.photosHidden}
                   lang={l}
-                  position={{ index: step, total: profiles.length }}
-                  onOpenPhoto={index => {
-                    setLightbox({ slot: current.slot, index });
-                    beacon({ slot: current.slot, photo: true });
-                  }}
-                  notice={notice}
+                  highlightId={highlight}
+                  disabled={saving}
                 />
 
-                {questionnaire && (
-                  <section className="mt-10 overflow-hidden rounded-[28px]" style={{ background: T.card, border: `1px solid ${T.hairline}`, boxShadow: cardShadow }}>
-                    <div className="px-6 py-8 sm:px-12 sm:py-11">
-                      <Eyebrow color={T.rose}>{l === "id" ? "Refleksi Anda" : "Your reflection"}</Eyebrow>
-                      <h2 className="mt-3 text-[28px] leading-tight sm:text-[34px]" style={{ fontFamily: serif, color: T.ink }}>
-                        {l === "id" ? `Bagaimana perasaan Anda tentang ${profileTitle(current, l)}?` : `How do you feel about ${profileTitle(current, l)}?`}
-                      </h2>
-                      <p className="mt-3 max-w-2xl text-[14.5px] leading-relaxed" style={{ color: T.muted }}>
-                        {l === "id"
-                          ? "Tidak ada jawaban benar atau salah. Jawaban yang jujur membantu matchmaker Anda memberikan pendampingan terbaik — hanya tim Jodohmu yang membacanya."
-                          : "There are no right or wrong answers. Honest reflections help your matchmaker guide you well — only the Jodohmu team reads them."}
-                      </p>
+                <button
+                  onClick={saveDecision}
+                  disabled={saving}
+                  className="mt-9 inline-flex h-[52px] w-full items-center justify-center gap-2 rounded-full text-[15px] font-bold text-white disabled:opacity-60"
+                  style={{ background: `linear-gradient(135deg, ${T.navyDeep}, ${T.rose})`, boxShadow: "0 14px 30px -14px rgba(155,34,66,0.6)" }}
+                >
+                  {saving
+                    ? l === "id" ? "Menyimpan…" : "Saving…"
+                    : index + 1 >= profiles.length
+                      ? l === "id" ? "Simpan & selesai" : "Save & finish"
+                      : l === "id" ? "Simpan & lanjut" : "Save & continue"}
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </motion.div>
+          )}
 
-                      <div className="mt-10">
-                        {d.viewer ? (
-                          <ReflectionForm
-                            questions={questionnaire.questions}
-                            answers={answers[String(current.slot)] ?? {}}
-                            onChange={next => setAnswers(prev => ({ ...prev, [String(current.slot)]: next }))}
-                            photosHidden={current.photosHidden}
-                            lang={l}
-                            highlightId={highlight?.slot === current.slot ? highlight.questionId : null}
-                          />
-                        ) : (
-                          <div className="flex flex-col items-start gap-5 rounded-[22px] px-6 py-7 sm:flex-row sm:items-center" style={{ background: T.paper, border: `1px solid ${T.hairline}` }}>
-                            <p className="flex-1 text-[14.5px] leading-relaxed" style={{ color: T.body }}>
-                              {l === "id"
-                                ? "Masuk untuk menuliskan refleksi Anda. Jawaban Anda tersimpan aman dan hanya dibaca oleh matchmaker Anda."
-                                : "Sign in to write your reflection. Your answers are kept safe and read only by your matchmaker."}
-                            </p>
-                            <GoogleButton onClick={signIn} busy={signingIn} lang={l} />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </section>
-                )}
-              </>
-            )}
-
-            {onDecisionStep && (
-              <section className="overflow-hidden rounded-[28px]" style={{ background: T.card, border: `1px solid ${T.hairline}`, boxShadow: cardShadow }}>
-                <div className="relative h-24 overflow-hidden" style={{ background: T.paperDeep }}>
-                  <GeometricPattern opacity={0.2} />
+          {/* ── finished ── */}
+          {stage.kind === "done" && (
+            <motion.div
+              key="done"
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden rounded-[28px] text-center"
+              style={{ background: T.card, border: `1px solid ${T.hairline}`, boxShadow: cardShadow }}
+            >
+              <div className="relative h-24 overflow-hidden" style={{ background: T.paperDeep }}>
+                <GeometricPattern opacity={0.25} />
+              </div>
+              <div className="px-6 pb-9 pt-7 sm:px-10">
+                <div
+                  className="relative z-10 mx-auto -mt-16 mb-6 flex h-[72px] w-[72px] items-center justify-center rounded-full"
+                  style={{ background: T.card, boxShadow: `0 0 0 1px ${T.accent}66, 0 0 0 7px ${T.card}` }}
+                >
+                  <Check className="h-7 w-7" style={{ color: T.successInk }} />
                 </div>
-                <div className="px-6 pb-10 pt-8 sm:px-12">
-                  <Eyebrow color={T.rose}>{l === "id" ? "Langkah terakhir" : "Final step"}</Eyebrow>
-                  <h2 className="mt-3 text-[30px] leading-tight sm:text-[38px]" style={{ fontFamily: serif, color: T.ink }}>
-                    {l === "id" ? "Dengan siapa Anda ingin melangkah?" : "Who would you like to move forward with?"}
-                  </h2>
-                  <p className="mt-3 max-w-2xl text-[14.5px] leading-relaxed" style={{ color: T.muted }}>
-                    {l === "id"
-                      ? "Pilih satu profil, atau tidak ada untuk saat ini. Matchmaker Anda akan menghubungi Anda untuk langkah berikutnya, insyaAllah."
-                      : "Choose one profile, or none for now. Your matchmaker will reach out about the next step, insyaAllah."}
-                  </p>
+                <Eyebrow>{l === "id" ? "Selesai" : "All done"}</Eyebrow>
+                <h1 className="mb-3 mt-3 text-[28px] leading-tight" style={{ fontFamily: serif, color: T.ink }}>
+                  {l === "id" ? "Jazakumullahu khairan" : "Jazakumullahu khairan"}
+                </h1>
+                <p className="mx-auto mb-8 max-w-md text-[14.5px] leading-relaxed" style={{ color: T.muted }}>
+                  {questionnaire
+                    ? l === "id"
+                      ? "Refleksi Anda sudah kami terima. Matchmaker Anda akan meninjau dan menghubungi Anda untuk langkah berikutnya, insyaAllah."
+                      : "We've received your reflections. Your matchmaker will review them and be in touch about the next step, insyaAllah."
+                    : l === "id"
+                      ? "Terima kasih telah melihat profil pilihan kami."
+                      : "Thank you for looking through our selected profiles."}
+                </p>
 
-                  <div role="radiogroup" className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                    {profiles.map((p, i) => {
-                      const selected = finalChoice === String(p.slot);
-                      const said = answers[String(p.slot)]?.match;
-                      return (
-                        <button
-                          key={p.slot}
-                          role="radio"
-                          aria-checked={selected}
-                          disabled={!d.viewer}
-                          onClick={() => setFinalChoice(String(p.slot))}
-                          className="flex items-center gap-4 rounded-[20px] px-5 py-4 text-left transition-all disabled:opacity-60"
-                          style={selected
-                            ? { background: T.navyDeep, color: "#fff", border: `1px solid ${T.navyDeep}` }
-                            : { background: T.paper, color: T.ink, border: `1px solid ${T.hairline}` }}
-                        >
-                          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[17px]" style={{ fontFamily: serif, background: selected ? "rgba(255,255,255,0.14)" : T.card, color: selected ? "#fff" : T.navy, border: selected ? "none" : `1px solid ${T.hairline}` }}>
-                            {i + 1}
-                          </span>
-                          <span className="min-w-0 flex-1">
-                            <span className="block truncate text-[16px]" style={{ fontFamily: serif }}>{profileTitle(p, l)}</span>
-                            {said && (
-                              <span className="text-[12px]" style={{ color: selected ? "rgba(255,255,255,0.75)" : T.muted }}>
-                                {said === "yes" ? (l === "id" ? "Anda merasa cocok" : "You felt a match") : (l === "id" ? "Anda merasa kurang cocok" : "You felt it wasn't a match")}
-                              </span>
-                            )}
-                          </span>
-                          {selected && <Check className="h-5 w-5 shrink-0" />}
-                        </button>
-                      );
-                    })}
+                {questionnaire && (
+                  <div className="mx-auto mb-8 max-w-md text-left">
+                    <label className="mb-2 block text-[15px]" style={{ fontFamily: serif, color: T.ink }}>
+                      {l === "id" ? "Ada pesan untuk matchmaker Anda?" : "Anything to add for your matchmaker?"}
+                      <span className="ml-2 font-sans text-[11.5px]" style={{ color: T.faint }}>{l === "id" ? "(opsional)" : "(optional)"}</span>
+                    </label>
+                    <textarea
+                      value={finalNote}
+                      onChange={e => { setFinalNote(e.target.value); setNoteSaved(false); }}
+                      rows={3}
+                      maxLength={2000}
+                      className="w-full resize-y rounded-2xl px-4 py-3 text-[14.5px] leading-relaxed focus:outline-none"
+                      style={{ background: T.surface, border: `1px solid ${T.hairline}`, color: T.ink }}
+                      placeholder={l === "id" ? "Apa pun yang perlu kami ketahui…" : "Anything we should know…"}
+                    />
                     <button
-                      role="radio"
-                      aria-checked={finalChoice === FINAL_CHOICE_NONE}
-                      disabled={!d.viewer}
-                      onClick={() => setFinalChoice(FINAL_CHOICE_NONE)}
-                      className="rounded-[20px] px-5 py-4 text-left text-[14.5px] font-semibold transition-all disabled:opacity-60 sm:col-span-2"
-                      style={finalChoice === FINAL_CHOICE_NONE
-                        ? { background: T.ink, color: "#fff", border: `1px solid ${T.ink}` }
-                        : { background: T.card, color: T.body, border: `1px dashed ${T.faint}` }}
+                      onClick={saveNote}
+                      disabled={saving || !finalNote.trim() || noteSaved}
+                      className="mt-3 inline-flex h-11 items-center justify-center gap-2 rounded-full px-6 text-[14px] font-bold text-white disabled:opacity-50"
+                      style={{ background: T.navyDeep }}
                     >
-                      {l === "id" ? "Belum ada yang tepat untuk saat ini" : "None of them feels right for now"}
+                      {noteSaved ? <><Check className="h-4 w-4" /> {l === "id" ? "Terkirim" : "Sent"}</> : l === "id" ? "Kirim catatan" : "Send note"}
                     </button>
                   </div>
+                )}
 
-                  <label className="mt-8 block text-[16px]" style={{ fontFamily: serif, color: T.ink }}>
-                    {l === "id" ? "Pesan untuk matchmaker Anda" : "A note for your matchmaker"}
-                    <span className="ml-2 font-sans text-[11.5px]" style={{ color: T.faint }}>{l === "id" ? "(opsional)" : "(optional)"}</span>
-                  </label>
-                  <textarea
-                    value={finalNote}
-                    onChange={e => setFinalNote(e.target.value)}
-                    disabled={!d.viewer}
-                    rows={4}
-                    maxLength={2000}
-                    className="mt-3 w-full resize-y rounded-2xl px-4 py-3.5 text-[15px] leading-relaxed focus:outline-none"
-                    style={{ background: T.paper, border: `1px solid ${T.hairline}`, color: T.ink }}
-                    placeholder={l === "id" ? "Apa pun yang perlu kami ketahui…" : "Anything we should know…"}
-                  />
-                </div>
-              </section>
-            )}
-          </motion.div>
+                <a
+                  href={WHATSAPP}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex h-12 items-center rounded-full px-7 text-[14px] font-bold"
+                  style={{ background: T.paperDeep, color: T.navyDeep }}
+                >
+                  {l === "id" ? "Bicara dengan matchmaker" : "Talk to a matchmaker"}
+                </a>
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
-
-        {/* ── step controls ── */}
-        {(stepCount > 1 || questionnaire) && (
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            {step > 0 && (
-              <button onClick={() => goTo(step - 1)} className="inline-flex h-12 items-center gap-2 rounded-full px-5 text-[14px] font-bold" style={{ background: T.card, color: T.body, border: `1px solid ${T.hairline}` }}>
-                <ArrowLeft className="h-4 w-4" />
-                {l === "id" ? "Sebelumnya" : "Previous"}
-              </button>
-            )}
-            <div className="flex-1" />
-            {submittedAt && (
-              <span className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold" style={{ color: T.sageInk }}>
-                <Check className="h-4 w-4" />
-                {l === "id" ? "Terkirim — Anda masih dapat memperbaruinya" : "Sent — you can still update it"}
-              </span>
-            )}
-            {!isLast ? (
-              <button onClick={() => goTo(step + 1)} className="inline-flex h-12 items-center gap-2 rounded-full px-6 text-[14px] font-bold text-white" style={{ background: T.navyDeep }}>
-                {step + 1 === profiles.length && hasDecision
-                  ? l === "id" ? "Ke keputusan" : "To your decision"
-                  : l === "id" ? "Profil berikutnya" : "Next profile"}
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            ) : questionnaire && d.viewer ? (
-              <button onClick={submit} disabled={submitting} className="inline-flex h-12 items-center gap-2 rounded-full px-7 text-[14px] font-bold text-white disabled:opacity-60" style={{ background: T.rose, boxShadow: "0 12px 28px -12px rgba(155,34,66,0.6)" }}>
-                {submitting
-                  ? l === "id" ? "Mengirim…" : "Sending…"
-                  : submittedAt
-                    ? l === "id" ? "Perbarui refleksi" : "Update reflections"
-                    : l === "id" ? "Kirim ke matchmaker" : "Send to my matchmaker"}
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            ) : null}
-          </div>
-        )}
-
-        {d.purpose === "promotion" && (
-          <section className="relative mt-12 overflow-hidden rounded-[28px] px-6 py-12 text-center sm:px-12" style={{ background: T.navyDeep }}>
-            <GeometricPattern color="#ffffff" opacity={0.06} />
-            <h2 className="relative text-[28px] leading-tight text-white sm:text-[34px]" style={{ fontFamily: serif }}>
-              {l === "id" ? "Siap memulai ta'aruf yang terarah?" : "Ready for a guided ta'aruf?"}
-            </h2>
-            <p className="relative mx-auto mt-3 max-w-lg text-[14.5px] leading-relaxed" style={{ color: "rgba(255,255,255,0.78)" }}>
-              {l === "id"
-                ? "Tim Jodohmu mendampingi setiap langkah — dari perkenalan, pertemuan keluarga, hingga khitbah."
-                : "The Jodohmu team walks with you through every step — introduction, family meeting, and proposal."}
-            </p>
-            <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" className="relative mt-7 inline-flex h-12 items-center rounded-full px-7 text-[14px] font-bold" style={{ background: "#fff", color: T.navyDeep }}>
-              {l === "id" ? "Bicara dengan matchmaker" : "Talk to a matchmaker"}
-            </a>
-          </section>
-        )}
       </main>
-
-      <Footer lang={l} />
+      )}
 
       {/* ── lightbox ── */}
       <AnimatePresence>
         {lightbox && d.profiles[lightbox.slot]?.photos[lightbox.index] && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ background: "rgba(12,10,9,0.92)" }}
+            style={{ background: "rgba(12,10,9,0.94)" }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

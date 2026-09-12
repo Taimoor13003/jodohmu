@@ -2,6 +2,7 @@ import crypto from "crypto";
 import { Timestamp } from "firebase-admin/firestore";
 import cloudinary from "@/lib/cloudinary";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
+import type { AvatarVariant } from "@/lib/share-avatars";
 import { DEFAULT_SHARE_QUESTIONS, questionsSchema, type Question } from "@/lib/share-questions";
 import { AUDIENCE_TIERS, normalizeAudiences, type AudienceTier, type Audiences } from "@/lib/share-sections";
 import type {
@@ -33,6 +34,8 @@ export interface ShareRecord {
   access: ShareAccess;
   audiences: Audiences;
   photoSelection: Record<string, number[] | null>;
+  /** stand-in portrait per candidate, for viewers who may not see photos */
+  avatarSelection: Record<string, AvatarVariant>;
   expiresAt: Timestamp | null;
   maxOpens: number | null;
   maxOpensPerViewer: number | null;
@@ -213,11 +216,19 @@ export function tierFor(viewer: ShareViewer | null): AudienceTier {
   return "member";
 }
 
-/** Team members can always open a link, so they can check what they sent. */
-export function accessGate(access: ShareAccess, viewer: ShareViewer | null): Extract<ShareGateState, "signin_required" | "not_invited"> | null {
-  if (access.mode === "anyone") return null;
-  if (!viewer) return "signin_required";
-  if (access.mode === "invited" && !isTeamViewer(viewer) && !access.invitedEmails.includes(viewer.email)) {
+/**
+ * Matchmaking decks always need an identity — progress and answers are kept
+ * per person — so only promotion links can be browsed signed out. Team members
+ * can always open a link, to check what they sent.
+ */
+export function accessGate(
+  share: { access: ShareAccess; purpose: SharePurpose },
+  viewer: ShareViewer | null,
+): Extract<ShareGateState, "signin_required" | "not_invited"> | null {
+  if (!viewer) {
+    return share.purpose === "matchmaking" || share.access.mode !== "anyone" ? "signin_required" : null;
+  }
+  if (share.access.mode === "invited" && !isTeamViewer(viewer) && !share.access.invitedEmails.includes(viewer.email)) {
     return "not_invited";
   }
   return null;
@@ -246,6 +257,7 @@ export function readShare(data: FirebaseFirestore.DocumentData): ShareRecord {
     },
     audiences: normalizeAudiences(data.audiences ?? {}),
     photoSelection: data.photoSelection ?? {},
+    avatarSelection: data.avatarSelection ?? {},
     expiresAt: data.expiresAt instanceof Timestamp ? data.expiresAt : null,
     maxOpens: data.maxOpens ?? null,
     maxOpensPerViewer: data.maxOpensPerViewer ?? null,
@@ -283,6 +295,7 @@ export function serialiseShare(id: string, share: ShareRecord, nowMs = Date.now(
     access: share.access,
     audiences: share.audiences,
     photoSelection: share.photoSelection,
+    avatarSelection: share.avatarSelection,
     expiresAt: toIso(share.expiresAt),
     maxOpens: share.maxOpens,
     maxOpensPerViewer: share.maxOpensPerViewer,
@@ -379,10 +392,12 @@ function overlayText(text: string, max: number): string {
 export function buildWatermarkedUrl(ref: CloudinaryRef, opts: WatermarkOptions): string {
   const label = overlayText(opts.label, 64);
   const tile = overlayText(opts.tile, 34);
+  // "fit" everywhere: the whole photo is delivered, never cropped. The card
+  // letterboxes it against a blurred copy of itself rather than cutting it.
   const base =
     opts.variant === "full"
-      ? { width: 1400, crop: "limit", quality: "auto:good", fetch_format: "jpg" }
-      : { width: 900, height: 1200, crop: "fill", gravity: "auto", quality: "auto:good", fetch_format: "jpg" };
+      ? { width: 1400, height: 1400, crop: "fit", quality: "auto:good", fetch_format: "jpg" }
+      : { width: 1000, height: 1400, crop: "fit", quality: "auto:good", fetch_format: "jpg" };
 
   return cloudinary.url(ref.publicId, {
     resource_type: ref.resourceType,

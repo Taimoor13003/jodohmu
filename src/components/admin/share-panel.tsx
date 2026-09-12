@@ -276,10 +276,9 @@ function ShareDetailsDrawer({ shareId, lang, onClose, onChanged }: {
     };
     const profiles = s.candidateIds.map((candidateId, slot) => {
       const seconds = viewers.reduce((sum, v) => sum + (v.engagement.stepSeconds[String(slot)] ?? 0), 0);
-      const yes = responses.filter(r => r.answers[candidateId]?.match === "yes").length;
-      const no = responses.filter(r => r.answers[candidateId]?.match === "no").length;
-      const chosen = responses.filter(r => r.finalChoice === candidateId).length;
-      return { candidateId, name: s.candidateNames[candidateId] ?? "—", seconds, yes, no, chosen };
+      const yes = responses.filter(r => r.decisions?.[candidateId] === "yes").length;
+      const no = responses.filter(r => r.decisions?.[candidateId] === "no").length;
+      return { candidateId, name: s.candidateNames[candidateId] ?? "—", seconds, yes, no };
     });
     const maxSeconds = Math.max(1, ...profiles.map(p => p.seconds));
     return {
@@ -382,7 +381,6 @@ function ShareDetailsDrawer({ shareId, lang, onClose, onChanged }: {
                           <>
                             <span className="rounded-full px-2 py-0.5 text-[11px] font-bold" style={{ background: C.greenBg, color: C.green }}>✓ {p.yes}</span>
                             <span className="rounded-full px-2 py-0.5 text-[11px] font-bold" style={{ background: "#FEF2F2", color: "#B91C1C" }}>✕ {p.no}</span>
-                            {p.chosen > 0 && <span className="rounded-full px-2 py-0.5 text-[11px] font-bold" style={{ background: "#FDF2F4", color: C.rose }}>♥ {p.chosen} {t("dipilih", "chosen")}</span>}
                           </>
                         )}
                       </div>
@@ -548,7 +546,7 @@ function ShareDetailsDrawer({ shareId, lang, onClose, onChanged }: {
           ) : (
             <div className="flex flex-col gap-4">
               {detail.responses.map(r => {
-                const chosen = r.finalChoice === "none" ? t("Tidak ada yang dipilih", "None chosen") : r.finalChoice ? share.candidateNames[r.finalChoice] : null;
+                const liked = share.candidateIds.filter(id => r.decisions?.[id] === "yes").map(id => share.candidateNames[id]);
                 return (
                   <div key={r.uid} className="rounded-2xl border bg-white" style={{ borderColor: C.border }}>
                     <div className="flex flex-wrap items-center gap-2 border-b px-5 py-3" style={{ borderColor: C.divider }}>
@@ -556,9 +554,16 @@ function ShareDetailsDrawer({ shareId, lang, onClose, onChanged }: {
                         <p className="truncate text-[14px] font-bold" style={{ color: C.text }}>{r.name || r.email}</p>
                         <p className="text-[11.5px]" style={{ color: C.label }}>{r.email} · {formatDateTime(r.updatedAt, lang)}</p>
                       </div>
-                      {chosen && (
-                        <span className="flex items-center gap-1 rounded-full px-2.5 py-1 text-[11.5px] font-bold" style={{ background: r.finalChoice === "none" ? "#F1F5F9" : C.greenBg, color: r.finalChoice === "none" ? C.label : C.green }}>
-                          <Check className="h-3 w-3" /> {chosen}
+                      <span
+                        className="flex items-center gap-1 rounded-full px-2.5 py-1 text-[11.5px] font-bold"
+                        style={liked.length ? { background: C.greenBg, color: C.green } : { background: "#F1F5F9", color: C.label }}
+                      >
+                        <Check className="h-3 w-3" />
+                        {liked.length ? liked.join(", ") : t("Belum ada yang cocok", "No matches")}
+                      </span>
+                      {r.completedAt && (
+                        <span className="rounded-full px-2 py-0.5 text-[10.5px] font-bold" style={{ background: C.bg, color: C.label }}>
+                          {t("selesai", "finished")}
                         </span>
                       )}
                     </div>
@@ -567,7 +572,17 @@ function ShareDetailsDrawer({ shareId, lang, onClose, onChanged }: {
                         const answers = r.answers[candidateId] ?? {};
                         return (
                           <div key={candidateId}>
-                            <p className="mb-2 text-[12px] font-extrabold uppercase tracking-wide" style={{ color: C.navy }}>{share.candidateNames[candidateId]}</p>
+                            <div className="mb-2 flex flex-wrap items-center gap-2">
+                              <p className="text-[12px] font-extrabold uppercase tracking-wide" style={{ color: C.navy }}>{share.candidateNames[candidateId]}</p>
+                              {r.decisions?.[candidateId] && (
+                                <span
+                                  className="rounded-full px-2 py-0.5 text-[10.5px] font-bold"
+                                  style={r.decisions[candidateId] === "yes" ? { background: C.greenBg, color: C.green } : { background: "#FEF2F2", color: "#B91C1C" }}
+                                >
+                                  {r.decisions[candidateId] === "yes" ? t("Cocok", "Match") : t("Belum cocok", "Not a match")}
+                                </span>
+                              )}
+                            </div>
                             <dl className="flex flex-col gap-2">
                               {questions.filter(q => answers[q.id]).map(q => (
                                 <div key={q.id}>

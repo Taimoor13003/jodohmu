@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { AVATAR_VARIANTS, type AvatarVariant } from "@/lib/share-avatars";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -18,3 +19,8 @@ export const accessSchema = z
   .refine(a => a.mode !== "invited" || a.invitedEmails.length > 0, { message: "Add at least one invited email" });
 
 export const photoSelectionSchema = z.record(z.string(), z.array(z.number().int().min(0).max(50)).nullable());
+
+export const avatarSelectionSchema = z.record(
+  z.string(),
+  z.enum(AVATAR_VARIANTS as unknown as [AvatarVariant, ...AvatarVariant[]]),
+);

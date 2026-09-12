@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { SHARE_SECTIONS, type ProjectedProfile } from "@/lib/share-sections";
 import { LONG_FORM_FIELDS, displayValue, fieldLabel, type Lang } from "@/lib/share-display";
+import { ProfileAvatar } from "./avatars";
 import { Eyebrow, GeometricPattern, T, cardShadow, serif } from "./share-theme";
 
 const GLANCE: { field: string; icon: LucideIcon }[] = [
@@ -31,16 +32,6 @@ export function profileTitle(profile: ProjectedProfile, lang: Lang): string {
   return `${lang === "id" ? "Kandidat" : "Candidate"} ${profile.slot + 1}`;
 }
 
-function initials(profile: ProjectedProfile): string {
-  if (profile.nameHidden) return String(profile.slot + 1);
-  return profile.name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map(w => w[0]?.toUpperCase())
-    .join("");
-}
-
 function Portrait({ profile, lang, onOpenPhoto }: { profile: ProjectedProfile; lang: Lang; onOpenPhoto?: (i: number) => void }) {
   const cover = profile.photos[0];
   if (cover) {
@@ -49,37 +40,94 @@ function Portrait({ profile, lang, onOpenPhoto }: { profile: ProjectedProfile; l
         type="button"
         onClick={() => onOpenPhoto?.(0)}
         onContextMenu={e => e.preventDefault()}
-        className="group relative block w-full h-full min-h-[340px] overflow-hidden cursor-zoom-in"
+        className="relative block h-full min-h-[340px] w-full cursor-zoom-in overflow-hidden"
         style={{ background: T.paperDeep }}
       >
+        {/* whole photo, never cropped — blurred copy fills the gaps */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={cover.src} alt="" aria-hidden draggable={false} className="absolute inset-0 h-full w-full select-none object-cover" style={{ filter: "blur(26px)", transform: "scale(1.2)" }} />
+        <div className="absolute inset-0" style={{ background: "rgba(76,31,53,0.2)" }} />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={cover.src}
           alt={profileTitle(profile, lang)}
           draggable={false}
-          className="absolute inset-0 h-full w-full object-cover object-top select-none transition-transform duration-700 group-hover:scale-[1.02]"
+          className="absolute inset-0 h-full w-full select-none object-contain"
         />
-        <span className="absolute inset-x-0 bottom-0 h-24" style={{ background: "linear-gradient(to top, rgba(28,25,23,0.35), transparent)" }} />
       </button>
     );
   }
 
   return (
     <div className="relative flex h-full min-h-[300px] flex-col items-center justify-center overflow-hidden px-8 py-12" style={{ background: T.paperDeep }}>
-      <GeometricPattern />
-      <div
-        className="relative flex h-[118px] w-[118px] items-center justify-center rounded-full"
-        style={{ background: T.paper, boxShadow: `0 0 0 1px ${T.gold}55, 0 0 0 8px ${T.paper}, 0 0 0 9px ${T.gold}33` }}
-      >
-        <span className="text-[40px] leading-none" style={{ fontFamily: serif, color: T.navyDeep }}>
-          {initials(profile)}
-        </span>
-      </div>
+      <GeometricPattern opacity={0.16} />
+      <ProfileAvatar
+        variant={profile.avatar}
+        className="relative h-[136px] w-[136px] rounded-full"
+        style={{ boxShadow: `0 0 0 1px ${T.accentSoft}, 0 0 0 9px ${T.card}` }}
+      />
       <p className="relative mt-7 max-w-[240px] text-center text-[12px] leading-relaxed" style={{ color: T.muted }}>
         {lang === "id"
           ? "Foto dibagikan dengan penuh amanah, setelah ada ketertarikan dan persetujuan kedua pihak."
           : "Photos are shared in trust, once there is mutual interest and consent."}
       </p>
+    </div>
+  );
+}
+
+/** The detail sections for one profile, minus everything shown in the hero. */
+export function profileSections(profile: ProjectedProfile, lang: Lang) {
+  return SHARE_SECTIONS.map(section => ({
+    ...section,
+    rows: section.fields
+      .filter(field => !HERO_FIELDS.has(field))
+      .map(field => ({ field, value: formatField(field, profile.data[field], lang) }))
+      .filter((row): row is { field: string; value: string } => !!row.value),
+  })).filter(s => s.rows.length > 0);
+}
+
+/** Section cards on their own — used by the deck's details sheet. */
+export function ProfileDetails({ profile, lang }: { profile: ProjectedProfile; lang: Lang }) {
+  const about = formatField("aboutMe", profile.data.aboutMe, lang);
+  const sections = profileSections(profile, lang);
+
+  return (
+    <div className="flex flex-col gap-5">
+      {about && (
+        <section className="rounded-[22px] px-5 py-5" style={{ background: T.card, border: `1px solid ${T.hairline}` }}>
+          <h3 className="mb-2.5 text-[17px]" style={{ fontFamily: serif, color: T.ink }}>
+            {lang === "id" ? "Tentang Saya" : "About Me"}
+          </h3>
+          <p className="whitespace-pre-line text-[14.5px] leading-[1.8]" style={{ color: T.body }}>{about}</p>
+        </section>
+      )}
+      {sections.map(section => (
+        <section key={section.key} className="rounded-[22px] px-5 py-5" style={{ background: T.card, border: `1px solid ${T.hairline}` }}>
+          <div className="mb-3 flex items-center gap-3">
+            <h3 className="text-[17px]" style={{ fontFamily: serif, color: T.ink }}>
+              {lang === "id" ? section.labelId : section.labelEn}
+            </h3>
+            <span className="h-px flex-1" style={{ background: `linear-gradient(to right, ${T.accent}66, transparent)` }} />
+          </div>
+          <dl>
+            {section.rows.map((row, i) =>
+              LONG_FORM_FIELDS.has(row.field) ? (
+                <div key={row.field} className="py-3" style={i ? { borderTop: `1px solid ${T.hairline}` } : undefined}>
+                  <dt className="mb-1.5 text-[10.5px] font-bold uppercase" style={{ color: T.faint, letterSpacing: "0.12em" }}>
+                    {fieldLabel(row.field, lang)}
+                  </dt>
+                  <dd className="whitespace-pre-line text-[14px] leading-relaxed" style={{ color: T.body }}>{row.value}</dd>
+                </div>
+              ) : (
+                <div key={row.field} className="flex items-baseline justify-between gap-5 py-2.5" style={i ? { borderTop: `1px solid ${T.hairline}` } : undefined}>
+                  <dt className="text-[13px]" style={{ color: T.muted }}>{fieldLabel(row.field, lang)}</dt>
+                  <dd className="text-right text-[13.5px] font-semibold" style={{ color: T.ink }}>{row.value}</dd>
+                </div>
+              ),
+            )}
+          </dl>
+        </section>
+      ))}
     </div>
   );
 }
@@ -103,13 +151,7 @@ export function ProfileCard({
   const chips = [f("maritalStatus"), f("openToTaaruf"), f("gender")].filter(Boolean) as string[];
   const glance = GLANCE.map(g => ({ ...g, value: f(g.field) })).filter(g => g.value && g.field !== "location");
 
-  const sections = SHARE_SECTIONS.map(section => ({
-    ...section,
-    rows: section.fields
-      .filter(field => !HERO_FIELDS.has(field))
-      .map(field => ({ field, value: f(field) }))
-      .filter((row): row is { field: string; value: string } => !!row.value),
-  })).filter(s => s.rows.length > 0);
+  const sections = profileSections(profile, lang);
 
   return (
     <div className="flex flex-col gap-6">
@@ -142,7 +184,7 @@ export function ProfileCard({
                 {age && location && <span style={{ color: T.faint }}>·</span>}
                 {location && (
                   <span className="inline-flex items-center gap-1.5">
-                    <MapPin className="h-3.5 w-3.5" style={{ color: T.gold }} />
+                    <MapPin className="h-3.5 w-3.5" style={{ color: T.accent }} />
                     {location}
                   </span>
                 )}
@@ -152,7 +194,7 @@ export function ProfileCard({
             {chips.length > 0 && (
               <div className="mt-5 flex flex-wrap gap-2">
                 {chips.map(chip => (
-                  <span key={chip} className="rounded-full px-3 py-1 text-[11.5px] font-bold" style={{ background: T.goldSoft, color: "#6B5530" }}>
+                  <span key={chip} className="rounded-full px-3 py-1 text-[11.5px] font-bold" style={{ background: T.accentSoft, color: "#6B5530" }}>
                     {chip}
                   </span>
                 ))}
@@ -160,8 +202,8 @@ export function ProfileCard({
             )}
 
             {about && (
-              <blockquote className="relative mt-8 border-l pl-5" style={{ borderColor: T.gold }}>
-                <Quote className="absolute -left-2.5 -top-1 h-5 w-5 p-0.5" style={{ color: T.gold, background: T.card }} />
+              <blockquote className="relative mt-8 border-l pl-5" style={{ borderColor: T.accent }}>
+                <Quote className="absolute -left-2.5 -top-1 h-5 w-5 p-0.5" style={{ color: T.accent, background: T.card }} />
                 <p className="whitespace-pre-line text-[16.5px] italic leading-[1.8]" style={{ fontFamily: serif, color: T.body }}>
                   {about}
                 </p>
@@ -172,7 +214,7 @@ export function ProfileCard({
               <dl className="mt-auto grid grid-cols-1 gap-x-6 gap-y-4 pt-9 sm:grid-cols-2">
                 {glance.map(({ field, icon: Icon, value }) => (
                   <div key={field} className="flex items-start gap-3">
-                    <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ background: T.paper, border: `1px solid ${T.hairline}` }}>
+                    <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full" style={{ background: T.surface, border: `1px solid ${T.hairline}` }}>
                       <Icon className="h-3.5 w-3.5" style={{ color: T.navy }} />
                     </span>
                     <div className="min-w-0">
@@ -217,7 +259,7 @@ export function ProfileCard({
                 <h3 className="text-[19px]" style={{ fontFamily: serif, color: T.ink }}>
                   {lang === "id" ? section.labelId : section.labelEn}
                 </h3>
-                <span className="h-px flex-1" style={{ background: `linear-gradient(to right, ${T.gold}66, transparent)` }} />
+                <span className="h-px flex-1" style={{ background: `linear-gradient(to right, ${T.accent}66, transparent)` }} />
               </div>
               <dl>
                 {section.rows.map((row, i) =>

@@ -14,12 +14,12 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const C = {
-  paper: "#FBF8F3",
-  ink: "#1C1917",
-  body: "#57534E",
-  gold: "#B08D57",
+  paper: "#FFFAF7",
+  ink: "#102B61",
+  body: "#52617C",
+  accent: "#9B2242",
   rose: "#9B2242",
-  navy: "#0A2754",
+  navy: "#0B3A86",
 };
 
 async function googleFont(family: string, spec: string, text: string): Promise<ArrayBuffer | null> {
@@ -105,17 +105,17 @@ export default async function OpengraphImage({ params }: { params: { token: stri
           <img src={logoSrc} width={178} height={80} />
 
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", fontSize: 19, fontWeight: 800, letterSpacing: 6, color: C.gold }}>{eyebrow}</div>
+            <div style={{ display: "flex", fontSize: 19, fontWeight: 800, letterSpacing: 6, color: C.accent }}>{eyebrow}</div>
             <div style={{ display: "flex", marginTop: 22, fontFamily: "Playfair", fontSize: 58, lineHeight: 1.1, color: C.ink }}>{lead}</div>
             <div style={{ display: "flex", fontFamily: "Playfair", fontStyle: "italic", fontSize: emphasisSize, lineHeight: 1.1, color: C.rose }}>
               {emphasis}
             </div>
-            <div style={{ display: "flex", marginTop: 26, width: 96, height: 2, background: C.gold }} />
+            <div style={{ display: "flex", marginTop: 26, width: 96, height: 2, background: C.accent }} />
             <div style={{ display: "flex", marginTop: 24, fontSize: 26, fontWeight: 600, lineHeight: 1.45, color: C.body, maxWidth: 620 }}>{sub}</div>
           </div>
 
           <div style={{ display: "flex", alignItems: "center", fontSize: 19, fontWeight: 600, color: C.body }}>
-            <div style={{ display: "flex", width: 9, height: 9, borderRadius: 9, background: C.gold, marginRight: 14 }} />
+            <div style={{ display: "flex", width: 9, height: 9, borderRadius: 9, background: C.accent, marginRight: 14 }} />
             {footer}
           </div>
         </div>
@@ -123,13 +123,13 @@ export default async function OpengraphImage({ params }: { params: { token: stri
         <div style={{ display: "flex", position: "relative", flex: 1, alignItems: "center", justifyContent: "center", background: C.navy }}>
           <svg width="440" height="630" viewBox="0 0 440 630" style={{ position: "absolute", top: 0, left: 0 }}>
             {stars.map((d, i) => (
-              <path key={i} d={d} fill="none" stroke={C.gold} strokeOpacity="0.22" strokeWidth="1.2" />
+              <path key={i} d={d} fill="none" stroke={C.accent} strokeOpacity="0.22" strokeWidth="1.2" />
             ))}
           </svg>
-          <div style={{ display: "flex", width: 236, height: 236, borderRadius: 236, border: `2px solid ${C.gold}`, alignItems: "center", justifyContent: "center", background: C.navy }}>
+          <div style={{ display: "flex", width: 236, height: 236, borderRadius: 236, border: `2px solid ${C.accent}`, alignItems: "center", justifyContent: "center", background: C.navy }}>
             <div style={{ display: "flex", flexDirection: "column", width: 200, height: 200, borderRadius: 200, alignItems: "center", justifyContent: "center", background: C.paper }}>
               <div style={{ display: "flex", fontFamily: "Playfair", fontSize: 92, lineHeight: 1, color: C.navy }}>{medallion}</div>
-              <div style={{ display: "flex", marginTop: 8, fontSize: 15, fontWeight: 800, letterSpacing: 5, color: C.gold }}>{medallionLabel}</div>
+              <div style={{ display: "flex", marginTop: 8, fontSize: 15, fontWeight: 800, letterSpacing: 5, color: C.accent }}>{medallionLabel}</div>
             </div>
           </div>
         </div>

@@ -6,6 +6,7 @@
 import type { AudienceTier, Audiences, ProjectedProfile } from "@/lib/share-sections";
 import type { ProfileAnswers, Question } from "@/lib/share-questions";
 import type { VisitContext } from "@/lib/share-analytics";
+import type { AvatarVariant } from "@/lib/share-avatars";
 
 export type SharePurpose = "matchmaking" | "promotion";
 export type AccessMode = "anyone" | "signin" | "invited";
@@ -34,6 +35,7 @@ export interface ShareSummary {
   access: ShareAccess;
   audiences: Audiences;
   photoSelection: Record<string, number[] | null>;
+  avatarSelection: Record<string, AvatarVariant>;
   expiresAt: string | null;
   maxOpens: number | null;
   maxOpensPerViewer: number | null;
@@ -80,17 +82,21 @@ export interface ShareViewEvent {
   visit: VisitContext | null;
 }
 
+export type SwipeDecision = "yes" | "no";
+
 export interface ShareResponseRow {
   uid: string;
   email: string;
   name: string;
   /** keyed by candidateId */
   answers: Record<string, ProfileAnswers>;
-  /** candidateId, "none", or null for single-profile links */
-  finalChoice: string | null;
+  /** the swipe on each profile, keyed by candidateId */
+  decisions: Record<string, SwipeDecision>;
   finalNote: string;
   submittedAt: string | null;
   updatedAt: string | null;
+  /** set once every profile in the link has been swiped */
+  completedAt: string | null;
 }
 
 export interface ShareDetail {
@@ -110,6 +116,8 @@ export type ShareGateState =
   | "signin_required"
   | "not_invited"
   | "exhausted_for_you"
+  /** this viewer already swiped through every profile */
+  | "completed"
   | "error";
 
 export interface ShareGatePayload {
@@ -120,13 +128,11 @@ export interface ShareGatePayload {
   profileCount?: number;
 }
 
-export interface ShareViewResponse {
-  /** keyed by profile slot ("0".."4") — candidate ids never reach the recipient */
-  answers: Record<string, ProfileAnswers>;
-  /** slot string, "none", or null */
-  finalChoice: string | null;
+/** Where this viewer got to. Slots, never candidate ids. */
+export interface ShareProgress {
+  decidedSlots: number[];
+  completed: boolean;
   finalNote: string;
-  submittedAt: string | null;
 }
 
 export interface ShareViewPayload {
@@ -140,7 +146,7 @@ export interface ShareViewPayload {
   viewer: { name: string; email: string } | null;
   profiles: ProjectedProfile[];
   questionnaire: ShareQuestionnaire;
-  response: ShareViewResponse | null;
+  progress: ShareProgress;
   expiresAt: string | null;
   opensRemaining: number | null;
   opensRemainingForYou: number | null;

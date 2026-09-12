@@ -15,7 +15,7 @@ import {
   type ShareRecord,
 } from "@/lib/shares";
 import type { ShareDetail, ShareResponseRow, ShareViewEvent, ShareViewerRow } from "@/lib/share-types";
-import { accessSchema, audiencesSchema, photoSelectionSchema } from "@/lib/share-schemas";
+import { accessSchema, audiencesSchema, avatarSelectionSchema, photoSelectionSchema } from "@/lib/share-schemas";
 
 const patchSchema = z.object({
   revoke: z.boolean().optional(),
@@ -33,6 +33,7 @@ const patchSchema = z.object({
   access: accessSchema.optional(),
   audiences: audiencesSchema.optional(),
   photoSelection: photoSelectionSchema.optional(),
+  avatarSelection: avatarSelectionSchema.optional(),
 });
 
 async function loadShare(shareId: string) {
@@ -112,10 +113,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ shar
         email: r.email ?? "",
         name: r.name ?? "",
         answers: r.answers ?? {},
-        finalChoice: r.finalChoice ?? null,
+        decisions: r.decisions ?? {},
         finalNote: r.finalNote ?? "",
         submittedAt: toIso(r.submittedAt),
         updatedAt: toIso(r.updatedAt),
+        completedAt: toIso(r.completedAt),
       };
     });
 
@@ -170,6 +172,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ sh
   if (body.photoSelection !== undefined) {
     update.photoSelection = Object.fromEntries(
       share.candidateIds.map(id => [id, body.photoSelection![id] ?? null]),
+    );
+  }
+  if (body.avatarSelection !== undefined) {
+    update.avatarSelection = Object.fromEntries(
+      share.candidateIds.map(id => [id, body.avatarSelection![id] ?? share.avatarSelection[id] ?? "man"]),
     );
   }
 

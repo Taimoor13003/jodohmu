@@ -70,7 +70,7 @@ export function ReflectionForm({
               style={flagged ? { boxShadow: `0 0 0 2px ${T.rose}`, padding: 14, margin: -14 } : undefined}
             >
               <div className="mb-4 flex gap-4">
-                <span className="pt-0.5 text-[15px] tabular-nums" style={{ fontFamily: serif, color: T.gold }}>
+                <span className="pt-0.5 text-[15px] tabular-nums" style={{ fontFamily: serif, color: T.accent }}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <label className="text-[18px] leading-snug" style={{ fontFamily: serif, color: T.ink }}>
@@ -94,7 +94,7 @@ export function ReflectionForm({
                       maxLength={2000}
                       placeholder={lang === "id" ? "Tulis dengan jujur dan tenang…" : "Write honestly, in your own words…"}
                       className="w-full resize-y rounded-2xl px-4 py-3.5 text-[15px] leading-relaxed focus:outline-none disabled:opacity-60"
-                      style={{ background: T.paper, border: `1px solid ${T.hairline}`, color: T.ink }}
+                      style={{ background: T.surface, border: `1px solid ${T.hairline}`, color: T.ink }}
                     />
                     <p className="mt-1.5 text-right text-[11px] tabular-nums" style={{ color: T.faint }}>{value.length} / 2000</p>
                   </div>

@@ -109,6 +109,14 @@ export function optionsFor(q: Question) {
   return q.type === "yes_no" ? YES_NO_OPTIONS : q.options ?? [];
 }
 
+/**
+ * The first yes/no question is answered by the swipe itself, so the deck
+ * never renders it as a form field.
+ */
+export function swipeQuestionId(questions: Question[]): string | null {
+  return questions.find(q => q.type === "yes_no" && !q.showIf)?.id ?? null;
+}
+
 export function isQuestionVisible(q: Question, answers: ProfileAnswers, photosHidden: boolean): boolean {
   if (!q.showIf) return true;
   if (q.showIf === "photosHidden") return photosHidden;

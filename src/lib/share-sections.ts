@@ -6,6 +6,8 @@
    definition of "what this viewer may see".
    ────────────────────────────────────────────────────────────────────── */
 
+import type { AvatarVariant } from "@/lib/share-avatars";
+
 export interface ShareSection {
   key: string;
   labelId: string;
@@ -135,6 +137,8 @@ export interface ProjectedProfile {
   slot: number;
   name: string;
   nameHidden: boolean;
+  /** stand-in portrait shown when this viewer may not see photos */
+  avatar: AvatarVariant;
   data: Record<string, unknown>;
   photos: { index: number; src: string }[];
   /** The link hides photos from this viewer (drives the "photo not shown" question). */
@@ -148,6 +152,7 @@ export interface ProjectInput {
   candidate: Record<string, unknown>;
   audiences: Audiences;
   tier: AudienceTier;
+  avatar: AvatarVariant;
   /** Photo indexes chosen for this profile; null = all of them. */
   photoSelection: number[] | null;
   anonymousLabel: string;
@@ -194,6 +199,7 @@ export function projectProfile(input: ProjectInput): ProjectedProfile {
     slot: input.slot,
     name: nameHidden ? input.anonymousLabel : realName,
     nameHidden,
+    avatar: input.avatar,
     data,
     photos: rule.showPhotos ? photoIndexes.map(index => ({ index, src: input.photoSrc(index) })) : [],
     photosHidden: !rule.showPhotos || photoIndexes.length === 0,

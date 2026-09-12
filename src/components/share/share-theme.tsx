@@ -1,31 +1,40 @@
-/* Visual language for recipient-facing profile links: an editorial, private
-   introduction — ivory paper, ink, hairlines, a restrained gold and rose. */
+/* Recipient-facing profile links, in the Jodohmu brand palette:
+   rose #9B2242 and royal blue #0B3A86 on warm white, with the soft pink and
+   soft blue tints used across the marketing site. */
 
 export const T = {
-  paper: "#FBF8F3",
-  paperDeep: "#F3ECE1",
+  paper: "#FFFFFF",
+  /** subtle fill for inputs and tiles, so they still read on a white page */
+  surface: "#F6F8FC",
+  paperDeep: "#FDEFF3",
+  paperBlue: "#F1F5FF",
   card: "#FFFFFF",
-  ink: "#1C1917",
-  body: "#44403C",
-  muted: "#78716C",
-  faint: "#A8A29E",
-  hairline: "#E9E2D6",
+  ink: "#102B61",
+  body: "#52617C",
+  muted: "#7C8AA3",
+  faint: "#AEB8C9",
+  hairline: "#E6EAF5",
   navy: "#0B3A86",
-  navyDeep: "#0A2754",
+  navyDeep: "#102B61",
   rose: "#9B2242",
-  roseSoft: "#FBF0F3",
-  gold: "#A8834A",
-  goldSoft: "#F4EBDC",
-  sage: "#EDF3EE",
-  sageInk: "#3C6A51",
+  roseSoft: "#FFE0EF",
+  roseDeep: "#4C1F35",
+  accent: "#9B2242",
+  accentSoft: "#F7BFD0",
+  blueSoft: "#DCE7FC",
+  success: "#EAF6F0",
+  successInk: "#2F6B52",
 };
+
+export const BRAND_GRADIENT = `linear-gradient(135deg, ${T.navy}, ${T.rose})`;
 
 export const serif = "var(--font-playfair), Georgia, 'Times New Roman', serif";
 
-export const cardShadow = "0 1px 2px rgba(28,25,23,0.04), 0 18px 48px -20px rgba(28,25,23,0.18)";
+/** White cards on a white page are separated by elevation, not colour. */
+export const cardShadow = "0 1px 2px rgba(16,43,97,0.06), 0 10px 30px -12px rgba(16,43,97,0.20)";
 
 /** Quiet eight-point-star lattice, used where a photo is intentionally withheld. */
-export function GeometricPattern({ color = T.gold, opacity = 0.16 }: { color?: string; opacity?: number }) {
+export function GeometricPattern({ color = T.rose, opacity = 0.16 }: { color?: string; opacity?: number }) {
   const id = "jm-star-lattice";
   return (
     <svg aria-hidden className="absolute inset-0 h-full w-full" style={{ opacity }}>
@@ -45,7 +54,7 @@ export function GeometricPattern({ color = T.gold, opacity = 0.16 }: { color?: s
   );
 }
 
-export function Eyebrow({ children, color = T.gold }: { children: React.ReactNode; color?: string }) {
+export function Eyebrow({ children, color = T.rose }: { children: React.ReactNode; color?: string }) {
   return (
     <p className="text-[10.5px] font-extrabold uppercase" style={{ color, letterSpacing: "0.22em" }}>
       {children}

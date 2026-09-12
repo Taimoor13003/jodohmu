@@ -10,7 +10,9 @@ import {
   AUDIENCE_TIERS, SHARE_SECTIONS, candidateDisplayName, defaultAudiences, normalizeAudiences, projectProfile, tierRank,
   type AudienceRule, type AudienceTier, type Audiences,
 } from "@/lib/share-sections";
+import { AVATAR_LABELS, avatarsForGender, defaultAvatarFor, type AvatarVariant } from "@/lib/share-avatars";
 import { questionsSchema, type Question } from "@/lib/share-questions";
+import { AvatarSwatch } from "@/components/share/avatars";
 import { fieldLabel } from "@/lib/share-display";
 import type { AccessMode, SharePurpose, ShareSummary } from "@/lib/share-types";
 import { ProfileCard } from "@/components/share/profile-card";
@@ -168,6 +170,7 @@ export default function ShareBuilder({
 
   const [audiences, setAudiences] = useState<Audiences>(() => defaultAudiences());
   const [photoSelection, setPhotoSelection] = useState<Record<string, number[] | null>>({});
+  const [avatarSelection, setAvatarSelection] = useState<Record<string, AvatarVariant>>({});
 
   const [questionnaireEnabled, setQuestionnaireEnabled] = useState(true);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -333,6 +336,7 @@ export default function ShareBuilder({
           access: { mode: accessMode, invitedEmails: accessMode === "invited" ? invitedEmails : [] },
           audiences,
           photoSelection,
+          avatarSelection,
           expiresInHours,
           maxOpens,
           maxOpensPerViewer,
@@ -399,6 +403,7 @@ export default function ShareBuilder({
         candidate: previewCandidate.data,
         audiences,
         tier: previewTier,
+        avatar: avatarSelection[previewCandidate.id] ?? defaultAvatarFor(previewCandidate.data),
         photoSelection: photoSelection[previewCandidate.id] ?? null,
         anonymousLabel: `PREVIEW-${previewSlot + 1}`,
         photoSrc: i => previewCandidate.photoUrls[i],
@@ -636,6 +641,33 @@ export default function ShareBuilder({
                     ))}
                   </tbody>
                 </table>
+              </div>
+
+              <div>
+                <Label hint={t("Dipakai untuk audiens yang tidak boleh melihat foto, atau bila kandidat belum punya foto.", "Shown to audiences who may not see photos, or when a candidate has none.")}>
+                  <span className="inline-flex items-center gap-1.5"><UserRound className="h-3.5 w-3.5" /> {t("Avatar pengganti", "Stand-in avatar")}</span>
+                </Label>
+                <div className="flex flex-col gap-3">
+                  {candidates.map(c => {
+                    const current = avatarSelection[c.id] ?? defaultAvatarFor(c.data);
+                    return (
+                      <div key={c.id} className="rounded-xl border bg-white p-3" style={{ borderColor: C.border }}>
+                        <p className="mb-2.5 text-[13px] font-bold" style={{ color: C.text }}>{c.name}</p>
+                        <div className="flex flex-wrap gap-4">
+                          {avatarsForGender(c.data.gender).map(v => (
+                            <AvatarSwatch
+                              key={v}
+                              variant={v}
+                              selected={current === v}
+                              label={AVATAR_LABELS[v][lang]}
+                              onClick={() => setAvatarSelection(prev => ({ ...prev, [c.id]: v }))}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
               {candidates.some(c => c.photoUrls.length > 0) && (
