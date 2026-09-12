@@ -78,6 +78,14 @@ const nextConfig = {
         source: "/profile/:path*",
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }],
       },
+      // Controlled share links: never indexed, never cached by intermediaries.
+      {
+        source: "/s/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow, noarchive, noimageindex" },
+          { key: "Cache-Control", value: "no-store, private" },
+        ],
+      },
       {
         source: "/login",
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }],

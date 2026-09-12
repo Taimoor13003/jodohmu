@@ -10,7 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   Users, Briefcase, UserCheck, MessageCircle,
-  Globe, LogOut, Menu, Bell, MessageSquareText,
+  Globe, LogOut, Menu, Bell, MessageSquareText, Link2,
 } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 
@@ -190,6 +190,7 @@ const SIDEBAR_W = 220;
 const NAV = [
   { href: "/admin/candidates", label: "Kandidat",      icon: <UserCheck      className="w-full h-full" />, color: "#C4294A", bg: "#FFF1F2" },
   { href: "/admin/chat",       label: "Chat",           icon: <MessageCircle  className="w-full h-full" />, color: "#0369A1", bg: "#EFF6FF" },
+  { href: "/admin/shares",     label: "Tautan Profil",  icon: <Link2          className="w-full h-full" />, color: "#7C3AED", bg: "#F5F3FF" },
   { href: "/admin/workers",    label: "Workers",        icon: <Briefcase      className="w-full h-full" />, color: "#14B8A6", bg: "#F0FDFA" },
   { href: "/admin/users",      label: "Semua Pengguna", icon: <Users          className="w-full h-full" />, color: "#6366F1", bg: "#EEF2FF" },
 ];
@@ -202,7 +203,9 @@ function Sidebar({ open, onClose, onSidebarEnter, onSidebarLeave, onLogout, role
   role: string;
 }) {
   const pathname = usePathname();
-  const nav = role === "worker" ? NAV.filter(item => item.href === "/admin/candidates" || item.href === "/admin/chat") : NAV;
+  const nav = role === "worker"
+    ? NAV.filter(item => ["/admin/candidates", "/admin/chat", "/admin/shares"].includes(item.href))
+    : NAV;
 
   return (
     <div

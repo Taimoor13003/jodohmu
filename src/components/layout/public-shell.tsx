@@ -5,7 +5,7 @@ import { Header } from "./header";
 import { Footer } from "./footer";
 import { WhatsAppFab } from "./whatsapp-fab";
 
-const APP_PREFIXES = ["/dashboard", "/admin", "/profile/", "/presentations/foreign", "/presentations/indonesia", "/presentations/entrepreneurship"];
+const APP_PREFIXES = ["/dashboard", "/admin", "/profile/", "/s/","/presentations/foreign", "/presentations/indonesia", "/presentations/entrepreneurship"];
 
 export function PublicShell({
   children,

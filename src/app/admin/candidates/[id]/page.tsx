@@ -9,13 +9,14 @@ import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { auth } from "@/lib/firebase";
+import SharePanel from "@/components/admin/share-panel";
 import {
   MapPin, Briefcase, GraduationCap, CheckCircle2, Heart,
   Brain, ClipboardList, ChevronLeft, ChevronRight, Eye, EyeOff,
   AlertTriangle, CheckCircle, Fingerprint, Award,
   Pencil, Save, X, UserPlus, Trash2, Clock, Star, ToggleLeft,
   BookOpen, Shield, Leaf, Target, Users, CalendarDays,
-  ArrowLeft, LayoutList, Plus, Download, FileText, MessageCircle,
+  ArrowLeft, LayoutList, Plus, Download, FileText, MessageCircle, Link2,
 } from "lucide-react";
 
 /* ── palette ─────────────────────────────────────────────────────────── */
@@ -784,6 +785,7 @@ export default function AdminCandidateProfile({ params }: { params: { id: string
   const [assignMsg,       setAssignMsg]       = useState<string | null>(null);
 
   const [cvModal,  setCvModal]  = useState(false);
+  const [sharePanel, setSharePanel] = useState(false);
   const [cvLang,   setCvLang]   = useState<Lang>(lang);
   const [cvPhoto,  setCvPhoto]  = useState(true);
 
@@ -1391,6 +1393,12 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
           style={{ color: C.body, borderColor: C.border, background: "white" }}>
           <FileText style={{ width: 13, height: 13 }} />
           {lang === "id" ? "CV Ta'aruf" : "Taaruf CV"}
+        </button>
+        <button onClick={() => setSharePanel(true)}
+          className="flex items-center gap-1.5 text-[12.5px] font-bold px-3.5 py-1.5 rounded-lg text-white transition-opacity hover:opacity-90"
+          style={{ background: "linear-gradient(135deg, #1B3A6B, #C4294A)" }}>
+          <Link2 style={{ width: 13, height: 13 }} />
+          {lang === "id" ? "Bagikan Profil" : "Share Profile"}
         </button>
         <Link href={`/admin/chat?uid=${id}&name=${encodeURIComponent(meta.name ?? "")}`}
           className="flex items-center gap-1.5 text-[12.5px] font-semibold px-3.5 py-1.5 rounded-lg border transition-colors hover:bg-white"
@@ -2552,6 +2560,16 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
       )}
 
       {/* ── TAARUF CV MODAL ─────────────────────────────────────────────── */}
+      {sharePanel && (
+        <SharePanel
+          candidateId={id}
+          candidateName={name !== "—" ? name : (meta.name ?? "Kandidat")}
+          photoUrls={photos}
+          lang={lang}
+          onClose={() => setSharePanel(false)}
+        />
+      )}
+
       {cvModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
           style={{ background: "rgba(15,23,42,0.65)", backdropFilter: "blur(4px)" }}

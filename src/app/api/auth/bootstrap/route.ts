@@ -3,6 +3,7 @@ import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
 import { generateUsername } from "@/lib/username";
 import { pushToAdmin } from "@/lib/push-server";
+import { SHARES_COLLECTION, shareCode } from "@/lib/shares";
 
 /**
  * Called right after any self-serve sign-in (Google or email/password).
@@ -24,6 +25,7 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json().catch(() => ({} as Record<string, unknown>));
     const clientName = typeof body?.name === "string" ? body.name.trim() : "";
+    const shareToken = typeof body?.shareToken === "string" ? body.shareToken : "";
 
     const roleRef = adminDb().collection("user_roles").doc(uid);
     const roleSnap = await roleRef.get();
@@ -56,11 +58,17 @@ export async function POST(req: NextRequest) {
 
     await adminDb().collection("usernames").doc(username).set({ uid, email });
 
+    // Accounts created from a profile link are attributed to that link.
+    const sourceShare = /^[A-Za-z0-9_-]{16,64}$/.test(shareToken)
+      ? await adminDb().collection(SHARES_COLLECTION).doc(shareToken).get()
+      : null;
+
     await adminDb().collection("candidate_intake").doc(uid).set({
       email,
       name,
       personStatus: "new_lead",
-      leadSource: authProvider,
+      leadSource: sourceShare?.exists ? "share_link" : authProvider,
+      ...(sourceShare?.exists ? { sourceShareId: shareToken, sourceShareCode: shareCode(shareToken) } : {}),
       createdAt: FieldValue.serverTimestamp(),
     });
 
