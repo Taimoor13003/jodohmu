@@ -10,6 +10,8 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { auth } from "@/lib/firebase";
 import SharePanel from "@/components/admin/share-panel";
+import CandidateInvite from "@/components/admin/candidate-invite";
+import { ageFromDob } from "@/lib/age";
 import {
   MapPin, Briefcase, GraduationCap, CheckCircle2, Heart,
   Brain, ClipboardList, ChevronLeft, ChevronRight, Eye, EyeOff,
@@ -51,8 +53,8 @@ const SF: Record<string, string[]> = {
   "gaya-hidup":      ["smokingStatus","alcoholUse","drugUse","exerciseFrequency","socialPreference","dietaryRestrictions"],
   "tujuan":          ["maritalTimeline","weddingPreference","financialManagementStyle","decisionMakingStyle"],
   "profil-agama":    ["religion","religiousPracticeLevel","prayerHabit","quranReading","hijab","beard","waliAvailability","maharExpectation","maharBudget","polygamyView"],
-  "data-pribadi":    ["age","gender","dateOfBirth","nationality","ethnicity","height","weight","bloodType","birthPlace","currentlyLivingWith","whatsappNumber","ownHealthCondition"],
-  "karir":           ["occupation","employmentStatus","incomeRange","propertyStatus","hasDebts","financialGoalsAfterMarriage"],
+  "data-pribadi":    ["gender","dateOfBirth","nationality","ethnicity","height","weight","bloodType","birthPlace","currentlyLivingWith","whatsappNumber","ownHealthCondition"],
+  "karir":           ["occupation","jobPosition","jobDescription","employmentStatus","incomeRange","propertyStatus","hasDebts","financialGoalsAfterMarriage"],
   "kriteria":        ["preferredMinAge","preferredMaxAge","preferredReligion","prefReligionLevel","prefHijabBeard","prefMazhab","preferredEducationLevel","prefPreviousStatus","openToDivorcedOrWidowed","openToDifferentEthnicity","preferredLocationOfSpouse","prefDomicile","prefWorkStatus","prefJobField","prefMinIncome","prefMinHeight","prefMaxHeight","prefBodyType","prefChildrenFromPrevious","prefMaxChildren","prefLivingWithFamily","prefPersonalityType","prefSmokingAcceptance","prefWifeCareer","prefHealthCondition","preferredPersonalityTraits","physicalPreferences","spouseDealBreakers"],
   "harapan":         ["roleExpectationsHusband","roleExpectationsWife"],
   "catatan-tim":     ["salesLeadNotes","profileMakerNotes","imamNotes","psychologistNotes","receptionistNotes","internalTeamNotes","emotionalReadinessAssessment","backgroundCheckerNotes"],
@@ -389,7 +391,7 @@ const T: Record<Lang, Record<string, string>> = {
   id: {
     back: "Kembali ke Kandidat", save: "Simpan", cancel: "Batal", saving: "…",
     not_filled: "Belum diisi.", not_set: "Belum diset",
-    assign: "Tugaskan", pick_worker: "Pilih worker…",
+    assign: "Tugaskan", pick_worker: "Pilih worker…", already_assigned: "sudah ditugaskan", creator: "Pembuat profil",
     workers_title: "Workers Ditugaskan", no_workers: "Belum ada worker yang ditugaskan.",
     open_taaruf: "Open Ta'aruf", not_open: "Tidak Open Ta'aruf", taaruf_not_set: "Taaruf: belum diset",
     activated_by: "Diaktifkan oleh", assessment_div: "Penilaian & Verifikasi",
@@ -409,10 +411,10 @@ const T: Record<Lang, Record<string, string>> = {
     f_pref_divorced: "Status sebelumnya", f_pref_ethnicity: "Beda etnis",
     f_timeline: "Target Waktu", f_wedding: "Preferensi Pernikahan",
     f_finance: "Keuangan", f_decision: "Pengambilan Keputusan",
-    f_age: "Usia", f_gender: "Jenis Kelamin", f_dob: "Tgl Lahir",
+    f_age: "Usia (otomatis)", f_gender: "Jenis Kelamin", f_dob: "Tgl Lahir",
     f_nationality: "Kebangsaan", f_ethnicity: "Suku",
     f_height: "Tinggi", f_weight: "Berat", f_bloodtype: "Gol. Darah",
-    f_occupation: "Pekerjaan", f_emp_status: "Status Kerja",
+    f_occupation: "Pekerjaan", f_job_position: "Jabatan", f_job_desc: "Deskripsi Pekerjaan", f_emp_status: "Status Kerja",
     f_income: "Penghasilan", f_property: "Properti", f_debts: "Hutang",
     f_religion: "Agama", f_practice: "Ibadah", f_prayer2: "Shalat",
     f_hijab: "Hijab", f_beard: "Jenggot", f_polygamy: "Terbuka Poligami", f_mahar: "Mahar",
@@ -470,7 +472,7 @@ const T: Record<Lang, Record<string, string>> = {
   en: {
     back: "Back to Candidates", save: "Save", cancel: "Cancel", saving: "…",
     not_filled: "Not filled in.", not_set: "Not set",
-    assign: "Assign", pick_worker: "Select worker…",
+    assign: "Assign", pick_worker: "Select worker…", already_assigned: "already assigned", creator: "Created this profile",
     workers_title: "Assigned Workers", no_workers: "No workers assigned yet.",
     open_taaruf: "Open to Ta'aruf", not_open: "Not Open to Ta'aruf", taaruf_not_set: "Taaruf: not set",
     activated_by: "Activated by", assessment_div: "Assessments & Verification",
@@ -490,10 +492,10 @@ const T: Record<Lang, Record<string, string>> = {
     f_pref_divorced: "Previous status", f_pref_ethnicity: "Diff. ethnicity",
     f_timeline: "Timeline", f_wedding: "Wedding preference",
     f_finance: "Finance", f_decision: "Decision making",
-    f_age: "Age", f_gender: "Gender", f_dob: "Date of birth",
+    f_age: "Age (auto)", f_gender: "Gender", f_dob: "Date of birth",
     f_nationality: "Nationality", f_ethnicity: "Ethnicity",
     f_height: "Height", f_weight: "Weight", f_bloodtype: "Blood type",
-    f_occupation: "Occupation", f_emp_status: "Employment status",
+    f_occupation: "Occupation", f_job_position: "Job position", f_job_desc: "Job description", f_emp_status: "Employment status",
     f_income: "Income", f_property: "Property", f_debts: "Debts",
     f_religion: "Religion", f_practice: "Practice level", f_prayer2: "Prayer",
     f_hijab: "Hijab", f_beard: "Beard", f_polygamy: "Open to Polygamy", f_mahar: "Dowry (Mahar)",
@@ -781,11 +783,13 @@ export default function AdminCandidateProfile({ params }: { params: { id: string
 
   const [workers,         setWorkers]         = useState<WorkerRow[]>([]);
   const [assignedWorkers, setAssignedWorkers] = useState<string[]>([]);
+  const [createdBy,       setCreatedBy]       = useState<string | null>(null);
   const [selectedWorker,  setSelectedWorker]  = useState("");
   const [assignMsg,       setAssignMsg]       = useState<string | null>(null);
 
   const [cvModal,  setCvModal]  = useState(false);
   const [sharePanel, setSharePanel] = useState(false);
+  const [inviteModal, setInviteModal] = useState(false);
   const [cvLang,   setCvLang]   = useState<Lang>(lang);
   const [cvPhoto,  setCvPhoto]  = useState(true);
 
@@ -813,6 +817,7 @@ export default function AdminCandidateProfile({ params }: { params: { id: string
       setMeta(json.meta ?? {});
       setCanEdit(json.canEdit ?? false);
       setAssignedWorkers(d.assignedWorkers ?? []);
+      setCreatedBy(typeof d.createdBy === "string" ? d.createdBy : null);
       const sm: Record<string, SectionMeta> = {};
       if (d._sectionMeta && typeof d._sectionMeta === "object") {
         for (const [k, v] of Object.entries(d._sectionMeta as Record<string, { updatedByName: string; updatedAt: { _seconds?: number } | string }>)) {
@@ -1321,7 +1326,6 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
   const gender     = raw(data, "gender");
   const isAdmin    = role === "admin";
   const workerMap  = Object.fromEntries(workers.map(w => [w.uid, w]));
-  const unassigned = workers.filter(w => !assignedWorkers.includes(w.uid));
   const profStatuses = getProfileStatuses(data);
   const openTaaruf   = raw(data, "openToTaaruf");
   const paket        = raw(data, "paket");
@@ -1394,6 +1398,21 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
           <FileText style={{ width: 13, height: 13 }} />
           {lang === "id" ? "CV Ta'aruf" : "Taaruf CV"}
         </button>
+        <a href={`/profile/${id}`} target="_blank" rel="noopener noreferrer"
+          title={lang === "id" ? "Lihat link profil yang dibagikan kandidat, persis seperti orang lain melihatnya" : "See the candidate's shareable profile link exactly as others see it"}
+          className="flex items-center gap-1.5 text-[12.5px] font-semibold px-3.5 py-1.5 rounded-lg border transition-colors hover:bg-white"
+          style={{ color: C.body, borderColor: C.border, background: "white" }}>
+          <Eye style={{ width: 13, height: 13 }} />
+          {lang === "id" ? "Lihat Link Profil" : "View Profile Link"}
+        </a>
+        {canEdit && (
+          <button onClick={() => setInviteModal(true)}
+            className="flex items-center gap-1.5 text-[12.5px] font-semibold px-3.5 py-1.5 rounded-lg border transition-colors hover:bg-white"
+            style={{ color: C.body, borderColor: C.border, background: "white" }}>
+            <UserPlus style={{ width: 13, height: 13 }} />
+            {lang === "id" ? "Undang ke Akun" : "Invite to Account"}
+          </button>
+        )}
         <button onClick={() => setSharePanel(true)}
           className="flex items-center gap-1.5 text-[12.5px] font-bold px-3.5 py-1.5 rounded-lg text-white transition-opacity hover:opacity-90"
           style={{ background: "linear-gradient(135deg, #1B3A6B, #C4294A)" }}>
@@ -1767,7 +1786,8 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
               <Card>
                 <div className="p-6 group">
                   <SH title={t.s_pribadi} icon={<Shield className="w-full h-full" />} iconColor="#3B82F6" iconBg="#EFF6FF" {...sp("data-pribadi")} />
-                  <FR label={t.f_age}         value={g("data-pribadi","age")}         fieldKey="age"         {...ep("data-pribadi")} />
+                  {/* Age is read-only: it follows the date of birth, including while editing it */}
+                  <FR label={t.f_age}         value={String(ageFromDob(g("data-pribadi","dateOfBirth")) ?? g("data-pribadi","age"))} fieldKey="age" {...ep("data-pribadi")} isEditing={false} />
                   <FR label={t.f_gender}      value={g("data-pribadi","gender")}       fieldKey="gender"      select={OPTS.gender}    {...ep("data-pribadi")} />
                   <FR label={t.f_dob}         value={g("data-pribadi","dateOfBirth")}  fieldKey="dateOfBirth" {...ep("data-pribadi")} />
                   <FR label={t.f_nationality} value={g("data-pribadi","nationality")}  fieldKey="nationality" {...ep("data-pribadi")} />
@@ -1788,6 +1808,8 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
                       <div className="p-6 group">
                         <SH title={t.s_karir} icon={<Briefcase className="w-full h-full" />} iconColor="#14B8A6" iconBg="#F0FDFA" {...sp("karir")} />
                         <FR label={t.f_occupation} value={g("karir","occupation")}       fieldKey="occupation"       {...ep("karir")} />
+                        <FR label={t.f_job_position} value={g("karir","jobPosition")}    fieldKey="jobPosition"      {...ep("karir")} />
+                        <FR label={t.f_job_desc}     value={g("karir","jobDescription")} fieldKey="jobDescription"   long {...ep("karir")} />
                         <FR label={t.f_emp_status} value={g("karir","employmentStatus")} fieldKey="employmentStatus" select={OPTS.employmentStatus} {...ep("karir")} />
                         <FR label={t.f_income}     value={g("karir","incomeRange")}      fieldKey="incomeRange"      select={OPTS.incomeRange}      {...ep("karir")} />
                         <FR label={t.f_property}   value={g("karir","propertyStatus")}   fieldKey="propertyStatus"   select={OPTS.propertyStatus}   {...ep("karir")} />
@@ -2461,7 +2483,12 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
                               return (
                                 <div key={uid} className="flex items-center justify-between rounded-xl px-3.5 py-2.5" style={{ background: C.bg, border: `1px solid ${C.border}` }}>
                                   <div>
-                                    <p className="text-[13px] font-semibold" style={{ color: C.text }}>{w?.name ?? uid}</p>
+                                    <p className="text-[13px] font-semibold" style={{ color: C.text }}>
+                                      {w?.name ?? uid}
+                                      {uid === createdBy && (
+                                        <span className="ml-2 rounded-full bg-emerald-50 px-2 py-0.5 text-[10.5px] font-semibold text-emerald-700">{t.creator}</span>
+                                      )}
+                                    </p>
                                     {w?.email && <p className="text-[11.5px]" style={{ color: C.muted }}>{w.email}</p>}
                                   </div>
                                   <button onClick={() => removeWorker(uid)} className="transition-colors hover:text-red-500" style={{ color: C.muted }}>
@@ -2473,12 +2500,20 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
                           </div>
                         )
                       }
-                      {unassigned.length > 0 && (
+                      {workers.length > 0 && (
                         <div className="flex items-center gap-2">
                           <select value={selectedWorker} onChange={e => setSelectedWorker(e.target.value)}
                             className="flex-1 h-9 rounded-xl border bg-white px-3 text-[13px] focus:outline-none" style={{ borderColor: C.border, color: C.text }}>
                             <option value="">{t.pick_worker}</option>
-                            {unassigned.map(w => <option key={w.uid} value={w.uid}>{w.name} — {w.email}</option>)}
+                            {/* Assigned workers stay listed (disabled) so nobody looks "missing" */}
+                            {workers.map(w => {
+                              const assigned = assignedWorkers.includes(w.uid);
+                              return (
+                                <option key={w.uid} value={w.uid} disabled={assigned}>
+                                  {w.name} — {w.email}{assigned ? ` (${t.already_assigned})` : ""}
+                                </option>
+                              );
+                            })}
                           </select>
                           <button onClick={assignWorker} disabled={!selectedWorker}
                             className="flex items-center gap-1.5 text-[12.5px] font-semibold text-white px-4 py-2 rounded-xl disabled:opacity-40 transition-all"
@@ -2567,6 +2602,15 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
           photoUrls={photos}
           lang={lang}
           onClose={() => setSharePanel(false)}
+        />
+      )}
+
+      {inviteModal && (
+        <CandidateInvite
+          candidateId={id}
+          candidateName={meta.name ?? raw(data, "name")}
+          lang={lang}
+          onClose={() => setInviteModal(false)}
         />
       )}
 

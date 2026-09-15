@@ -79,6 +79,8 @@ export interface ShareViewEvent {
   viewerKey: string;
   tier: AudienceTier;
   countedAsOpen: boolean;
+  /** set when the event is a suspected screenshot or print attempt */
+  capture: "printscreen" | "shortcut" | "print" | null;
   visit: VisitContext | null;
 }
 

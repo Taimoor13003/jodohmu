@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
+import { ageFromDob, withLiveAge } from "@/lib/age";
 
 async function resolveRole(uid: string): Promise<string | null> {
   const snap = await adminDb().collection("user_roles").doc(uid).get();
@@ -39,7 +40,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     ]);
 
     return NextResponse.json({
-      data: intakeSnap.data() ?? {},
+      data: withLiveAge(intakeSnap.data() ?? {}),
       meta: roleSnap.data() ?? {},
       canEdit: access.canEdit,
     });
@@ -63,6 +64,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
     const body = await req.json();
     const { _sectionKey, ...fields } = body as Record<string, unknown>;
+
+    // Age isn't editable; it always follows the date of birth
+    delete fields.age;
+    const liveAge = ageFromDob(fields.dateOfBirth);
+    if (liveAge !== null) fields.age = String(liveAge);
 
     const payload: Record<string, unknown> = {
       ...fields,

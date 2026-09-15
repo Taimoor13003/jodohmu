@@ -15,7 +15,7 @@ import type { Lang } from "@/lib/share-display";
 import type { ShareGatePayload, ShareGateState, ShareViewPayload } from "@/lib/share-types";
 import { profileTitle } from "@/components/share/profile-card";
 import { ReflectionForm } from "@/components/share/reflection-form";
-import { SwipeDeck, type Decision } from "@/components/share/swipe-deck";
+import { SwipeDeck, type CaptureKind, type Decision } from "@/components/share/swipe-deck";
 import { Eyebrow, GeometricPattern, GoogleMark, T, cardShadow, serif } from "@/components/share/share-theme";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 
@@ -370,7 +370,7 @@ export default function ShareView({ token }: { token: string }) {
   }, [index, profiles.length, data, stage.kind]);
 
   /* ── engagement: visible seconds per profile + photo opens ── */
-  const beacon = useCallback((body: { slot: number; seconds?: number; photo?: boolean }) => {
+  const beacon = useCallback((body: { slot: number; seconds?: number; photo?: boolean; capture?: CaptureKind }) => {
     const url = `/api/share/${encodeURIComponent(token)}/activity`;
     const payload = JSON.stringify(body);
     try {
@@ -585,6 +585,8 @@ export default function ShareView({ token }: { token: string }) {
             onDecide={onDecide}
             onUndo={undo}
             canUndo={decided.length > 0}
+            watermark={`${d.viewer?.email || d.recipientLabel} · ${d.code}`}
+            onCaptureAttempt={kind => beacon({ slot: profiles[index]?.slot ?? -1, capture: kind })}
             onOpenPhoto={(slot, photoIndex) => {
               setLightbox({ slot, index: photoIndex });
               beacon({ slot, photo: true });

@@ -46,7 +46,7 @@ export default function CandidatesPage() {
   const { role, loading: authLoading } = useAuth();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<"all" | "leads">("all");
+  const [filter, setFilter] = useState<"all" | "leads" | "mine">("all");
   const [cityFilter, setCityFilter] = useState<string>("all");
   const [genderFilter, setGenderFilter] = useState<string>("all");
   const [minAge, setMinAge] = useState<string>("");
@@ -104,12 +104,14 @@ export default function CandidatesPage() {
   };
 
   const leadCount = users.filter(u => LEAD_STATUSES.has(u.personStatus ?? "")).length;
+  const mineCount = users.filter(u => u.canEdit).length;
 
   const cityOptions = Array.from(
     new Set(users.map(u => u.location?.trim()).filter((v): v is string => !!v))
   ).sort((a, b) => a.localeCompare(b));
 
   const visibleUsers = users.filter(u => {
+    if (filter === "mine" && !u.canEdit) return false;
     if (filter === "leads" && !LEAD_STATUSES.has(u.personStatus ?? "")) return false;
     if (cityFilter !== "all" && (u.location ?? "").trim() !== cityFilter) return false;
     if (genderFilter !== "all" && (u.gender ?? "") !== genderFilter) return false;
@@ -117,7 +119,7 @@ export default function CandidatesPage() {
     if (minAge && (Number.isNaN(age) || age < Number(minAge))) return false;
     if (maxAge && (Number.isNaN(age) || age > Number(maxAge))) return false;
     return true;
-  });
+  }).sort((a, b) => (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0));
 
   const hasActiveFilters = cityFilter !== "all" || genderFilter !== "all" || minAge !== "" || maxAge !== "";
   const resetFilters = () => {
@@ -130,6 +132,11 @@ export default function CandidatesPage() {
   useEffect(() => {
     if (role === "admin" || role === "worker") fetchUsers();
   }, [role, fetchUsers]);
+
+  // Workers start on the clients they own, so a newly added one is right there
+  useEffect(() => {
+    if (role === "worker") setFilter("mine");
+  }, [role]);
 
   if (authLoading) {
     return (
@@ -155,7 +162,11 @@ export default function CandidatesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-[#9B2242]">Candidates</h1>
-          <p className="text-muted-foreground">All registered candidates in the matchmaking program.</p>
+          <p className="text-muted-foreground">
+            {role === "worker"
+              ? "Clients you added or are assigned to are under My clients. Newest first."
+              : "All registered candidates in the matchmaking program."}
+          </p>
         </div>
 
         <button
@@ -174,6 +185,14 @@ export default function CandidatesPage() {
       </div>
 
       <div className="flex items-center gap-2">
+        {role === "worker" && (
+          <button
+            onClick={() => setFilter("mine")}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition ${filter === "mine" ? "bg-[#0b3a86] text-white border-[#0b3a86]" : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"}`}
+          >
+            My clients ({mineCount})
+          </button>
+        )}
         <button
           onClick={() => setFilter("all")}
           className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition ${filter === "all" ? "bg-[#0b3a86] text-white border-[#0b3a86]" : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"}`}
@@ -259,7 +278,11 @@ export default function CandidatesPage() {
             <div className="p-8 text-center text-muted-foreground">Loading...</div>
           ) : visibleUsers.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
-              {filter === "leads" ? "No new leads right now." : "No candidates found."}
+              {filter === "leads"
+                ? "No new leads right now."
+                : filter === "mine"
+                  ? "You haven't added any clients yet — use “Add candidate” to create one."
+                  : "No candidates found."}
             </div>
           ) : (
             <Table>

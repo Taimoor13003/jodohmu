@@ -102,6 +102,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ shar
         viewerKey: e.viewerKey ?? "",
         tier: e.tier ?? "public",
         countedAsOpen: !!e.countedAsOpen,
+        capture: e.capture ?? null,
         visit: e.visit ?? null,
       };
     });

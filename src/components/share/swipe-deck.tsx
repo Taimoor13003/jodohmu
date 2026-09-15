@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useReducedMotion, useTransform, type PanInfo } from "framer-motion";
 import {
-  Briefcase, CalendarHeart, GraduationCap, Heart, Home, MapPin, Ruler, RotateCcw, Sparkles, X, type LucideIcon,
+  Briefcase, CalendarHeart, GraduationCap, Heart, Home, Lock, MapPin, Ruler, RotateCcw, Sparkles, X, type LucideIcon,
 } from "lucide-react";
 import { LONG_FORM_FIELDS, fieldLabel, type Lang } from "@/lib/share-display";
 import type { ProjectedProfile } from "@/lib/share-sections";
@@ -17,7 +17,8 @@ const FLING_DISTANCE = 110;
 const FLING_VELOCITY = 550;
 /** room reserved at the bottom of the screen for the floating actions */
 const ACTIONS_SPACE = 116;
-const PHOTO_SHARE = "66%";
+/** photo height as a share of the card; the details peek in below and the whole card scrolls */
+const PHOTO_SHARE = "84%";
 /** how much of a photo we'll crop away before letterboxing it instead */
 const MAX_CROP = 0.28;
 
@@ -87,9 +88,9 @@ function CardFace({ profile, lang, interactive, onOpenPhoto, note }: {
   };
 
   return (
-    <div className="flex h-full w-full flex-col overflow-hidden" style={{ background: T.card }}>
+    <div className="h-full w-full overflow-y-auto overscroll-contain" style={{ background: T.card }}>
       {/* ── photo, or a deep panel + avatar so the white name plate reads the same ── */}
-      <div ref={frame} className="relative shrink-0" style={{ height: PHOTO_SHARE }}>
+      <div ref={frame} className="relative" style={{ height: PHOTO_SHARE }}>
         {photo ? (
           <>
             {/* placeholder until the photo arrives, so nothing pops in */}
@@ -183,9 +184,10 @@ function CardFace({ profile, lang, interactive, onOpenPhoto, note }: {
         </div>
       </div>
 
-      {/* ── everything the team allowed this viewer to see ── */}
-      <div className="relative min-h-0 flex-1">
-        <div className="h-full overflow-y-auto px-5 pb-10 pt-4" style={{ background: T.card }}>
+      {/* ── everything the team allowed this viewer to see ──
+          at least one card tall, so even a short profile scrolls the photo fully away */}
+      <div className="relative" style={{ minHeight: "100%" }}>
+        <div className="px-5 pb-10 pt-4" style={{ background: T.card }}>
           {note && (
             <div className="mb-4 rounded-xl px-3.5 py-3" style={{ background: T.paperBlue }}>
               <p className="whitespace-pre-line text-[12.5px] leading-[1.65]" style={{ color: T.body }}>{note}</p>
@@ -260,16 +262,40 @@ function CardFace({ profile, lang, interactive, onOpenPhoto, note }: {
             </p>
           )}
         </div>
-        {/* hints that the panel keeps scrolling */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-9" style={{ background: `linear-gradient(to top, ${T.card}, transparent)` }} />
       </div>
+      {/* hints that the card keeps scrolling */}
+      <div className="pointer-events-none sticky bottom-0 -mt-9 h-9" style={{ background: `linear-gradient(to top, ${T.card}, transparent)` }} />
     </div>
+  );
+}
+
+/* ── capture deterrence ──
+   A web page cannot block OS screenshots. What it can do is make any capture
+   traceable (identity watermark over the whole card), hide content whenever the
+   page isn't the active window, and refuse to print. */
+
+export type CaptureKind = "printscreen" | "shortcut" | "print";
+
+function IdentityWatermark({ text }: { text: string }) {
+  const safe = text.replace(/[<>&"'`]/g, "").slice(0, 80);
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="150">` +
+    `<text x="120" y="80" text-anchor="middle" transform="rotate(-24 120 75)" fill="rgb(128,128,128)" fill-opacity="0.22" ` +
+    `font-family="Arial, sans-serif" font-size="12" font-weight="700">${safe}</text></svg>`;
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 overflow-hidden rounded-[24px]"
+      style={{ backgroundImage: `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}")`, backgroundRepeat: "repeat" }}
+    />
   );
 }
 
 /* ── the deck: fills whatever space its parent gives it ── */
 
-export function SwipeDeck({ profiles, index, lang, onDecide, onOpenPhoto, onUndo, canUndo, askQuestions, note }: {
+export function SwipeDeck({
+  profiles, index, lang, onDecide, onOpenPhoto, onUndo, canUndo, askQuestions, note, watermark, onCaptureAttempt,
+}: {
   profiles: ProjectedProfile[];
   index: number;
   lang: Lang;
@@ -281,6 +307,9 @@ export function SwipeDeck({ profiles, index, lang, onDecide, onOpenPhoto, onUndo
   askQuestions: boolean;
   /** the team's opening note, shown on the first card */
   note?: string;
+  /** who is looking — tiled over the card so any capture is traceable */
+  watermark?: string;
+  onCaptureAttempt?: (kind: CaptureKind) => void;
 }) {
   const reduceMotion = useReducedMotion();
   const [exit, setExit] = useState<Decision | null>(null);
@@ -296,6 +325,48 @@ export function SwipeDeck({ profiles, index, lang, onDecide, onOpenPhoto, onUndo
 
   const profile = profiles[index];
   const next = profiles[index + 1];
+
+  /* hide everything while the page isn't the active window */
+  const [shielded, setShielded] = useState(false);
+  const captureRef = useRef(onCaptureAttempt);
+  captureRef.current = onCaptureAttempt;
+
+  useEffect(() => {
+    const hide = () => setShielded(true);
+    const show = () => setShielded(false);
+    const flash = (kind: CaptureKind) => {
+      hide();
+      window.setTimeout(show, 1600);
+      captureRef.current?.(kind);
+    };
+    const onVisibility = () => (document.visibilityState === "hidden" ? hide() : show());
+    const onKeyDown = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase();
+      if ((e.ctrlKey || e.metaKey) && key === "p") {
+        e.preventDefault();
+        flash("print");
+      } else if (e.metaKey && e.shiftKey && ["3", "4", "5", "6", "s"].includes(key)) {
+        flash("shortcut");
+      }
+    };
+    // Windows only reports PrintScreen on key-up, after the capture was taken.
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.key === "PrintScreen") flash("printscreen");
+    };
+
+    window.addEventListener("blur", hide);
+    window.addEventListener("focus", show);
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+    return () => {
+      window.removeEventListener("blur", hide);
+      window.removeEventListener("focus", show);
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
+    };
+  }, []);
 
   useEffect(() => {
     decided.current = false;
@@ -338,7 +409,29 @@ export function SwipeDeck({ profiles, index, lang, onDecide, onOpenPhoto, onUndo
   const shellShadow = "0 2px 6px rgba(16,43,97,0.07), 0 24px 50px -26px rgba(16,43,97,0.5)";
 
   return (
-    <div className="absolute inset-0">
+    <div className="absolute inset-0 select-none" style={{ WebkitTouchCallout: "none" }} onContextMenu={e => e.preventDefault()}>
+      {/* printing or "save as PDF" produces a blank page */}
+      <style>{"@media print { html, body { display: none !important; } }"}</style>
+
+      {shielded && (
+        <div
+          className="absolute inset-0 z-50 flex flex-col items-center justify-center px-10 text-center"
+          style={{ background: "rgba(255,255,255,0.7)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)" }}
+        >
+          <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-full" style={{ background: T.paperDeep }}>
+            <Lock className="h-5 w-5" style={{ color: T.rose }} />
+          </span>
+          <p className="text-[15px] font-bold" style={{ color: T.ink }}>
+            {lang === "id" ? "Konten disembunyikan" : "Content hidden"}
+          </p>
+          <p className="mt-1 max-w-[260px] text-[12.5px] leading-relaxed" style={{ color: T.muted }}>
+            {lang === "id"
+              ? "Profil ini rahasia dan hanya tampil saat halaman aktif."
+              : "This profile is confidential and only shows while the page is active."}
+          </p>
+        </div>
+      )}
+
       {/* the card fills the screen, minus room for the actions */}
       <div className="absolute inset-x-0 top-0 mx-auto px-3 pt-2 sm:px-4" style={{ bottom: ACTIONS_SPACE, maxWidth: 470 }}>
         <div className="relative h-full w-full">
@@ -366,6 +459,7 @@ export function SwipeDeck({ profiles, index, lang, onDecide, onOpenPhoto, onUndo
             <div className={cardShell} style={{ boxShadow: shellShadow }}>
               <CardFace profile={profile} lang={lang} interactive note={note} onOpenPhoto={i => onOpenPhoto(profile.slot, i)} />
             </div>
+            {watermark && <IdentityWatermark text={watermark} />}
 
             <motion.div
               className="pointer-events-none absolute left-5 top-6 rounded-xl px-4 py-2 text-[18px] font-extrabold tracking-[0.12em]"

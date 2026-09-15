@@ -9,6 +9,7 @@ import { CheckCircle2, Clock3, LogOut, MessageCircle, ShieldCheck, Sparkles } fr
 import { auth } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { awaitingDiscoveryCall, needsOnboarding } from "@/lib/onboarding";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 
 type Candidate = Record<string, unknown>;
@@ -30,11 +31,11 @@ export default function RequestSubmittedPage() {
       if (!res.ok) return;
       const { data } = await res.json() as { data: Candidate | null };
       const profile = data ?? {};
-      if (!profile.fullName || !profile.whatsappNumber || !profile.gender) {
+      if (needsOnboarding(profile)) {
         router.replace("/onboarding");
         return;
       }
-      if (profile.personStatus !== "new_lead" && profile.personStatus !== "awaiting_discovery_call") {
+      if (!awaitingDiscoveryCall(profile)) {
         router.replace("/dashboard");
         return;
       }

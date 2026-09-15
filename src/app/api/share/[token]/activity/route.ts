@@ -5,6 +5,7 @@ import { adminDb } from "@/lib/firebase-admin";
 import {
   SHARES_COLLECTION,
   SHARE_VIEWERS_SUBCOLLECTION,
+  SHARE_VIEWS_SUBCOLLECTION,
   evaluateShare,
   readShare,
   sessionCookieName,
@@ -24,6 +25,8 @@ const bodySchema = z.object({
   /** visible seconds since the last beacon; capped so a stuck tab can't inflate totals */
   seconds: z.number().int().min(0).max(120).default(0),
   photo: z.boolean().default(false),
+  /** a suspected screenshot or print attempt on the page */
+  capture: z.enum(["printscreen", "shortcut", "print"]).optional(),
 });
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ token: string }> }) {
@@ -40,8 +43,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
     return new NextResponse(null, { status: 400 });
   }
   if (!parsed.success) return new NextResponse(null, { status: 400 });
-  const { slot, seconds, photo } = parsed.data;
-  if (seconds === 0 && !photo) return new NextResponse(null, { status: 204 });
+  const { slot, seconds, photo, capture } = parsed.data;
+  if (seconds === 0 && !photo && !capture) return new NextResponse(null, { status: 204 });
 
   try {
     const ref = adminDb().collection(SHARES_COLLECTION).doc(token);
@@ -64,6 +67,21 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
       },
       { merge: true },
     );
+    if (capture) {
+      await Promise.all([
+        ref.collection(SHARE_VIEWERS_SUBCOLLECTION).doc(claims.vk).set(
+          { captureAttempts: FieldValue.increment(1) },
+          { merge: true },
+        ),
+        ref.collection(SHARE_VIEWS_SUBCOLLECTION).add({
+          at: FieldValue.serverTimestamp(),
+          viewerKey: claims.vk,
+          tier: claims.tier,
+          capture,
+          countedAsOpen: false,
+        }),
+      ]);
+    }
     return new NextResponse(null, { status: 204 });
   } catch (err) {
     console.error("share activity error", err);

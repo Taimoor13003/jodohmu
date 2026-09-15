@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
 import { generateUsername } from "@/lib/username";
+import { ageFromDob } from "@/lib/age";
 
 type Role = "admin" | "worker" | "candidate";
 
@@ -78,10 +79,17 @@ export async function POST(req: NextRequest) {
     });
 
     if (role === "candidate") {
+      const liveAge = ageFromDob(details?.dateOfBirth);
+      const phone = typeof details?.phone === "string" ? details.phone.trim() : "";
+      const code = typeof details?.phoneCountryCode === "string" ? details.phoneCountryCode : "";
       await adminDb().collection("candidate_intake").doc(userRecord.uid).set({
         ...details,
         email: emailLower,
         name,
+        // The candidate dashboard reads these self-signup field names
+        fullName: name,
+        age: liveAge !== null ? String(liveAge) : "",
+        ...(phone ? { whatsappNumber: phone.startsWith("+") ? phone : `${code}${phone.replace(/^0/, "")}` } : {}),
         // Workers get auto-assigned to clients they create so they can edit them right away
         ...(requesterRole === "worker" ? { assignedWorkers: [requesterUid] } : {}),
         createdAt: FieldValue.serverTimestamp(),

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
+import { stripTeamOnly } from "@/lib/candidate-private";
+import { ageFromDob, withLiveAge } from "@/lib/age";
 
 export async function GET(req: NextRequest) {
   const token = req.headers.get("authorization")?.replace("Bearer ", "");
@@ -9,7 +11,10 @@ export async function GET(req: NextRequest) {
   try {
     const decoded = await adminAuth().verifyIdToken(token);
     const snap = await adminDb().collection("candidate_intake").doc(decoded.uid).get();
-    return NextResponse.json({ uid: decoded.uid, data: snap.exists ? snap.data() : null });
+    return NextResponse.json({ uid: decoded.uid, data: snap.exists
+        ? { ...withLiveAge(stripTeamOnly(snap.data()!)), createdByTeam: !!snap.data()?.createdBy }
+        : null,
+    });
   } catch {
     return NextResponse.json({ error: "Error" }, { status: 500 });
   }
@@ -22,11 +27,11 @@ const ALL_WRITABLE = new Set([
   // about
   "aboutMe",
   // personal
-  "fullName", "age", "gender", "dateOfBirth", "nationality", "ethnicity",
+  "fullName", "gender", "dateOfBirth", "nationality", "ethnicity",
   "height", "weight", "bloodType", "birthPlace", "currentlyLivingWith",
   "ownHealthCondition", "whatsappNumber", "location",
   // career
-  "occupation", "employmentStatus", "incomeRange", "propertyStatus", "hasDebts",
+  "occupation", "jobPosition", "jobDescription", "employmentStatus", "incomeRange", "propertyStatus", "hasDebts",
   // lifestyle
   "smokingStatus", "alcoholUse", "exerciseFrequency", "socialPreference",
   // values
@@ -87,6 +92,10 @@ export async function PATCH(req: NextRequest) {
     }
 
     if (!Object.keys(safe).length) return NextResponse.json({ error: "No writable fields" }, { status: 400 });
+
+    // Age isn't editable; it always follows the date of birth
+    const liveAge = ageFromDob(safe.dateOfBirth);
+    if (liveAge !== null) safe.age = String(liveAge);
 
     // First time a lead supplies name + phone + gender, mark them ready for a
     // discovery call and notify the ops team so they can reach out via WhatsApp.

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
-  Activity, Ban, BarChart3, Check, CheckCircle2, Clock, Copy, Eye, Globe2, HeartHandshake, Image as ImageIcon,
+  Activity, Ban, BarChart3, Camera, Check, CheckCircle2, Clock, Copy, Eye, Globe2, HeartHandshake, Image as ImageIcon,
   KeyRound, Link2, Mail, MapPin, Megaphone, MessageCircle, MessageSquareText, Monitor, Plus, RefreshCw,
   RotateCcw, Smartphone, Tablet, Timer, Users, X,
 } from "lucide-react";
@@ -297,7 +297,7 @@ function ShareDetailsDrawer({ shareId, lang, onClose, onChanged }: {
 
   const timeline = useMemo(() => {
     if (!detail) return [];
-    const opens = detail.views.map(e => ({ kind: e.countedAsOpen ? "open" : "refresh", at: e.at, key: e.viewerKey, visit: e.visit }) as const);
+    const opens = detail.views.map(e => ({ kind: e.capture ? "capture" : e.countedAsOpen ? "open" : "refresh", at: e.at, key: e.viewerKey, visit: e.visit }) as const);
     const answers = detail.responses.map(r => ({ kind: "answer", at: r.updatedAt, key: `u_${r.uid}`, visit: null }) as const);
     return [...opens, ...answers].sort((a, b) => (b.at ?? "").localeCompare(a.at ?? ""));
   }, [detail]);
@@ -481,6 +481,12 @@ function ShareDetailsDrawer({ shareId, lang, onClose, onChanged }: {
                         <span>{t("Terakhir", "Last")}: <strong style={{ color: C.body }}>{relativeTime(v.lastAt, lang)}</strong></span>
                         <span>{t("Waktu", "Time")}: <strong style={{ color: C.body }}>{formatDuration(v.engagement.seconds, lang)}</strong></span>
                         <span className="flex items-center gap-1"><ImageIcon className="h-3 w-3" /><strong style={{ color: C.body }}>{v.engagement.photoViews}</strong> {t("foto", "photos")}</span>
+                        {(detail?.views ?? []).some(e => e.capture && e.viewerKey === v.key) && (
+                          <span className="flex items-center gap-1 font-semibold" style={{ color: "#B91C1C" }}>
+                            <Camera className="h-3 w-3" />
+                            {(detail?.views ?? []).filter(e => e.capture && e.viewerKey === v.key).length}× {t("tangkap layar", "capture attempts")}
+                          </span>
+                        )}
                       </div>
 
                       {v.engagement.seconds > 0 && (
@@ -515,6 +521,8 @@ function ShareDetailsDrawer({ shareId, lang, onClose, onChanged }: {
                   const place = placeLabel(item.visit);
                   const meta = item.kind === "answer"
                     ? { icon: <MessageSquareText className="h-3.5 w-3.5" />, bg: C.greenBg, fg: C.green, verb: t("mengirim refleksi", "sent their reflections") }
+                    : item.kind === "capture"
+                      ? { icon: <Camera className="h-3.5 w-3.5" />, bg: "#FEF2F2", fg: "#B91C1C", verb: t("mencoba menangkap layar", "tried to capture the screen") }
                     : item.kind === "open"
                       ? { icon: <Eye className="h-3.5 w-3.5" />, bg: "#EFF4FB", fg: C.navy, verb: t("membuka tautan", "opened the link") }
                       : { icon: <RefreshCw className="h-3.5 w-3.5" />, bg: C.divider, fg: C.label, verb: t("memuat ulang halaman", "reloaded the page") };

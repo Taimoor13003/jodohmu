@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
+import { withLiveAge } from "@/lib/age";
 
 export async function GET(req: NextRequest) {
   try {
@@ -59,7 +60,7 @@ export async function GET(req: NextRequest) {
         (u as Record<string, unknown>).personStatus = intake?.personStatus ?? null;
         (u as Record<string, unknown>).phone = intake?.whatsappNumber ?? null;
         (u as Record<string, unknown>).location = intake?.location ?? null;
-        (u as Record<string, unknown>).age = intake?.age ?? null;
+        (u as Record<string, unknown>).age = intake ? (withLiveAge(intake).age ?? null) : null;
         (u as Record<string, unknown>).gender = intake?.gender ?? null;
         // Workers see every candidate but may only edit the ones assigned to them
         (u as Record<string, unknown>).canEdit = requesterRole === "admin" || assigned.includes(decoded.uid);

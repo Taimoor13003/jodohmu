@@ -12,10 +12,12 @@ import { useLanguage } from "@/context/LanguageContext";
 import { toast } from "sonner";
 import {
   LayoutDashboard, User, Globe, LogOut, Menu,
-  Brain, ShieldCheck, ClipboardList, History, Stars, Lock,
+  Brain, ShieldCheck, ClipboardList, History, Stars, Lock, Fingerprint,
 } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 import { ChatWidget } from "@/components/chat/ChatWidget";
+import { awaitingDiscoveryCall, needsOnboarding } from "@/lib/onboarding";
+import { isResultSection, resultAvailable } from "@/lib/candidate-results";
 
 const TOPBAR_H  = 52;
 const SIDEBAR_W = 240;
@@ -34,7 +36,7 @@ const RESULT_NAV = [
     color: "#7C3AED", bg: "#F5F3FF",
     icon: <Brain className="w-full h-full" />,
     label: { id: "Tes Psikolog", en: "Psych Test" },
-    lockKey: "psychTestResult",
+    lockKey: "psych",
     toast: { id: "Hasil tes psikolog belum tersedia. Hubungi tim kami.", en: "Psych test result not yet available. Please contact our team." },
   },
   {
@@ -42,15 +44,23 @@ const RESULT_NAV = [
     color: "#0369A1", bg: "#F0F9FF",
     icon: <ShieldCheck className="w-full h-full" />,
     label: { id: "Background Check", en: "Background Check" },
-    lockKey: "bgCheckResult",
+    lockKey: "background",
     toast: { id: "Background check belum selesai. Hubungi tim kami.", en: "Background check not yet complete. Please contact our team." },
+  },
+  {
+    href: "/dashboard/verification",
+    color: "#0F766E", bg: "#F0FDFA",
+    icon: <Fingerprint className="w-full h-full" />,
+    label: { id: "Verifikasi Identitas", en: "Identity Check" },
+    lockKey: "identity",
+    toast: { id: "Verifikasi identitas belum selesai. Hubungi tim kami.", en: "Identity verification not yet complete. Please contact our team." },
   },
   {
     href: "/dashboard/assessment",
     color: "#B45309", bg: "#FFFBEB",
     icon: <ClipboardList className="w-full h-full" />,
     label: { id: "Jodohmu Assessment", en: "Jodohmu Assessment" },
-    lockKey: "jodohmuAssessmentResult",
+    lockKey: "assessment",
     toast: { id: "Assessment belum tersedia. Hubungi tim kami.", en: "Assessment not yet available. Please contact our team." },
   },
   {
@@ -72,6 +82,7 @@ const RESULT_NAV = [
 ];
 
 function isLocked(data: D, key: string): boolean {
+  if (isResultSection(key)) return !resultAvailable(data, key);
   const v = data[key];
   if (v === null || v === undefined || v === "") return true;
   if (Array.isArray(v) && v.length === 0) return true;
@@ -332,9 +343,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   // first-time candidates who haven't completed the quick lead-capture form
   useEffect(() => {
     if (loading || !user || role !== "candidate" || !candidateLoaded) return;
-    if (!candidateData.fullName || !candidateData.whatsappNumber || !candidateData.gender) {
+    if (needsOnboarding(candidateData)) {
       router.replace("/onboarding");
-    } else if (candidateData.personStatus === "new_lead" || candidateData.personStatus === "awaiting_discovery_call") {
+    } else if (awaitingDiscoveryCall(candidateData)) {
       router.replace("/request-submitted");
     }
   }, [loading, user, role, candidateLoaded, candidateData, router]);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,8 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
 import { UserPlus, Upload, X as XIcon } from "lucide-react";
+import { toast } from "sonner";
+import { ageFromDob } from "@/lib/age";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -371,9 +373,12 @@ function MultiCheck({ label, note, wide, options, value, onChange }: {
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 
+const DRAFT_KEY = "jodohmu:new-client-draft";
+
 function AdminUsersPageInner() {
   const { role, loading: authLoading } = useAuth();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -384,8 +389,10 @@ function AdminUsersPageInner() {
     if (searchParams.get("create") === "candidate") {
       setFormRole("candidate");
       setDialogOpen(true);
+      // Drop the flag so a refresh doesn't reopen an empty form
+      router.replace("/admin/users", { scroll: false });
     }
-  }, [searchParams]);
+  }, [searchParams, router]);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
   const [createdUsername, setCreatedUsername] = useState<string | null>(null);
@@ -438,6 +445,37 @@ function AdminUsersPageInner() {
   useEffect(() => { if (role === "admin") fetchUsers(); }, [role, fetchUsers]);
   useEffect(() => { if (role === "worker") setFormRole("candidate"); }, [role]);
 
+  // An unfinished form survives closing the dialog or refreshing the page.
+  // The password is never written to storage.
+  const [draftReady, setDraftReady] = useState(false);
+  const [restoredDraft, setRestoredDraft] = useState(false);
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(DRAFT_KEY);
+      if (raw) {
+        const saved = JSON.parse(raw) as { formRole?: Role; basic?: Partial<typeof basic>; d?: Partial<CandidateDetails>; photoUrls?: string[] };
+        if (saved.formRole) setFormRole(saved.formRole);
+        setBasic(prev => ({ ...prev, ...saved.basic, password: "" }));
+        setD({ ...EMPTY, ...saved.d });
+        setPhotoUrls(Array.isArray(saved.photoUrls) ? saved.photoUrls : []);
+        setRestoredDraft(true);
+      }
+    } catch { /* storage unavailable */ }
+    setDraftReady(true);
+  }, []);
+
+  const hasDraft =
+    !!(basic.name || basic.email || basic.username || basic.note || photoUrls.length) ||
+    (Object.keys(EMPTY) as (keyof CandidateDetails)[]).some(k => d[k] !== EMPTY[k]);
+
+  useEffect(() => {
+    if (!draftReady) return;
+    try {
+      if (hasDraft) localStorage.setItem(DRAFT_KEY, JSON.stringify({ formRole, basic: { ...basic, password: "" }, d, photoUrls }));
+      else localStorage.removeItem(DRAFT_KEY);
+    } catch { /* storage unavailable */ }
+  }, [draftReady, hasDraft, formRole, basic, d, photoUrls]);
+
   if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-[40vh]">
@@ -488,6 +526,7 @@ function AdminUsersPageInner() {
     setStatus("idle");
     setError(null);
     setCreatedUsername(null);
+    setRestoredDraft(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -514,6 +553,15 @@ function AdminUsersPageInner() {
       const data = await res.json().catch(() => ({}));
       setCreatedUsername(data.username ?? null);
       setStatus("success");
+      toast.success(`${basic.name} is saved`, {
+        description: formRole === "candidate" ? "Opening the profile — you can keep adding details there." : undefined,
+      });
+      // Land on the saved profile so it's obvious nothing was lost
+      if (formRole === "candidate" && data.uid) {
+        reset();
+        router.push(`/admin/candidates/${data.uid}`);
+        return;
+      }
       await fetchUsers();
       setTimeout(() => { setDialogOpen(false); reset(); }, 3000);
     } catch (err) {
@@ -532,17 +580,31 @@ function AdminUsersPageInner() {
             {role === "admin" ? "All registered users across all roles." : "Create a new client profile — you'll be assigned to it automatically."}
           </p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={open => { setDialogOpen(open); if (!open) reset(); }}>
+        <Dialog open={dialogOpen} onOpenChange={open => {
+          setDialogOpen(open);
+          if (open) return;
+          if (status === "success") { reset(); return; }
+          // Closing keeps what was typed; workers go back to their client list
+          if (hasDraft) toast.info("Draft kept — open “Add candidate” again to continue where you left off.");
+          if (role === "worker") router.push("/admin/candidates");
+        }}>
           <DialogTrigger asChild>
             <Button className="rounded-full bg-gradient-to-r from-[#9B2242] to-[#0b3a86] text-white gap-2">
-              <UserPlus className="h-4 w-4" /> {role === "admin" ? "Create user" : "Create client"}
+              <UserPlus className="h-4 w-4" /> {hasDraft ? "Continue draft" : role === "admin" ? "Create user" : "Create client"}
             </Button>
           </DialogTrigger>
 
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="text-[#0b3a86]">Create User</DialogTitle>
+              <DialogTitle className="text-[#0b3a86]">{role === "worker" ? "New Client" : "Create User"}</DialogTitle>
             </DialogHeader>
+
+            {restoredDraft && status !== "success" && (
+              <div className="flex items-center justify-between gap-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                <span>You&apos;re continuing an unsaved draft. Re-enter the temporary password before creating.</span>
+                <button type="button" onClick={reset} className="shrink-0 font-semibold underline">Discard draft</button>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="space-y-2 pt-2">
 
@@ -623,8 +685,8 @@ function AdminUsersPageInner() {
                 <F label="Date of Birth">
                   <Input className="h-9 text-sm" type="date" value={d.dateOfBirth} onChange={inp("dateOfBirth")} />
                 </F>
-                <F label="Age">
-                  <Input className="h-9 text-sm" type="number" value={d.age} onChange={inp("age")} placeholder="e.g. 27" min={18} max={70} />
+                <F label="Age (from date of birth)">
+                  <Input className="h-9 text-sm" value={ageFromDob(d.dateOfBirth)?.toString() ?? ""} placeholder="Set the date of birth" disabled />
                 </F>
 
                 {/* Phone with country code */}
@@ -1641,8 +1703,8 @@ function AdminUsersPageInner() {
 
               </>)}
 
-              {/* Submit */}
-              <div className="pt-4">
+              {/* Submit — pinned so the result is visible without scrolling */}
+              <div className="sticky -bottom-6 -mx-6 -mb-6 border-t border-[#0b3a86]/10 bg-white px-6 pb-6 pt-4">
                 <Button type="submit" disabled={status === "loading"}
                   className="w-full rounded-full bg-gradient-to-r from-[#9B2242] to-[#0b3a86] text-white py-5">
                   {status === "loading" ? "Creating..." : "Create user"}
@@ -1661,6 +1723,20 @@ function AdminUsersPageInner() {
           </DialogContent>
         </Dialog>
       </div>
+
+      {role === "worker" && (
+        <Card className="border-0 shadow-xl">
+          <CardContent className="flex flex-col items-start gap-3 p-6 text-sm text-muted-foreground">
+            <p>
+              Clients you create are saved under <span className="font-semibold text-[#0b3a86]">Candidates → My clients</span>,
+              and you&apos;re taken to the new profile as soon as it&apos;s saved.
+            </p>
+            <Button variant="outline" className="rounded-full" onClick={() => router.push("/admin/candidates")}>
+              Go to my clients
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Users table — admin only; workers only create clients, they don't browse the roster */}
       {role === "admin" && (

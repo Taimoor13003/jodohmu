@@ -4,6 +4,7 @@ import { FieldValue } from "firebase-admin/firestore";
 import { generateUsername } from "@/lib/username";
 import { pushToAdmin } from "@/lib/push-server";
 import { SHARES_COLLECTION, shareCode } from "@/lib/shares";
+import { needsOnboarding } from "@/lib/onboarding";
 
 /**
  * Called right after any self-serve sign-in (Google or email/password).
@@ -32,13 +33,12 @@ export async function POST(req: NextRequest) {
 
     if (roleSnap.exists) {
       const role = (roleSnap.data()?.role as string | undefined) ?? "candidate";
-      let needsOnboarding = false;
+      let onboarding = false;
       if (role === "candidate") {
         const intakeSnap = await adminDb().collection("candidate_intake").doc(uid).get();
-        const data = intakeSnap.data();
-        needsOnboarding = !data?.fullName || !data?.whatsappNumber || !data?.gender;
+        onboarding = needsOnboarding(intakeSnap.data());
       }
-      return NextResponse.json({ role, needsOnboarding, isNewUser: false });
+      return NextResponse.json({ role, needsOnboarding: onboarding, isNewUser: false });
     }
 
     const email = (decoded.email ?? "").toLowerCase();

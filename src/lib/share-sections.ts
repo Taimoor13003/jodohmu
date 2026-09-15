@@ -7,6 +7,7 @@
    ────────────────────────────────────────────────────────────────────── */
 
 import type { AvatarVariant } from "@/lib/share-avatars";
+import { withLiveAge } from "@/lib/age";
 
 export interface ShareSection {
   key: string;
@@ -47,7 +48,7 @@ export const SHARE_SECTIONS: ShareSection[] = [
     labelEn: "Lifestyle",
     fields: ["smokingStatus", "alcoholUse", "exerciseFrequency", "socialPreference", "viewsOnMixedSocializing", "familyOriented"],
   },
-  { key: "karir", labelId: "Karir", labelEn: "Career", fields: ["employmentStatus", "incomeRange"] },
+  { key: "karir", labelId: "Karir", labelEn: "Career", fields: ["jobPosition", "jobDescription", "employmentStatus", "incomeRange"] },
   {
     key: "keluarga",
     labelId: "Keluarga",
@@ -180,7 +181,8 @@ export function candidateDisplayName(candidate: Record<string, unknown>): string
 
 /** The single source of truth for what one viewer sees of one profile. */
 export function projectProfile(input: ProjectInput): ProjectedProfile {
-  const { candidate, audiences, tier } = input;
+  const { audiences, tier } = input;
+  const candidate = withLiveAge(input.candidate);
   const rule = audiences[tier];
   const top = audiences.candidate;
 

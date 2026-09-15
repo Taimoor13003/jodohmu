@@ -1,5 +1,8 @@
 "use client";
 
+import { ResultHeadline } from "../_result-page";
+import { resultAvailable } from "@/lib/candidate-results";
+
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
@@ -13,7 +16,7 @@ import {
   MapPin, Briefcase, GraduationCap, Heart, Eye, EyeOff, Camera,
   ChevronLeft, ChevronRight, X, BookOpen, Shield, Leaf, Star,
   Users, CalendarDays, Target, Link as LinkIcon, CheckCircle2 as CheckCircle2Icon,
-  Lock, Brain, ShieldCheck, ClipboardList, History, Sparkles, Pencil,
+  Lock, Brain, ShieldCheck, ClipboardList, History, Sparkles, Pencil, Fingerprint,
   Plus, Trash2, Loader2,
 } from "lucide-react";
 
@@ -529,17 +532,7 @@ export default function CandidateProfilePage() {
       if (editSection === "marriage") {
         body.maritalGoalsUpdatedAt = new Date().toISOString();
       }
-      // Auto-calculate age from dateOfBirth
-      if (body.dateOfBirth && typeof body.dateOfBirth === "string") {
-        const dob = new Date(body.dateOfBirth as string);
-        if (!isNaN(dob.getTime())) {
-          const today = new Date();
-          let a = today.getFullYear() - dob.getFullYear();
-          const dm = today.getMonth() - dob.getMonth();
-          if (dm < 0 || (dm === 0 && today.getDate() < dob.getDate())) a--;
-          if (a > 0 && a < 120 && !isLocked("age")) body.age = String(a);
-        }
-      }
+      // Age is worked out on the server from dateOfBirth
       const res = await fetch("/api/candidate/me", {
         method: "PATCH",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -656,7 +649,7 @@ export default function CandidateProfilePage() {
   const FIELDS = {
     aboutMe:   ["aboutMe"],
     personal:  ["gender","dateOfBirth","nationality","ethnicity","height","weight","bloodType","birthPlace","currentlyLivingWith","ownHealthCondition","whatsappNumber"],
-    career:    ["occupation","employmentStatus","incomeRange","propertyStatus","hasDebts"],
+    career:    ["occupation","jobPosition","jobDescription","employmentStatus","incomeRange","propertyStatus","hasDebts"],
     lifestyle: ["smokingStatus","alcoholUse","exerciseFrequency","socialPreference"],
     values:    ["quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing","familyOriented"],
     religion:  ["religion","religiousPracticeLevel","prayerHabit","quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing","hijab","beard","waliAvailability","islamicOrganization","churchAttendance","baptized","bibleReading","religionNotes"],
@@ -1037,10 +1030,12 @@ export default function CandidateProfilePage() {
             )}
 
             {stranger ? (
-              hasAny("occupation","employmentStatus","incomeRange","propertyStatus","hasDebts") && (
+              hasAny("occupation","jobPosition","jobDescription","employmentStatus","incomeRange","propertyStatus","hasDebts") && (
                 <SCard title={l("Karir & Keuangan","Career & Finance")} icon={<Briefcase className="w-full h-full" />} iconColor="#14B8A6" iconBg="#F0FDFA">
                   <FieldGrid>
                     <Field label={l("Pekerjaan","Occupation")} value={raw(data,"occupation")} stranger={stranger} long />
+                    <Field label={l("Jabatan","Job Position")} value={raw(data,"jobPosition")} stranger={stranger} />
+                    <Field label={l("Deskripsi Pekerjaan","Job Description")} value={raw(data,"jobDescription")} stranger={stranger} long />
                     <Field label={l("Status Kerja","Employment")} value={s("employmentStatus")} stranger={stranger} />
                     <Field label={l("Pendapatan","Income")} value={s("incomeRange")} stranger={stranger} />
                     <Field label={l("Properti","Property")} value={s("propertyStatus")} stranger={stranger} />
@@ -1053,14 +1048,18 @@ export default function CandidateProfilePage() {
                 {editSection === "career" ? (
                   <FieldGrid>
                     <EInput field="occupation" label={l("Pekerjaan","Occupation")} draft={draft} locked={isLocked("occupation")} upd={upd} long />
+                    <EInput field="jobPosition" label={l("Jabatan","Job Position")} draft={draft} locked={isLocked("jobPosition")} upd={upd} />
+                    <EInput field="jobDescription" label={l("Deskripsi Pekerjaan","Job Description")} draft={draft} locked={isLocked("jobDescription")} upd={upd} long />
                     <EInput field="employmentStatus" label={l("Status Kerja","Employment")} type="sel" opts={vOpt(["employed","self_employed","business_owner","unemployed","student","retired"])} draft={draft} locked={isLocked("employmentStatus")} upd={upd} />
                     <EInput field="incomeRange" label={l("Pendapatan","Income")} type="sel" opts={vOpt(["below_5m","5m_10m","10m_20m","20m_50m","above_50m","prefer_not_to_say"])} draft={draft} locked={isLocked("incomeRange")} upd={upd} />
                     <EInput field="propertyStatus" label={l("Properti","Property")} type="sel" opts={vOpt(["own","rent","family_home","company_provided"])} draft={draft} locked={isLocked("propertyStatus")} upd={upd} />
                     <EInput field="hasDebts" label={l("Hutang","Has Debts")} type="sel" opts={vOpt(["yes","no"])} draft={draft} locked={isLocked("hasDebts")} upd={upd} />
                   </FieldGrid>
-                ) : hasAny("occupation","employmentStatus","incomeRange","propertyStatus","hasDebts") ? (
+                ) : hasAny("occupation","jobPosition","jobDescription","employmentStatus","incomeRange","propertyStatus","hasDebts") ? (
                   <FieldGrid>
                     <Field label={l("Pekerjaan","Occupation")} value={raw(data,"occupation")} stranger={stranger} long />
+                    <Field label={l("Jabatan","Job Position")} value={raw(data,"jobPosition")} stranger={stranger} />
+                    <Field label={l("Deskripsi Pekerjaan","Job Description")} value={raw(data,"jobDescription")} stranger={stranger} long />
                     <Field label={l("Status Kerja","Employment")} value={s("employmentStatus")} stranger={stranger} />
                     <Field label={l("Pendapatan","Income")} value={s("incomeRange")} stranger={stranger} />
                     <Field label={l("Properti","Property")} value={s("propertyStatus")} stranger={stranger} />
@@ -1527,9 +1526,10 @@ export default function CandidateProfilePage() {
 
           {/* ── Laporan & Hasil (own view only) ── */}
           {!stranger && (() => {
-            const psychLocked   = !data.psychTestResult          || data.psychTestResult          === "";
-            const bgLocked      = !data.bgCheckResult            || data.bgCheckResult            === "";
-            const assessLocked  = !data.jodohmuAssessmentResult  || data.jodohmuAssessmentResult  === "";
+            const psychLocked   = !resultAvailable(data, "psych");
+            const bgLocked      = !resultAvailable(data, "background");
+            const idLocked      = !resultAvailable(data, "identity");
+            const assessLocked  = !resultAvailable(data, "assessment");
             const taarufLocked  = !data.pastTaarufResults        || (Array.isArray(data.pastTaarufResults) && (data.pastTaarufResults as unknown[]).length === 0) || data.pastTaarufResults === "";
             const matchLocked   = !data.recommendedMatches       || (Array.isArray(data.recommendedMatches)  && (data.recommendedMatches  as unknown[]).length === 0) || data.recommendedMatches  === "";
 
@@ -1546,9 +1546,7 @@ export default function CandidateProfilePage() {
                     icon={<Brain className="w-full h-full" />}
                     iconBg="#F5F3FF" iconColor="#7C3AED"
                     locked={!!psychLocked} lang={lang}>
-                    <p className="text-[13px] leading-relaxed whitespace-pre-wrap" style={{ color: C.body }}>
-                      {String(data.psychTestResult)}
-                    </p>
+                    <ResultHeadline data={data} section="psych" lang={lang} />
                   </ResultCard>
 
                   <ResultCard
@@ -1556,9 +1554,15 @@ export default function CandidateProfilePage() {
                     icon={<ShieldCheck className="w-full h-full" />}
                     iconBg="#F0F9FF" iconColor="#0369A1"
                     locked={!!bgLocked} lang={lang}>
-                    <p className="text-[13px] leading-relaxed whitespace-pre-wrap" style={{ color: C.body }}>
-                      {String(data.bgCheckResult)}
-                    </p>
+                    <ResultHeadline data={data} section="background" lang={lang} />
+                  </ResultCard>
+
+                  <ResultCard
+                    title={l("Verifikasi Identitas", "Identity Check")}
+                    icon={<Fingerprint className="w-full h-full" />}
+                    iconBg="#F0FDFA" iconColor="#0F766E"
+                    locked={idLocked} lang={lang}>
+                    <ResultHeadline data={data} section="identity" lang={lang} />
                   </ResultCard>
 
                   <ResultCard
@@ -1566,9 +1570,7 @@ export default function CandidateProfilePage() {
                     icon={<ClipboardList className="w-full h-full" />}
                     iconBg="#FFFBEB" iconColor="#B45309"
                     locked={!!assessLocked} lang={lang}>
-                    <p className="text-[13px] leading-relaxed whitespace-pre-wrap" style={{ color: C.body }}>
-                      {String(data.jodohmuAssessmentResult)}
-                    </p>
+                    <ResultHeadline data={data} section="assessment" lang={lang} />
                   </ResultCard>
 
                   <ResultCard

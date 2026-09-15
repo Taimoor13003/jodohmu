@@ -7,6 +7,7 @@ import { getIdToken } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { awaitingDiscoveryCall, needsOnboarding } from "@/lib/onboarding";
 import { User as UserIcon, Phone, Cake, MapPin, Users } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 
@@ -38,9 +39,8 @@ export default function OnboardingPage() {
         const res = await fetch("/api/candidate/me", { headers: { Authorization: `Bearer ${token}` } });
         if (res.ok) {
           const { data } = await res.json() as { data: Record<string, unknown> | null };
-          if (data?.fullName && data?.whatsappNumber && data?.gender) {
-            const status = typeof data.personStatus === "string" ? data.personStatus : "";
-            router.replace(status === "new_lead" || status === "awaiting_discovery_call" ? "/request-submitted" : "/dashboard");
+          if (!needsOnboarding(data)) {
+            router.replace(awaitingDiscoveryCall(data) ? "/request-submitted" : "/dashboard");
             return;
           }
           if (typeof data?.fullName === "string" && data.fullName) setFullName(data.fullName);

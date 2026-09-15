@@ -12,7 +12,7 @@ export const FIELD_LABELS: Record<string, Record<Lang, string>> = {
   location:                  { id: "Domisili",                 en: "Location" },
   occupation:                { id: "Pekerjaan",                en: "Occupation" },
   educations:                { id: "Pendidikan",               en: "Education" },
-  openToTaaruf:              { id: "Status Ta'aruf",           en: "Ta'aruf Status" },
+  openToTaaruf:              { id: "Status Perkenalan",        en: "Introduction Status" },
   maritalStatus:             { id: "Status Pernikahan",        en: "Marital Status" },
   aboutMe:                   { id: "Tentang Saya",             en: "About Me" },
   height:                    { id: "Tinggi Badan",             en: "Height" },
@@ -38,6 +38,8 @@ export const FIELD_LABELS: Record<string, Record<Lang, string>> = {
   socialPreference:          { id: "Preferensi Sosial",        en: "Social Preference" },
   viewsOnMixedSocializing:   { id: "Pergaulan Campur",         en: "Mixed Socializing" },
   familyOriented:            { id: "Orientasi Keluarga",       en: "Family Oriented" },
+  jobPosition:               { id: "Jabatan",                  en: "Job Position" },
+  jobDescription:            { id: "Deskripsi Pekerjaan",      en: "Job Description" },
   employmentStatus:          { id: "Status Pekerjaan",         en: "Employment Status" },
   incomeRange:               { id: "Rentang Penghasilan",      en: "Income Range" },
   siblingCount:              { id: "Jumlah Saudara",           en: "Siblings" },
@@ -68,6 +70,7 @@ export const FIELD_LABELS: Record<string, Record<Lang, string>> = {
 /** Fields rendered as full-width prose rather than a label/value row. */
 export const LONG_FORM_FIELDS = new Set([
   "aboutMe",
+  "jobDescription",
   "roleExpectationsHusband",
   "roleExpectationsWife",
   "preferredPersonalityTraits",
@@ -77,8 +80,8 @@ export const LONG_FORM_FIELDS = new Set([
 const VALUE_LABELS: Record<string, Record<Lang, string>> = {
   male: { id: "Laki-laki", en: "Male" },
   female: { id: "Perempuan", en: "Female" },
-  ready: { id: "Open Ta'aruf", en: "Open to Ta'aruf" },
-  preparing: { id: "Persiapan Ta'aruf", en: "Preparing for Ta'aruf" },
+  ready: { id: "Siap Diperkenalkan", en: "Open to Introductions" },
+  preparing: { id: "Sedang Bersiap", en: "Getting Ready" },
   no: { id: "Tidak", en: "No" },
   yes: { id: "Ya", en: "Yes" },
   never: { id: "Tidak pernah", en: "Never" },

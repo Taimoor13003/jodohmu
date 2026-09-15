@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebase-admin";
+import { withLiveAge } from "@/lib/age";
+import { authenticateTeam } from "@/lib/team-access";
 
 const PUBLIC_FIELDS = new Set([
-  "fullName","age","gender","location","occupation","educations",
+  "fullName","age","gender","location","occupation","jobPosition","jobDescription","employmentStatus","educations",
   "aboutMe","photoUrls","photoVisibility",
   "smokingStatus","alcoholUse","exerciseFrequency","socialPreference",
   "quranReading","islamicKnowledgeLevel","halalLifestyleStrictness","viewsOnMixedSocializing","familyOriented",
@@ -24,21 +26,31 @@ const PUBLIC_FIELDS = new Set([
   "prefHealthCondition","preferredPersonalityTraits","physicalPreferences","spouseDealBreakers",
 ]);
 
-export async function GET(_req: NextRequest, { params }: { params: Promise<{ uid: string }> }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ uid: string }> }) {
   const { uid } = await params;
   try {
     const snap = await adminDb().collection("candidate_intake").doc(uid).get();
     if (!snap.exists) return NextResponse.json({ available: false });
 
-    const raw = snap.data() as Record<string, unknown>;
-    if (!raw.profileLinkActive) return NextResponse.json({ available: false });
+    const raw = withLiveAge(snap.data() as Record<string, unknown>);
+
+    // Admins and workers can preview the link exactly as visitors get it,
+    // even while the candidate has it switched off.
+    const actor = req.headers.get("authorization") ? await authenticateTeam(req.headers.get("authorization")) : null;
+    const preview = actor?.role === "admin" || actor?.role === "worker";
+
+    if (!raw.profileLinkActive && !preview) return NextResponse.json({ available: false });
 
     const safe: Record<string, unknown> = {};
     for (const key of Array.from(PUBLIC_FIELDS)) {
       if (key in raw) safe[key] = raw[key];
     }
 
-    return NextResponse.json({ available: true, data: safe });
+    return NextResponse.json({
+      available: true,
+      data: safe,
+      ...(preview ? { preview: { linkActive: !!raw.profileLinkActive, photosVisible: !!raw.publicPhotosVisible } } : {}),
+    });
   } catch {
     return NextResponse.json({ available: false }, { status: 500 });
   }
