@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/pricing/international", priority: 0.8, changeFrequency: "monthly", lastModified: now },
     { path: "/plan-your-jodohmu-way", priority: 0.8, changeFrequency: "monthly", lastModified: now },
     { path: "/careers", priority: 0.7, changeFrequency: "monthly", lastModified: now },
+    { path: "/mitra", priority: 0.6, changeFrequency: "monthly", lastModified: now },
     { path: "/blog", priority: 0.8, changeFrequency: "weekly", lastModified: now },
     { path: "/faq", priority: 0.7, lastModified: now },
     { path: "/contact", priority: 0.7, lastModified: now },

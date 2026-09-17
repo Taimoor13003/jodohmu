@@ -34,6 +34,7 @@ export function Footer() {
               <Link href="/presentations" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.presentations")}</Link>
               <Link href="/faq" className="hover:text-brand-rose transition-colors">{t("header.faq")}</Link>
               <Link href="/careers" className="hover:text-brand-rose transition-colors">{t("header.careers")}</Link>
+              <Link href="/mitra" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.mitra")}</Link>
               <Link href="/contact" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.contact")}</Link>
               <Link href="/privacy" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.privacy")}</Link>
               <Link href="/terms" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.terms")}</Link>
