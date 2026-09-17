@@ -40,7 +40,7 @@ type PkgConfig = {
 const packages: PkgConfig[] = [
   { key: "awal", featuresCount: 7, months: 3 },
   { key: "serius", featuresCount: 11, months: 6, popular: true },
-  { key: "istimewa", featuresCount: 13, months: 12 },
+  { key: "istimewa", featuresCount: 15, months: 12 },
 ];
 
 const packageBlogHref: Record<PkgConfig["key"], string> = {
