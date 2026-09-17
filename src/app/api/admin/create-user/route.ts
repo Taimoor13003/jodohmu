@@ -3,6 +3,7 @@ import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
 import { generateUsername } from "@/lib/username";
 import { ageFromDob } from "@/lib/age";
+import { TEAM_POSITIONS, normalizePermissions } from "@/lib/calldesk";
 
 type Role = "admin" | "worker" | "candidate";
 
@@ -27,6 +28,9 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
     const { role, email, password, name, details, username: rawUsername } = body ?? {};
+    // Workers can be given a position and Call Desk permissions at creation (admin only reaches this for workers)
+    const position = TEAM_POSITIONS.some(p => p.value === body?.position) ? body.position : null;
+    const permissions = normalizePermissions(Array.isArray(body?.permissions) ? body.permissions : []);
 
     // Admins can create any role; workers may only create candidates (their own clients)
     if (requesterRole !== "admin" && !(requesterRole === "worker" && role === "candidate")) {
@@ -71,6 +75,7 @@ export async function POST(req: NextRequest) {
       username,
       createdAt: FieldValue.serverTimestamp(),
       createdBy: requesterUid,
+      ...(role === "worker" ? { position, permissions } : {}),
     });
 
     await adminDb().collection("usernames").doc(username).set({

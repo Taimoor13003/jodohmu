@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { withLiveAge } from "@/lib/age";
+import { TEAM_INVITES } from "@/lib/calldesk";
 
 export async function GET(req: NextRequest) {
   try {
@@ -33,6 +34,8 @@ export async function GET(req: NextRequest) {
           email: data.email ?? "—",
           role: (data.role ?? "candidate") as string,
           source: (data.source as string | undefined) ?? null,
+          position: (data.position as string | undefined) ?? null,
+          permissions: Array.isArray(data.permissions) ? (data.permissions as string[]) : [],
           createdAt: data.createdAt?.toDate?.()?.toISOString() ?? null,
         };
       })
@@ -65,6 +68,23 @@ export async function GET(req: NextRequest) {
         // Workers see every candidate but may only edit the ones assigned to them
         (u as Record<string, unknown>).canEdit = requesterRole === "admin" || assigned.includes(decoded.uid);
       }
+    }
+
+    // Pending team invites show up alongside workers until the person first signs in
+    if (requesterRole === "admin" && roleFilter === "worker") {
+      const invites = await adminDb().collection(TEAM_INVITES).where("claimedUid", "==", null).get();
+      const pending = invites.docs.map(doc => ({
+        uid: `invite:${doc.id}`,
+        name: doc.data().name ?? "—",
+        email: doc.id,
+        role: "worker",
+        source: "team_invite",
+        position: doc.data().position ?? null,
+        permissions: doc.data().permissions ?? [],
+        createdAt: doc.data().createdAt?.toDate?.()?.toISOString() ?? null,
+        pending: true,
+      }));
+      return NextResponse.json({ users: [...pending, ...users] });
     }
 
     return NextResponse.json({ users });

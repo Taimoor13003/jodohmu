@@ -13,19 +13,23 @@ type UserRole = "candidate" | "worker" | "admin";
 interface AuthContextType {
   user: User | null;
   role: UserRole;
+  // Team permissions from user_roles (e.g. "calldesk"); always empty for non-workers
+  permissions: string[];
   loading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType>({ user: null, role: "candidate", loading: true });
+const AuthContext = createContext<AuthContextType>({ user: null, role: "candidate", permissions: [], loading: true });
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<UserRole>("candidate");
+  const [permissions, setPermissions] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
+      setPermissions([]);
       if (user) registerFcmToken(user.uid).catch(() => {});
       if (!user?.email) {
         setRole("candidate");
@@ -39,9 +43,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // Prefer lookup by uid
         const roleDoc = await getDoc(doc(db, "user_roles", user.uid));
         if (roleDoc.exists()) {
-          const data = roleDoc.data() as { role?: UserRole };
+          const data = roleDoc.data() as { role?: UserRole; permissions?: unknown };
           if (data.role === "admin" || data.role === "worker" || data.role === "candidate") {
             setRole(data.role);
+            if (Array.isArray(data.permissions)) setPermissions(data.permissions.filter((p): p is string => typeof p === "string"));
             setLoading(false);
             return;
           }
@@ -80,7 +85,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
-  return <AuthContext.Provider value={{ user, role, loading }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ user, role, permissions, loading }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => useContext(AuthContext);

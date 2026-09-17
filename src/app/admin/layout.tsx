@@ -10,7 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   Users, Briefcase, UserCheck, MessageCircle,
-  Globe, LogOut, Menu, Bell, MessageSquareText, Link2,
+  Globe, LogOut, Menu, Bell, MessageSquareText, Link2, PhoneCall,
 } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 
@@ -188,6 +188,7 @@ const TOPBAR_H  = 52;
 const SIDEBAR_W = 220;
 
 const NAV = [
+  { href: "/admin/calls",      label: "Call Desk",      icon: <PhoneCall      className="w-full h-full" />, color: "#EA580C", bg: "#FFF7ED" },
   { href: "/admin/candidates", label: "Kandidat",      icon: <UserCheck      className="w-full h-full" />, color: "#C4294A", bg: "#FFF1F2" },
   { href: "/admin/chat",       label: "Chat",           icon: <MessageCircle  className="w-full h-full" />, color: "#0369A1", bg: "#EFF6FF" },
   { href: "/admin/shares",     label: "Tautan Profil",  icon: <Link2          className="w-full h-full" />, color: "#7C3AED", bg: "#F5F3FF" },
@@ -196,15 +197,17 @@ const NAV = [
 ];
 
 /* ── sidebar ── */
-function Sidebar({ open, onClose, onSidebarEnter, onSidebarLeave, onLogout, role }: {
+function Sidebar({ open, onClose, onSidebarEnter, onSidebarLeave, onLogout, role, permissions }: {
   open: boolean; onClose: () => void;
   onSidebarEnter: () => void; onSidebarLeave: () => void;
   onLogout: () => void;
   role: string;
+  permissions: string[];
 }) {
   const pathname = usePathname();
+  const workerLinks = ["/admin/candidates", "/admin/chat", "/admin/shares", ...(permissions.includes("calldesk") ? ["/admin/calls"] : [])];
   const nav = role === "worker"
-    ? NAV.filter(item => ["/admin/candidates", "/admin/chat", "/admin/shares"].includes(item.href))
+    ? NAV.filter(item => workerLinks.includes(item.href))
     : NAV;
 
   return (
@@ -422,7 +425,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { role } = useAuth();
+  const { role, permissions } = useAuth();
   const openTimerRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -483,6 +486,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         onSidebarLeave={handleSidebarLeave}
         onLogout={async () => { await signOut(auth); router.push("/login"); }}
         role={role}
+        permissions={permissions}
       />
 
       {/* Main content — always full width, never pushed by sidebar */}

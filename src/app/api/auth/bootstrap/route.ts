@@ -5,6 +5,7 @@ import { generateUsername } from "@/lib/username";
 import { pushToAdmin } from "@/lib/push-server";
 import { SHARES_COLLECTION, shareCode } from "@/lib/shares";
 import { needsOnboarding } from "@/lib/onboarding";
+import { TEAM_INVITES } from "@/lib/calldesk";
 
 /**
  * Called right after any self-serve sign-in (Google or email/password).
@@ -45,6 +46,29 @@ export async function POST(req: NextRequest) {
     const name = decoded.name || clientName || email.split("@")[0] || "New User";
     const authProvider = decoded.firebase?.sign_in_provider ?? "password";
     const username = generateUsername();
+
+    // Team members invited by an admin become workers on their first sign-in.
+    // Only a verified email (e.g. Google) can claim an invite.
+    const inviteRef = email ? adminDb().collection(TEAM_INVITES).doc(email) : null;
+    const invite = inviteRef && decoded.email_verified ? await inviteRef.get() : null;
+    if (inviteRef && invite?.exists && !invite.data()?.claimedUid) {
+      const data = invite.data()!;
+      await roleRef.set({
+        role: "worker",
+        email,
+        name: data.name || name,
+        username,
+        position: data.position ?? null,
+        permissions: Array.isArray(data.permissions) ? data.permissions : [],
+        createdAt: FieldValue.serverTimestamp(),
+        createdBy: data.createdBy ?? null,
+        source: "team_invite",
+        authProvider,
+      });
+      await adminDb().collection("usernames").doc(username).set({ uid, email });
+      await inviteRef.update({ claimedUid: uid, claimedAt: FieldValue.serverTimestamp() });
+      return NextResponse.json({ role: "worker", needsOnboarding: false, isNewUser: true });
+    }
 
     await roleRef.set({
       role: "candidate",
