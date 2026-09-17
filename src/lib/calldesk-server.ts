@@ -82,20 +82,28 @@ export const toActivity = (id: string, data: DocumentData): CallDeskActivity => 
 
 // Keeps only well-formed hours (start before end) and valid days off
 export function cleanAvailability(input: unknown): Availability {
-  const raw = (input ?? {}) as { weekly?: Record<string, unknown>; daysOff?: unknown };
-  const weekly = { ...EMPTY_AVAILABILITY.weekly };
-  for (const day of WEEKDAYS) {
-    const hours = raw.weekly?.[day] as { start?: unknown; end?: unknown } | null | undefined;
-    weekly[day] = hours && isTime(hours.start) && isTime(hours.end) && hours.start < hours.end
+  const raw = (input ?? {}) as { weekly?: Record<string, unknown>; daysOff?: unknown; dayOverrides?: unknown };
+  const cleanHours = (value: unknown) => {
+    const hours = value as { start?: unknown; end?: unknown } | null | undefined;
+    return hours && isTime(hours.start) && isTime(hours.end) && hours.start < hours.end
       ? { start: hours.start, end: hours.end }
       : null;
-  }
+  };
+  const weekly = { ...EMPTY_AVAILABILITY.weekly };
+  for (const day of WEEKDAYS) weekly[day] = cleanHours(raw.weekly?.[day]);
+  const seen = new Set<string>();
+  const dayOverrides = (Array.isArray(raw.dayOverrides) ? raw.dayOverrides : [])
+    .filter((d): d is { date: string; hours?: unknown } => isDay((d as { date?: unknown })?.date))
+    .filter((d) => !seen.has(d.date) && Boolean(seen.add(d.date)))
+    .map((d) => ({ date: d.date, hours: cleanHours(d.hours) }))
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .slice(-200);
   const daysOff = (Array.isArray(raw.daysOff) ? raw.daysOff : [])
     .filter((d): d is { date: string; note?: unknown } => isDay((d as { date?: unknown })?.date))
     .map((d) => ({ date: d.date, note: typeof d.note === "string" ? d.note.trim().slice(0, 120) : "" }))
     .sort((a, b) => a.date.localeCompare(b.date))
-    .slice(0, 100);
-  return { weekly, daysOff };
+    .slice(-100);
+  return { weekly, daysOff, dayOverrides };
 }
 
 type ImportSource = {

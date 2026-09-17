@@ -5,21 +5,24 @@ import Link from "next/link";
 import { CalendarClock, ExternalLink, Loader2, MessageCircle, Pencil, Phone, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
-  CONTACT_STATUSES, DEFAULT_TZ, LOG_ACTIONS, TIMEZONES, addDays, isTimeZone, toJakarta,
+  CONTACT_STATUSES, DEFAULT_TZ, LOG_ACTIONS, TIMEZONES, addDays, fromJakarta, isTimeZone, toJakarta,
   type CallDeskActivity, type CallDeskContact, type CallDeskMember, type LogAction,
 } from "@/lib/calldesk";
 import {
   ACTION_TONE, SourceBadge, StatusBadge, TimeZoneField, actionLabel, callDeskFetch, followUpTimeLabel, formatDay, formatTime, telLink, useL, waLink,
 } from "./shared";
 import { AssigneeField, type DeskMe } from "./team-schedule";
+import type { Slot } from "./day-view";
 
 const input = "h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]/20";
 
-export function ContactPanel({ contact, team, me, today, onClose, onChanged }: {
+export function ContactPanel({ contact, team, me, today, preset, onClose, onChanged }: {
   contact: CallDeskContact;
   team: CallDeskMember[];
   me: DeskMe;
   today: string;
+  // Set when opened from a calendar slot (a WIB time); pre-fills the follow-up and assignee
+  preset?: Slot | null;
   onClose: () => void;
   onChanged: () => Promise<void>;
 }) {
@@ -32,15 +35,28 @@ export function ContactPanel({ contact, team, me, today, onClose, onChanged }: {
 
   // Only a follow-up that's still in the future carries over; logging against a due one completes it
   const futureFollowUp = contact.followUpDate && contact.followUpDate > today;
-  const emptyLog = {
-    type: "" as LogAction | "",
-    status: contact.status as string,
-    note: "",
-    followUpDate: futureFollowUp ? contact.followUpDate ?? "" : "",
-    followUpTime: futureFollowUp ? contact.followUpTime ?? "" : "",
-    followUpNote: futureFollowUp ? contact.followUpNote ?? "" : "",
-    assignedTo: contact.assignedTo ?? "",
-  };
+  const presetLocal = preset
+    ? (contact.timezone === DEFAULT_TZ ? { day: preset.day, time: preset.time } : fromJakarta(preset.day, preset.time, contact.timezone))
+    : null;
+  const emptyLog = presetLocal && preset
+    ? {
+        type: "note" as LogAction | "",
+        status: contact.status as string,
+        note: "",
+        followUpDate: presetLocal.day,
+        followUpTime: presetLocal.time,
+        followUpNote: futureFollowUp ? contact.followUpNote ?? "" : "",
+        assignedTo: preset.uid,
+      }
+    : {
+        type: "" as LogAction | "",
+        status: contact.status as string,
+        note: "",
+        followUpDate: futureFollowUp ? contact.followUpDate ?? "" : "",
+        followUpTime: futureFollowUp ? contact.followUpTime ?? "" : "",
+        followUpNote: futureFollowUp ? contact.followUpNote ?? "" : "",
+        assignedTo: contact.assignedTo ?? "",
+      };
   const [log, setLog] = useState(emptyLog);
   const [details, setDetails] = useState({ name: contact.name, phone: contact.phone, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone });
 
@@ -61,7 +77,7 @@ export function ContactPanel({ contact, team, me, today, onClose, onChanged }: {
     setDetails({ name: contact.name, phone: contact.phone, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone });
     loadTimeline();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contact.id, contact.lastActivityAt]);
+  }, [contact.id, contact.lastActivityAt, preset]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => event.key === "Escape" && onClose();

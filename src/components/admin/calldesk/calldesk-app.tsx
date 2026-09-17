@@ -9,6 +9,7 @@ import { ContactPanel } from "./contact-panel";
 import { callDeskFetch, formatDay, useL } from "./shared";
 import { CalendarView, ContactsView, HistoryView, TodayView } from "./views";
 import { TeamScheduleView, type DeskMe } from "./team-schedule";
+import { SlotPicker, type Slot } from "./day-view";
 
 type DeskData = {
   today: string;
@@ -36,6 +37,9 @@ export function CallDeskApp() {
   const [tab, setTab] = useState<Tab>("today");
   const [openId, setOpenId] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
+  // A calendar slot being scheduled: picked first, then carried into the contact panel or new-contact form
+  const [slot, setSlot] = useState<Slot | null>(null);
+  const [preset, setPreset] = useState<Slot | null>(null);
   const [month, setMonth] = useState(initialToday.slice(0, 7));
   const [historyRange, setHistoryRange] = useState({ from: addDays(initialToday, -6), to: initialToday });
 
@@ -106,9 +110,11 @@ export function CallDeskApp() {
           <button type="button" onClick={load} disabled={refreshing} title={l({ id: "Muat ulang", en: "Refresh" })} className="grid h-10 w-10 place-items-center rounded-xl border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 disabled:opacity-60">
             <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
           </button>
-          <button type="button" onClick={() => setAdding(true)} className="flex h-10 items-center gap-2 rounded-xl bg-[#C4294A] px-4 text-sm font-bold text-white shadow-sm hover:bg-[#a82340]">
-            <Plus className="h-4 w-4" /> {l({ id: "Tambah kontak", en: "Add contact" })}
-          </button>
+          {tab !== "team" && (
+            <button type="button" onClick={() => { setPreset(null); setAdding(true); }} className="flex h-10 items-center gap-2 rounded-xl bg-[#C4294A] px-4 text-sm font-bold text-white shadow-sm hover:bg-[#a82340]">
+              <Plus className="h-4 w-4" /> {l({ id: "Tambah kontak (calon klien)", en: "Add contact (lead)" })}
+            </button>
+          )}
         </div>
       </div>
 
@@ -128,8 +134,21 @@ export function CallDeskApp() {
       </div>
 
       <div className="mt-5">
-        {tab === "today" && <TodayView contacts={data.contacts} activity={data.activity} today={data.today} me={data.me} onOpen={setOpenId} />}
-        {tab === "calendar" && <CalendarView contacts={data.contacts} activity={data.activity} team={data.team} today={data.today} month={month} onMonthChange={setMonth} onOpen={setOpenId} />}
+        {tab === "today" && <TodayView contacts={data.contacts} activity={data.activity} today={data.today} me={data.me} onOpen={(id) => { setPreset(null); setOpenId(id); }} />}
+        {tab === "calendar" && (
+          <CalendarView
+            contacts={data.contacts}
+            activity={data.activity}
+            team={data.team}
+            me={data.me}
+            today={data.today}
+            month={month}
+            onMonthChange={setMonth}
+            onOpen={(id) => { setPreset(null); setOpenId(id); }}
+            onSlot={setSlot}
+            onChanged={load}
+          />
+        )}
         {tab === "team" && <TeamScheduleView team={data.team} me={data.me} today={data.today} onChanged={load} />}
         {tab === "contacts" && <ContactsView contacts={data.contacts} today={data.today} onOpen={setOpenId} />}
         {tab === "history" && (
@@ -145,14 +164,34 @@ export function CallDeskApp() {
         )}
       </div>
 
-      {openContact && <ContactPanel contact={openContact} team={data.team} me={data.me} today={data.today} onClose={() => setOpenId(null)} onChanged={load} />}
+      {openContact && (
+        <ContactPanel
+          contact={openContact}
+          team={data.team}
+          me={data.me}
+          today={data.today}
+          preset={preset}
+          onClose={() => { setOpenId(null); setPreset(null); }}
+          onChanged={load}
+        />
+      )}
+      {slot && (
+        <SlotPicker
+          slot={slot}
+          contacts={data.contacts}
+          onClose={() => setSlot(null)}
+          onPick={(id) => { setPreset(slot); setSlot(null); setOpenId(id); }}
+          onNew={() => { setPreset(slot); setSlot(null); setAdding(true); }}
+        />
+      )}
       {adding && (
         <AddContactDialog
           today={data.today}
           team={data.team}
           me={data.me}
-          onClose={() => setAdding(false)}
-          onCreated={async (id) => { await load(); setAdding(false); setOpenId(id); }}
+          preset={preset}
+          onClose={() => { setAdding(false); setPreset(null); }}
+          onCreated={async (id) => { await load(); setAdding(false); setPreset(null); setOpenId(id); }}
         />
       )}
     </div>

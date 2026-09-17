@@ -12,6 +12,8 @@ import {
   jakartaFollowUp, telLink, useL, waLink,
 } from "./shared";
 import { AvailabilityList, type DeskMe } from "./team-schedule";
+import { DayView, type Slot } from "./day-view";
+import { availabilityOn } from "@/lib/calldesk";
 
 type OpenContact = (id: string) => void;
 
@@ -231,13 +233,14 @@ const WEEKDAYS: Bilingual[] = [
   { id: "Jum", en: "Fri" }, { id: "Sab", en: "Sat" }, { id: "Min", en: "Sun" },
 ];
 
-export function CalendarView({ contacts, activity, team, today, month, onMonthChange, onOpen }: {
-  contacts: CallDeskContact[]; activity: CallDeskActivity[]; team: CallDeskMember[]; today: string; month: string;
-  onMonthChange: (month: string) => void; onOpen: OpenContact;
+export function CalendarView({ contacts, activity, team, me, today, month, onMonthChange, onOpen, onSlot, onChanged }: {
+  contacts: CallDeskContact[]; activity: CallDeskActivity[]; team: CallDeskMember[]; me: DeskMe; today: string; month: string;
+  onMonthChange: (month: string) => void; onOpen: OpenContact; onSlot: (slot: Slot) => void; onChanged: () => Promise<void>;
 }) {
   const l = useL();
   const { lang } = useLanguage();
   const [selected, setSelected] = useState(today);
+  const [dayOpen, setDayOpen] = useState(false);
 
   const cells = useMemo(() => {
     const first = `${month}-01`;
@@ -269,6 +272,28 @@ export function CalendarView({ contacts, activity, team, today, month, onMonthCh
   const selectedFollowUps = (followUpsByDay.get(selected) ?? []).sort(byFollowUp);
   const selectedActivity = activityByDay.get(selected) ?? [];
 
+  if (dayOpen) {
+    return (
+      <div className="space-y-5">
+        <DayView
+          day={selected}
+          today={today}
+          team={team}
+          me={me}
+          contacts={contacts}
+          onDayChange={(day) => { setSelected(day); if (!day.startsWith(month)) onMonthChange(day.slice(0, 7)); }}
+          onBack={() => setDayOpen(false)}
+          onOpen={onOpen}
+          onSlot={onSlot}
+          onChanged={onChanged}
+        />
+        <Panel title={l({ id: "Aktivitas di hari ini", en: "Activity on this day" })} count={selectedActivity.length}>
+          <ActivityFeed items={selectedActivity} onOpen={onOpen} />
+        </Panel>
+      </div>
+    );
+  }
+
   return (
     <div className="grid gap-5 lg:grid-cols-[1fr_380px]">
       <section className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5">
@@ -293,12 +318,24 @@ export function CalendarView({ contacts, activity, team, today, month, onMonthCh
               <button
                 key={day}
                 type="button"
-                onClick={() => setSelected(day)}
+                onClick={() => { if (selected === day) setDayOpen(true); else setSelected(day); }}
+                onDoubleClick={() => { setSelected(day); setDayOpen(true); }}
                 className={`flex min-h-[64px] flex-col rounded-lg border p-1.5 text-left transition sm:min-h-[84px] ${selected === day ? "border-[#1B3A6B] ring-2 ring-[#1B3A6B]/15" : "border-slate-100 hover:border-slate-300"} ${inMonth ? "bg-white" : "bg-slate-50/60"}`}
               >
                 <span className={`grid h-6 w-6 place-items-center rounded-full text-xs font-bold ${day === today ? "bg-[#C4294A] text-white" : inMonth ? "text-slate-700" : "text-slate-300"}`}>
                   {Number(day.slice(8))}
                 </span>
+                {inMonth && team.length > 0 && (
+                  <div className="mt-1 flex flex-wrap gap-0.5">
+                    {team.map((member) => {
+                      const state = availabilityOn(member.availability, day).state;
+                      if (state === "unknown") return null;
+                      const tone = state === "available" ? "bg-emerald-500" : state === "off" ? "bg-rose-500" : "bg-slate-300";
+                      const label = state === "available" ? l({ id: "tersedia", en: "available" }) : state === "off" ? l({ id: "libur", en: "off" }) : l({ id: "tidak bekerja", en: "not working" });
+                      return <span key={member.uid} title={`${member.name}: ${label}`} className={`h-2 w-2 rounded-full ${tone}`} />;
+                    })}
+                  </div>
+                )}
                 <div className="mt-auto space-y-0.5">
                   {due > 0 && (
                     <span className={`block truncate rounded px-1 text-[10px] font-bold ${isOverdue ? "bg-rose-100 text-rose-700" : "bg-amber-100 text-amber-800"}`}>
@@ -319,10 +356,17 @@ export function CalendarView({ contacts, activity, team, today, month, onMonthCh
           <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded bg-amber-200" />{l({ id: "Tindak lanjut terjadwal", en: "Follow-ups scheduled" })}</span>
           <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded bg-sky-200" />{l({ id: "Aktivitas tercatat", en: "Activity logged" })}</span>
           <span className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded bg-rose-200" />{l({ id: "Terlambat", en: "Overdue" })}</span>
+          <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-emerald-500" />{l({ id: "Tersedia", en: "Available" })}</span>
+          <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-slate-300" />{l({ id: "Tidak bekerja", en: "Not working" })}</span>
+          <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-rose-500" />{l({ id: "Libur", en: "Off" })}</span>
+          <span className="text-slate-400">· {l({ id: "Klik tanggal dua kali untuk tampilan per jam", en: "Click a date twice to see its hour-by-hour view" })}</span>
         </div>
       </section>
 
       <div className="space-y-5">
+        <button type="button" onClick={() => setDayOpen(true)} className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#1B3A6B] text-sm font-bold text-white hover:bg-[#244a85]">
+          {l({ id: "Buka tampilan per jam", en: "Open hour-by-hour view" })} · {formatDay(selected, lang)}
+        </button>
         <Panel title={`${l({ id: "Jadwal", en: "Scheduled" })} · ${formatDay(selected, lang)}`} count={selectedFollowUps.length}>
           {selectedFollowUps.length ? (
             <div className="space-y-2">{selectedFollowUps.map((c) => <ContactRow key={c.id} contact={c} today={today} onOpen={onOpen} />)}</div>

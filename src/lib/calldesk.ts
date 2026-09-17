@@ -54,10 +54,16 @@ export const WEEKDAY_LABELS: Record<Weekday, Bilingual> = {
 };
 export type WorkHours = { start: string; end: string } | null;
 // Availability is always stored in Jakarta time
-export type Availability = { weekly: Record<Weekday, WorkHours>; daysOff: { date: string; note: string }[] };
+// dayOverrides replace the weekly hours for one date (hours: null = not working that day)
+export type Availability = {
+  weekly: Record<Weekday, WorkHours>;
+  daysOff: { date: string; note: string }[];
+  dayOverrides: { date: string; hours: WorkHours }[];
+};
 export const EMPTY_AVAILABILITY: Availability = {
   weekly: { mon: null, tue: null, wed: null, thu: null, fri: null, sat: null, sun: null },
   daysOff: [],
+  dayOverrides: [],
 };
 
 export const weekdayOf = (day: string): Weekday => WEEKDAYS[(new Date(`${day}T00:00:00Z`).getUTCDay() + 6) % 7];
@@ -66,11 +72,13 @@ export const weekdayOf = (day: string): Weekday => WEEKDAYS[(new Date(`${day}T00
 export function availabilityOn(availability: Availability | null, day: string, time?: string | null) {
   if (!availability) return { state: "unknown" as const };
   const off = availability.daysOff.find((d) => d.date === day);
-  if (off) return { state: "off" as const, note: off.note };
-  const hours = availability.weekly[weekdayOf(day)];
-  if (!hours) return { state: "not_working" as const };
-  if (time && (time < hours.start || time >= hours.end)) return { state: "outside" as const, hours };
-  return { state: "available" as const, hours };
+  if (off) return { state: "off" as const, note: off.note, custom: true };
+  const override = (availability.dayOverrides ?? []).find((d) => d.date === day);
+  const custom = Boolean(override);
+  const hours = override ? override.hours : availability.weekly[weekdayOf(day)];
+  if (!hours) return { state: "not_working" as const, custom };
+  if (time && (time < hours.start || time >= hours.end)) return { state: "outside" as const, hours, custom };
+  return { state: "available" as const, hours, custom };
 }
 
 export const CONTACT_STATUSES = [
@@ -152,7 +160,11 @@ export type CallDeskActivity = {
   createdAt: string | null;
 };
 
-export type CallDeskMember = { uid: string; name: string; position: TeamPosition | null; role: string; availability: Availability | null };
+// Invited people who haven't signed in yet use the id "invite:<email>" until their first sign-in
+export type CallDeskMember = {
+  uid: string; name: string; position: TeamPosition | null; role: string; availability: Availability | null; pending?: boolean;
+};
+export const inviteMemberId = (email: string) => `invite:${email.toLowerCase()}`;
 
 export const findLabel = <T extends { value: string; label: Bilingual }>(list: readonly T[], value: string | null | undefined) =>
   list.find((item) => item.value === value)?.label ?? null;
@@ -237,3 +249,20 @@ export function toJakarta(day: string, time: string, timeZone: string) {
 
 export const timeZoneShort = (timeZone: string) =>
   TIMEZONES.find((tz) => tz.value === timeZone)?.label.split(" (")[0].split(" — ")[0] ?? timeZone.split("/").pop()!.replace(/_/g, " ");
+
+// The reverse of toJakarta: a Jakarta (UTC+7, no DST) wall-clock day + time as seen in `timeZone`
+export function fromJakarta(day: string, time: string, timeZone: string) {
+  const [y, m, d] = day.split("-").map(Number);
+  const [hh, mm] = time.split(":").map(Number);
+  const moment = new Date(Date.UTC(y, m - 1, d, hh - 7, mm));
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+  }).formatToParts(moment);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "00";
+  return { day: `${get("year")}-${get("month")}-${get("day")}`, time: `${get("hour")}:${get("minute")}` };
+}
+
+// Calls have no set length; the day view shows each one as a slot of this size
+export const CALL_SLOT_MINUTES = 30;
+export const toMinutes = (time: string) => Number(time.slice(0, 2)) * 60 + Number(time.slice(3, 5));
+export const fromMinutes = (minutes: number) => `${String(Math.floor(minutes / 60)).padStart(2, "0")}:${String(minutes % 60).padStart(2, "0")}`;

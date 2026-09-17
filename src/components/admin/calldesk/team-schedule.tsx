@@ -42,7 +42,7 @@ export function AssigneeField({ team, me, value, onChange, day, time, className 
   const l = useL();
   const { lang } = useLanguage();
   // Non-planners can only take a call themselves, or keep whoever already has it
-  const options = me.canPlan ? team : team.filter((m) => m.uid === me.uid || m.uid === value);
+  const options = (me.canPlan ? team : team.filter((m) => m.uid === me.uid || m.uid === value)).filter((m) => !m.pending);
   const member = team.find((m) => m.uid === value);
   const check = member && day ? availabilityOn(member.availability, day, time) : null;
 
@@ -144,6 +144,25 @@ function AvailabilityEditor({ member, today, onClose, onSaved }: {
           })}
         </div>
 
+        {value.dayOverrides.some((d) => d.date >= today) && (
+          <div className="mt-6 rounded-xl border border-sky-100 bg-sky-50/50 p-4">
+            <h3 className="text-sm font-bold text-slate-900">{l({ id: "Jam khusus per tanggal", en: "Custom hours on specific dates" })}</h3>
+            <ul className="mt-2 space-y-1.5">
+              {value.dayOverrides.filter((d) => d.date >= today).map((override) => (
+                <li key={override.date} className="flex items-center justify-between gap-2 rounded-lg bg-white px-3 py-2 text-sm">
+                  <span>
+                    <span className="font-semibold text-slate-800">{formatDay(override.date, lang)}</span>
+                    <span className="text-slate-500"> · {override.hours ? `${override.hours.start}–${override.hours.end}` : l({ id: "tidak bekerja", en: "not working" })}</span>
+                  </span>
+                  <button type="button" title={l({ id: "Kembali ke jadwal biasa", en: "Back to the normal schedule" })} onClick={() => setValue({ ...value, dayOverrides: value.dayOverrides.filter((d) => d.date !== override.date) })} className="text-slate-400 hover:text-rose-600">
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div className="mt-6 rounded-xl border border-slate-100 bg-slate-50/70 p-4">
           <h3 className="text-sm font-bold text-slate-900">{l({ id: "Hari libur / cuti", en: "Days off / leave" })}</h3>
           {value.daysOff.filter((d) => d.date >= today).length === 0 && (
@@ -227,15 +246,24 @@ export function TeamScheduleView({ team, me, today, onChanged }: {
                   <tr key={member.uid}>
                     <td className="px-5 py-3">
                       <p className="font-semibold text-slate-800">{member.name}{member.uid === me.uid && <span className="ml-1 text-xs text-slate-400">({l({ id: "Anda", en: "you" })})</span>}</p>
+                      {member.pending && (
+                        <span className="mt-0.5 inline-block rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700">
+                          {l({ id: "Belum login", en: "Not signed in yet" })}
+                        </span>
+                      )}
                       <p className="text-xs text-slate-400">{l(findLabel(TEAM_POSITIONS, member.position)) || (member.role === "admin" ? "Admin" : "")}</p>
                     </td>
                     {week.map((day) => {
                       const state = availabilityOn(member.availability, day);
                       return (
                         <td key={day} className="px-1 py-3 text-center">
-                          {state.state === "available" && <span className="inline-block rounded-md bg-emerald-50 px-1.5 py-1 text-[11px] font-bold leading-tight text-emerald-700">{state.hours.start}<br />{state.hours.end}</span>}
+                          {state.state === "available" && (
+                            <span className={`inline-block rounded-md px-1.5 py-1 text-[11px] font-bold leading-tight ${state.custom ? "bg-sky-50 text-sky-700 ring-1 ring-sky-200" : "bg-emerald-50 text-emerald-700"}`}>
+                              {state.hours.start}<br />{state.hours.end}
+                            </span>
+                          )}
                           {state.state === "off" && <span title={state.note} className="inline-block rounded-md bg-rose-50 px-1.5 py-1 text-[11px] font-bold text-rose-600">{l({ id: "Libur", en: "Off" })}</span>}
-                          {state.state === "not_working" && <span className="text-slate-300">—</span>}
+                          {state.state === "not_working" && <span className={state.custom ? "text-[11px] font-bold text-sky-600" : "text-slate-300"}>{state.custom ? "×" : "—"}</span>}
                           {state.state === "unknown" && <span className="text-[11px] text-slate-300">?</span>}
                         </td>
                       );
@@ -255,7 +283,7 @@ export function TeamScheduleView({ team, me, today, onChanged }: {
         </div>
       </section>
       <p className="text-xs text-slate-400">
-        {l({ id: "Hanya orang dengan akses Call Desk yang muncul di sini. Tambahkan akses di halaman Workers.", en: "Only people with Call Desk access appear here. Grant access on the Workers page." })}
+        {l({ id: "Hanya orang dengan akses Call Desk yang muncul di sini (termasuk yang belum login). Tambahkan akses di halaman Workers. Panggilan baru bisa ditugaskan setelah orangnya login.", en: "Only people with Call Desk access appear here (including those who haven't signed in yet). Grant access on the Workers page. Calls can be assigned once the person has signed in." })}
       </p>
 
       {editing && <AvailabilityEditor member={editing} today={today} onClose={() => setEditing(null)} onSaved={onChanged} />}

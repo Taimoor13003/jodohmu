@@ -3,7 +3,7 @@ import { FieldValue, type DocumentData } from "firebase-admin/firestore";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import {
   CONTACT_SOURCES, CONTACT_STATUSES, IMPORTED_SOURCES, LOG_ACTIONS,
-  DEFAULT_TZ, addDays, isDay, isTime, isTimeZone, jakartaDay,
+  DEFAULT_TZ, TEAM_INVITES, addDays, inviteMemberId, isDay, isTime, isTimeZone, jakartaDay, weekdayOf,
   type CallDeskMember, type ContactStatus,
 } from "@/lib/calldesk";
 import {
@@ -25,12 +25,13 @@ function followUpFields(body: Record<string, unknown>) {
   };
 }
 
-// Everyone who can take calls: admins plus workers with Call Desk access
+// Everyone who can take calls: admins, workers with Call Desk access, and invited people who haven't signed in yet
 async function loadTeam(): Promise<CallDeskMember[]> {
   const db = adminDb();
-  const [roleSnap, availabilitySnap] = await Promise.all([
+  const [roleSnap, availabilitySnap, inviteSnap] = await Promise.all([
     db.collection("user_roles").where("role", "in", ["admin", "worker"]).get(),
     db.collection(AVAILABILITY).get(),
+    db.collection(TEAM_INVITES).where("claimedUid", "==", null).get(),
   ]);
   const availability = new Map(availabilitySnap.docs.map((doc) => [doc.id, cleanAvailability(doc.data())]));
   const members = roleSnap.docs.filter((doc) => doc.data().role === "admin" || (doc.data().permissions ?? []).includes("calldesk"));
@@ -41,15 +42,26 @@ async function loadTeam(): Promise<CallDeskMember[]> {
     const { users } = await adminAuth().getUsers(unnamed);
     users.forEach((user) => user.displayName && displayNames.set(user.uid, user.displayName));
   }
-  return members
+  const invited: CallDeskMember[] = inviteSnap.docs
+    .filter((doc) => (doc.data().permissions ?? []).includes("calldesk"))
     .map((doc) => ({
+      uid: inviteMemberId(doc.id),
+      name: doc.data().name ?? doc.id,
+      position: doc.data().position ?? null,
+      role: "worker",
+      availability: availability.get(inviteMemberId(doc.id)) ?? null,
+      pending: true,
+    }));
+  return [
+    ...members.map((doc) => ({
       uid: doc.id,
       name: doc.data().name ?? displayNames.get(doc.id) ?? doc.data().email ?? "—",
       position: doc.data().position ?? null,
       role: doc.data().role,
       availability: availability.get(doc.id) ?? null,
-    }))
-    .sort((a, b) => a.name.localeCompare(b.name));
+    })),
+    ...invited,
+  ].sort((a, b) => a.name.localeCompare(b.name));
 }
 
 // Resolves the requested assignee. Planners may assign anyone; others may only take a call themselves or leave it as is.
@@ -67,6 +79,7 @@ async function resolveAssignee(body: Record<string, unknown>, caller: CallDeskCa
   if (!requested) return { ok: true as const, value: { assignedTo: null, assignedName: null } };
   const member = (await loadTeam()).find((m) => m.uid === requested);
   if (!member) return { ok: false as const, error: "That person can't take calls." };
+  if (member.pending) return { ok: false as const, error: "That person hasn't signed in yet, so calls can't be assigned to them." };
   return { ok: true as const, value: { assignedTo: member.uid, assignedName: member.name } };
 }
 
@@ -141,7 +154,7 @@ export async function POST(req: NextRequest) {
     const day = jakartaDay();
     const by = { byUid: caller.uid, byName: caller.name, day, createdAt: now };
 
-    if (body.action === "availability") {
+    if (body.action === "availability" || body.action === "availability_day") {
       const uid = clean(body.uid, 128);
       if (!uid) return NextResponse.json({ error: "Missing person." }, { status: 400 });
       if (!caller.canPlan && uid !== caller.uid) {
@@ -150,13 +163,42 @@ export async function POST(req: NextRequest) {
       if (uid !== caller.uid && !(await loadTeam()).some((m) => m.uid === uid)) {
         return NextResponse.json({ error: "That person isn't on the call team." }, { status: 404 });
       }
+      const ref = db.collection(AVAILABILITY).doc(uid);
+      const stamp = { updatedAt: now, updatedByUid: caller.uid, updatedByName: caller.name };
+
+      // One date: normal schedule, custom hours, not working, or off — optionally also the weekly default
+      if (body.action === "availability_day") {
+        const date = isDay(body.date) ? body.date : null;
+        const mode = clean(body.mode, 20);
+        const hours = isTime(body.start) && isTime(body.end) && body.start < body.end ? { start: body.start, end: body.end } : null;
+        if (!date || !["default", "hours", "not_working", "off"].includes(mode)) {
+          return NextResponse.json({ error: "Invalid day or option." }, { status: 400 });
+        }
+        if (mode === "hours" && !hours) return NextResponse.json({ error: "End time must be after start time." }, { status: 400 });
+
+        const availability = await db.runTransaction(async (tx) => {
+          const current = cleanAvailability((await tx.get(ref)).data());
+          const next = {
+            weekly: { ...current.weekly },
+            daysOff: current.daysOff.filter((d) => d.date !== date),
+            dayOverrides: current.dayOverrides.filter((d) => d.date !== date),
+          };
+          const dayHours = mode === "hours" ? hours : null;
+          if (mode === "off") next.daysOff.push({ date, note: clean(body.note, 120) });
+          if (body.applyWeekly === true && (mode === "hours" || mode === "not_working")) {
+            next.weekly[weekdayOf(date)] = dayHours;
+          } else if (mode === "hours" || mode === "not_working") {
+            next.dayOverrides.push({ date, hours: dayHours });
+          }
+          const saved = cleanAvailability(next);
+          tx.set(ref, { ...saved, ...stamp });
+          return saved;
+        });
+        return NextResponse.json({ success: true, availability });
+      }
+
       const availability = cleanAvailability(body.availability);
-      await db.collection(AVAILABILITY).doc(uid).set({
-        ...availability,
-        updatedAt: now,
-        updatedByUid: caller.uid,
-        updatedByName: caller.name,
-      });
+      await ref.set({ ...availability, ...stamp });
       return NextResponse.json({ success: true, availability });
     }
 

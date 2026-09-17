@@ -5,14 +5,16 @@ import { Loader2, X } from "lucide-react";
 import { CONTACT_SOURCES, DEFAULT_TZ, IMPORTED_SOURCES, addDays, isTimeZone, toJakarta, type CallDeskMember } from "@/lib/calldesk";
 import { TimeZoneField, callDeskFetch, useL } from "./shared";
 import { AssigneeField, type DeskMe } from "./team-schedule";
+import type { Slot } from "./day-view";
 
 const input = "h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]/20";
 const label = "mb-1 block text-xs font-semibold text-slate-500";
 
 const manualSources = CONTACT_SOURCES.filter((source) => !IMPORTED_SOURCES.includes(source.value));
 
-export function AddContactDialog({ today, team, me, onClose, onCreated }: {
+export function AddContactDialog({ today, team, me, preset, onClose, onCreated }: {
   today: string;
+  preset?: Slot | null;
   team: CallDeskMember[];
   me: DeskMe;
   onClose: () => void;
@@ -21,7 +23,7 @@ export function AddContactDialog({ today, team, me, onClose, onCreated }: {
   const l = useL();
   const [form, setForm] = useState({
     name: "", phone: "", city: "", source: "whatsapp", bestTime: "", note: "", timezone: DEFAULT_TZ,
-    followUpDate: "", followUpTime: "", followUpNote: "", assignedTo: "",
+    followUpDate: preset?.day ?? "", followUpTime: preset?.time ?? "", followUpNote: "", assignedTo: preset?.uid ?? "",
   });
   const slot = !form.followUpDate
     ? { day: null, time: null }
