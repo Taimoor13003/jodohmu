@@ -247,12 +247,14 @@ export async function POST(req: NextRequest) {
     const contact = contactSnap.data()!;
 
     if (body.action === "log") {
-      const type = clean(body.type, 30);
-      if (!ACTION_VALUES.includes(type)) return NextResponse.json({ error: "Invalid action." }, { status: 400 });
+      // Picking what you did is optional: a plain change of status, assignee, follow-up or note is logged as "updated"
+      const requestedType = clean(body.type, 30);
+      const type = requestedType || "updated";
+      if (!ACTION_VALUES.includes(type) && type !== "updated") return NextResponse.json({ error: "Invalid action." }, { status: 400 });
       const requested = clean(body.status, 30);
       const statusTo = (STATUS_VALUES.includes(requested) ? requested : contact.status) as ContactStatus;
       // Any first real touch moves a new lead forward, unless a status was picked explicitly
-      const finalStatus = statusTo === "new" && type !== "note" ? "contacted" : statusTo;
+      const finalStatus = statusTo === "new" && type !== "note" && type !== "updated" ? "contacted" : statusTo;
       const note = clean(body.note, 1000);
       const followUp = followUpFields(body);
       const assignee = await resolveAssignee(body, caller, contact);
@@ -261,8 +263,8 @@ export async function POST(req: NextRequest) {
         || followUp.followUpTime !== (contact.followUpTime ?? null)
         || followUp.followUpNote !== (contact.followUpNote ?? null);
       const assigneeChanged = assignee.value.assignedTo !== (contact.assignedTo ?? null);
-      if (type === "note" && !note && finalStatus === contact.status && !followUpChanged && !assigneeChanged) {
-        return NextResponse.json({ error: "Write a note, change the status, or set a follow-up." }, { status: 400 });
+      if ((type === "note" || type === "updated") && !note && finalStatus === contact.status && !followUpChanged && !assigneeChanged) {
+        return NextResponse.json({ error: "Nothing changed — pick what you did, write a note, or change the status, follow-up or person." }, { status: 400 });
       }
 
       const batch = db.batch();

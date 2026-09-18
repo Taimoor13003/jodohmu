@@ -121,10 +121,6 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
   };
 
   const saveLog = async () => {
-    if (!log.type) {
-      setError(l({ id: "Pilih apa yang Anda lakukan.", en: "Choose what you did." }));
-      return;
-    }
     if (await submit({ action: "log", ...log })) setLog({ ...emptyLog, followUpDate: "", followUpTime: "", followUpNote: "" });
   };
 
@@ -292,13 +288,15 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
           {/* Log form */}
           <section>
             <h3 className="text-sm font-bold text-slate-900">{l({ id: "Catat aktivitas", en: "Log activity" })}</h3>
-            <p className="mt-2 text-xs font-semibold text-slate-500">{l({ id: "Apa yang Anda lakukan?", en: "What did you do?" })}</p>
+            <p className="mt-2 text-xs font-semibold text-slate-500">
+              {l({ id: "Apa yang Anda lakukan?", en: "What did you do?" })} <span className="font-medium text-slate-400">({l({ id: "opsional", en: "optional" })})</span>
+            </p>
             <div className="mt-1.5 flex flex-wrap gap-1.5">
               {LOG_ACTIONS.map((action) => (
                 <button
                   key={action.value}
                   type="button"
-                  onClick={() => setLog({ ...log, type: action.value })}
+                  onClick={() => setLog({ ...log, type: log.type === action.value ? "" : action.value })}
                   className={`rounded-full border px-3 py-1.5 text-xs font-bold transition ${log.type === action.value ? "border-[#1B3A6B] bg-[#1B3A6B] text-white" : "border-slate-200 text-slate-600 hover:border-slate-300"}`}
                 >
                   {l(action.label)}
@@ -382,7 +380,7 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
               className="mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#C4294A] text-sm font-bold text-white hover:bg-[#a82340] disabled:opacity-60"
             >
               {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-              {l({ id: "Simpan aktivitas", en: "Save activity" })}
+              {log.type ? l({ id: "Simpan aktivitas", en: "Save activity" }) : l({ id: "Simpan perubahan", en: "Save changes" })}
             </button>
           </section>
 

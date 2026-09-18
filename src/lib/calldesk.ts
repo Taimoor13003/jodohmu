@@ -116,7 +116,7 @@ export const LOG_ACTIONS = [
   { value: "note", label: { id: "Catatan saja", en: "Note only" } },
 ] as const;
 export type LogAction = (typeof LOG_ACTIONS)[number]["value"];
-export type ActivityType = LogAction | "created" | "edited" | "rescheduled";
+export type ActivityType = LogAction | "created" | "edited" | "rescheduled" | "updated";
 
 export type CallDeskContact = {
   id: string;
