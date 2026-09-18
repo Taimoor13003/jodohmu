@@ -18,21 +18,18 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Jodohmu — Jasa Perjodohan Offline & Ta'aruf Serius di Indonesia",
+    default: "Jodohmu — Jasa Perjodohan Serius di Indonesia",
     template: "%s | Jodohmu",
   },
   description:
-    "Jasa perjodohan offline yang halal dengan fasilitasi ta'aruf, penyaringan keluarga, dan perkenalan terarah bagi lajang siap nikah di seluruh Indonesia.",
+    "Jasa perjodohan hybrid (online dan tatap muka) dengan perkenalan terpandu, penyaringan keluarga, dan pendampingan terarah bagi lajang siap nikah di seluruh Indonesia.",
   keywords: [
     "Jodohmu",
-    "jasa perjodohan offline",
-    "ta'aruf",
+    "jasa perjodohan",
+    "perjodohan terpandu",
     "cari jodoh serius",
-    "perjodohan halal",
     "matchmaking Indonesia",
     "pendampingan pernikahan",
-    "nikah offline",
-    "cari pasangan halal",
     "marriage matchmaking Indonesia",
   ],
   verification: {
@@ -54,9 +51,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "Jodohmu — Jasa Perjodohan Offline & Ta'aruf di Indonesia",
+    title: "Jodohmu — Jasa Perjodohan Serius di Indonesia",
     description:
-      "Jasa perjodohan offline yang halal dengan fasilitasi ta'aruf, penyaringan keluarga, dan perkenalan terarah bagi lajang siap nikah di Indonesia.",
+      "Jasa perjodohan hybrid (online dan tatap muka) dengan perkenalan terpandu, penyaringan keluarga, dan pendampingan terarah bagi lajang siap nikah di Indonesia.",
     siteName: "Jodohmu",
     images: [
       {
@@ -71,9 +68,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jodohmu — Perjodohan Offline & Ta'aruf di Indonesia",
+    title: "Jodohmu — Perjodohan Serius di Indonesia",
     description:
-      "Jasa perjodohan offline yang halal dengan fasilitasi ta'aruf untuk lajang siap nikah di Indonesia.",
+      "Jasa perjodohan hybrid dengan perkenalan terpandu untuk lajang siap nikah di Indonesia.",
     images: [`${siteUrl}/jodohmu-logo.png`],
   },
   icons: {
@@ -144,17 +141,15 @@ export default function RootLayout({
                     logo: `${siteUrl}/jodohmu-logo.png`,
                     image: `${siteUrl}/jodohmu-logo.png`,
                     description:
-                      "Jasa perjodohan offline yang halal dengan fasilitasi ta'aruf dan pelibatan keluarga untuk lajang siap nikah di seluruh Indonesia.",
+                      "Jasa perjodohan hybrid (online dan tatap muka) dengan perkenalan terpandu dan pelibatan keluarga untuk lajang siap nikah di seluruh Indonesia.",
                     address: {
                       "@type": "PostalAddress",
-                      addressLocality: "Bandung",
-                      addressRegion: "Jawa Barat",
                       addressCountry: "ID",
                     },
                     areaServed: "Indonesia",
                     serviceType: [
-                      "Offline marriage matching",
-                      "Ta'aruf facilitation",
+                      "Marriage matchmaking",
+                      "Guided introductions",
                       "Family-friendly matchmaking",
                     ],
                     inLanguage: ["id", "en"],
@@ -171,12 +166,12 @@ export default function RootLayout({
                   {
                     "@type": "Service",
                     "@id": `${siteUrl}#service`,
-                    serviceType: "Offline marriage matchmaking and ta'aruf facilitation",
+                    serviceType: "Marriage matchmaking and guided introduction facilitation",
                     provider: { "@id": `${siteUrl}#organization` },
                     areaServed: "Indonesia",
                     url: siteUrl,
                     description:
-                      "Perkenalan offline yang dikurasi, ta'aruf yang didampingi, dan verifikasi kandidat yang mengutamakan keamanan untuk lajang yang serius menikah.",
+                      "Perkenalan yang dikurasi, pendampingan menyeluruh, dan verifikasi kandidat yang mengutamakan keamanan untuk lajang yang serius menikah.",
                     inLanguage: ["id", "en"],
                   },
                 ],

@@ -1,11 +1,15 @@
 # Jodohmu — Complete Knowledge Base
-*Last updated: June 7, 2026*
+*Last updated: September 17, 2026*
+
+> **Single source of truth.** This is the only place business facts (pricing, packages, policies, positioning) should be written down and edited. There used to be two separate WhatsApp AI-bot implementations that each restated these facts in their own prompt text and had drifted out of sync with this file (stale pricing, Muslim-only framing) — both were removed entirely on 2026-09-17 (`whatsapp-agent-local/`, and the Next.js webhook at `src/app/api/whatsapp/route.ts` + `src/lib/whatsapp/`), since neither was confirmed in active use. If a WhatsApp bot gets rebuilt later, give its prompt file the same explicit "source of truth is this KB" pointer so it can't silently drift again. See [[project-business-positioning]] memory for the full history of what's been fixed.
 
 ---
 
 ## 1. Business Overview
 
-**Jodohmu** is an offline Islamic matchmaking (ta'aruf) service based in Bandung, Indonesia. It is not an app, not a swipe platform, not digital matching. It is a fully human-guided, facilitated service for serious Muslim singles seeking halal marriage.
+**Jodohmu** is a hybrid (online and in-person) matchmaking service serving Indonesia, open to all faiths. It is not a swipe app or digital-only matching — it is a fully human-guided, facilitated service for serious singles seeking marriage, with in-person meetings arranged as part of the process.
+
+> Corrected Sept 17, 2026: previously described as "Islamic matchmaking (ta'aruf), offline, Bandung-based" — this was inaccurate. Jodohmu is not faith-exclusive, runs hybrid online + in-person (not offline-only), and is not marketed as based in one specific city. See [[feedback-inclusive-wording]] memory.
 
 - **Website:** jodohmu.com
 - **Instagram:** @jodohmu_official
@@ -27,11 +31,11 @@
 
 ## 3. Pricing Structure
 
-All packages currently at **50% founding member launch discount.**
+Ruby is at a **50% founding member launch discount**. Pearl is **Rp 2,500,000** (the entry price used in ads: "mulai dari Rp 2,5 juta").
 
 | Package | Duration | Profiles/Week | Normal Price | Launch Price |
 |---------|----------|---------------|--------------|--------------|
-| Pearl | 3 months | 2–3/week | Rp 2,500,000 | Rp 1,250,000 |
+| Pearl | 3 months | 2–3/week | Rp 2,500,000 | Rp 2,500,000 (no discount — confirmed Sept 17, 2026) |
 | Ruby | 6 months | 5–7/week | Rp 15,000,000 | Rp 7,500,000 |
 | Diamond | 12 months | 5–7/week | Rp 40,000,000 | Rp 40,000,000 |
 
@@ -41,7 +45,7 @@ All packages currently at **50% founding member launch discount.**
 
 ## 4. Service Deliverables Per Package
 
-### 🔹 Pearl — Rp 1,250,000
+### 🔹 Pearl — Rp 2,500,000
 - 3-month service window
 - 2–3 profiles per week
 - Basic introduction support
@@ -171,7 +175,7 @@ All packages currently at **50% founding member launch discount.**
 | Esron Club | — | Rp 500k–5jt | Mass market |
 | Rumaysho (digital) | Online | — | App-based |
 
-**Jodohmu's uncontested position:** Muslim-focused, offline, family-facilitated, Bandung-based, human-guided. No direct competitor in this specific niche.
+**Jodohmu's uncontested position:** hybrid (online + in-person), family-facilitated, human-guided, open to all faiths. No direct competitor in this specific niche.
 
 ---
 

@@ -56,19 +56,19 @@
     "hero": {
       "badge": "PENCARIAN JODOH SERIUS",
       "title": "Bimbingan Personal & Koneksi yang Terarah di Indonesia",
-      "description": "Jodohmu membimbing lajang berniat menikah dengan perjodohan offline yang halal, fasilitasi ta'aruf, serta penyaringan keluarga di seluruh Indonesia.",
+      "description": "Jodohmu membimbing lajang berniat menikah dengan perjodohan hybrid (online dan tatap muka), perkenalan terpandu, serta penyaringan keluarga di seluruh Indonesia.",
       "tagline": "Untuk Anda yang mencari hubungan bermakna dan masa depan bersama.",
       "cta": "Mulai Perjalanan Anda",
       "secondaryCta": "Bicara dengan Advisor",
       "highlight": {
         "points": {
           "support": "Matchmaker pribadi mendampingi setiap langkah",
-          "faith": "Perkenalan dan bimbingan yang selaras iman",
+          "faith": "Perkenalan dan bimbingan yang bermakna",
           "confidential": "Ruang pertemuan yang rahasia dan penuh hormat"
         }
       },
       "statsTitle": "Dipercaya para pencari serius",
-      "statsSubtitle": "Tim concierge kami telah merawat ratusan perkenalan bermakna yang berlandaskan cinta, kepercayaan, dan iman.",
+      "statsSubtitle": "Tim concierge kami telah merawat ratusan perkenalan bermakna yang berlandaskan cinta, kepercayaan, dan ketulusan.",
       "statsFooter": "Setiap kecocokan ditinjau langsung oleh matchmaker kami.",
       "stats": {
         "matches": {
@@ -88,8 +88,8 @@
     "whyChoose": {
       "badge": "KENAPA JODOHMU",
       "title": "Mengapa Memilih Jodohmu?",
-      "description": "Kami bukan sekadar aplikasi. Kami tim perjodohan offline yang sejalan iman untuk mereka yang sungguh-sungguh berkomitmen menuju pernikahan.",
-      "secondary": "Setiap perkenalan dikurasi penuh niat baik, hormat, dan nilai syariah—dibimbing matchmaker yang paham adab perkenalan yang halal.",
+      "description": "Kami bukan sekadar aplikasi. Kami tim matchmaking Anda — online dan tatap muka — untuk mereka yang sungguh-sungguh berkomitmen menuju pernikahan.",
+      "secondary": "Setiap perkenalan dikurasi penuh niat baik, hormat, dan nilai—dibimbing matchmaker yang memahami proses perkenalan yang serius.",
       "highlights": {
         "trust": {
           "title": "Komunitas Serius & Terverifikasi",
@@ -101,14 +101,14 @@
         },
         "curation": {
           "title": "Perkenalan yang Penuh Tujuan",
-          "description": "Kecocokan dipilih secara saksama dengan fokus pada kesesuaian, iman bersama, dan visi jangka panjang menuju pernikahan penuh berkah."
+          "description": "Kecocokan dipilih secara saksama dengan fokus pada kesesuaian, nilai bersama, dan visi jangka panjang menuju pernikahan."
         }
       }
     },
     "features": {
       "badge": "PENCARIAN PERSONAL",
       "title": "Matchmaking concierge yang dirancang khusus untuk Anda",
-      "subtitle": "Perkenalan offline terpilih untuk lajang siap nikah—pendampingan penuh, pelibatan keluarga, dan venue yang terhormat di seluruh Indonesia.",
+      "subtitle": "Perkenalan terpilih untuk lajang siap nikah—pendampingan penuh, pelibatan keluarga, dan venue yang terhormat, online maupun tatap muka di seluruh Indonesia.",
       "tagline": "Layanan Premium",
       "cta": "Pelajari cara kami membimbing Anda",
       "storyTitle": "SEPERTI APA RASANYA",
@@ -147,8 +147,8 @@
           "description": "Kami memfasilitasi pertemuan yang nyaman, santun, dan sesuai dengan nilai-nilai keimanan Anda."
         },
         "halal": {
-          "title": "Halal & Diawasi",
-          "description": "Setiap interaksi dijaga agar tetap hormat dengan opsi pendampingan keluarga atau tokoh agama."
+          "title": "Terjaga & Diawasi",
+          "description": "Setiap interaksi dijaga agar tetap hormat, dengan opsi pendampingan keluarga atau tokoh agama."
         }
       }
     },
@@ -227,7 +227,7 @@
       "subtitle": "Bukan testimoni panjang—dua teman Jodohmu yang siap bantu kamu melangkah.",
       "stories": {
         "miraGuide": {
-          "quote": "Hai, aku Mira—pemandu jodohmu. Aku jelaskan cara kerja Jodohmu, alur halal/offline, dan bangun kepercayaanmu pelan-pelan.",
+          "quote": "Hai, aku Mira—pemandu jodohmu. Aku jelaskan cara kerja Jodohmu, alur prosesnya, dan bangun kepercayaanmu pelan-pelan.",
           "name": "Mira • Pemandu Jodohmu"
         },
         "bimaAssistant": {
@@ -474,7 +474,7 @@
           },
           "location": {
             "label": "Lokasi:",
-            "value": "Bandung, Indonesia"
+            "value": "Indonesia"
           }
         }
       }
@@ -627,7 +627,7 @@
           },
           "location": {
             "label": "Lokasi:",
-            "value": "Bandung, Indonesia"
+            "value": "Indonesia"
           }
         }
       }
@@ -687,8 +687,8 @@
         "title": "Panduan Unggulan",
         "items": [
           {
-            "title": "Panduan ta'aruf offline",
-            "desc": "Alur pertemuan offline langkah demi langkah dengan pendamping, venue yang santun, dan pelibatan keluarga untuk perkenalan halal."
+            "title": "Panduan perkenalan terpandu",
+            "desc": "Alur pertemuan langkah demi langkah dengan pendamping, venue yang santun, dan pelibatan keluarga untuk perkenalan yang serius."
           },
           {
             "title": "Melibatkan keluarga & imam",
@@ -699,7 +699,7 @@
             "desc": "Tips penyaringan praktis bagi kandidat serius siap nikah di berbagai kota Indonesia."
           },
           {
-            "title": "Komunikasi halal",
+            "title": "Komunikasi yang terjaga",
             "desc": "Berkomunikasi dan bertemu dengan adab, menjaga batasan, serta memperjelas niat untuk menikah."
           },
           {
@@ -707,8 +707,8 @@
             "desc": "Rekomendasi venue santun di berbagai kota Indonesia untuk pertemuan terawasi atau bersama keluarga."
           },
           {
-            "title": "Checklist menuju khitbah",
-            "desc": "Checklist singkat untuk melangkah dari perkenalan hingga khitbah dengan jelas dan percaya diri."
+            "title": "Checklist menuju lamaran",
+            "desc": "Checklist singkat untuk melangkah dari perkenalan hingga lamaran dengan jelas dan percaya diri."
           },
           {
             "title": "Apakah Jodohmu hanya untuk Muslim?",
@@ -718,7 +718,7 @@
       },
       "cta": {
         "title": "Butuh pendampingan terkurasi?",
-        "subtitle": "Ngobrol dengan matchmaker kami untuk perjalanan halal-first yang terarah.",
+        "subtitle": "Ngobrol dengan matchmaker kami untuk perjalanan yang terarah.",
         "button": "Daftar sekarang"
       }
     }
@@ -1457,22 +1457,22 @@
       "urgency": "Kursi cepat terisi — daftar hari ini"
     },
     "trust": {
-      "couples": "Berbasis di Bandung",
-      "location": "Tim Berbasis Bandung",
+      "couples": "Berbasis di Indonesia",
+      "location": "Tim Berbasis Indonesia",
       "supervised": "100% Terawasi",
       "human": "Tim Nyata · Proses Nyata"
     },
     "hero": {
-      "badge": "Perjodohan Islami, Direinvensi",
+      "badge": "Matchmaking, Direinvensi",
       "titleLine1": "Satu Keputusan.",
-      "titleLine2": "Seumur Hidup Penuh Barakah.",
+      "titleLine2": "Seumur Hidup Bersama.",
       "subtitleLine1": "Di Jodohmu, kami tidak hanya membantu Anda menemukan pasangan.",
       "subtitleLine2": "Kami membantu Anda membangun masa depan yang penuh",
-      "subtitleWords": "cinta, kasih sayang, dan barakah.",
+      "subtitleWords": "cinta, kepercayaan, dan tujuan.",
       "trust": {
         "0": {
-          "title": "100% Halal",
-          "desc": "Perjodohan berbasis iman"
+          "title": "Selaras Nilai",
+          "desc": "Matchmaking yang dibangun sesuai apa yang penting bagi Anda"
         },
         "1": {
           "title": "Profil Terverifikasi",
@@ -1506,7 +1506,7 @@
         "4": "Kerahasiaan penuh terjamin"
       },
       "cardCta": "Mulai Perjalanan Anda",
-      "cardFooter": "Pembayaran Aman · 100% Halal"
+      "cardFooter": "Pembayaran Aman · 100% Terpercaya"
     },
     "packages": {
       "title": "Pilih Paket Anda",
@@ -1689,7 +1689,7 @@
       "title": "Bonus Keberhasilan",
       "price": "Rp 500k – 2 jt",
       "note": "sesuai paket · sukarela",
-      "desc": "Diberikan saat klien melanjutkan ke tahap khitbah · tidak wajib · dari hati",
+      "desc": "Diberikan saat klien melanjutkan ke tahap lamaran · tidak wajib · dari hati",
       "hikmah": "Kami tidak memungut biaya untuk keberhasilan — kami merayakannya bersama. Ini tanda syukur, sepenuhnya pilihan Anda."
     },
     "hikmah": {
@@ -1718,16 +1718,16 @@
   },
   "faqPage": {
     "hero": {
-      "title": "FAQ: Perjodohan Offline & Ta'aruf bersama Jodohmu",
-      "subtitle": "Jawaban ringkas untuk lajang siap nikah di seluruh Indonesia yang mencari perkenalan halal."
+      "title": "FAQ: Perjodohan bersama Jodohmu",
+      "subtitle": "Jawaban ringkas untuk lajang siap nikah di seluruh Indonesia."
     },
     "items": [
       {
         "q": "Apa beda Jodohmu dengan aplikasi dating?",
-        "a": "Kami fokus pada perkenalan offline yang halal, panduan ta'aruf, dan penyaringan ramah keluarga bagi kandidat siap nikah."
+        "a": "Kami fokus pada perkenalan terpandu — online maupun tatap muka — dan penyaringan ramah keluarga bagi kandidat siap nikah."
       },
       {
-        "q": "Apakah bisa libatkan keluarga atau imam?",
+        "q": "Apakah bisa libatkan keluarga atau pembimbing agama?",
         "a": "Bisa. Kami menyambut orang tua atau pembimbing agama dan dapat menyiapkan venue yang santun serta terawasi."
       },
       {
@@ -1736,19 +1736,19 @@
       },
       {
         "q": "Apakah komunitasnya disaring?",
-        "a": "Kandidat disaring untuk keseriusan, niat menikah, keselarasan iman dan nilai, serta kesiapan melibatkan keluarga."
+        "a": "Kandidat disaring untuk keseriusan, niat menikah, keselarasan nilai, serta kesiapan melibatkan keluarga."
       },
       {
-        "q": "Bagaimana jika saya baru di ta'aruf?",
+        "q": "Bagaimana jika saya baru dengan proses perkenalan seperti ini?",
         "a": "Tim kami membimbing etika, batas aman, dan langkah berikutnya agar setiap pertemuan terasa jelas dan terhormat, dengan opsi pendamping."
       },
       {
-        "q": "Bisakah bantu sampai khitbah?",
-        "a": "Bisa. Kami membimbing dari perkenalan hingga khitbah dengan tindak lanjut terstruktur dan penyelarasan keluarga."
+        "q": "Bisakah bantu sampai tahap lamaran?",
+        "a": "Bisa. Kami membimbing dari perkenalan hingga lamaran dengan tindak lanjut terstruktur dan penyelarasan keluarga."
       },
       {
         "q": "Bagaimana biaya layanan?",
-        "a": "Kami menyediakan paket transparan untuk perkenalan terkurasi dan ta'aruf terarah; hubungi tim kami untuk pilihan terbaru."
+        "a": "Kami menyediakan paket transparan untuk perkenalan terkurasi dan terarah; hubungi tim kami untuk pilihan terbaru."
       }
     ],
     "cta": {
@@ -1757,19 +1757,19 @@
       "button": "Daftar sekarang"
     },
     "heroBadges": {
-      "offline": "Offline & halal",
+      "offline": "Terpandu & Terverifikasi",
       "facilitated": "Pertemuan difasilitasi",
       "family": "Melibatkan keluarga"
     },
     "categories": {
-      "halalSafety": "Halal & Keamanan",
+      "halalSafety": "Keamanan & Kepercayaan",
       "process": "Proses",
       "support": "Dukungan"
     },
     "whyBox": {
       "title": "Kenapa memilih Jodohmu:",
       "points": {
-        "0": "Pertemuan offline yang halal dengan kandidat yang sudah diverifikasi.",
+        "0": "Pertemuan terpandu dan terverifikasi dengan kandidat yang sudah diperiksa — online maupun tatap muka.",
         "1": "Pendamping (ustaz/pendeta) tersedia sesuai permintaan.",
         "2": "Tempat pertemuan yang nyaman untuk keluarga dengan agenda yang terarah.",
         "3": "Paket transparan — tanpa biaya tersembunyi."

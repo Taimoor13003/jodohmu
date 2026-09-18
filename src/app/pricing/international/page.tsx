@@ -61,7 +61,7 @@ const steps = [
   },
   {
     num: "04",
-    title: "Ta'aruf",
+    title: "Introductions",
     desc: "Online facilitated sessions via video call — a facilitator is present at every meeting.",
   },
   {
@@ -127,7 +127,7 @@ const faqs = [
   },
   {
     q: "Can I do everything remotely without visiting Indonesia?",
-    a: "The online verification, psychology assessment, and ta'aruf sessions are all remote. The in-person Indonesia visit is only required when both parties wish to proceed after ta'aruf — it is not required upfront.",
+    a: "The online verification, psychology assessment, and introduction sessions are all remote. The in-person Indonesia visit is only required when both parties wish to proceed after the introductions — it is not required upfront.",
   },
   {
     q: "Are the Indonesian candidates aware they may be matched with someone from abroad?",
@@ -214,7 +214,7 @@ export default function InternationalPricingPage() {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { icon: "✈️", text: "When both hearts are ready, we arrange a beautiful first meeting in Indonesia" },
-              { icon: "🎥", text: "All ta'aruf sessions are online via video call with a facilitator present" },
+              { icon: "🎥", text: "All introduction sessions are online via video call with a facilitator present" },
               { icon: "💳", text: "Your journey begins with a minimum 20% payment — we agree a clear payment plan together" },
               { icon: "📅", text: "Every service is delivered with full care within your package window — we give our best from day one" },
             ].map((p, i) => (

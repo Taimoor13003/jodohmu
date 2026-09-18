@@ -56,7 +56,7 @@
     "hero": {
       "badge": "SERIOUS MATCHMAKING",
       "title": "Personal Guidance & Intentional Connections in Indonesia",
-      "description": "Jodohmu guides serious, marriage-intent singles with offline, faith-aligned matchmaking, ta'aruf facilitation, and family-friendly vetting across Indonesia.",
+      "description": "Jodohmu guides marriage-intent singles with hybrid (online and in-person) matchmaking, guided introductions, and family-friendly vetting across Indonesia.",
       "tagline": "For people seeking a meaningful connection and a shared future.",
       "cta": "Begin Your Journey",
       "secondaryCta": "Talk to an Advisor",
@@ -88,8 +88,8 @@
     "whyChoose": {
       "badge": "WHY JODOHMU",
       "title": "Why Choose Jodohmu?",
-      "description": "We are more than an app. We are your offline, faith-aligned matchmaking team for people who are committed to marriage.",
-      "secondary": "Every introduction is curated with care, intention, and deep respect for your values—guided by matchmakers who understand halal courtship.",
+      "description": "We are more than an app. We are your dedicated matchmaking team — online and in person — for people who are committed to marriage.",
+      "secondary": "Every introduction is curated with care, intention, and deep respect for your values—guided by matchmakers who understand what serious courtship requires.",
       "highlights": {
         "trust": {
           "title": "Serious, Vetted Community",
@@ -101,14 +101,14 @@
         },
         "curation": {
           "title": "Purposeful Introductions",
-          "description": "Thoughtful matches focus on compatibility, shared faith, and long-term vision for a blessed marriage."
+          "description": "Thoughtful matches focus on compatibility, shared values, and a long-term vision for marriage."
         }
       }
     },
     "features": {
       "badge": "PERSONAL MATCHING",
       "title": "Concierge matchmaking crafted around you",
-      "subtitle": "Handpicked offline introductions for serious, marriage-ready singles—full guidance, family involvement, and respectful venues across Indonesia.",
+      "subtitle": "Handpicked introductions for marriage-ready singles — full guidance, family involvement, and respectful venues, online and in person across Indonesia.",
       "tagline": "Premium Service",
       "cta": "Discover how we guide you",
       "storyTitle": "HOW IT FEELS",
@@ -232,7 +232,7 @@
       "subtitle": "Two friendly humans who guide you through Jodohmu—no endless testimonials, just real help.",
       "stories": {
         "miraGuide": {
-          "quote": "Hi, I’m Mira—your calm match guide. I’ll walk you through how Jodohmu works, explain the halal/offline flow, and earn your trust step by step.",
+          "quote": "Hi, I’m Mira—your calm match guide. I’ll walk you through how Jodohmu works, explain the process, and earn your trust step by step.",
           "name": "Mira • Match Guide"
         },
         "bimaAssistant": {
@@ -474,7 +474,7 @@
           },
           "location": {
             "label": "Location:",
-            "value": "Bandung, Indonesia"
+            "value": "Indonesia"
           }
         }
       }
@@ -627,7 +627,7 @@
           },
           "location": {
             "label": "Location:",
-            "value": "Bandung, Indonesia"
+            "value": "Indonesia"
           }
         }
       }
@@ -1453,22 +1453,22 @@
       "urgency": "Seats filling fast — register today"
     },
     "trust": {
-      "couples": "Bandung-Based",
-      "location": "Bandung-Based Team",
+      "couples": "Indonesia-Based",
+      "location": "Indonesia-Based Team",
       "supervised": "100% Supervised",
       "human": "Real Team · Real Process"
     },
     "hero": {
-      "badge": "Muslim Matchmaking, Reimagined",
+      "badge": "Matchmaking, Reimagined",
       "titleLine1": "One Decision.",
-      "titleLine2": "A Lifetime of Barakah.",
+      "titleLine2": "A Lifetime Together.",
       "subtitleLine1": "At Jodohmu, we don't just help you find a match.",
       "subtitleLine2": "We help you build a future filled with",
-      "subtitleWords": "love, mercy, and barakah.",
+      "subtitleWords": "love, trust, and purpose.",
       "trust": {
         "0": {
-          "title": "100% Halal",
-          "desc": "Faith-focused matchmaking"
+          "title": "Values-Aligned",
+          "desc": "Matchmaking built around what matters to you"
         },
         "1": {
           "title": "Verified Profiles",
@@ -1502,7 +1502,7 @@
         "4": "Full confidentiality guaranteed"
       },
       "cardCta": "Start Your Journey",
-      "cardFooter": "Secure Payment · 100% Safe & Halal"
+      "cardFooter": "Secure Payment · 100% Safe & Trusted"
     },
     "packages": {
       "title": "Choose Your Package",
@@ -1642,7 +1642,7 @@
           "duration": "12 months · fully private",
           "features": [
             "Everything included in Ruby",
-            "Founder-led private search strategy",
+            "Private search strategy led directly by a senior matchmaker (Dokcin)",
             "Dedicated personal matchmaking concierge",
             "Your matchmaker comes to you — at your home or a place you choose",
             "A personal professional photographer for your profile photo session",
@@ -1714,16 +1714,16 @@
   },
   "faqPage": {
     "hero": {
-      "title": "FAQ: Offline Marriage Matching & Ta'aruf with Jodohmu",
-      "subtitle": "Straight answers for sincere, marriage-focused singles across Indonesia seeking halal introductions."
+      "title": "FAQ: Marriage Matchmaking with Jodohmu",
+      "subtitle": "Straight answers for sincere, marriage-focused singles across Indonesia."
     },
     "items": [
       {
         "q": "How is Jodohmu different from dating apps?",
-        "a": "We focus on offline, halal introductions, ta'aruf guidance, and family-friendly vetting for marriage-intent candidates."
+        "a": "We focus on guided introductions — online and in person — and family-friendly vetting for marriage-intent candidates."
       },
       {
-        "q": "Can you involve family or an imam?",
+        "q": "Can you involve family or a religious advisor?",
         "a": "Yes. We welcome parents or religious advisors and can host meetings in respectful, supervised venues."
       },
       {
@@ -1732,19 +1732,19 @@
       },
       {
         "q": "Is the community vetted?",
-        "a": "Candidates are screened for seriousness, intent to marry, alignment with faith and values, and readiness for family involvement."
+        "a": "Candidates are screened for seriousness, intent to marry, alignment with values, and readiness for family involvement."
       },
       {
-        "q": "What if I'm new to ta'aruf?",
+        "q": "What if I'm new to this kind of guided introduction?",
         "a": "Our team coaches you on etiquette, boundaries, and next steps so every meeting feels respectful and clear, with options for chaperones."
       },
       {
-        "q": "Can you help with proposal (khitbah)?",
-        "a": "Yes. We guide you from introductions through khitbah with structured follow-ups and family alignment."
+        "q": "Can you help with the proposal stage?",
+        "a": "Yes. We guide you from introductions through proposal with structured follow-ups and family alignment."
       },
       {
         "q": "How do payments work?",
-        "a": "We offer transparent packages for vetted introductions and guided ta'aruf; talk to our team for the latest options."
+        "a": "We offer transparent packages for vetted, guided introductions; talk to our team for the latest options."
       }
     ],
     "cta": {
@@ -1753,19 +1753,19 @@
       "button": "Register now"
     },
     "heroBadges": {
-      "offline": "Offline & halal",
+      "offline": "Guided & Verified",
       "facilitated": "Facilitated meetings",
       "family": "Family-ready"
     },
     "categories": {
-      "halalSafety": "Halal & Safety",
+      "halalSafety": "Trust & Safety",
       "process": "Process",
       "support": "Support"
     },
     "whyBox": {
       "title": "Why Jodohmu is best:",
       "points": {
-        "0": "Offline, halal-first meetings with vetted candidates.",
+        "0": "Guided, verified meetings with vetted candidates — online and in person.",
         "1": "Facilitators/chaperones (imam/pastor) on request.",
         "2": "Family-friendly venues and structured agendas.",
         "3": "Transparent packages—no surprise fees."
