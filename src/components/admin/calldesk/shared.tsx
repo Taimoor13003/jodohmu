@@ -47,6 +47,7 @@ export function SourceBadge({ source }: { source: string }) {
 const EXTRA_ACTIONS: Record<string, Bilingual> = {
   created: { id: "Kontak ditambahkan", en: "Contact added" },
   edited: { id: "Data diubah", en: "Details edited" },
+  rescheduled: { id: "Jadwal diubah", en: "Schedule changed" },
 };
 
 export function actionLabel(type: ActivityType | null) {
@@ -55,6 +56,7 @@ export function actionLabel(type: ActivityType | null) {
 }
 
 export const ACTION_TONE: Record<string, string> = {
+  rescheduled: "bg-amber-500",
   call_reached: "bg-emerald-500",
   call_no_answer: "bg-amber-500",
   wa_sent: "bg-green-600",

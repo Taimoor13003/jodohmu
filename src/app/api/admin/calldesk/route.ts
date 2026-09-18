@@ -3,7 +3,7 @@ import { FieldValue, type DocumentData } from "firebase-admin/firestore";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import {
   CONTACT_SOURCES, CONTACT_STATUSES, IMPORTED_SOURCES, LOG_ACTIONS,
-  DEFAULT_TZ, TEAM_INVITES, addDays, inviteMemberId, isDay, isTime, isTimeZone, jakartaDay, weekdayOf,
+  DEFAULT_TZ, TEAM_INVITES, addDays, inviteMemberId, isDay, isPastSlot, isTime, isTimeZone, jakartaDay, jakartaTime, toJakarta, weekdayOf,
   type CallDeskMember, type ContactStatus,
 } from "@/lib/calldesk";
 import {
@@ -79,7 +79,6 @@ async function resolveAssignee(body: Record<string, unknown>, caller: CallDeskCa
   if (!requested) return { ok: true as const, value: { assignedTo: null, assignedName: null } };
   const member = (await loadTeam()).find((m) => m.uid === requested);
   if (!member) return { ok: false as const, error: "That person can't take calls." };
-  if (member.pending) return { ok: false as const, error: "That person hasn't signed in yet, so calls can't be assigned to them." };
   return { ok: true as const, value: { assignedTo: member.uid, assignedName: member.name } };
 }
 
@@ -280,6 +279,38 @@ export async function POST(req: NextRequest) {
         contactId, contactName: contact.name ?? "", type, note,
         statusFrom: contact.status ?? null,
         statusTo: finalStatus,
+      });
+      await batch.commit();
+      return NextResponse.json({ success: true });
+    }
+
+    // Move a scheduled call: only while it is still in the future
+    if (body.action === "reschedule") {
+      const clockNow = jakartaTime();
+      const asJakarta = (date: string | null, time: string | null) =>
+        date && time && (contact.timezone ?? DEFAULT_TZ) !== DEFAULT_TZ
+          ? toJakarta(date, time, contact.timezone)
+          : { day: date, time };
+      const current = asJakarta(contact.followUpDate ?? null, contact.followUpTime ?? null);
+      if (isPastSlot(current.day, current.time, day, clockNow)) {
+        return NextResponse.json({ error: "This call has already passed — log what happened instead." }, { status: 400 });
+      }
+
+      const followUp = followUpFields(body);
+      if (!followUp.followUpDate) return NextResponse.json({ error: "Pick a date." }, { status: 400 });
+      const next = asJakarta(followUp.followUpDate, followUp.followUpTime);
+      if (isPastSlot(next.day, next.time, day, clockNow)) {
+        return NextResponse.json({ error: "Pick a time in the future." }, { status: 400 });
+      }
+      const assignee = await resolveAssignee(body, caller, contact);
+      if (!assignee.ok) return NextResponse.json({ error: assignee.error }, { status: 403 });
+
+      const batch = db.batch();
+      batch.update(contactRef, { ...followUp, ...assignee.value, lastActivityAt: now, lastActivityBy: caller.name });
+      batch.set(db.collection(ACTIVITY).doc(), {
+        ...by, ...followUp, ...assignee.value,
+        contactId, contactName: contact.name ?? "", type: "rescheduled", note: clean(body.note, 300),
+        statusFrom: contact.status ?? null, statusTo: contact.status ?? null,
       });
       await batch.commit();
       return NextResponse.json({ success: true });

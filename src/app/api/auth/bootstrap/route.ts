@@ -67,12 +67,19 @@ export async function POST(req: NextRequest) {
       });
       await adminDb().collection("usernames").doc(username).set({ uid, email });
       await inviteRef.update({ claimedUid: uid, claimedAt: FieldValue.serverTimestamp() });
-      // A schedule planned before the first sign-in moves over to the real account
-      const plannedRef = adminDb().collection("team_availability").doc(inviteMemberId(email));
+      // A schedule and any calls assigned before the first sign-in move over to the real account
+      const placeholder = inviteMemberId(email);
+      const plannedRef = adminDb().collection("team_availability").doc(placeholder);
       const planned = await plannedRef.get();
       if (planned.exists) {
         await adminDb().collection("team_availability").doc(uid).set(planned.data()!);
         await plannedRef.delete();
+      }
+      const assigned = await adminDb().collection("calldesk_contacts").where("assignedTo", "==", placeholder).get();
+      if (!assigned.empty) {
+        const batch = adminDb().batch();
+        assigned.docs.forEach((doc) => batch.update(doc.ref, { assignedTo: uid, assignedName: data.name || name }));
+        await batch.commit();
       }
       return NextResponse.json({ role: "worker", needsOnboarding: false, isNewUser: true });
     }

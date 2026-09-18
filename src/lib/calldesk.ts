@@ -116,7 +116,7 @@ export const LOG_ACTIONS = [
   { value: "note", label: { id: "Catatan saja", en: "Note only" } },
 ] as const;
 export type LogAction = (typeof LOG_ACTIONS)[number]["value"];
-export type ActivityType = LogAction | "created" | "edited";
+export type ActivityType = LogAction | "created" | "edited" | "rescheduled";
 
 export type CallDeskContact = {
   id: string;
@@ -173,6 +173,17 @@ export const findLabel = <T extends { value: string; label: Bilingual }>(list: r
 export const JAKARTA_TZ = "Asia/Jakarta";
 export const jakartaDay = (date: Date = new Date()) =>
   new Intl.DateTimeFormat("en-CA", { timeZone: JAKARTA_TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(date);
+
+export const jakartaTime = (date: Date = new Date()) =>
+  new Intl.DateTimeFormat("en-GB", { timeZone: JAKARTA_TZ, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(date);
+
+// A follow-up counts as past once its Jakarta day (and time, when set) has gone by
+export const isPastSlot = (day: string | null, time: string | null, today: string, now: string) => {
+  if (!day) return false;
+  if (day < today) return true;
+  if (day > today) return false;
+  return time ? time < now : false;
+};
 
 export const addDays = (day: string, amount: number) => {
   const date = new Date(`${day}T00:00:00Z`);

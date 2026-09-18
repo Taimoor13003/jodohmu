@@ -42,7 +42,7 @@ export function AssigneeField({ team, me, value, onChange, day, time, className 
   const l = useL();
   const { lang } = useLanguage();
   // Non-planners can only take a call themselves, or keep whoever already has it
-  const options = (me.canPlan ? team : team.filter((m) => m.uid === me.uid || m.uid === value)).filter((m) => !m.pending);
+  const options = me.canPlan ? team : team.filter((m) => m.uid === me.uid || m.uid === value);
   const member = team.find((m) => m.uid === value);
   const check = member && day ? availabilityOn(member.availability, day, time) : null;
 
@@ -52,7 +52,7 @@ export function AssigneeField({ team, me, value, onChange, day, time, className 
         <option value="">{l({ id: "Belum ditugaskan", en: "Not assigned" })}</option>
         {options.map((m) => (
           <option key={m.uid} value={m.uid}>
-            {m.name}{m.position ? ` — ${l(findLabel(TEAM_POSITIONS, m.position))}` : ""}
+            {m.name}{m.position ? ` — ${l(findLabel(TEAM_POSITIONS, m.position))}` : ""}{m.pending ? ` (${l({ id: "belum login", en: "not signed in" })})` : ""}
           </option>
         ))}
       </select>

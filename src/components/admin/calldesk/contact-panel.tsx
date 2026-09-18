@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { CalendarClock, ExternalLink, Loader2, MessageCircle, Pencil, Phone, X } from "lucide-react";
+import { CalendarClock, ExternalLink, Loader2, Lock, MessageCircle, Pencil, Phone, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
-  CONTACT_STATUSES, DEFAULT_TZ, LOG_ACTIONS, TIMEZONES, addDays, fromJakarta, isTimeZone, toJakarta,
+  CONTACT_STATUSES, DEFAULT_TZ, LOG_ACTIONS, TIMEZONES, addDays, fromJakarta, isPastSlot, isTimeZone, jakartaTime, toJakarta,
   type CallDeskActivity, type CallDeskContact, type CallDeskMember, type LogAction,
 } from "@/lib/calldesk";
 import {
@@ -59,6 +59,19 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
       };
   const [log, setLog] = useState(emptyLog);
   const [details, setDetails] = useState({ name: contact.name, phone: contact.phone, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone });
+  const [editingSlot, setEditingSlot] = useState(false);
+  const [slotForm, setSlotForm] = useState({
+    followUpDate: contact.followUpDate ?? "",
+    followUpTime: contact.followUpTime ?? "",
+    followUpNote: contact.followUpNote ?? "",
+    assignedTo: contact.assignedTo ?? "",
+  });
+
+  // A scheduled call can be moved until its time has passed (compared in Jakarta time)
+  const jakartaDue = contact.followUpDate && contact.followUpTime && contact.timezone !== DEFAULT_TZ
+    ? toJakarta(contact.followUpDate, contact.followUpTime, contact.timezone)
+    : { day: contact.followUpDate, time: contact.followUpTime };
+  const slotIsPast = isPastSlot(jakartaDue.day, jakartaDue.time, today, jakartaTime());
 
   const loadTimeline = useCallback(async () => {
     try {
@@ -74,6 +87,13 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
     setEditing(false);
     setError(null);
     setLog(emptyLog);
+    setEditingSlot(false);
+    setSlotForm({
+      followUpDate: contact.followUpDate ?? "",
+      followUpTime: contact.followUpTime ?? "",
+      followUpNote: contact.followUpNote ?? "",
+      assignedTo: contact.assignedTo ?? "",
+    });
     setDetails({ name: contact.name, phone: contact.phone, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone });
     loadTimeline();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -117,6 +137,10 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
 
   const saveDetails = async () => {
     if (await submit({ action: "edit", ...details })) setEditing(false);
+  };
+
+  const saveSlot = async () => {
+    if (await submit({ action: "reschedule", ...slotForm })) setEditingSlot(false);
   };
 
   const quickDates = [
@@ -209,16 +233,59 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
             )}
           </section>
 
-          {/* Current follow-up */}
+          {/* Scheduled call — editable while it is still ahead */}
           {contact.followUpDate && (
-            <div className={`flex gap-3 rounded-xl p-3 text-sm ${contact.followUpDate < today ? "bg-rose-50 text-rose-800" : "bg-amber-50 text-amber-900"}`}>
-              <CalendarClock className="mt-0.5 h-4 w-4 shrink-0" />
-              <div>
-                <p className="font-bold">
-                  {l({ id: "Tindak lanjut", en: "Follow-up" })}: {formatDay(contact.followUpDate, lang)}{contact.followUpTime ? ` · ${followUpTimeLabel(contact)}` : ""}
-                </p>
-                {contact.followUpNote && <p className="mt-0.5">{contact.followUpNote}</p>}
+            <div className={`rounded-xl p-3 text-sm ${slotIsPast ? "bg-rose-50 text-rose-800" : "bg-amber-50 text-amber-900"}`}>
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex gap-3">
+                  <CalendarClock className="mt-0.5 h-4 w-4 shrink-0" />
+                  <div>
+                    <p className="font-bold">
+                      {l({ id: "Tindak lanjut", en: "Follow-up" })}: {formatDay(contact.followUpDate, lang)}{contact.followUpTime ? ` · ${followUpTimeLabel(contact)}` : ""}
+                    </p>
+                    {contact.assignedName && <p className="mt-0.5 font-semibold">→ {contact.assignedName}</p>}
+                    {contact.followUpNote && <p className="mt-0.5">{contact.followUpNote}</p>}
+                  </div>
+                </div>
+                {slotIsPast ? (
+                  <span className="flex shrink-0 items-center gap-1 text-[11px] font-bold text-rose-500">
+                    <Lock className="h-3 w-3" />{l({ id: "Sudah lewat", en: "Already passed" })}
+                  </span>
+                ) : (
+                  <button type="button" onClick={() => setEditingSlot((open) => !open)} className="flex shrink-0 items-center gap-1 text-xs font-bold text-amber-900 hover:underline">
+                    <Pencil className="h-3 w-3" />{editingSlot ? l({ id: "Batal", en: "Cancel" }) : l({ id: "Ubah jadwal", en: "Edit" })}
+                  </button>
+                )}
               </div>
+
+              {slotIsPast && <p className="mt-2 text-xs">{l({ id: "Jadwal yang sudah lewat tidak bisa diubah — catat hasilnya di bawah.", en: "A call that has passed can't be moved — log what happened below." })}</p>}
+
+              {editingSlot && !slotIsPast && (
+                <div className="mt-3 space-y-2 rounded-lg bg-white p-3">
+                  <div className="grid grid-cols-2 gap-2">
+                    <input type="date" min={today} className={input} value={slotForm.followUpDate} onChange={(e) => setSlotForm({ ...slotForm, followUpDate: e.target.value })} />
+                    <input type="time" className={input} value={slotForm.followUpTime} onChange={(e) => setSlotForm({ ...slotForm, followUpTime: e.target.value })} />
+                  </div>
+                  {contact.timezone !== DEFAULT_TZ && slotForm.followUpDate && slotForm.followUpTime && (
+                    <p className="text-[11px] font-semibold text-amber-700">
+                      {l({ id: "Waktu kontak", en: "Contact's time" })} · = {toJakarta(slotForm.followUpDate, slotForm.followUpTime, contact.timezone).time} WIB
+                    </p>
+                  )}
+                  <AssigneeField
+                    team={team}
+                    me={me}
+                    value={slotForm.assignedTo}
+                    onChange={(assignedTo) => setSlotForm({ ...slotForm, assignedTo })}
+                    day={slotForm.followUpDate ? (contact.timezone === DEFAULT_TZ || !slotForm.followUpTime ? slotForm.followUpDate : toJakarta(slotForm.followUpDate, slotForm.followUpTime, contact.timezone).day) : null}
+                    time={slotForm.followUpTime ? (contact.timezone === DEFAULT_TZ ? slotForm.followUpTime : toJakarta(slotForm.followUpDate, slotForm.followUpTime, contact.timezone).time) : null}
+                    className={input}
+                  />
+                  <input className={input} value={slotForm.followUpNote} onChange={(e) => setSlotForm({ ...slotForm, followUpNote: e.target.value })} placeholder={l({ id: "Yang perlu dikirim/dilakukan", en: "What to send/do" })} />
+                  <button type="button" disabled={saving} onClick={saveSlot} className="flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-[#1B3A6B] text-sm font-bold text-white disabled:opacity-60">
+                    {saving && <Loader2 className="h-4 w-4 animate-spin" />}{l({ id: "Simpan perubahan jadwal", en: "Save schedule change" })}
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
