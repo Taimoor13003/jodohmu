@@ -13,6 +13,7 @@ import {
 } from "./shared";
 import { AssigneeField, type DeskMe } from "./team-schedule";
 import type { Slot } from "./day-view";
+import { ChatArchive, OutcomeSection, ProfileFacts, QualityBadge, RecordingLinks } from "./outcome";
 
 const input = "h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]/20";
 
@@ -156,6 +157,7 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
               <h2 className="truncate text-xl font-bold text-slate-900">{contact.name}</h2>
               <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                 <StatusBadge status={contact.status} />
+                <QualityBadge quality={contact.quality} />
                 <SourceBadge source={contact.source} />
                 {contact.city && <span className="text-xs text-slate-500">· {contact.city}</span>}
                 {contact.assignedName && (
@@ -221,13 +223,17 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
                 {contact.createdAt && (<><dt className="text-slate-400">{l({ id: "Masuk", en: "Added" })}</dt><dd className="text-slate-700">{formatDay(contact.createdAt.slice(0, 10), lang, { day: "numeric", month: "short", year: "numeric" })}</dd></>)}
               </dl>
             )}
+            {!editing && <ProfileFacts contact={contact} />}
             {contact.details && <p className="mt-3 whitespace-pre-line rounded-lg bg-white p-3 text-xs leading-5 text-slate-600">{contact.details}</p>}
+            <ChatArchive contact={contact} />
             {contact.candidateUid && (
               <Link href={`/admin/candidates/${contact.candidateUid}`} className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#C4294A] hover:underline">
                 {l({ id: "Buka profil kandidat", en: "Open candidate profile" })} <ExternalLink className="h-3 w-3" />
               </Link>
             )}
           </section>
+
+          <OutcomeSection contact={contact} today={today} onSave={submit} />
 
           {/* Scheduled call — editable while it is still ahead */}
           {contact.followUpDate && (
@@ -406,6 +412,7 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
                       {item.byName} · {formatDay(item.day, lang)} {formatTime(item.createdAt)}
                     </p>
                     {item.note && <p className="mt-1 whitespace-pre-line text-sm text-slate-600">{item.note}</p>}
+                    <RecordingLinks item={item} />
                     {item.assignedName && item.type !== "edited" && (
                       <p className="mt-1 text-xs font-semibold text-indigo-700">→ {l({ id: "Ditugaskan ke", en: "Assigned to" })} {item.assignedName}</p>
                     )}

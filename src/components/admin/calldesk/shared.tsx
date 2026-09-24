@@ -49,6 +49,7 @@ const EXTRA_ACTIONS: Record<string, Bilingual> = {
   edited: { id: "Data diubah", en: "Details edited" },
   rescheduled: { id: "Jadwal diubah", en: "Schedule changed" },
   updated: { id: "Diperbarui", en: "Updated" },
+  outcome: { id: "Hasil diperbarui", en: "Outcome updated" },
 };
 
 export function actionLabel(type: ActivityType | null) {
@@ -63,6 +64,8 @@ export const ACTION_TONE: Record<string, string> = {
   call_no_answer: "bg-amber-500",
   wa_sent: "bg-green-600",
   wa_replied: "bg-teal-500",
+  meet_held: "bg-indigo-500",
+  outcome: "bg-[#C4294A]",
   note: "bg-slate-400",
   created: "bg-[#1B3A6B]",
   edited: "bg-slate-300",

@@ -91,6 +91,8 @@ export const CONTACT_STATUSES = [
   { value: "unreachable", label: { id: "Tidak bisa dihubungi", en: "Unreachable" }, tone: "bg-rose-50 text-rose-600 border-rose-200" },
 ] as const;
 export type ContactStatus = (typeof CONTACT_STATUSES)[number]["value"];
+// Statuses where the lead did not go ahead, so a lost reason applies
+export const CLOSED_LOST: string[] = ["not_interested", "unreachable"];
 
 export const CONTACT_SOURCES = [
   { value: "contact_form", label: { id: "Form kontak", en: "Contact form" } },
@@ -100,6 +102,7 @@ export const CONTACT_SOURCES = [
   { value: "ads", label: { id: "Iklan", en: "Ads" } },
   { value: "whatsapp", label: { id: "WhatsApp", en: "WhatsApp" } },
   { value: "instagram", label: { id: "Instagram", en: "Instagram" } },
+  { value: "facebook", label: { id: "Facebook Messenger", en: "Facebook Messenger" } },
   { value: "referral", label: { id: "Rekomendasi", en: "Referral" } },
   { value: "walk_in", label: { id: "Datang langsung", en: "Walk-in" } },
   { value: "other", label: { id: "Lainnya", en: "Other" } },
@@ -113,10 +116,78 @@ export const LOG_ACTIONS = [
   { value: "call_no_answer", label: { id: "Ditelepon — tidak diangkat", en: "Called — no answer" } },
   { value: "wa_sent", label: { id: "WhatsApp dikirim", en: "WhatsApp sent" } },
   { value: "wa_replied", label: { id: "Dibalas di WhatsApp", en: "Replied on WhatsApp" } },
+  { value: "meet_held", label: { id: "Video call (Meet)", en: "Video call (Meet)" } },
   { value: "note", label: { id: "Catatan saja", en: "Note only" } },
 ] as const;
 export type LogAction = (typeof LOG_ACTIONS)[number]["value"];
-export type ActivityType = LogAction | "created" | "edited" | "rescheduled" | "updated";
+export type ActivityType = LogAction | "created" | "edited" | "rescheduled" | "updated" | "outcome";
+
+// Where a person is in the Jodohmu process, in order; the furthest step reached drives the funnel in Insights
+export const JOURNEY_STAGES = [
+  { value: "inquiry", label: { id: "Bertanya", en: "Asked about the service" } },
+  { value: "details", label: { id: "Memberi data diri", en: "Gave their details" } },
+  { value: "intro_booked", label: { id: "Telepon perkenalan dijadwalkan", en: "Intro call booked" } },
+  { value: "intro_done", label: { id: "Telepon perkenalan selesai", en: "Intro call done" } },
+  { value: "consult_booked", label: { id: "Meet konsultan dijadwalkan", en: "Consultant meet booked" } },
+  { value: "consult_done", label: { id: "Meet konsultan selesai", en: "Consultant meet done" } },
+  { value: "paid", label: { id: "Sudah bayar", en: "Paid" } },
+  { value: "profile", label: { id: "Pembuatan profil", en: "Profile being built" } },
+  { value: "matching", label: { id: "Proses perjodohan", en: "Matching" } },
+] as const;
+export type JourneyStage = (typeof JOURNEY_STAGES)[number]["value"];
+export const stageIndex = (stage: string | null) => JOURNEY_STAGES.findIndex((s) => s.value === stage);
+
+// Who has the next move: us (a follow-up we owe) or them (we are waiting for a reply or decision)
+export const WAITING_ON = [
+  { value: "us", label: { id: "Menunggu kita", en: "Waiting on us" } },
+  { value: "them", label: { id: "Menunggu mereka", en: "Waiting on them" } },
+] as const;
+export type WaitingOn = (typeof WAITING_ON)[number]["value"];
+
+export const LEAD_QUALITIES = [
+  { value: "hot", label: { id: "Panas — siap lanjut", en: "Hot — ready to go" }, tone: "bg-rose-50 text-rose-700 border-rose-200" },
+  { value: "warm", label: { id: "Hangat — tertarik, belum pasti", en: "Warm — interested, not sure yet" }, tone: "bg-amber-50 text-amber-700 border-amber-200" },
+  { value: "cold", label: { id: "Dingin — kecil kemungkinan", en: "Cold — unlikely" }, tone: "bg-sky-50 text-sky-700 border-sky-200" },
+] as const;
+export type LeadQuality = (typeof LEAD_QUALITIES)[number]["value"];
+
+// Why a lead did not go ahead; picked when a contact ends as not interested or unreachable
+export const LOST_REASONS = [
+  { value: "price", label: { id: "Harga terlalu mahal", en: "Too expensive" } },
+  { value: "not_ready", label: { id: "Belum siap / nanti saja", en: "Not ready yet / later" } },
+  { value: "family", label: { id: "Keluarga tidak setuju", en: "Family didn't agree" } },
+  { value: "wanted_free", label: { id: "Mencari layanan gratis", en: "Wanted a free service" } },
+  { value: "wrong_expectation", label: { id: "Harapan tidak sesuai layanan", en: "Expected a different service" } },
+  { value: "no_reply", label: { id: "Berhenti membalas", en: "Stopped replying" } },
+  { value: "we_dropped", label: { id: "Kita tidak menindaklanjuti", en: "We didn't follow up" } },
+  { value: "no_show", label: { id: "Tidak hadir / terlalu sering reschedule", en: "Missed calls / rescheduled too often" } },
+  { value: "not_fit", label: { id: "Tidak cocok dengan kriteria kami", en: "Not a fit for us" } },
+  { value: "found_partner", label: { id: "Sudah menemukan pasangan", en: "Already found someone" } },
+  { value: "spam", label: { id: "Spam / tidak serius", en: "Spam / not serious" } },
+  { value: "other", label: { id: "Lainnya", en: "Other" } },
+] as const;
+export type LostReason = (typeof LOST_REASONS)[number]["value"];
+
+export const PAID_PACKAGES = [
+  { value: "consultation", label: { id: "Biaya sesi konsultasi", en: "Consultation call fee" } },
+  { value: "registration", label: { id: "Biaya pendaftaran", en: "Registration fee" } },
+  { value: "pearl", label: { id: "Pearl", en: "Pearl" } },
+  { value: "ruby", label: { id: "Ruby", en: "Ruby" } },
+  { value: "diamond", label: { id: "Diamond", en: "Diamond" } },
+  { value: "other", label: { id: "Lainnya", en: "Other" } },
+] as const;
+export type PaidPackage = (typeof PAID_PACKAGES)[number]["value"];
+
+// Where the money landed: Indonesian clients pay the Jodohmu bank account, international clients pay by PayPal to a personal account
+export const PAYMENT_CHANNELS = [
+  { value: "jodohmu_bank", label: { id: "Rekening Jodohmu (Indonesia)", en: "Jodohmu bank (Indonesia)" } },
+  { value: "paypal_personal", label: { id: "PayPal pribadi (luar Indonesia)", en: "PayPal, personal (outside Indonesia)" } },
+] as const;
+export type PaymentChannel = (typeof PAYMENT_CHANNELS)[number]["value"];
+
+// Activity written by the on-demand CRM sync (chats + call recordings), not by a person
+export const SYNC_UID = "crm_sync";
+export const SYNC_NAME = "CRM sync";
 
 export type CallDeskContact = {
   id: string;
@@ -139,6 +210,49 @@ export type CallDeskContact = {
   lastActivityBy: string | null;
   createdAt: string | null;
   createdByName: string | null;
+  // Outcome fields, set by hand or by the CRM sync
+  quality: LeadQuality | null;
+  lostReason: LostReason | null;
+  lostNote: string | null;
+  paidPackage: PaidPackage | null;
+  paidAmount: number | null;
+  paidDate: string | null;
+  // paidAmount is always the rupiah actually received; foreign payments keep their original amount, e.g. "USD 25"
+  paymentChannel: PaymentChannel | null;
+  paidOriginal: string | null;
+  // Meta ad the lead replied to, from the WhatsApp inbox label "ad_id.…"
+  adId: string | null;
+  // Facts about the person, gathered from chats and calls, kept structured so they can be queried later
+  profile: LeadProfile;
+  // True once the CRM sync has archived this person's WhatsApp chat
+  hasChatArchive: boolean;
+  stage: JourneyStage | null;
+  waitingOn: WaitingOn | null;
+  // Test entries and duplicates, left out of Insights
+  excluded: boolean;
+};
+
+export type LeadProfile = {
+  age?: number;
+  gender?: "male" | "female";
+  maritalStatus?: "never_married" | "divorced" | "widowed" | "married";
+  children?: number;
+  religion?: string;
+  occupation?: string;
+  education?: string;
+  lookingFor?: string;
+  [extra: string]: string | number | boolean | undefined;
+};
+
+export const PROFILE_LABELS: Record<string, Bilingual> = {
+  age: { id: "Usia", en: "Age" },
+  gender: { id: "Jenis kelamin", en: "Gender" },
+  maritalStatus: { id: "Status pernikahan", en: "Marital status" },
+  children: { id: "Anak", en: "Children" },
+  religion: { id: "Agama", en: "Religion" },
+  occupation: { id: "Pekerjaan", en: "Occupation" },
+  education: { id: "Pendidikan", en: "Education" },
+  lookingFor: { id: "Mencari", en: "Looking for" },
 };
 
 export type CallDeskActivity = {
@@ -158,6 +272,9 @@ export type CallDeskActivity = {
   byName: string;
   day: string;
   createdAt: string | null;
+  // Calls from the Drive recordings folder: a link to the file and, when transcribed, the transcript id
+  recordingUrl: string | null;
+  transcriptId: string | null;
 };
 
 // Invited people who haven't signed in yet use the id "invite:<email>" until their first sign-in

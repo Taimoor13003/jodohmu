@@ -11,6 +11,8 @@ export type CallDeskCaller = { uid: string; name: string; isAdmin: boolean; canS
 export const CONTACTS = "calldesk_contacts";
 export const ACTIVITY = "calldesk_activity";
 export const AVAILABILITY = "team_availability";
+// Call transcripts live apart from activity so the desk stays quick to load; an activity links to one by id
+export const TRANSCRIPTS = "calldesk_transcripts";
 
 // Admins always have access; workers need the "calldesk" permission set on their user_roles doc
 export async function requireCallDesk(req: NextRequest): Promise<CallDeskCaller | null> {
@@ -59,6 +61,20 @@ export const toContact = (id: string, data: DocumentData): CallDeskContact => ({
   lastActivityBy: data.lastActivityBy ?? null,
   createdAt: iso(data.createdAt),
   createdByName: data.createdByName ?? null,
+  quality: data.quality ?? null,
+  lostReason: data.lostReason ?? null,
+  lostNote: data.lostNote ?? null,
+  paidPackage: data.paidPackage ?? null,
+  paidAmount: typeof data.paidAmount === "number" ? data.paidAmount : null,
+  paidDate: data.paidDate ?? null,
+  paymentChannel: data.paymentChannel ?? null,
+  paidOriginal: data.paidOriginal ?? null,
+  adId: data.adId ?? null,
+  profile: data.profile && typeof data.profile === "object" ? data.profile : {},
+  hasChatArchive: data.hasChatArchive === true,
+  stage: data.stage ?? null,
+  waitingOn: data.waitingOn ?? null,
+  excluded: data.excluded === true,
 });
 
 export const toActivity = (id: string, data: DocumentData): CallDeskActivity => ({
@@ -78,6 +94,8 @@ export const toActivity = (id: string, data: DocumentData): CallDeskActivity => 
   byName: str(data.byName),
   day: str(data.day),
   createdAt: iso(data.createdAt),
+  recordingUrl: data.recordingUrl ?? null,
+  transcriptId: data.transcriptId ?? null,
 });
 
 // Keeps only well-formed hours (start before end) and valid days off

@@ -2,18 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { FieldValue, type DocumentData } from "firebase-admin/firestore";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import {
-  CONTACT_SOURCES, CONTACT_STATUSES, IMPORTED_SOURCES, LOG_ACTIONS,
+  CONTACT_SOURCES, CONTACT_STATUSES, IMPORTED_SOURCES, LEAD_QUALITIES, LOG_ACTIONS, LOST_REASONS, JOURNEY_STAGES, PAID_PACKAGES, PAYMENT_CHANNELS, WAITING_ON, findLabel,
   DEFAULT_TZ, TEAM_INVITES, addDays, inviteMemberId, isDay, isPastSlot, isTime, isTimeZone, jakartaDay, jakartaTime, toJakarta, weekdayOf,
-  type CallDeskMember, type ContactStatus,
+  type Bilingual, type CallDeskMember, type ContactStatus,
 } from "@/lib/calldesk";
 import {
-  ACTIVITY, AVAILABILITY, CONTACTS, cleanAvailability, importLeads, requireCallDesk, toActivity, toContact,
+  ACTIVITY, AVAILABILITY, CONTACTS, TRANSCRIPTS, cleanAvailability, importLeads, requireCallDesk, toActivity, toContact,
   type CallDeskCaller,
 } from "@/lib/calldesk-server";
+import { EXPENSE_CATEGORIES, EXPENSE_STATUSES, FINANCE_EXPENSES } from "@/lib/finance";
+import { applySyncPlan, financeExpenses, syncContacts, syncStatus, type SyncPlan } from "@/lib/calldesk-sync";
 
 const clean = (value: unknown, max: number) => (typeof value === "string" ? value.trim().slice(0, max) : "");
 const STATUS_VALUES = CONTACT_STATUSES.map((s) => s.value) as string[];
 const ACTION_VALUES = LOG_ACTIONS.map((a) => a.value) as string[];
+const pick = (list: readonly { value: string }[], value: unknown) =>
+  typeof value === "string" && list.some((item) => item.value === value) ? value : null;
 const MANUAL_SOURCES = CONTACT_SOURCES.map((s) => s.value).filter((s) => !IMPORTED_SOURCES.includes(s)) as string[];
 
 function followUpFields(body: Record<string, unknown>) {
@@ -83,7 +87,10 @@ async function resolveAssignee(body: Record<string, unknown>, caller: CallDeskCa
 }
 
 /* GET /api/admin/calldesk?from=YYYY-MM-DD&to=YYYY-MM-DD — contacts, activity in range, team
-   GET /api/admin/calldesk?contactId=… — full timeline for one contact */
+   GET /api/admin/calldesk?contactId=… — full timeline for one contact
+   GET /api/admin/calldesk?transcriptId=… — one call transcript
+   GET /api/admin/calldesk?sync=status|contacts — CRM sync cursor, or contacts for matching (admins)
+   GET /api/admin/calldesk?finance=expenses — company expenses (admins) */
 export async function GET(req: NextRequest) {
   const caller = await requireCallDesk(req);
   if (!caller) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -91,6 +98,27 @@ export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;
 
   try {
+    if (params.get("finance") === "expenses") {
+      if (!caller.isAdmin) return NextResponse.json({ error: "Only admins can see finances." }, { status: 403 });
+      return NextResponse.json({ expenses: await financeExpenses() });
+    }
+
+    const sync = params.get("sync");
+    if (sync) {
+      if (!caller.isAdmin) return NextResponse.json({ error: "Only admins can run the CRM sync." }, { status: 403 });
+      if (sync === "status") return NextResponse.json(await syncStatus());
+      if (sync === "contacts") return NextResponse.json({ contacts: await syncContacts() });
+      return NextResponse.json({ error: "Unknown sync request." }, { status: 400 });
+    }
+
+    const transcriptId = params.get("transcriptId");
+    if (transcriptId) {
+      const snap = await db.collection(TRANSCRIPTS).doc(transcriptId).get();
+      if (!snap.exists) return NextResponse.json({ error: "Transcript not found." }, { status: 404 });
+      const data = snap.data()!;
+      return NextResponse.json({ transcript: { id: snap.id, fileName: data.fileName ?? "", text: data.text ?? "", recordingUrl: data.recordingUrl ?? null } });
+    }
+
     const contactId = params.get("contactId");
     if (contactId) {
       const snap = await db.collection(ACTIVITY).where("contactId", "==", contactId).get();
@@ -152,6 +180,39 @@ export async function POST(req: NextRequest) {
     const now = FieldValue.serverTimestamp();
     const day = jakartaDay();
     const by = { byUid: caller.uid, byName: caller.name, day, createdAt: now };
+
+    // Company expenses, admins only: add one, or mark an owed one as paid
+    if (body.action === "expense" || body.action === "expense_paid") {
+      if (!caller.isAdmin) return NextResponse.json({ error: "Only admins can change finances." }, { status: 403 });
+      const stamp = { updatedAt: now, updatedBy: caller.name };
+      if (body.action === "expense_paid") {
+        const ref = db.collection(FINANCE_EXPENSES).doc(clean(body.id, 120));
+        if (!(await ref.get()).exists) return NextResponse.json({ error: "Expense not found." }, { status: 404 });
+        await ref.update({ status: "paid", date: isDay(body.date) ? body.date : day, ...stamp });
+        return NextResponse.json({ success: true });
+      }
+      const amount = typeof body.amount === "number" && Number.isFinite(body.amount) && body.amount > 0 ? Math.round(body.amount) : null;
+      const category = pick(EXPENSE_CATEGORIES, body.category);
+      const status = pick(EXPENSE_STATUSES, body.status);
+      const payee = clean(body.payee, 80);
+      if (!amount || !category || !status || !payee || !isDay(body.date)) {
+        return NextResponse.json({ error: "Date, amount, category, status and who it was paid to are all required." }, { status: 400 });
+      }
+      const ref = db.collection(FINANCE_EXPENSES).doc();
+      await ref.set({
+        key: `manual:${ref.id}`, date: body.date, amount, category, status, payee,
+        role: clean(body.role, 60), note: clean(body.note, 300), contactId: null, ...stamp,
+      });
+      return NextResponse.json({ success: true, id: ref.id });
+    }
+
+    // CRM sync from chats and call recordings: a dry run unless `write` is true
+    if (body.action === "sync") {
+      if (!caller.isAdmin) return NextResponse.json({ error: "Only admins can run the CRM sync." }, { status: 403 });
+      const plan = body.plan as SyncPlan | undefined;
+      if (!plan || !Array.isArray(plan.contacts ?? [])) return NextResponse.json({ error: "Missing plan." }, { status: 400 });
+      return NextResponse.json(await applySyncPlan(plan, body.write === true, caller.name));
+    }
 
     if (body.action === "availability" || body.action === "availability_day") {
       const uid = clean(body.uid, 128);
@@ -281,6 +342,49 @@ export async function POST(req: NextRequest) {
         contactId, contactName: contact.name ?? "", type, note,
         statusFrom: contact.status ?? null,
         statusTo: finalStatus,
+        recordingUrl: /^https:\/\/\S+$/.test(clean(body.recordingUrl, 500)) ? clean(body.recordingUrl, 500) : null,
+      });
+      await batch.commit();
+      return NextResponse.json({ success: true });
+    }
+
+    // Lead quality, why it was lost, and what was paid; each change is written to the timeline
+    if (body.action === "outcome") {
+      const amount = typeof body.paidAmount === "number" && Number.isFinite(body.paidAmount) && body.paidAmount >= 0
+        ? Math.round(body.paidAmount)
+        : null;
+      const updates = {
+        quality: pick(LEAD_QUALITIES, body.quality),
+        lostReason: pick(LOST_REASONS, body.lostReason),
+        lostNote: clean(body.lostNote, 300) || null,
+        paidPackage: pick(PAID_PACKAGES, body.paidPackage),
+        paidAmount: amount,
+        paidDate: isDay(body.paidDate) ? body.paidDate : null,
+        paymentChannel: pick(PAYMENT_CHANNELS, body.paymentChannel),
+        paidOriginal: clean(body.paidOriginal, 40) || null,
+        stage: pick(JOURNEY_STAGES, body.stage),
+        waitingOn: pick(WAITING_ON, body.waitingOn),
+        excluded: body.excluded === true,
+      };
+      const labels: Record<string, readonly { value: string; label: Bilingual }[]> = {
+        quality: LEAD_QUALITIES, lostReason: LOST_REASONS, paidPackage: PAID_PACKAGES, paymentChannel: PAYMENT_CHANNELS,
+        stage: JOURNEY_STAGES, waitingOn: WAITING_ON,
+      };
+      const shown = (key: string, value: unknown) =>
+        value === null || value === undefined ? "—" : labels[key] ? findLabel(labels[key], value as string)?.en ?? String(value) : String(value);
+      const changed = (Object.keys(updates) as (keyof typeof updates)[])
+        .filter((key) => (contact[key] ?? (key === "excluded" ? false : null)) !== updates[key])
+        .map((key) => `${key}: ${shown(key, contact[key])} → ${shown(key, updates[key])}`);
+      if (!changed.length) return NextResponse.json({ success: true });
+
+      const batch = db.batch();
+      batch.update(contactRef, { ...updates, lastActivityAt: now, lastActivityBy: caller.name });
+      batch.set(db.collection(ACTIVITY).doc(), {
+        ...by,
+        contactId, contactName: contact.name ?? "", type: "outcome", note: changed.join("\n"),
+        statusFrom: contact.status ?? null, statusTo: contact.status ?? null,
+        followUpDate: null, followUpTime: null, followUpNote: null,
+        assignedTo: contact.assignedTo ?? null, assignedName: contact.assignedName ?? null,
       });
       await batch.commit();
       return NextResponse.json({ success: true });

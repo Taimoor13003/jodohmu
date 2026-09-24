@@ -151,7 +151,8 @@ export function TodayView({ contacts, activity, today, me, onOpen }: {
   const todays = activity.filter((item) => item.day === today && (scope === "team" || item.byUid === meUid));
 
   const open = contacts.filter((contact) =>
-    (!CLOSED_STATUSES.includes(contact.status) || contact.followUpDate)
+    !contact.excluded
+    && (!CLOSED_STATUSES.includes(contact.status) || contact.followUpDate)
     && (!onlyMine || contact.assignedTo === meUid));
   const byTime = byFollowUp;
   const overdue = open.filter((c) => dueState(c, today) === "overdue").sort(byTime);
