@@ -10,7 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   Users, Briefcase, UserCheck, MessageCircle,
-  Globe, LogOut, Menu, Bell, MessageSquareText, Link2, PhoneCall, Wallet,
+  Globe, LogOut, Menu, Bell, MessageSquareText, Link2, PhoneCall, Wallet, BookOpen,
 } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 
@@ -190,6 +190,7 @@ const SIDEBAR_W = 220;
 const NAV = [
   { href: "/admin/calls",      label: "Call Desk",      icon: <PhoneCall      className="w-full h-full" />, color: "#EA580C", bg: "#FFF7ED" },
   { href: "/admin/finance",    label: "Keuangan",       icon: <Wallet         className="w-full h-full" />, color: "#15803D", bg: "#F0FDF4" },
+  { href: "/admin/knowledge",  label: "Pengetahuan",    icon: <BookOpen       className="w-full h-full" />, color: "#B45309", bg: "#FFFBEB" },
   { href: "/admin/candidates", label: "Kandidat",      icon: <UserCheck      className="w-full h-full" />, color: "#C4294A", bg: "#FFF1F2" },
   { href: "/admin/chat",       label: "Chat",           icon: <MessageCircle  className="w-full h-full" />, color: "#0369A1", bg: "#EFF6FF" },
   { href: "/admin/shares",     label: "Tautan Profil",  icon: <Link2          className="w-full h-full" />, color: "#7C3AED", bg: "#F5F3FF" },

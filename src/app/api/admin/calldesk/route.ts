@@ -11,7 +11,7 @@ import {
   type CallDeskCaller,
 } from "@/lib/calldesk-server";
 import { EXPENSE_CATEGORIES, EXPENSE_STATUSES, FINANCE_EXPENSES } from "@/lib/finance";
-import { applySyncPlan, financeExpenses, syncContacts, syncStatus, type SyncPlan } from "@/lib/calldesk-sync";
+import { applySyncPlan, financeExpenses, knowledgeEntries, syncContacts, syncStatus, type SyncPlan } from "@/lib/calldesk-sync";
 
 const clean = (value: unknown, max: number) => (typeof value === "string" ? value.trim().slice(0, max) : "");
 const STATUS_VALUES = CONTACT_STATUSES.map((s) => s.value) as string[];
@@ -90,7 +90,8 @@ async function resolveAssignee(body: Record<string, unknown>, caller: CallDeskCa
    GET /api/admin/calldesk?contactId=… — full timeline for one contact
    GET /api/admin/calldesk?transcriptId=… — one call transcript
    GET /api/admin/calldesk?sync=status|contacts — CRM sync cursor, or contacts for matching (admins)
-   GET /api/admin/calldesk?finance=expenses — company expenses (admins) */
+   GET /api/admin/calldesk?finance=expenses — company expenses (admins)
+   GET /api/admin/calldesk?knowledge=1 — the knowledge base (admins) */
 export async function GET(req: NextRequest) {
   const caller = await requireCallDesk(req);
   if (!caller) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -98,6 +99,11 @@ export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;
 
   try {
+    if (params.get("knowledge")) {
+      if (!caller.isAdmin) return NextResponse.json({ error: "Only admins can see the knowledge base." }, { status: 403 });
+      return NextResponse.json({ entries: await knowledgeEntries() });
+    }
+
     if (params.get("finance") === "expenses") {
       if (!caller.isAdmin) return NextResponse.json({ error: "Only admins can see finances." }, { status: 403 });
       return NextResponse.json({ expenses: await financeExpenses() });

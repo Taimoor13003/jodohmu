@@ -10,6 +10,7 @@ import {
 } from "@/lib/calldesk";
 import { ACTIVITY, CONTACTS, TRANSCRIPTS } from "@/lib/calldesk-server";
 import { EXPENSE_CATEGORIES, EXPENSE_STATUSES, FINANCE_EXPENSES, type FinanceExpense } from "@/lib/finance";
+import { KNOWLEDGE_BASE, KNOWLEDGE_CATEGORIES, type KnowledgeEntry } from "@/lib/knowledge";
 
 export const SYNC_STATE = "calldesk_sync/state";
 
@@ -53,7 +54,22 @@ export type SyncContact = {
 // Expenses are keyed by `key` so the same entry can be corrected by applying it again
 export type SyncExpense = Omit<FinanceExpense, "id" | "contactId"> & { key: string; contactPhone?: string | null; remove?: boolean };
 
-export type SyncPlan = { syncedThrough?: string; contacts: SyncContact[]; expenses?: SyncExpense[] };
+// Knowledge entries are keyed by `key`; applying the same key again rewrites the entry
+export type SyncKnowledge = Pick<KnowledgeEntry, "key" | "category" | "title" | "body"> & { evidence?: string[]; priority?: number; remove?: boolean };
+
+export type SyncPlan = { syncedThrough?: string; contacts: SyncContact[]; expenses?: SyncExpense[]; knowledge?: SyncKnowledge[] };
+
+export async function knowledgeEntries(): Promise<KnowledgeEntry[]> {
+  const snap = await adminDb().collection(KNOWLEDGE_BASE).get();
+  return snap.docs.map((doc) => {
+    const d = doc.data();
+    return {
+      id: doc.id, key: d.key, category: d.category, title: d.title ?? "", body: d.body ?? "",
+      evidence: Array.isArray(d.evidence) ? d.evidence : [], priority: typeof d.priority === "number" ? d.priority : 0,
+      updatedAt: d.updatedAt?.toDate?.()?.toISOString() ?? null, updatedBy: d.updatedBy ?? null,
+    };
+  });
+}
 
 export async function financeExpenses(): Promise<FinanceExpense[]> {
   const snap = await adminDb().collection(FINANCE_EXPENSES).orderBy("date").get();
@@ -304,6 +320,35 @@ export async function applySyncPlan(plan: SyncPlan, write: boolean, runBy: strin
     const changed = !before || Object.entries(data).some(([k, v]) => before[k] !== v);
     if (!changed) continue;
     report.push(`${before ? "~" : "+"} expense ${expense.date} ${data.category} Rp ${data.amount.toLocaleString("id-ID")} — ${data.payee} (${data.status})${data.note ? `: ${data.note}` : ""}`);
+    if (write) await ref.set({ ...data, updatedAt: FieldValue.serverTimestamp(), updatedBy: runBy });
+  }
+
+  for (const item of plan.knowledge ?? []) {
+    const issues: string[] = [];
+    if (!item.key) issues.push("missing key");
+    if (!item.remove) {
+      if (!values(KNOWLEDGE_CATEGORIES).includes(item.category)) issues.push(`category "${item.category}" is not one of ${values(KNOWLEDGE_CATEGORIES).join(", ")}`);
+      if (!item.title?.trim() || !item.body?.trim()) issues.push("title and body are required");
+    }
+    if (issues.length) {
+      problems.push(`knowledge ${item.key ?? "?"}: ${issues.join("; ")}`);
+      continue;
+    }
+    const ref = db.collection(KNOWLEDGE_BASE).doc(`kb_${hash(item.key)}`);
+    const before = (await ref.get()).data();
+    if (item.remove) {
+      if (!before) continue;
+      report.push(`- knowledge ${item.key}: removed`);
+      if (write) await ref.delete();
+      continue;
+    }
+    const data = {
+      key: item.key, category: item.category, title: item.title.trim(), body: item.body.trim(),
+      evidence: item.evidence ?? [], priority: item.priority ?? 0,
+    };
+    const changed = !before || JSON.stringify(Object.keys(data).map((k) => before[k])) !== JSON.stringify(Object.values(data));
+    if (!changed) continue;
+    report.push(`${before ? "~" : "+"} knowledge [${data.category}] ${data.title}`);
     if (write) await ref.set({ ...data, updatedAt: FieldValue.serverTimestamp(), updatedBy: runBy });
   }
 
