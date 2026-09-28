@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { BarChart3, CalendarDays, CalendarRange, History, Loader2, PhoneCall, Plus, RefreshCw, Users } from "lucide-react";
+import { BarChart3, CalendarDays, CalendarRange, History, Loader2, PhoneCall, Plus, RefreshCw, SquareKanban, Users } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { addDays, jakartaDay, type CallDeskActivity, type CallDeskContact, type CallDeskMember } from "@/lib/calldesk";
 import { AddContactDialog } from "./add-contact";
@@ -11,6 +11,7 @@ import { CalendarView, ContactsView, HistoryView, TodayView } from "./views";
 import { TeamScheduleView, type DeskMe } from "./team-schedule";
 import { SlotPicker, type Slot } from "./day-view";
 import { InsightsView } from "./insights";
+import { BoardView } from "./board";
 
 type DeskData = {
   today: string;
@@ -20,7 +21,7 @@ type DeskData = {
   me: DeskMe;
 };
 
-type Tab = "today" | "calendar" | "contacts" | "team" | "history" | "insights";
+type Tab = "today" | "calendar" | "contacts" | "board" | "team" | "history" | "insights";
 
 const monthEnd = (month: string) => {
   const date = new Date(`${month}-01T00:00:00Z`);
@@ -93,6 +94,7 @@ export function CallDeskApp() {
     { value: "today", label: l({ id: "Hari ini", en: "Today" }), icon: <PhoneCall className="h-4 w-4" /> },
     { value: "calendar", label: l({ id: "Kalender", en: "Calendar" }), icon: <CalendarDays className="h-4 w-4" /> },
     { value: "contacts", label: l({ id: "Semua kontak", en: "All contacts" }), icon: <Users className="h-4 w-4" /> },
+    { value: "board", label: l({ id: "Papan tahap", en: "Board" }), icon: <SquareKanban className="h-4 w-4" /> },
     { value: "team", label: l({ id: "Jadwal tim", en: "Team schedule" }), icon: <CalendarRange className="h-4 w-4" /> },
     { value: "history", label: l({ id: "Riwayat & laporan", en: "History & reports" }), icon: <History className="h-4 w-4" /> },
     // Whole-business numbers, so only for people who can see the whole team
@@ -154,6 +156,9 @@ export function CallDeskApp() {
         )}
         {tab === "team" && <TeamScheduleView team={data.team} me={data.me} today={data.today} onChanged={load} />}
         {tab === "insights" && data.me.canSeeTeam && <InsightsView contacts={data.contacts} today={data.today} />}
+        {tab === "board" && (
+          <BoardView contacts={data.contacts} team={data.team} me={data.me} today={data.today} onOpen={(id) => { setPreset(null); setOpenId(id); }} onChanged={load} />
+        )}
         {tab === "contacts" && <ContactsView contacts={data.contacts} today={data.today} onOpen={setOpenId} />}
         {tab === "history" && (
           <HistoryView

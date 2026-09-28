@@ -354,6 +354,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true });
     }
 
+    // Moving a card on the Board: changes only the journey stage, and writes it to the timeline
+    if (body.action === "stage") {
+      const stage = pick(JOURNEY_STAGES, body.stage);
+      if ((contact.stage ?? null) === stage) return NextResponse.json({ success: true });
+      const shown = (value: unknown) => (value ? findLabel(JOURNEY_STAGES, value as string)?.en ?? String(value) : "—");
+      const batch = db.batch();
+      batch.update(contactRef, { stage, lastActivityAt: now, lastActivityBy: caller.name });
+      batch.set(db.collection(ACTIVITY).doc(), {
+        ...by,
+        contactId, contactName: contact.name ?? "", type: "outcome", note: `stage: ${shown(contact.stage)} → ${shown(stage)}`,
+        statusFrom: contact.status ?? null, statusTo: contact.status ?? null,
+        followUpDate: null, followUpTime: null, followUpNote: null,
+        assignedTo: contact.assignedTo ?? null, assignedName: contact.assignedName ?? null,
+      });
+      await batch.commit();
+      return NextResponse.json({ success: true });
+    }
+
     // Lead quality, why it was lost, and what was paid; each change is written to the timeline
     if (body.action === "outcome") {
       const amount = typeof body.paidAmount === "number" && Number.isFinite(body.paidAmount) && body.paidAmount >= 0
