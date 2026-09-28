@@ -12,6 +12,8 @@ import { figureSvg, iconSvg } from "@/lib/social-figures";
    the Instagram Graph API as the "Jodohmu Poster Bot" system user. */
 
 const GRAPH = "https://graph.facebook.com/v23.0";
+// Instagram sometimes never answers a request; without a limit the post (and the screen) waits forever
+const GRAPH_TIMEOUT_MS = 20_000;
 export const CARD_SIZE = { width: 1080, height: 1350 };
 
 const C = { paper: "#FFFAF7", ink: "#102B61", body: "#52617C", line: "#E9DFD8" };
@@ -19,9 +21,9 @@ const C = { paper: "#FFFAF7", ink: "#102B61", body: "#52617C", line: "#E9DFD8" }
 async function googleFont(family: string, spec: string, text: string): Promise<ArrayBuffer | null> {
   try {
     const cssUrl = `https://fonts.googleapis.com/css2?family=${family}:${spec}&text=${encodeURIComponent(text)}`;
-    const css = await fetch(cssUrl, { cache: "force-cache" }).then((r) => r.text());
+    const css = await fetch(cssUrl, { cache: "force-cache", signal: AbortSignal.timeout(10_000) }).then((r) => r.text());
     const src = css.match(/src: url\((.+?)\) format\('(?:opentype|truetype)'\)/)?.[1];
-    return src ? await fetch(src, { cache: "force-cache" }).then((r) => r.arrayBuffer()) : null;
+    return src ? await fetch(src, { cache: "force-cache", signal: AbortSignal.timeout(10_000) }).then((r) => r.arrayBuffer()) : null;
   } catch {
     return null;
   }
@@ -233,9 +235,10 @@ async function graph<T>(pathAndQuery: string, init?: { method?: "GET" | "POST"; 
   const method = init?.method ?? "GET";
   const url = new URL(`${GRAPH}/${pathAndQuery}`);
   const body = new URLSearchParams({ ...(init?.params ?? {}), access_token: token });
+  const signal = AbortSignal.timeout(GRAPH_TIMEOUT_MS);
   const res = method === "GET"
-    ? await fetch(`${url.toString()}${url.search ? "&" : "?"}${body.toString()}`, { cache: "no-store" })
-    : await fetch(url, { method, body, cache: "no-store" });
+    ? await fetch(`${url.toString()}${url.search ? "&" : "?"}${body.toString()}`, { cache: "no-store", signal })
+    : await fetch(url, { method, body, cache: "no-store", signal });
   const json = (await res.json().catch(() => ({}))) as T & { error?: { message?: string } };
   if (!res.ok || json.error) throw new Error(`Instagram: ${json.error?.message ?? res.statusText}`);
   return json;
@@ -253,32 +256,35 @@ export async function instagramAccount(handle: string): Promise<{ id: string; us
 
 // Instagram fetches each image first; wait until a container is ready (usually a few seconds)
 async function waitReady(containerId: string) {
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 20; i++) {
     const { status_code } = await graph<{ status_code?: string }>(containerId, { params: { fields: "status_code" } });
     if (status_code === "FINISHED") return;
     if (status_code === "ERROR" || status_code === "EXPIRED") throw new Error(`Instagram could not process the image (${status_code}).`);
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, 1500));
   }
+  throw new Error("Instagram is taking too long to process the image. Try again in a minute.");
 }
 
-// One image becomes a single post; several become a swipeable carousel, in order
-export async function publishImages(igUserId: string, imageUrls: string[], caption: string): Promise<{ mediaId: string; permalink: string | null }> {
+// One image becomes a single post; several become a swipeable carousel, in order.
+// onPublished runs as soon as Instagram confirms, before the link lookup, so the record is right even if that lookup fails.
+export async function publishImages(igUserId: string, imageUrls: string[], caption: string, onPublished?: (mediaId: string) => Promise<void>): Promise<{ mediaId: string; permalink: string | null }> {
   let containerId: string;
   if (imageUrls.length === 1) {
     containerId = (await graph<{ id: string }>(`${igUserId}/media`, { method: "POST", params: { image_url: imageUrls[0], caption } })).id;
   } else {
-    const children: string[] = [];
-    for (const url of imageUrls) {
+    // Slides are prepared side by side; Promise.all keeps them in posting order
+    const children = await Promise.all(imageUrls.map(async (url) => {
       const child = await graph<{ id: string }>(`${igUserId}/media`, { method: "POST", params: { image_url: url, is_carousel_item: "true" } });
       await waitReady(child.id);
-      children.push(child.id);
-    }
+      return child.id;
+    }));
     containerId = (await graph<{ id: string }>(`${igUserId}/media`, {
       method: "POST", params: { media_type: "CAROUSEL", children: children.join(","), caption },
     })).id;
   }
   await waitReady(containerId);
   const published = await graph<{ id: string }>(`${igUserId}/media_publish`, { method: "POST", params: { creation_id: containerId } });
+  await onPublished?.(published.id);
   const media = await graph<{ permalink?: string }>(published.id, { params: { fields: "permalink" } }).catch(() => ({ permalink: undefined }));
   return { mediaId: published.id, permalink: media.permalink ?? null };
 }
@@ -288,7 +294,7 @@ export async function mediaExists(mediaId: string): Promise<boolean | null> {
   const token = metaToken();
   if (!token) return null;
   try {
-    const res = await fetch(`${GRAPH}/${mediaId}?fields=id&access_token=${encodeURIComponent(token)}`, { cache: "no-store" });
+    const res = await fetch(`${GRAPH}/${mediaId}?fields=id&access_token=${encodeURIComponent(token)}`, { cache: "no-store", signal: AbortSignal.timeout(10_000) });
     if (res.ok) return true;
     const json = (await res.json().catch(() => ({}))) as { error?: { code?: number } };
     // Code 100 is "object does not exist": the post was deleted
@@ -345,16 +351,22 @@ export async function createPost({ candidateId, pageKey, choices, figure, captio
     });
   });
 
+  let publishedId: string | null = null;
   try {
     const account = await instagramAccount(page.handle);
     if (!account) throw new Error(`The poster can't see @${page.handle}. Check its access in Meta Business Settings.`);
     const slides = await renderSlides(card);
     const imageUrls = await Promise.all(slides.map((png, i) => hostCard(png, `${card.code}-${page.key}-${i + 1}`)));
     await ref.update({ imageUrl: imageUrls[0], imageUrls, updatedAt: FieldValue.serverTimestamp() });
-    const { mediaId, permalink } = await publishImages(account.id, imageUrls, text);
-    await ref.update({ status: "published", mediaId, permalink, publishedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() });
+    const { permalink } = await publishImages(account.id, imageUrls, text, async (id) => {
+      publishedId = id;
+      await ref.update({ status: "published", mediaId: id, publishedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() });
+    });
+    await ref.update({ permalink, updatedAt: FieldValue.serverTimestamp() });
     return { permalink };
   } catch (err) {
+    // Once Instagram has confirmed the post it is live, whatever fails afterwards
+    if (publishedId) return { permalink: null };
     const message = err instanceof Error ? err.message : "Posting failed.";
     await ref.update({ status: "failed", error: message, updatedAt: FieldValue.serverTimestamp() });
     throw new PostError(message, 502);
