@@ -9,6 +9,7 @@ import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { UserPlus, ExternalLink, MessageCircle } from "lucide-react";
+import { SOCIAL_PAGES } from "@/lib/social";
 import Link from "next/link";
 
 interface UserRow {
@@ -342,6 +343,19 @@ export default function CandidatesPage() {
                           >
                             <MessageCircle className="h-4 w-4" />
                           </Link>
+                          {role === "admin" && (
+                            <select
+                              value=""
+                              onChange={e => router.push(`/admin/subpages?page=${e.target.value}&profile=${u.uid}`)}
+                              title="Post this profile on one of our Instagram subpages"
+                              className="h-7 rounded-full border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-500 hover:border-slate-300"
+                            >
+                              <option value="" disabled>Post to subpage…</option>
+                              {SOCIAL_PAGES.map(p => (
+                                <option key={p.key} value={p.key}>@{p.handle}{p.connected ? "" : " (not connected)"}</option>
+                              ))}
+                            </select>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>

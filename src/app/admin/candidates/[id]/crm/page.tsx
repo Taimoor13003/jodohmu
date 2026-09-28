@@ -7,6 +7,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { auth } from "@/lib/firebase";
 import { getIdToken } from "firebase/auth";
 import { toast } from "sonner";
+import SocialPostHistory from "@/components/admin/social-post-history";
 import {
   ArrowLeft, Plus, Trash2, Save, X,
   Phone, Video, MessageSquare, Brain, FileText,
@@ -291,6 +292,9 @@ export default function CRMPage({ params }: { params: { id: string } }) {
             </div>
           )}
         </div>
+
+        {/* ── social media posts (admin only; hidden when the caller can't read them) ── */}
+        <SocialPostHistory candidateId={id} lang={lang} />
 
         {/* ── add entry button ── */}
         <div className="flex items-center gap-3 mb-4">

@@ -11,6 +11,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { auth } from "@/lib/firebase";
 import SharePanel from "@/components/admin/share-panel";
 import CandidateInvite from "@/components/admin/candidate-invite";
+import SocialPostPanel from "@/components/admin/social-post-panel";
 import { ageFromDob } from "@/lib/age";
 import {
   MapPin, Briefcase, GraduationCap, CheckCircle2, Heart,
@@ -18,7 +19,7 @@ import {
   AlertTriangle, CheckCircle, Fingerprint, Award,
   Pencil, Save, X, UserPlus, Trash2, Clock, Star, ToggleLeft,
   BookOpen, Shield, Leaf, Target, Users, CalendarDays,
-  ArrowLeft, LayoutList, Plus, Download, FileText, MessageCircle, Link2,
+  ArrowLeft, LayoutList, Plus, Download, FileText, MessageCircle, Link2, Instagram,
 } from "lucide-react";
 
 /* ── palette ─────────────────────────────────────────────────────────── */
@@ -789,6 +790,7 @@ export default function AdminCandidateProfile({ params }: { params: { id: string
 
   const [cvModal,  setCvModal]  = useState(false);
   const [sharePanel, setSharePanel] = useState(false);
+  const [socialPanel, setSocialPanel] = useState(false);
   const [inviteModal, setInviteModal] = useState(false);
   const [cvLang,   setCvLang]   = useState<Lang>(lang);
   const [cvPhoto,  setCvPhoto]  = useState(true);
@@ -1419,6 +1421,14 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
           <Link2 style={{ width: 13, height: 13 }} />
           {lang === "id" ? "Bagikan Profil" : "Share Profile"}
         </button>
+        {isAdmin && (
+          <button onClick={() => setSocialPanel(true)}
+            className="flex items-center gap-1.5 text-[12.5px] font-semibold px-3.5 py-1.5 rounded-lg border transition-colors hover:bg-white"
+            style={{ color: C.body, borderColor: C.border, background: "white" }}>
+            <Instagram style={{ width: 13, height: 13 }} />
+            {lang === "id" ? "Posting ke Instagram" : "Post to Instagram"}
+          </button>
+        )}
         <Link href={`/admin/chat?uid=${id}&name=${encodeURIComponent(meta.name ?? "")}`}
           className="flex items-center gap-1.5 text-[12.5px] font-semibold px-3.5 py-1.5 rounded-lg border transition-colors hover:bg-white"
           style={{ color: C.body, borderColor: C.border, background: "white" }}>
@@ -2603,6 +2613,10 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
           lang={lang}
           onClose={() => setSharePanel(false)}
         />
+      )}
+
+      {socialPanel && (
+        <SocialPostPanel candidateId={id} profile={data} lang={lang} onClose={() => setSocialPanel(false)} />
       )}
 
       {inviteModal && (
