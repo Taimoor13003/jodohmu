@@ -61,7 +61,7 @@ export function suggestPages(p: Profile): SocialPageKey[] {
 
 // The silhouette a profile gets unless the team picks another
 export function figureFor(p: Profile): Figure {
-  if (text(p.gender) === "male") return "man";
+  if (text(p.gender) === "male") return /islam|muslim/i.test(text(p.religion)) ? "man_peci_beard" : "man";
   return ["yes", "yes_full"].includes(text(p.hijab).toLowerCase()) ? "hijab" : "woman";
 }
 export type FigureChoice = "auto" | Figure;
@@ -184,7 +184,8 @@ export function profileCode(candidateId: string) {
 }
 
 const rowIcon = (key: SocialFieldKey, value: string, profile: Profile): IconKey | null => {
-  if (key === "gender") return text(profile.gender) === "male" ? "male" : "female";
+  // follows the words on the card, so a custom "Male" gets the male sign
+  if (key === "gender") return /^(male|man|laki)/i.test(value) ? "male" : /^(female|woman|perempuan|wanita)/i.test(value) ? "female" : text(profile.gender) === "male" ? "male" : "female";
   if (key === "religion") return /islam|muslim/i.test(value) ? "moon" : /kristen|christ|katolik|catholic/i.test(value) ? "church" : "sparkles";
   return FIELD_DEFS[key].icon;
 };
@@ -254,7 +255,9 @@ export const CARD_PROFILE_KEYS = [
   "educationLevel", "educations", "maritalStatus", "religion", "ethnicity", "ethnicityCustom", "height", "hijab",
 ] as const;
 
-const FIGURE_NAMES: Record<Figure, string> = { man: "Man", woman: "Woman, no hijab", hijab: "Woman in hijab" };
+const FIGURE_NAMES: Record<Figure, string> = {
+  man: "Man", man_peci: "Man with peci", man_peci_beard: "Man with peci & full beard", woman: "Woman, no hijab", hijab: "Woman in hijab",
+};
 
 // How the posted card differed from the template's usual card, in words, so the CRM can show it
 export function describeChoices(pageKey: SocialPageKey, choices: FieldChoices, profile: Profile, figure: FigureChoice): string[] {

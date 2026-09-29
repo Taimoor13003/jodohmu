@@ -1,19 +1,21 @@
 /* Faceless head-and-shoulders silhouettes for the profile cards, facing left, drawn on a 400×480 box.
    Our own drawings: the Canva template's silhouette is a paid Canva element and can't be reused. */
 
-export type Figure = "man" | "woman" | "hijab";
+export type Figure = "man" | "man_peci" | "man_peci_beard" | "woman" | "hijab";
 type Shade = "base" | "shade";
 
 // Each figure is layers of [shade, path]: skin/body first, then hair or fabric on top in a second grey
-export const FIGURES: Record<Figure, { label: { id: string; en: string }; layers: [Shade, string][] }> = {
-  man: {
-    label: { id: "Laki-laki", en: "Man" },
-    layers: [
+// The drawn man, used for the men's figures when their artwork file is missing
+const MAN_LAYERS: [Shade, string][] = [
       ["base", "M30 480 C36 432 84 410 146 398 C180 391 198 380 200 360 L202 334 C186 332 164 330 148 324 C134 318 126 306 126 294 C126 286 130 282 133 280 C129 278 126 274 127 270 C128 267 130 266 131 265 C128 263 126 259 127 256 C128 252 131 249 131 246 C124 244 110 240 108 232 C107 226 112 220 116 214 C122 206 130 196 134 186 C137 180 134 175 133 170 C132 163 135 157 136 150 C138 138 140 126 146 116 C140 108 138 98 146 90 C156 72 176 58 200 52 C214 44 232 42 250 44 C300 48 336 80 346 130 C354 170 348 214 330 244 C318 262 312 280 312 300 C312 324 316 346 330 362 C350 384 384 400 394 430 C398 446 400 462 400 480 Z"],
       ["shade", "M146 116 C140 108 138 98 146 90 C156 72 176 58 200 52 C214 44 232 42 250 44 C300 48 336 80 346 130 C354 170 348 214 330 244 C318 240 306 228 300 214 C296 196 292 176 282 164 C262 150 230 142 204 132 C184 124 164 118 146 116 Z"],
       ["shade", "M262 196 C270 186 286 188 290 202 C294 216 290 236 280 244 C272 250 262 246 262 236 Z"],
-    ],
-  },
+    ];
+
+export const FIGURES: Record<Figure, { label: { id: string; en: string }; layers: [Shade, string][] }> = {
+  man: { label: { id: "Laki-laki", en: "Man" }, layers: MAN_LAYERS },
+  man_peci: { label: { id: "Laki-laki berpeci", en: "Man with peci" }, layers: MAN_LAYERS },
+  man_peci_beard: { label: { id: "Berpeci & berjenggot", en: "Peci & full beard" }, layers: MAN_LAYERS },
   woman: {
     label: { id: "Perempuan tanpa hijab", en: "Woman, no hijab" },
     layers: [

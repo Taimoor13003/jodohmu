@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 const MODES: FieldMode[] = ["show", "custom", "hide"];
-const FIGURES: FigureChoice[] = ["auto", "man", "woman", "hijab"];
+const FIGURES: FigureChoice[] = ["auto", "man", "man_peci", "man_peci_beard", "woman", "hijab"];
 
 // Public posting is admin-only
 async function requireAdmin(req: NextRequest) {

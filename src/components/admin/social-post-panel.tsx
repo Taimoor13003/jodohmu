@@ -249,7 +249,7 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
               <section>
                 <p className="mb-2 text-xs font-bold uppercase tracking-wider" style={{ color: C.label }}>{t("Siluet", "Silhouette")}</p>
                 <div className="flex flex-wrap gap-2">
-                  {(["auto", "man", "woman", "hijab"] as FigureChoice[]).map((f) => {
+                  {(["auto", ...Object.keys(FIGURES)] as FigureChoice[]).map((f) => {
                     const active = figure === f;
                     const label = f === "auto"
                       ? `${t("Otomatis", "Auto")} · ${FIGURES[figureFor(profile)].label[lang]}`

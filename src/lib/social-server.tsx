@@ -1,4 +1,6 @@
 import { ImageResponse } from "next/og";
+import { readFile } from "fs/promises";
+import path from "path";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import cloudinary from "@/lib/cloudinary";
 import { adminDb } from "@/lib/firebase-admin";
@@ -6,7 +8,7 @@ import {
   SOCIAL_POSTS, buildCard, describeChoices, findPage, helloLines,
   type CardContent, type FieldChoices, type FigureChoice, type SocialPageKey,
 } from "@/lib/social";
-import { figureSvg, iconSvg } from "@/lib/social-figures";
+import { figureSvg, iconSvg, type Figure } from "@/lib/social-figures";
 
 /* Server side of social posting: draws the slides, hosts them, and publishes them through
    the Instagram Graph API as the "Jodohmu Poster Bot" system user. */
@@ -157,15 +159,37 @@ function HelloFrame({ card, children }: { card: CardContent; children: React.Rea
   );
 }
 
+// Our own silhouette artwork, when it has been added: 800×960 transparent PNGs, figure facing left, cut off at the bottom edge.
+// Written out per figure so the files are bundled with the server code.
+const FIGURE_FILES: Record<Figure, string> = {
+  man: path.join(process.cwd(), "public", "social-figures", "man.png"),
+  man_peci: path.join(process.cwd(), "public", "social-figures", "man-peci.png"),
+  man_peci_beard: path.join(process.cwd(), "public", "social-figures", "man-peci-beard.png"),
+  woman: path.join(process.cwd(), "public", "social-figures", "woman.png"),
+  hijab: path.join(process.cwd(), "public", "social-figures", "hijab.png"),
+};
+const figureCache = new Map<Figure, string>();
+
+// The artwork if we have it, otherwise the drawn silhouette
+async function figureImage(figure: Figure): Promise<string> {
+  const cached = figureCache.get(figure);
+  if (cached) return cached;
+  const src = await readFile(FIGURE_FILES[figure])
+    .then((png) => `data:image/png;base64,${png.toString("base64")}`)
+    .catch(() => figureSvg(figure, { base: "#DEDEDE", shade: "#C6C6C6" }));
+  figureCache.set(figure, src);
+  return src;
+}
+
 async function renderHelloIntro(card: CardContent): Promise<ImageResponse> {
   const { title, sub } = helloLines(card);
   const titleSize = title.length <= 14 ? 132 : title.length <= 19 ? 104 : 84;
-  const figure = { width: 600, height: 720 };
+  const figure = { width: 640, height: 768, src: await figureImage(card.figure) };
   return new ImageResponse(
     (
       <HelloFrame card={card}>
         {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
-        <img src={figureSvg(card.figure, { base: "#DEDEDE", shade: "#C6C6C6" })} width={figure.width} height={figure.height}
+        <img src={figure.src} width={figure.width} height={figure.height}
           style={{ position: "absolute", left: (CARD_SIZE.width - figure.width) / 2 + 30, top: ART_H - figure.height }} />
         <div style={{ position: "absolute", top: 138, left: 40, right: 40, display: "flex", flexDirection: "column", alignItems: "center" }}>
           <div style={{ display: "flex", fontSize: titleSize, fontWeight: 800, color: H.title, letterSpacing: -titleSize * 0.045, lineHeight: 1 }}>{title}</div>
@@ -223,8 +247,18 @@ export async function renderSlides(card: CardContent): Promise<ArrayBuffer[]> {
 // Instagram only accepts JPEGs at a public URL, so the card is hosted on Cloudinary as a JPEG
 export async function hostCard(png: ArrayBuffer, name: string): Promise<string> {
   const dataUri = `data:image/png;base64,${Buffer.from(png).toString("base64")}`;
-  const res = await cloudinary.uploader.upload(dataUri, { folder: "social-posts", public_id: name, format: "jpg", overwrite: true });
+  const upload = () => cloudinary.uploader.upload(dataUri, { folder: "social-posts", public_id: name, format: "jpg", overwrite: true });
+  // Uploads occasionally fail on a stale connection; one retry clears it
+  const res = await upload().catch(() => new Promise((r) => setTimeout(r, 1500)).then(upload))
+    .catch((err) => { throw new Error(`Image upload failed: ${errorText(err)}`); });
   return res.secure_url;
+}
+
+// Cloudinary rejects with plain objects ({ message, http_code }) or { error: { message } }, not Error instances
+export function errorText(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  const e = err as { message?: string; error?: { message?: string } } | null;
+  return e?.message ?? e?.error?.message ?? (typeof err === "string" ? err : JSON.stringify(err)) ?? "unknown error";
 }
 
 export const metaToken = () => process.env.META_SYSTEM_USER_TOKEN?.trim() || null;
@@ -367,7 +401,7 @@ export async function createPost({ candidateId, pageKey, choices, figure, captio
   } catch (err) {
     // Once Instagram has confirmed the post it is live, whatever fails afterwards
     if (publishedId) return { permalink: null };
-    const message = err instanceof Error ? err.message : "Posting failed.";
+    const message = errorText(err) || "Posting failed.";
     await ref.update({ status: "failed", error: message, updatedAt: FieldValue.serverTimestamp() });
     throw new PostError(message, 502);
   }
