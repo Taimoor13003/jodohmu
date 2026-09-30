@@ -30,19 +30,30 @@ export const TEAM_PERMISSIONS = [
     label: { id: "Atur jadwal tim", en: "Plan team schedule" },
     hint: { id: "Bisa mengatur ketersediaan semua orang dan menugaskan panggilan ke siapa pun.", en: "Can set everyone's availability and assign calls to anyone." },
   },
+  {
+    value: "mitra",
+    label: { id: "Kelola Mitra", en: "Manage Mitra" },
+    hint: { id: "Bisa melihat daftar calon mitra, menghubungi, dan mencatat hasilnya.", en: "Can see the partner list, reach out, and log what happened." },
+  },
 ] as const;
 export type TeamPermission = (typeof TEAM_PERMISSIONS)[number]["value"];
 
-// Every extra permission builds on Call Desk access; without it, nothing else applies
+// Permissions that stand on their own; every other extra permission builds on Call Desk access
+const STANDALONE_PERMISSIONS = ["mitra"];
+
 export const normalizePermissions = (requested: readonly string[]) => {
   const known = TEAM_PERMISSIONS.map((p) => p.value as string).filter((p) => requested.includes(p));
-  if (!known.length) return [];
-  return known.includes("calldesk") ? known : ["calldesk", ...known];
+  const needsCallDesk = known.some((p) => !STANDALONE_PERMISSIONS.includes(p));
+  return needsCallDesk && !known.includes("calldesk") ? ["calldesk", ...known] : known;
 };
 
 // Toggling in the UI: removing Call Desk access removes everything that depends on it
 export const togglePermission = (current: readonly string[], permission: string) => {
-  if (current.includes(permission)) return permission === "calldesk" ? [] : current.filter((p) => p !== permission);
+  if (current.includes(permission)) {
+    return permission === "calldesk"
+      ? current.filter((p) => STANDALONE_PERMISSIONS.includes(p))
+      : current.filter((p) => p !== permission);
+  }
   return normalizePermissions([...current, permission]);
 };
 

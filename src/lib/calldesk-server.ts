@@ -37,6 +37,22 @@ export async function requireCallDesk(req: NextRequest): Promise<CallDeskCaller 
   }
 }
 
+// Admins always; workers only when an admin has given them the "mitra" permission
+export async function requireMitra(req: NextRequest): Promise<{ uid: string; name: string } | null> {
+  const token = req.headers.get("authorization")?.replace("Bearer ", "");
+  if (!token) return null;
+  try {
+    const decoded = await adminAuth().verifyIdToken(token);
+    const data = (await adminDb().collection("user_roles").doc(decoded.uid).get()).data();
+    const name = (data?.name as string | undefined) ?? decoded.name ?? decoded.email ?? "—";
+    const permissions: string[] = Array.isArray(data?.permissions) ? data.permissions : [];
+    if (data?.role === "admin" || (data?.role === "worker" && permissions.includes("mitra"))) return { uid: decoded.uid, name };
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 const iso = (value: unknown) => (value as Timestamp | undefined)?.toDate?.()?.toISOString() ?? null;
 const str = (value: unknown) => (typeof value === "string" ? value : "");
 

@@ -10,7 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   Users, Briefcase, UserCheck, MessageCircle,
-  Globe, LogOut, Menu, Bell, MessageSquareText, Link2, PhoneCall, Wallet, BookOpen, Instagram,
+  Globe, LogOut, Menu, Bell, MessageSquareText, Link2, PhoneCall, Wallet, BookOpen, Handshake, Instagram,
 } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 
@@ -189,6 +189,7 @@ const SIDEBAR_W = 220;
 
 const NAV = [
   { href: "/admin/calls",      label: "Call Desk",      icon: <PhoneCall      className="w-full h-full" />, color: "#EA580C", bg: "#FFF7ED" },
+  { href: "/admin/mitra",      label: "Mitra",          icon: <Handshake      className="w-full h-full" />, color: "#0F766E", bg: "#F0FDFA" },
   { href: "/admin/finance",    label: "Keuangan",       icon: <Wallet         className="w-full h-full" />, color: "#15803D", bg: "#F0FDF4" },
   { href: "/admin/knowledge",  label: "Pengetahuan",    icon: <BookOpen       className="w-full h-full" />, color: "#B45309", bg: "#FFFBEB" },
   { href: "/admin/candidates", label: "Kandidat",      icon: <UserCheck      className="w-full h-full" />, color: "#C4294A", bg: "#FFF1F2" },
@@ -208,7 +209,7 @@ function Sidebar({ open, onClose, onSidebarEnter, onSidebarLeave, onLogout, role
   permissions: string[];
 }) {
   const pathname = usePathname();
-  const workerLinks = ["/admin/candidates", "/admin/chat", "/admin/shares", ...(permissions.includes("calldesk") ? ["/admin/calls"] : [])];
+  const workerLinks = ["/admin/candidates", "/admin/chat", "/admin/shares", ...(permissions.includes("calldesk") ? ["/admin/calls"] : []), ...(permissions.includes("mitra") ? ["/admin/mitra"] : [])];
   const nav = role === "worker"
     ? NAV.filter(item => workerLinks.includes(item.href))
     : NAV;
