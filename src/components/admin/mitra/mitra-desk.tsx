@@ -1,14 +1,15 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Loader2, Mail, MessageCircle, Phone, Globe, Instagram, ChevronDown, Clock, ArrowRight } from "lucide-react";
+import { Loader2, Mail, MessageCircle, Phone, Globe, Instagram, ChevronDown, Clock, ArrowRight, List, SquareKanban } from "lucide-react";
 import { addDays, findLabel } from "@/lib/calldesk";
 import {
-  MITRA_CHANNELS, MITRA_CLOSED, MITRA_FACILITATOR, MITRA_FAITHS, MITRA_SCORE_QUESTIONS, MITRA_SOURCES, MITRA_STAGES, MITRA_TYPES, instagramUrl,
+  MITRA_CHANNELS, MITRA_CLOSED, MITRA_FACILITATOR, MITRA_FAITHS, MITRA_SCORE_QUESTIONS, MITRA_SIGNED, MITRA_SOURCES, MITRA_STAGES, MITRA_TYPES, instagramUrl,
   type MitraProspect,
 } from "@/lib/mitra";
 import { callDeskFetch, formatDay, telLink, useL, waLink } from "@/components/admin/calldesk/shared";
 import { Tile } from "@/components/admin/calldesk/insights";
+import { MitraBoard } from "./mitra-board";
 import { useLanguage } from "@/context/LanguageContext";
 
 const input = "h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-800";
@@ -222,6 +223,7 @@ export function MitraDesk() {
   const [faith, setFaith] = useState("");
   const [facilitator, setFacilitator] = useState("");
   const [query, setQuery] = useState("");
+  const [view, setView] = useState<"list" | "board">("list");
 
   const load = useCallback(async () => {
     try {
@@ -252,18 +254,32 @@ export function MitraDesk() {
   const isDue = useCallback((p: MitraProspect) =>
     !MITRA_CLOSED.includes(p.stage) && (p.followUpDate ? p.followUpDate <= today : p.stage === "prospect"), [today]);
 
-  const shown = useMemo(() => {
+  // Search and dropdown filters; shared by the list and the board
+  const matching = useMemo(() => {
     if (!prospects) return [];
     const q = query.trim().toLowerCase();
     return prospects
-      .filter((p) => filter === "all" || (filter === "due" ? isDue(p) : p.stage === filter))
       .filter((p) => !type || p.type === type)
       .filter((p) => !faith || p.faith === faith)
       .filter((p) => !facilitator || p.facilitator === facilitator)
-      .filter((p) => !q || [p.name, p.organization, p.city, p.instagram, p.phone, p.reason, p.nextAction, p.notes].some((v) => v.toLowerCase().includes(q)))
+      .filter((p) => !q || [p.name, p.organization, p.city, p.instagram, p.phone, p.reason, p.nextAction, p.notes].some((v) => v.toLowerCase().includes(q)));
+  }, [prospects, type, faith, facilitator, query]);
+
+  const shown = useMemo(() => {
+    return matching
+      .filter((p) => filter === "all" || (filter === "due" ? isDue(p) : p.stage === filter))
       // Due list: oldest follow-up first, never-contacted after; otherwise newest first as loaded
       .sort((a, b) => (filter === "due" ? (a.followUpDate ?? "9999").localeCompare(b.followUpDate ?? "9999") : 0));
-  }, [prospects, filter, type, faith, facilitator, query, isDue]);
+  }, [matching, filter, isDue]);
+
+  // Clicking a board card opens it in the list, where the details and log form live
+  const openFromBoard = (id: string) => {
+    setView("list");
+    setFilter("all");
+    setOpenId(id);
+    setEditingId(null);
+    requestAnimationFrame(() => document.getElementById(`mitra-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  };
 
   if (!prospects && error) return <p className="text-sm font-semibold text-rose-600">{error}</p>;
   if (!prospects) return <Loader2 className="h-6 w-6 animate-spin text-[#1B3A6B]" />;
@@ -285,7 +301,7 @@ export function MitraDesk() {
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Tile label={l({ id: "Perlu dihubungi hari ini", en: "Due today" })} value={String(due)} />
         <Tile label={l({ id: "Bergabung minggu ini", en: "Signed this week" })} value={String(signedThisWeek)} hint={l({ id: "target: 5", en: "target: 5" })} />
-        <Tile label={l({ id: "Sudah bergabung", en: "Signed up" })} value={String(count("signed") + count("active"))} />
+        <Tile label={l({ id: "Sudah bergabung", en: "Signed up" })} value={String(prospects.filter((p) => MITRA_SIGNED.includes(p.stage)).length)} />
         <Tile label={l({ id: "Aktif (sudah merujuk)", en: "Active (have referred)" })} value={String(count("active"))} />
       </div>
 
@@ -305,6 +321,14 @@ export function MitraDesk() {
             <option value="">{l({ id: "Pendamping: semua", en: "Facilitator: any" })}</option>
             {MITRA_FACILITATOR.map((f) => <option key={f.value} value={f.value}>{l(f.label)}</option>)}
           </select>
+          <div className="flex h-9 overflow-hidden rounded-lg border border-slate-200">
+            {([["list", <List key="i" className="h-4 w-4" />, l({ id: "Daftar", en: "List" })], ["board", <SquareKanban key="i" className="h-4 w-4" />, l({ id: "Papan", en: "Board" })]] as const).map(([value, icon, label]) => (
+              <button key={value} type="button" onClick={() => setView(value)}
+                className={`flex items-center gap-1.5 px-3 text-sm font-semibold ${view === value ? "bg-[#1B3A6B] text-white" : "bg-white text-slate-600 hover:bg-slate-50"}`}>
+                {icon}{label}
+              </button>
+            ))}
+          </div>
           <button type="button" onClick={() => setAdding((open) => !open)} className="h-9 rounded-lg bg-[#C4294A] px-4 text-sm font-bold text-white hover:bg-[#a82340]">
             {adding ? l({ id: "Batal", en: "Cancel" }) : l({ id: "+ Tambah calon mitra", en: "+ Add potential Mitra" })}
           </button>
@@ -315,6 +339,9 @@ export function MitraDesk() {
               onSave={async (profile) => { if (await post({ action: "create", ...profile })) setAdding(false); }} />
           </div>
         )}
+        {view === "board" ? (
+          <div className="pt-3"><MitraBoard prospects={matching} today={today} onOpen={openFromBoard} onChanged={load} /></div>
+        ) : (<>
         <div className="flex flex-wrap gap-1.5 px-5 py-3">
           {chip("due", l({ id: "Perlu dihubungi", en: "Due" }), due)}
           {chip("all", l({ id: "Semua", en: "All" }), prospects.length)}
@@ -332,7 +359,7 @@ export function MitraDesk() {
             const open = openId === p.id;
             const overdue = p.followUpDate && p.followUpDate < today;
             return (
-              <li key={p.id}>
+              <li key={p.id} id={`mitra-${p.id}`} className="scroll-mt-4">
                 <div role="button" tabIndex={0} onClick={() => { setOpenId(open ? null : p.id); setEditingId(null); }}
                   onKeyDown={(e) => { if (e.key === "Enter") setOpenId(open ? null : p.id); }}
                   className="flex cursor-pointer flex-wrap items-center gap-3 px-5 py-3 hover:bg-slate-50/70">
@@ -439,6 +466,7 @@ export function MitraDesk() {
             );
           })}
         </ul>
+        </>)}
       </section>
     </div>
   );

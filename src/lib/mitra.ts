@@ -3,19 +3,26 @@ import type { Bilingual } from "@/lib/calldesk";
 
 export const MITRA_PROSPECTS = "mitra_prospects";
 
+// Acquisition gets someone to sign up; management keeps a signed Mitra briefed, referring and facilitating
 export const MITRA_STAGES = [
-  { value: "prospect", label: { id: "Belum dihubungi", en: "Not contacted" }, tone: "bg-slate-50 text-slate-600 border-slate-200" },
-  { value: "contacted", label: { id: "Sudah dihubungi", en: "Contacted" }, tone: "bg-sky-50 text-sky-700 border-sky-200" },
-  { value: "interested", label: { id: "Tertarik", en: "Interested" }, tone: "bg-violet-50 text-violet-700 border-violet-200" },
-  { value: "signed", label: { id: "Sudah bergabung", en: "Signed up" }, tone: "bg-indigo-50 text-indigo-700 border-indigo-200" },
-  // Has sent at least one real referral
-  { value: "active", label: { id: "Aktif (sudah merujuk)", en: "Active (has referred)" }, tone: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  { value: "not_now", label: { id: "Belum sekarang", en: "Not now" }, tone: "bg-amber-50 text-amber-700 border-amber-200" },
-  { value: "not_fit", label: { id: "Tidak cocok", en: "Not a fit" }, tone: "bg-slate-100 text-slate-400 border-slate-200" },
+  { value: "prospect", phase: "acquisition", label: { id: "Belum dihubungi", en: "Not contacted" }, tone: "bg-slate-50 text-slate-600 border-slate-200" },
+  { value: "contacted", phase: "acquisition", label: { id: "Sudah dihubungi", en: "Contacted" }, tone: "bg-sky-50 text-sky-700 border-sky-200" },
+  { value: "interested", phase: "acquisition", label: { id: "Tertarik", en: "Interested" }, tone: "bg-violet-50 text-violet-700 border-violet-200" },
+  { value: "signed", phase: "management", label: { id: "Sudah bergabung", en: "Signed up" }, tone: "bg-indigo-50 text-indigo-700 border-indigo-200" },
+  // Knows how we work and can run an introduction on their own
+  { value: "briefed", phase: "management", label: { id: "Sudah dibriefing", en: "Briefed, ready" }, tone: "bg-cyan-50 text-cyan-700 border-cyan-200" },
+  // Has sent at least one real referral or facilitated a meeting
+  { value: "active", phase: "management", label: { id: "Aktif (sudah merujuk)", en: "Active (has referred)" }, tone: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+  // Signed up once but has gone quiet; worth a nudge
+  { value: "paused", phase: "management", label: { id: "Tidak aktif", en: "Gone quiet" }, tone: "bg-orange-50 text-orange-700 border-orange-200" },
+  { value: "not_now", phase: "closed", label: { id: "Belum sekarang", en: "Not now" }, tone: "bg-amber-50 text-amber-700 border-amber-200" },
+  { value: "not_fit", phase: "closed", label: { id: "Tidak cocok", en: "Not a fit" }, tone: "bg-slate-100 text-slate-400 border-slate-200" },
 ] as const;
 export type MitraStage = (typeof MITRA_STAGES)[number]["value"];
 // Stages nobody needs to chase any more
 export const MITRA_CLOSED: string[] = ["not_fit"];
+// Everyone who has signed up, whatever state they are in now
+export const MITRA_SIGNED: string[] = MITRA_STAGES.filter((s) => s.phase === "management").map((s) => s.value);
 
 // The first six match the partner types on the public /mitra form
 export const MITRA_TYPES = [

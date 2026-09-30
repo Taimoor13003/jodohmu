@@ -163,6 +163,24 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true });
     }
 
+    // Moving a card on the Board: changes only the stage, and writes the move to the history
+    if (body.action === "stage") {
+      const stage = pick(MITRA_STAGES, body.stage);
+      if (!stage) return NextResponse.json({ error: "Unknown stage." }, { status: 400 });
+      const from = current.stage ?? "prospect";
+      if (from === stage) return NextResponse.json({ success: true });
+      const entry: MitraLogEntry = {
+        at: now, by: caller.name, channel: "note", note: "",
+        stageFrom: from as MitraLogEntry["stageFrom"], stageTo: stage as MitraLogEntry["stageTo"],
+      };
+      await ref.update({
+        stage,
+        log: [entry, ...(Array.isArray(current.log) ? current.log : [])].slice(0, MAX_LOG),
+        updatedAt: FieldValue.serverTimestamp(), updatedBy: caller.name,
+      });
+      return NextResponse.json({ success: true });
+    }
+
     // One touch: what happened, and optionally a new stage, score, referral count and next follow-up
     if (body.action === "log") {
       const channel = pick(MITRA_CHANNELS, body.channel) ?? "note";
