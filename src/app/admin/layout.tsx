@@ -10,7 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   Users, Briefcase, UserCheck, MessageCircle,
-  Globe, LogOut, Menu, Bell, MessageSquareText, Link2, PhoneCall, Wallet, BookOpen, Handshake, Instagram, AtSign,
+  Globe, LogOut, Menu, Bell, MessageSquareText, Link2, PhoneCall, Wallet, BookOpen, Handshake, Instagram,
 } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 
@@ -196,7 +196,6 @@ const NAV = [
   { href: "/admin/chat",       label: "Chat",           icon: <MessageCircle  className="w-full h-full" />, color: "#0369A1", bg: "#EFF6FF" },
   { href: "/admin/shares",     label: "Tautan Profil",  icon: <Link2          className="w-full h-full" />, color: "#7C3AED", bg: "#F5F3FF" },
   { href: "/admin/subpages",   label: "Subpages",       icon: <Instagram      className="w-full h-full" />, color: "#DB2777", bg: "#FDF2F8" },
-  { href: "/admin/threads",    label: "Threads",        icon: <AtSign         className="w-full h-full" />, color: "#18181B", bg: "#F4F4F5" },
   { href: "/admin/workers",    label: "Workers",        icon: <Briefcase      className="w-full h-full" />, color: "#14B8A6", bg: "#F0FDFA" },
   { href: "/admin/users",      label: "Semua Pengguna", icon: <Users          className="w-full h-full" />, color: "#6366F1", bg: "#EEF2FF" },
 ];
@@ -210,7 +209,7 @@ function Sidebar({ open, onClose, onSidebarEnter, onSidebarLeave, onLogout, role
   permissions: string[];
 }) {
   const pathname = usePathname();
-  const workerLinks = ["/admin/candidates", "/admin/chat", "/admin/shares", ...(permissions.includes("calldesk") ? ["/admin/calls"] : []), ...(permissions.includes("mitra") ? ["/admin/mitra"] : [])];
+  const workerLinks = ["/admin/candidates", "/admin/chat", "/admin/shares", ...(permissions.includes("calldesk") ? ["/admin/calls"] : []), ...(permissions.includes("mitra") ? ["/admin/mitra"] : []), ...(permissions.includes("social") ? ["/admin/subpages"] : [])];
   const nav = role === "worker"
     ? NAV.filter(item => workerLinks.includes(item.href))
     : NAV;

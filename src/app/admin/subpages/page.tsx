@@ -5,15 +5,15 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import SubpagesScreen from "@/components/admin/subpages-screen";
 
-// Posting to our public Instagram pages is admin-only
+// Our public accounts: admins, and workers an admin has given "Manage social media"
 export default function SubpagesPage() {
-  const { role, loading } = useAuth();
+  const { role, permissions, loading } = useAuth();
   const { lang } = useLanguage();
   if (loading) return null;
-  if (role !== "admin") {
+  if (role !== "admin" && !(role === "worker" && permissions.includes("social"))) {
     return (
       <div className="mx-auto max-w-lg p-8 text-center text-sm text-slate-500">
-        {lang === "id" ? "Hanya admin yang bisa memposting ke subpage." : "Only admins can post to subpages."}
+        {lang === "id" ? "Minta admin memberi Anda akses Kelola media sosial." : "Ask an admin to give you Manage social media access."}
       </div>
     );
   }

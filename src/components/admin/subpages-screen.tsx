@@ -2,17 +2,21 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { CheckCircle2, ExternalLink, Instagram, Loader2, Search } from "lucide-react";
+import { CheckCircle2, ExternalLink, Images, Inbox, Loader2, Search } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import { SOCIAL_PAGES, autoValues, findPage, suggestPages, type SocialPageKey } from "@/lib/social";
+import { autoValues, findPage, suggestPages, type SocialPageKey } from "@/lib/social";
 import { authFetch } from "@/components/admin/share-api";
 import { SocialComposer, type PostRow } from "./social-post-panel";
+import SocialHub, { type HubData } from "./social-hub";
+import LoginStatus from "./login-status";
+import { SOCIAL_ACCOUNTS, findSocialAccount, type SocialAccountKey } from "@/lib/social-accounts";
 
 type ProfileRow = { id: string; personStatus: string | null; isTest: boolean; profile: Record<string, unknown> };
 
 const C = { border: "#E2E8F0", text: "#0F172A", body: "#334155", label: "#64748B", muted: "#94A3B8", navy: "#1B3A6B" };
 
-/* Admin → Subpages: one tab per niche Instagram page. Pick a profile, shape its card, post it.
+/* Admin → Subpages: one tab per public account. "Inbox & posting" handles its Instagram, Facebook and Threads
+   in one place; "Client cards" builds a client's faceless card and posts it to the page's Instagram.
    The page wraps this with the admin check. */
 export default function SubpagesScreen() {
   const { lang: rawLang } = useLanguage();
@@ -22,17 +26,68 @@ export default function SubpagesScreen() {
   const pathname = usePathname();
   const params = useSearchParams();
 
-  // The chosen page and profile live in the URL, so "Post to subpage" elsewhere can link straight here
-  const page = (findPage(params.get("page") ?? "")?.key ?? "nikahin_foreigner") as SocialPageKey;
-  const selectedId = params.get("profile");
-  const pageInfo = findPage(page)!;
-  const go = (next: { page?: string; profile?: string | null }) => {
-    const q = new URLSearchParams({ page: next.page ?? page });
-    const profile = next.profile === undefined ? selectedId : next.profile;
-    if (profile) q.set("profile", profile);
+  // Account, view and profile live in the URL, so "Post to subpage" elsewhere (and the Threads login) can link straight here
+  const account = (findSocialAccount(params.get("page") ?? "")?.key ?? "nikahin_foreigner") as SocialAccountKey;
+  const accountInfo = findSocialAccount(account)!;
+  const cardPage = findPage(account);
+  const view = params.get("view") === "cards" || (params.get("profile") && params.get("view") !== "inbox") ? "cards" : "inbox";
+  const go = (next: { page?: string; view?: string; profile?: string | null }) => {
+    const q = new URLSearchParams({ page: next.page ?? account, view: next.view ?? view });
+    const profile = next.profile === undefined ? params.get("profile") : next.profile;
+    if (profile && (next.page ?? account) === account) q.set("profile", profile);
     router.replace(`${pathname}?${q.toString()}`, { scroll: false });
   };
+  const [threadsOn, setThreadsOn] = useState<HubData["accounts"]>([]);
+  const notice = params.get("connected") ? t("Threads terhubung.", "Threads connected.") : null;
+  const loginError = params.get("error");
 
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+      <p className="text-xs font-bold uppercase tracking-wider text-[#C4294A]">Subpages</p>
+      <h1 className="mt-1 text-2xl font-bold text-slate-900">{t("Kelola akun sosial kita", "Manage our social accounts")}</h1>
+
+      <div className="mt-5 flex gap-1 overflow-x-auto rounded-xl border bg-white p-1" style={{ borderColor: C.border }}>
+        {SOCIAL_ACCOUNTS.map((a) => (
+          <button key={a.key} type="button" onClick={() => go({ page: a.key, profile: null })}
+            className="flex shrink-0 flex-col items-start rounded-lg px-4 py-2 text-left transition"
+            style={account === a.key ? { background: a.accent, color: "white" } : { color: C.label }}>
+            <span className="text-sm font-bold">@{a.handle}</span>
+            <span className="text-[11px] opacity-80">{a.label}{threadsOn.find((x) => x.key === a.key)?.threads ? " · Threads ✓" : ""}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-4 inline-flex rounded-xl border bg-white p-1" style={{ borderColor: C.border }}>
+        {([["inbox", t("Inbox & posting", "Inbox & posting"), Inbox], ["cards", t("Kartu klien", "Client cards"), Images]] as const).map(([key, label, Icon]) => (
+          <button key={key} type="button" onClick={() => go({ view: key })}
+            className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm font-bold"
+            style={view === key ? { background: C.navy, color: "white" } : { color: C.label }}>
+            <Icon className="h-4 w-4" />{label}
+          </button>
+        ))}
+      </div>
+      <div className="mt-4"><LoginStatus key={account} accountKey={account} lang={lang} /></div>
+      {loginError && <p className="mt-3 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{loginError}</p>}
+
+      <div className="mt-4">
+        {view === "inbox"
+          ? <SocialHub key={account} accountKey={account} lang={lang} notice={notice} onAccounts={setThreadsOn} />
+          : cardPage
+            ? <ClientCards key={cardPage.key} page={cardPage.key} lang={lang} selectedId={params.get("profile")} onSelect={(id) => go({ profile: id })} />
+            : <p className="rounded-2xl border bg-white px-5 py-16 text-center text-sm" style={{ borderColor: C.border, color: C.muted }}>
+                {t(`Kartu klien hanya untuk subpage, bukan @${accountInfo.handle}.`, `Client cards are for the niche pages, not @${accountInfo.handle}.`)}
+              </p>}
+      </div>
+    </div>
+  );
+}
+
+// Pick a profile, shape its card, post it to the page's Instagram
+function ClientCards({ page, lang, selectedId, onSelect }: {
+  page: SocialPageKey; lang: "id" | "en"; selectedId: string | null; onSelect: (id: string) => void;
+}) {
+  const t = (id: string, en: string) => (lang === "id" ? id : en);
+  const pageInfo = findPage(page)!;
   const [profiles, setProfiles] = useState<ProfileRow[]>([]);
   const [posts, setPosts] = useState<PostRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,24 +121,15 @@ export default function SubpagesScreen() {
   const selected = profiles.find((p) => p.id === selectedId) ?? null;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-      <p className="text-xs font-bold uppercase tracking-wider text-[#C4294A]">Subpages</p>
-      <h1 className="mt-1 text-2xl font-bold text-slate-900">{t("Posting profil ke halaman Instagram", "Post profiles to our Instagram pages")}</h1>
-
-      <div className="mt-5 flex gap-1 overflow-x-auto rounded-xl border bg-white p-1" style={{ borderColor: C.border }}>
-        {SOCIAL_PAGES.map((p) => (
-          <button key={p.key} type="button" onClick={() => go({ page: p.key })}
-            className="flex shrink-0 flex-col items-start rounded-lg px-4 py-2 text-left transition"
-            style={page === p.key ? { background: p.accent, color: "white" } : { color: C.label }}>
-            <span className="flex items-center gap-1.5 text-sm font-bold"><Instagram className="h-3.5 w-3.5" />@{p.handle}</span>
-            <span className="text-[11px] opacity-80">{p.label}{!p.connected && ` · ${t("belum terhubung", "not connected yet")}`}</span>
-          </button>
-        ))}
-      </div>
-
+    <div>
+      {!pageInfo.connected && (
+        <p className="mb-3 rounded-lg bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-800">
+          {t(`@${pageInfo.handle} belum terhubung ke poster Instagram.`, `@${pageInfo.handle} isn't connected to the Instagram poster yet.`)}
+        </p>
+      )}
       {error && <p className="mt-3 rounded-lg bg-rose-50 px-3 py-2 text-sm font-semibold text-rose-700">{error}</p>}
 
-      <div className="mt-5 grid gap-5 lg:grid-cols-[320px_1fr]">
+      <div className="grid gap-5 lg:grid-cols-[320px_1fr]">
         {/* ── choose a profile ── */}
         <aside className="space-y-3">
           <div className="rounded-2xl border bg-white p-3" style={{ borderColor: C.border }}>
@@ -105,7 +151,7 @@ export default function SubpagesScreen() {
               const active = p.id === selectedId;
               const posted = postedBy.get(p.id);
               return (
-                <button key={p.id} type="button" onClick={() => go({ profile: p.id })}
+                <button key={p.id} type="button" onClick={() => onSelect(p.id)}
                   className="w-full rounded-xl border bg-white px-3 py-2.5 text-left transition hover:shadow-sm"
                   style={{ borderColor: active ? pageInfo.accent : C.border, boxShadow: active ? `0 0 0 1px ${pageInfo.accent}` : undefined }}>
                   <div className="flex items-center gap-1.5">

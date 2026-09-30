@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { adminDb } from "@/lib/firebase-admin";
-import { authenticateTeam } from "@/lib/team-access";
+import { requireSocial } from "@/lib/social-access";
 import {
   CARD_PROFILE_KEYS, SOCIAL_POSTS, buildCard, defaultChoices, fieldsFor, findPage,
   type FieldChoices, type FieldMode, type FigureChoice, type SocialPageKey,
@@ -15,11 +15,8 @@ export const maxDuration = 60;
 const MODES: FieldMode[] = ["show", "custom", "hide"];
 const FIGURES: FigureChoice[] = ["auto", "man", "man_peci", "man_peci_beard", "woman", "hijab"];
 
-// Public posting is admin-only
-async function requireAdmin(req: NextRequest) {
-  const actor = await authenticateTeam(req.headers.get("authorization"));
-  return actor?.role === "admin" ? actor : null;
-}
+// Public posting: admins, and workers with "Manage social media"
+const requireAdmin = (req: NextRequest) => requireSocial(req.headers.get("authorization"));
 
 function cleanChoices(pageKey: SocialPageKey, input: unknown): FieldChoices {
   const out = defaultChoices(pageKey);

@@ -35,11 +35,16 @@ export const TEAM_PERMISSIONS = [
     label: { id: "Kelola Mitra", en: "Manage Mitra" },
     hint: { id: "Bisa melihat daftar calon mitra, menghubungi, dan mencatat hasilnya.", en: "Can see the partner list, reach out, and log what happened." },
   },
+  {
+    value: "social",
+    label: { id: "Kelola media sosial", en: "Manage social media" },
+    hint: { id: "Bisa memposting ke Instagram, Facebook & Threads kita, membalas komentar, dan membuat kartu klien di Subpages.", en: "Can post to our Instagram, Facebook and Threads, answer comments, and make client cards on Subpages." },
+  },
 ] as const;
 export type TeamPermission = (typeof TEAM_PERMISSIONS)[number]["value"];
 
 // Permissions that stand on their own; every other extra permission builds on Call Desk access
-const STANDALONE_PERMISSIONS = ["mitra"];
+const STANDALONE_PERMISSIONS = ["mitra", "social"];
 
 export const normalizePermissions = (requested: readonly string[]) => {
   const known = TEAM_PERMISSIONS.map((p) => p.value as string).filter((p) => requested.includes(p));

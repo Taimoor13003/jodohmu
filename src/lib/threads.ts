@@ -1,6 +1,8 @@
 import { createCipheriv, createDecipheriv, createHash, createHmac, randomBytes, timingSafeEqual } from "crypto";
-import { FieldValue, Timestamp } from "firebase-admin/firestore";
+import { FieldValue } from "firebase-admin/firestore";
 import { adminDb } from "@/lib/firebase-admin";
+import { SOCIAL_ACCOUNTS, findSocialAccount, type SocialAccountKey } from "@/lib/social-accounts";
+import { inboxMarks, isOpen, markReplied, toItem, type InboxItem, type InboxPost } from "@/lib/social-inbox";
 
 /* Posting to and answering on Jodohmu's Threads accounts from the admin.
    Unlike Instagram (one system-user token), every Threads account logs in once through
@@ -11,24 +13,12 @@ const API = `${HOST}/v1.0`;
 const TIMEOUT_MS = 20_000;
 export const THREADS_ACCOUNTS_COLLECTION = "threads_accounts";
 export const THREADS_POSTS = "threads_posts";
-export const THREADS_INBOX = "threads_inbox";
 export const THREADS_TEXT_LIMIT = 500;
-// A reply nobody has answered for this long is flagged as a follow-up
-export const FOLLOW_UP_MS = 6 * 60 * 60 * 1000;
 const SCOPES = ["threads_basic", "threads_content_publish", "threads_read_replies", "threads_manage_replies", "threads_manage_insights"];
 
-export type ThreadsAccountKey = "nikahin_foreigner" | "nikah_lagiyuk" | "taaruf_sekarang" | "temu_chindo" | "kristenmatch" | "jodohmu";
-
-// The same handles as the Instagram pages (a Threads profile is made from its Instagram account), plus the main account
-export const THREADS_ACCOUNTS: { key: ThreadsAccountKey; handle: string; label: string; accent: string }[] = [
-  { key: "nikahin_foreigner", handle: "nikahin_foreigner", label: "WNI & WNA", accent: "#761410" },
-  { key: "nikah_lagiyuk", handle: "nikah_lagiyuk", label: "Janda / duda", accent: "#9B2242" },
-  { key: "taaruf_sekarang", handle: "taaruf_sekarang", label: "Muslim", accent: "#3E5A4C" },
-  { key: "temu_chindo", handle: "temu_chindo", label: "Chindo", accent: "#B4232C" },
-  { key: "kristenmatch", handle: "kristenmatch.indo", label: "Kristen", accent: "#1D4E89" },
-  { key: "jodohmu", handle: "jodohmu_official", label: "Jodohmu", accent: "#C4294A" },
-];
-export const findThreadsAccount = (key: string) => THREADS_ACCOUNTS.find((a) => a.key === key) ?? null;
+export type ThreadsAccountKey = SocialAccountKey;
+export const THREADS_ACCOUNTS = SOCIAL_ACCOUNTS;
+export const findThreadsAccount = findSocialAccount;
 
 const appId = () => process.env.THREADS_APP_ID?.trim() || null;
 const appSecret = () => process.env.THREADS_APP_SECRET?.trim() || null;
@@ -208,27 +198,19 @@ type RawReply = {
   hide_status?: string; is_reply_owned_by_me?: boolean; replied_to?: { id: string };
 };
 
-export type InboxItem = {
-  id: string; postId: string; text: string; username: string; timestamp: string; permalink: string | null;
-  hidden: boolean; answered: boolean; ourAnswer: string | null; answeredByName: string | null; done: boolean; doneByName: string | null; followUp: boolean;
-  // When this is a reply to one of our replies, what we had said
-  inReplyToOurs: string | null;
-};
-export type InboxPost = { id: string; text: string; permalink: string | null; timestamp: string; mediaType: string; imageUrl: string | null; replyCount: number; open: number };
-
 // Our recent posts and every reply under them, marked answered once we have replied to it
 export async function inbox(key: ThreadsAccountKey): Promise<{ username: string; posts: InboxPost[]; items: InboxItem[] }> {
   const s = await session(key);
   const { data: posts } = await api<{ data: RawPost[] }>(s.token, "me/threads", {
     params: { fields: "id,text,permalink,timestamp,media_type,media_url", limit: "20" },
   });
-  const conversations = await Promise.all(posts.map((p) =>
-    api<{ data: RawReply[] }>(s.token, `${p.id}/conversation`, {
-      params: { fields: "id,text,username,timestamp,permalink,hide_status,is_reply_owned_by_me,replied_to", reverse: "false", limit: "100" },
-    }).then((r) => r.data).catch(() => [] as RawReply[])));
-
-  const doneSnap = await adminDb().collection(THREADS_INBOX).where("account", "==", key).get();
-  const done = new Map(doneSnap.docs.map((d) => [d.id, d.data()]));
+  const [conversations, marks] = await Promise.all([
+    Promise.all(posts.map((p) =>
+      api<{ data: RawReply[] }>(s.token, `${p.id}/conversation`, {
+        params: { fields: "id,text,username,timestamp,permalink,hide_status,is_reply_owned_by_me,replied_to", reverse: "false", limit: "100" },
+      }).then((r) => r.data).catch(() => [] as RawReply[]))),
+    inboxMarks("threads", key),
+  ]);
   const isOurs = (r: RawReply) => r.is_reply_owned_by_me === true || r.username?.toLowerCase() === s.username.toLowerCase();
 
   const items: InboxItem[] = [];
@@ -237,27 +219,16 @@ export async function inbox(key: ThreadsAccountKey): Promise<{ username: string;
     const ours = new Map(replies.filter(isOurs).map((r) => [r.id, r]));
     const answers = new Map<string, RawReply>();
     for (const r of Array.from(ours.values())) if (r.replied_to?.id && !answers.has(r.replied_to.id)) answers.set(r.replied_to.id, r);
-    let open = 0;
-    for (const r of replies) {
-      if (isOurs(r)) continue;
-      const answer = answers.get(r.id) ?? null;
-      const mark = done.get(r.id);
-      const isDone = Boolean(mark?.byUid);
-      const hidden = r.hide_status === "HIDDEN";
-      const settled = Boolean(answer) || isDone || hidden;
-      if (!settled) open++;
-      items.push({
-        id: r.id, postId: p.id, text: r.text ?? "", username: r.username ?? "someone", timestamp: r.timestamp, permalink: r.permalink ?? null,
-        hidden, answered: Boolean(answer), ourAnswer: answer?.text ?? null, answeredByName: answer ? ((mark?.repliedByName as string) ?? null) : null,
-        done: isDone, doneByName: isDone ? ((mark?.byName as string) ?? null) : null,
-        followUp: !settled && Date.now() - new Date(r.timestamp).getTime() > FOLLOW_UP_MS,
-        inReplyToOurs: r.replied_to?.id ? (ours.get(r.replied_to.id)?.text ?? null) : null,
-      });
-    }
+    const rows = replies.filter((r) => !isOurs(r)).map((r) => toItem("threads", {
+      id: r.id, postId: p.id, text: r.text ?? "", username: r.username ?? "someone", timestamp: r.timestamp, permalink: r.permalink ?? null,
+      hidden: r.hide_status === "HIDDEN", answer: answers.get(r.id)?.text ?? (answers.has(r.id) ? "" : null),
+      inReplyToOurs: r.replied_to?.id ? (ours.get(r.replied_to.id)?.text ?? null) : null,
+    }, marks.get(r.id)));
+    items.push(...rows);
     return {
-      id: p.id, text: p.text ?? "", permalink: p.permalink ?? null, timestamp: p.timestamp, mediaType: p.media_type ?? "TEXT",
+      platform: "threads" as const, id: p.id, text: p.text ?? "", permalink: p.permalink ?? null, timestamp: p.timestamp,
       imageUrl: p.media_type === "IMAGE" || p.media_type === "CAROUSEL_ALBUM" ? (p.media_url ?? null) : null,
-      replyCount: replies.filter((r) => !isOurs(r)).length, open,
+      replyCount: rows.length, open: rows.filter(isOpen).length,
     };
   });
   items.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
@@ -270,23 +241,13 @@ export async function replyTo(key: ThreadsAccountKey, replyToId: string, text: s
   if (body.length > THREADS_TEXT_LIMIT) throw new Error(`Threads allows ${THREADS_TEXT_LIMIT} characters; this has ${body.length}.`);
   const s = await session(key);
   const result = await publishContainer(s, { media_type: "TEXT", text: body, reply_to_id: replyToId });
-  await adminDb().collection(THREADS_INBOX).doc(replyToId).set(
-    { account: key, repliedByUid: actor.uid, repliedByName: actor.name, repliedAt: FieldValue.serverTimestamp() }, { merge: true },
-  );
+  await markReplied("threads", key, replyToId, actor);
   return result;
 }
 
 export async function setHidden(key: ThreadsAccountKey, replyId: string, hide: boolean) {
   const s = await session(key);
   await api(s.token, `${replyId}/manage_reply`, { method: "POST", params: { hide: String(hide) } });
-}
-
-// "Done" for replies that need no answer (a thank-you, an emoji), so they leave the follow-up list
-export async function markDone(key: ThreadsAccountKey, replyId: string, done: boolean, actor: { uid: string; name: string }) {
-  const ref = adminDb().collection(THREADS_INBOX).doc(replyId);
-  await ref.set(done
-    ? { account: key, byUid: actor.uid, byName: actor.name, at: Timestamp.now() }
-    : { account: key, byUid: FieldValue.delete(), byName: FieldValue.delete(), at: FieldValue.delete() }, { merge: true });
 }
 
 /* ── Meta's deauthorize / data-deletion callbacks ── */
