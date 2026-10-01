@@ -3,21 +3,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import {
-  Check, ChevronLeft, ChevronRight, Copy, Eye, Globe2, HeartHandshake, Image as ImageIcon, Info,
+  Check, ChevronLeft, ChevronRight, Copy, Eye, Globe2, HeartHandshake,
   KeyRound, Link2, Mail, Megaphone, MessageCircle, Search, UserRound, X,
 } from "lucide-react";
-import {
-  AUDIENCE_TIERS, SHARE_SECTIONS, candidateDisplayName, defaultAudiences, normalizeAudiences, projectProfile, tierRank,
-  type AudienceRule, type AudienceTier, type Audiences,
-} from "@/lib/share-sections";
-import { AVATAR_LABELS, avatarsForGender, defaultAvatarFor, type AvatarVariant } from "@/lib/share-avatars";
+import { AUDIENCE_TIERS, defaultAudiences, type AudienceRule, type Audiences } from "@/lib/share-sections";
+import type { AvatarVariant } from "@/lib/share-avatars";
 import { questionsSchema, type Question } from "@/lib/share-questions";
-import { AvatarSwatch } from "@/components/share/avatars";
-import { fieldLabel } from "@/lib/share-display";
 import type { AccessMode, SharePurpose, ShareSummary } from "@/lib/share-types";
-import { ProfileCard } from "@/components/share/profile-card";
 import { QuestionEditor } from "./question-editor";
 import { authFetch, shareUrl } from "./share-api";
+import {
+  Chip, Label, TIER_META, VisibilityFields, VisibilityPreview, loadCandidate, type BuilderCandidate,
+} from "./share-visibility";
 
 type Lang = "id" | "en";
 
@@ -29,14 +26,6 @@ const C = {
 
 const MAX_PROFILES = 5;
 
-export interface BuilderCandidate {
-  id: string;
-  name: string;
-  data: Record<string, unknown>;
-  photoUrls: string[];
-  photoVisibility: string | null;
-}
-
 interface PickerRow {
   uid: string;
   name: string;
@@ -45,12 +34,6 @@ interface PickerRow {
   age?: string | number | null;
   canEdit?: boolean;
 }
-
-const TIER_META: Record<AudienceTier, { title: Record<Lang, string>; hint: Record<Lang, string> }> = {
-  public: { title: { id: "Siapa saja", en: "Anyone" }, hint: { id: "Belum masuk", en: "Not signed in" } },
-  member: { title: { id: "Sudah masuk", en: "Signed in" }, hint: { id: "Akun Google apa pun", en: "Any Google account" } },
-  candidate: { title: { id: "Kandidat terdaftar", en: "Registered candidates" }, hint: { id: "Sudah lewat tahap lead", en: "Past the New Lead stage" } },
-};
 
 const EXPIRY = [
   { v: 24, id: "24 jam", en: "24 hours" },
@@ -71,42 +54,7 @@ const PER_PERSON = [
   { v: null, id: "Tanpa batas", en: "Unlimited" },
 ];
 
-async function loadCandidate(id: string): Promise<BuilderCandidate> {
-  const json = await authFetch<{ data?: Record<string, unknown>; meta?: { name?: string } }>(`/api/admin/candidate/${id}`);
-  const data = json.data ?? {};
-  return {
-    id,
-    name: candidateDisplayName(data) || json.meta?.name || "Kandidat",
-    data,
-    photoUrls: Array.isArray(data.photoUrls) ? (data.photoUrls as unknown[]).filter((u): u is string => typeof u === "string") : [],
-    photoVisibility: typeof data.photoVisibility === "string" ? data.photoVisibility : null,
-  };
-}
-
 /* ── small parts ─────────────────────────────────────── */
-
-function Chip({ active, onClick, children, disabled }: { active: boolean; onClick: () => void; children: React.ReactNode; disabled?: boolean }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      className="rounded-full border px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors disabled:opacity-40"
-      style={active ? { background: C.navy, borderColor: C.navy, color: "#fff" } : { background: "#fff", borderColor: C.border, color: C.label }}
-    >
-      {children}
-    </button>
-  );
-}
-
-function Label({ children, hint }: { children: React.ReactNode; hint?: React.ReactNode }) {
-  return (
-    <div className="mb-2">
-      <p className="text-[11px] font-bold uppercase tracking-wide" style={{ color: C.muted }}>{children}</p>
-      {hint && <p className="mt-0.5 text-[12px]" style={{ color: C.label }}>{hint}</p>}
-    </div>
-  );
-}
 
 function OptionTile({ active, onClick, icon, title, body }: { active: boolean; onClick: () => void; icon: React.ReactNode; title: string; body: string }) {
   return (
@@ -123,23 +71,6 @@ function OptionTile({ active, onClick, icon, title, body }: { active: boolean; o
         <span className="block text-[14px] font-bold" style={{ color: C.text }}>{title}</span>
         <span className="mt-0.5 block text-[12.5px] leading-snug" style={{ color: C.label }}>{body}</span>
       </span>
-    </button>
-  );
-}
-
-function TierBox({ checked, disabled, onChange, label }: { checked: boolean; disabled?: boolean; onChange: (on: boolean) => void; label: string }) {
-  return (
-    <button
-      type="button"
-      role="checkbox"
-      aria-checked={checked}
-      aria-label={label}
-      disabled={disabled}
-      onClick={() => onChange(!checked)}
-      className="mx-auto flex h-6 w-6 items-center justify-center rounded-md border transition-colors disabled:opacity-25"
-      style={checked ? { background: C.navy, borderColor: C.navy } : { background: "#fff", borderColor: "#CBD5E1" }}
-    >
-      {checked && <Check className="h-3.5 w-3.5 text-white" />}
     </button>
   );
 }
@@ -176,8 +107,6 @@ export default function ShareBuilder({
   const [questions, setQuestions] = useState<Question[]>([]);
 
   const [step, setStep] = useState(0);
-  const [previewTier, setPreviewTier] = useState<AudienceTier>("member");
-  const [previewSlot, setPreviewSlot] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [created, setCreated] = useState<ShareSummary | null>(null);
 
@@ -212,37 +141,8 @@ export default function ShareBuilder({
   );
   const stepKey = steps[Math.min(step, steps.length - 1)].key;
 
-  /* ── audience editing (keeps tiers cumulative) ── */
-
-  const setField = (field: string, tier: AudienceTier, on: boolean) =>
-    setAudiences(prev => {
-      const rank = tierRank(tier);
-      const next = JSON.parse(JSON.stringify(prev)) as Audiences;
-      AUDIENCE_TIERS.forEach((tt, i) => {
-        const has = next[tt].fields.includes(field);
-        if (on && i >= rank && !has) next[tt].fields.push(field);
-        if (!on && i <= rank && has) next[tt].fields = next[tt].fields.filter(f => f !== field);
-      });
-      return normalizeAudiences(next);
-    });
-
-  const setFlag = (flag: "showName" | "showPhotos", tier: AudienceTier, on: boolean) =>
-    setAudiences(prev => {
-      const rank = tierRank(tier);
-      const next = JSON.parse(JSON.stringify(prev)) as Audiences;
-      AUDIENCE_TIERS.forEach((tt, i) => {
-        if (on && i >= rank) next[tt][flag] = true;
-        if (!on && i <= rank) next[tt][flag] = false;
-      });
-      return normalizeAudiences(next);
-    });
-
   const publicDisabled = accessMode !== "anyone";
   const tiersInUse = publicDisabled ? AUDIENCE_TIERS.filter(tt => tt !== "public") : AUDIENCE_TIERS;
-
-  useEffect(() => {
-    if (publicDisabled && previewTier === "public") setPreviewTier("member");
-  }, [publicDisabled, previewTier]);
 
   /* ── candidates ── */
 
@@ -268,14 +168,6 @@ export default function ShareBuilder({
       .filter(r => [r.name, r.email, r.location ?? ""].some(v => v?.toLowerCase().includes(q)))
       .slice(0, 8);
   }, [picker, pickerQuery, candidates]);
-
-  const togglePhoto = (candidate: BuilderCandidate, index: number) =>
-    setPhotoSelection(prev => {
-      const all = candidate.photoUrls.map((_, i) => i);
-      const current = prev[candidate.id] ?? all;
-      const next = current.includes(index) ? current.filter(i => i !== index) : [...current, index].sort((a, b) => a - b);
-      return { ...prev, [candidate.id]: next.length === all.length ? null : next };
-    });
 
   const commitEmails = () => {
     const parts = emailDraft.split(/[\s,;]+/).map(e => e.trim().toLowerCase()).filter(Boolean);
@@ -394,21 +286,6 @@ export default function ShareBuilder({
       </div>
     );
   }
-
-  /* ── preview projection ── */
-  const previewCandidate = candidates[Math.min(previewSlot, Math.max(0, candidates.length - 1))];
-  const preview = previewCandidate
-    ? projectProfile({
-        slot: Math.min(previewSlot, candidates.length - 1),
-        candidate: previewCandidate.data,
-        audiences,
-        tier: previewTier,
-        avatar: avatarSelection[previewCandidate.id] ?? defaultAvatarFor(previewCandidate.data),
-        photoSelection: photoSelection[previewCandidate.id] ?? null,
-        anonymousLabel: `PREVIEW-${previewSlot + 1}`,
-        photoSrc: i => previewCandidate.photoUrls[i],
-      })
-    : null;
 
   const ruleSummary = (rule: AudienceRule) =>
     `${rule.fields.length} ${t("data", "fields")} · ${rule.showName ? t("nama", "name") : t("tanpa nama", "no name")} · ${rule.showPhotos ? t("foto", "photos") : t("tanpa foto", "no photos")}`;
@@ -599,111 +476,17 @@ export default function ShareBuilder({
 
           {/* ── 3. visibility matrix ── */}
           {stepKey === "visibility" && (
-            <div className="flex flex-col gap-6">
-              <div className="flex items-start gap-2.5 rounded-xl px-4 py-3" style={{ background: "#EFF4FB" }}>
-                <Info className="mt-0.5 h-4 w-4 shrink-0" style={{ color: C.navy }} />
-                <p className="text-[12.5px] leading-relaxed" style={{ color: C.body }}>
-                  {t(
-                    "Centang apa yang boleh dilihat setiap kelompok. Kelompok yang lebih tinggi selalu melihat semua yang dilihat kelompok di kirinya. Tim Jodohmu selalu melihat semuanya.",
-                    "Tick what each audience may see. Each audience always sees everything the one to its left sees. The Jodohmu team always sees everything.",
-                  )}
-                  {publicDisabled && <strong> {t("Kolom “Siapa saja” tidak dipakai karena tautan ini wajib masuk.", "The “Anyone” column is unused because this link requires sign-in.")}</strong>}
-                </p>
-              </div>
-
-              <div className="overflow-x-auto rounded-2xl border bg-white" style={{ borderColor: C.border }}>
-                <table className="w-full min-w-[560px] text-[13px]">
-                  <thead>
-                    <tr style={{ background: C.bg }}>
-                      <th className="px-4 py-3 text-left text-[11px] font-bold uppercase tracking-wide" style={{ color: C.muted }}>{t("Informasi", "Information")}</th>
-                      {AUDIENCE_TIERS.map(tier => (
-                        <th key={tier} className="w-32 px-2 py-3 text-center" style={{ opacity: tier === "public" && publicDisabled ? 0.35 : 1 }}>
-                          <span className="block text-[12px] font-bold" style={{ color: C.text }}>{TIER_META[tier].title[lang]}</span>
-                          <span className="block text-[10.5px] font-medium" style={{ color: C.muted }}>{TIER_META[tier].hint[lang]}</span>
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {([["showName", t("Nama asli", "Real name")], ["showPhotos", t("Foto", "Photos")]] as const).map(([flag, label]) => (
-                      <tr key={flag} style={{ borderTop: `1px solid ${C.divider}` }}>
-                        <td className="px-4 py-2.5 font-bold" style={{ color: C.text }}>{label}</td>
-                        {AUDIENCE_TIERS.map(tier => (
-                          <td key={tier} className="px-2 py-2.5 text-center">
-                            <TierBox checked={audiences[tier][flag]} disabled={tier === "public" && publicDisabled} onChange={on => setFlag(flag, tier, on)} label={`${label} — ${TIER_META[tier].title[lang]}`} />
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                    {SHARE_SECTIONS.map(section => (
-                      <SectionRows key={section.key} sectionLabel={lang === "id" ? section.labelId : section.labelEn} fields={section.fields}
-                        audiences={audiences} lang={lang} publicDisabled={publicDisabled} onToggle={setField} />
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div>
-                <Label hint={t("Dipakai untuk audiens yang tidak boleh melihat foto, atau bila kandidat belum punya foto.", "Shown to audiences who may not see photos, or when a candidate has none.")}>
-                  <span className="inline-flex items-center gap-1.5"><UserRound className="h-3.5 w-3.5" /> {t("Avatar pengganti", "Stand-in avatar")}</span>
-                </Label>
-                <div className="flex flex-col gap-3">
-                  {candidates.map(c => {
-                    const current = avatarSelection[c.id] ?? defaultAvatarFor(c.data);
-                    return (
-                      <div key={c.id} className="rounded-xl border bg-white p-3" style={{ borderColor: C.border }}>
-                        <p className="mb-2.5 text-[13px] font-bold" style={{ color: C.text }}>{c.name}</p>
-                        <div className="flex flex-wrap gap-4">
-                          {avatarsForGender(c.data.gender).map(v => (
-                            <AvatarSwatch
-                              key={v}
-                              variant={v}
-                              selected={current === v}
-                              label={AVATAR_LABELS[v][lang]}
-                              onClick={() => setAvatarSelection(prev => ({ ...prev, [c.id]: v }))}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {candidates.some(c => c.photoUrls.length > 0) && (
-                <div>
-                  <Label hint={t("Pilih foto mana yang ikut dibagikan, per profil. Foto selalu diberi tanda air nama penerima.", "Choose which photos are shared, per profile. Photos are always watermarked with the viewer.")}>
-                    <span className="inline-flex items-center gap-1.5"><ImageIcon className="h-3.5 w-3.5" /> {t("Foto yang dibagikan", "Shared photos")}</span>
-                  </Label>
-                  <div className="flex flex-col gap-3">
-                    {candidates.filter(c => c.photoUrls.length > 0).map(c => (
-                      <div key={c.id} className="rounded-xl border bg-white p-3" style={{ borderColor: C.border }}>
-                        <div className="mb-2 flex items-center gap-2">
-                          <p className="text-[13px] font-bold" style={{ color: C.text }}>{c.name}</p>
-                          {c.photoVisibility === "after_match" && (
-                            <span className="rounded-full px-2 py-0.5 text-[10.5px] font-bold" style={{ background: C.amberBg, color: C.amber }}>
-                              {t("Kandidat memilih foto setelah match", "Candidate prefers photos after match")}
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex flex-wrap gap-2">
-                          {c.photoUrls.map((url, i) => {
-                            const on = (photoSelection[c.id] ?? null) === null || photoSelection[c.id]!.includes(i);
-                            return (
-                              <button key={i} type="button" onClick={() => togglePhoto(c, i)} className="relative h-16 w-14 overflow-hidden rounded-lg" style={{ border: `2px solid ${on ? C.navy : C.border}`, opacity: on ? 1 : 0.4 }}>
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img src={url} alt="" className="h-full w-full object-cover object-top" />
-                                {on && <span className="absolute bottom-0.5 right-0.5 flex h-4 w-4 items-center justify-center rounded-full" style={{ background: C.navy }}><Check className="h-2.5 w-2.5 text-white" /></span>}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+            <VisibilityFields
+              candidates={candidates}
+              lang={lang}
+              publicDisabled={publicDisabled}
+              audiences={audiences}
+              onAudiences={setAudiences}
+              photoSelection={photoSelection}
+              onPhotoSelection={setPhotoSelection}
+              avatarSelection={avatarSelection}
+              onAvatarSelection={setAvatarSelection}
+            />
           )}
 
           {/* ── 4. questions ── */}
@@ -742,26 +525,14 @@ export default function ShareBuilder({
                 ))}
               </div>
 
-              <div className="rounded-2xl border" style={{ borderColor: C.border, background: "#FBF8F3" }}>
-                <div className="flex flex-wrap items-center gap-2 border-b px-4 py-3" style={{ borderColor: C.border, background: "#fff" }}>
-                  <Eye className="h-4 w-4" style={{ color: C.navy }} />
-                  <span className="text-[13px] font-bold" style={{ color: C.text }}>{t("Pratinjau sebagai", "Preview as")}</span>
-                  {tiersInUse.map(tier => (
-                    <Chip key={tier} active={previewTier === tier} onClick={() => setPreviewTier(tier)}>{TIER_META[tier].title[lang]}</Chip>
-                  ))}
-                  <div className="flex-1" />
-                  {candidates.length > 1 && candidates.map((c, i) => (
-                    <Chip key={c.id} active={previewSlot === i} onClick={() => setPreviewSlot(i)}>{i + 1}</Chip>
-                  ))}
-                </div>
-                <div className="p-4 sm:p-6">
-                  {preview ? (
-                    <ProfileCard profile={preview} lang={lang} position={{ index: previewSlot, total: candidates.length }} />
-                  ) : (
-                    <p className="py-10 text-center text-[13px]" style={{ color: C.muted }}>{t("Tambahkan profil untuk melihat pratinjau.", "Add a profile to see a preview.")}</p>
-                  )}
-                </div>
-              </div>
+              <VisibilityPreview
+                candidates={candidates}
+                lang={lang}
+                tiers={tiersInUse}
+                audiences={audiences}
+                photoSelection={photoSelection}
+                avatarSelection={avatarSelection}
+              />
             </div>
           )}
         </div>
@@ -784,51 +555,5 @@ export default function ShareBuilder({
         </div>
       </div>
     </div>
-  );
-}
-
-function SectionRows({ sectionLabel, fields, audiences, lang, publicDisabled, onToggle }: {
-  sectionLabel: string;
-  fields: string[];
-  audiences: Audiences;
-  lang: Lang;
-  publicDisabled: boolean;
-  onToggle: (field: string, tier: AudienceTier, on: boolean) => void;
-}) {
-  const allOn = (tier: AudienceTier) => fields.every(f => audiences[tier].fields.includes(f));
-  return (
-    <>
-      <tr style={{ borderTop: `1px solid ${C.border}`, background: C.bg }}>
-        <td className="px-4 py-2 text-[11px] font-bold uppercase tracking-wide" style={{ color: C.label }}>{sectionLabel}</td>
-        {AUDIENCE_TIERS.map(tier => (
-          <td key={tier} className="px-2 py-2 text-center">
-            <button
-              type="button"
-              disabled={tier === "public" && publicDisabled}
-              onClick={() => fields.forEach(f => onToggle(f, tier, !allOn(tier)))}
-              className="text-[10.5px] font-bold disabled:opacity-25"
-              style={{ color: C.navy }}
-            >
-              {allOn(tier) ? (lang === "id" ? "hapus semua" : "clear") : (lang === "id" ? "semua" : "all")}
-            </button>
-          </td>
-        ))}
-      </tr>
-      {fields.map(field => (
-        <tr key={field} style={{ borderTop: `1px solid ${C.divider}` }}>
-          <td className="py-2 pl-7 pr-4" style={{ color: C.body }}>{fieldLabel(field, lang)}</td>
-          {AUDIENCE_TIERS.map(tier => (
-            <td key={tier} className="px-2 py-2 text-center">
-              <TierBox
-                checked={audiences[tier].fields.includes(field)}
-                disabled={tier === "public" && publicDisabled}
-                onChange={on => onToggle(field, tier, on)}
-                label={`${fieldLabel(field, lang)} — ${tier}`}
-              />
-            </td>
-          ))}
-        </tr>
-      ))}
-    </>
   );
 }

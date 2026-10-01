@@ -3,13 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useReducedMotion, useTransform, type PanInfo } from "framer-motion";
 import {
-  Briefcase, CalendarHeart, GraduationCap, Heart, Home, Lock, MapPin, Ruler, RotateCcw, Sparkles, X, type LucideIcon,
+  Briefcase, CalendarHeart, GraduationCap, Heart, Lock, MapPin, Ruler, RotateCcw, Sparkles, X, type LucideIcon,
 } from "lucide-react";
 import { LONG_FORM_FIELDS, fieldLabel, type Lang } from "@/lib/share-display";
 import type { ProjectedProfile } from "@/lib/share-sections";
 import { ProfileAvatar } from "./avatars";
 import { BRAND_GRADIENT, GeometricPattern, T, serif } from "./share-theme";
-import { formatField, profileSections, profileTitle } from "./profile-card";
+import { formatField, formatLocation, profileSections, profileTitle } from "./profile-card";
 
 export type Decision = "yes" | "no";
 
@@ -29,7 +29,6 @@ const GLANCE: { field: string; icon: LucideIcon }[] = [
   { field: "maritalTimeline", icon: CalendarHeart },
   { field: "religiousPracticeLevel", icon: Sparkles },
   { field: "height", icon: Ruler },
-  { field: "currentlyLivingWith", icon: Home },
 ];
 
 /* ── one card: the photo, then everything this viewer is allowed to see ── */
@@ -46,18 +45,14 @@ function CardFace({ profile, lang, interactive, onOpenPhoto, note }: {
   /** cover when the crop is minor, contain when the photo truly can't fill */
   const [fit, setFit] = useState<"cover" | "contain">("cover");
   const frame = useRef<HTMLDivElement | null>(null);
+  const photoEl = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     setPhotoIndex(0);
   }, [profile.slot]);
 
   const photo = profile.photos[Math.min(photoIndex, profile.photos.length - 1)];
-  useEffect(() => {
-    setLoaded(false);
-  }, [photo?.src]);
-
-  const onPhotoLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = e.currentTarget;
+  const showPhoto = (img: HTMLImageElement) => {
     const box = frame.current?.getBoundingClientRect();
     if (box && box.width > 0 && img.naturalWidth > 0) {
       const imgRatio = img.naturalWidth / img.naturalHeight;
@@ -69,8 +64,15 @@ function CardFace({ profile, lang, interactive, onOpenPhoto, note }: {
     setLoaded(true);
   };
 
+  useEffect(() => {
+    // A cached photo can finish before its load handler is attached.
+    const img = photoEl.current;
+    if (img?.complete && img.naturalWidth > 0) showPhoto(img);
+    else setLoaded(false);
+  }, [photo?.src]);
+
   const age = formatField("age", profile.data.age, lang);
-  const location = formatField("location", profile.data.location, lang);
+  const location = formatLocation(profile, lang);
   const occupation = formatField("occupation", profile.data.occupation, lang);
   const about = formatField("aboutMe", profile.data.aboutMe, lang);
   const sections = profileSections(profile, lang);
@@ -88,9 +90,10 @@ function CardFace({ profile, lang, interactive, onOpenPhoto, note }: {
   };
 
   return (
-    <div className="h-full w-full overflow-y-auto overscroll-contain" style={{ background: T.card }}>
+    <div className="h-full w-full overflow-y-auto overflow-x-hidden overscroll-contain" style={{ background: T.card }}>
       {/* ── photo, or a deep panel + avatar so the white name plate reads the same ── */}
-      <div ref={frame} className="relative" style={{ height: PHOTO_SHARE }}>
+      {/* clipped: the blurred backdrop is scaled past the frame and would otherwise let the card scroll sideways */}
+      <div ref={frame} className="relative overflow-hidden" style={{ height: PHOTO_SHARE }}>
         {photo ? (
           <>
             {/* placeholder until the photo arrives, so nothing pops in */}
@@ -113,7 +116,8 @@ function CardFace({ profile, lang, interactive, onOpenPhoto, note }: {
               src={photo.src}
               alt={profileTitle(profile, lang)}
               draggable={false}
-              onLoad={onPhotoLoad}
+              ref={photoEl}
+              onLoad={e => showPhoto(e.currentTarget)}
               onContextMenu={e => e.preventDefault()}
               className="absolute inset-0 h-full w-full select-none transition-opacity duration-500"
               style={{ objectFit: fit, objectPosition: "50% 28%", opacity: loaded ? 1 : 0 }}
@@ -270,31 +274,15 @@ function CardFace({ profile, lang, interactive, onOpenPhoto, note }: {
 }
 
 /* ── capture deterrence ──
-   A web page cannot block OS screenshots. What it can do is make any capture
-   traceable (identity watermark over the whole card), hide content whenever the
-   page isn't the active window, and refuse to print. */
+   A web page cannot block OS screenshots. What it can do is hide content
+   whenever the page isn't the active window, and refuse to print. */
 
 export type CaptureKind = "printscreen" | "shortcut" | "print";
-
-function IdentityWatermark({ text }: { text: string }) {
-  const safe = text.replace(/[<>&"'`]/g, "").slice(0, 80);
-  const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="150">` +
-    `<text x="120" y="80" text-anchor="middle" transform="rotate(-24 120 75)" fill="rgb(128,128,128)" fill-opacity="0.22" ` +
-    `font-family="Arial, sans-serif" font-size="12" font-weight="700">${safe}</text></svg>`;
-  return (
-    <div
-      aria-hidden
-      className="pointer-events-none absolute inset-0 overflow-hidden rounded-[24px]"
-      style={{ backgroundImage: `url("data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}")`, backgroundRepeat: "repeat" }}
-    />
-  );
-}
 
 /* ── the deck: fills whatever space its parent gives it ── */
 
 export function SwipeDeck({
-  profiles, index, lang, onDecide, onOpenPhoto, onUndo, canUndo, askQuestions, note, watermark, onCaptureAttempt,
+  profiles, index, lang, onDecide, onOpenPhoto, onUndo, canUndo, askQuestions, note, onCaptureAttempt,
 }: {
   profiles: ProjectedProfile[];
   index: number;
@@ -307,8 +295,6 @@ export function SwipeDeck({
   askQuestions: boolean;
   /** the team's opening note, shown on the first card */
   note?: string;
-  /** who is looking — tiled over the card so any capture is traceable */
-  watermark?: string;
   onCaptureAttempt?: (kind: CaptureKind) => void;
 }) {
   const reduceMotion = useReducedMotion();
@@ -459,7 +445,6 @@ export function SwipeDeck({
             <div className={cardShell} style={{ boxShadow: shellShadow }}>
               <CardFace profile={profile} lang={lang} interactive note={note} onOpenPhoto={i => onOpenPhoto(profile.slot, i)} />
             </div>
-            {watermark && <IdentityWatermark text={watermark} />}
 
             <motion.div
               className="pointer-events-none absolute left-5 top-6 rounded-xl px-4 py-2 text-[18px] font-extrabold tracking-[0.12em]"

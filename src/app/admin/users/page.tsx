@@ -40,6 +40,7 @@ interface CandidateDetails {
   phone: string;
   phoneCountryCode: string;
   location: string;
+  locationArea: string;
   nationality: string;
   nationalityCustom: string;
   ethnicity: string;
@@ -190,7 +191,7 @@ interface CandidateDetails {
 
 const EMPTY: CandidateDetails = {
   gender: "", dateOfBirth: "", age: "", phone: "", phoneCountryCode: "+62",
-  location: "", nationality: "", nationalityCustom: "", ethnicity: "", ethnicityCustom: "",
+  location: "", locationArea: "", nationality: "", nationalityCustom: "", ethnicity: "", ethnicityCustom: "",
   height: "", weight: "",
   maritalStatus: "", previousMarriageCount: "", divorceYear: "", divorceInitiatedBy: "",
   previousDivorceReason: "", timeToHealFromDivorce: "", childrenFromPreviousMarriage: "",
@@ -708,6 +709,10 @@ function AdminUsersPageInner() {
 
                 <F label="City / Location">
                   <Input className="h-9 text-sm" value={d.location} onChange={inp("location")} placeholder="Bandung, West Java" />
+                </F>
+
+                <F label="Area / District (optional)">
+                  <Input className="h-9 text-sm" value={d.locationArea} onChange={inp("locationArea")} placeholder="e.g. Setiabudi, Sleman" />
                 </F>
 
                 {/* Nationality with "Other" option */}

@@ -585,7 +585,6 @@ export default function ShareView({ token }: { token: string }) {
             onDecide={onDecide}
             onUndo={undo}
             canUndo={decided.length > 0}
-            watermark={`${d.viewer?.email || d.recipientLabel} · ${d.code}`}
             onCaptureAttempt={kind => beacon({ slot: profiles[index]?.slot ?? -1, capture: kind })}
             onOpenPhoto={(slot, photoIndex) => {
               setLightbox({ slot, index: photoIndex });

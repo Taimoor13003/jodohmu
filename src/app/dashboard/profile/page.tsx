@@ -4,6 +4,7 @@ import { ResultHeadline } from "../_result-page";
 import { resultAvailable } from "@/lib/candidate-results";
 
 
+import { LIVING_WITH_OPTIONS, livingWithLabel } from "@/lib/share-display";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -987,7 +988,7 @@ export default function CandidateProfilePage() {
                     <Field label={l("Berat","Weight")} value={raw(data,"weight") !== "—" ? `${raw(data,"weight")} kg` : "—"} stranger={stranger} />
                     <Field label={l("Gol. Darah","Blood Type")} value={s("bloodType")} stranger={stranger} />
                     <Field label={l("Lahir Di","Place of Birth")} value={raw(data,"birthPlace")} stranger={stranger} />
-                    <Field label={l("Tinggal Dengan","Living With")} value={raw(data,"currentlyLivingWith")} stranger={stranger} />
+                    <Field label={l("Tinggal Dengan","Living With")} value={livingWithLabel(raw(data,"currentlyLivingWith"), lang === "en" ? "en" : "id")} stranger={stranger} />
                     <Field label={l("Kondisi Kesehatan","Health Condition")} value={raw(data,"ownHealthCondition")} stranger={stranger} long />
                   </FieldGrid>
                 </SCard>
@@ -1004,7 +1005,7 @@ export default function CandidateProfilePage() {
                     <EInput field="weight" label={l("Berat (kg)","Weight (kg)")} type="num" draft={draft} locked={isLocked("weight")} upd={upd} />
                     <EInput field="bloodType" label={l("Gol. Darah","Blood Type")} type="sel" opts={[["A","A"],["B","B"],["AB","AB"],["O","O"]]} draft={draft} locked={isLocked("bloodType")} upd={upd} />
                     <EInput field="birthPlace" label={l("Lahir Di","Place of Birth")} draft={draft} locked={isLocked("birthPlace")} upd={upd} />
-                    <EInput field="currentlyLivingWith" label={l("Tinggal Dengan","Living With")} draft={draft} locked={isLocked("currentlyLivingWith")} upd={upd} />
+                    <EInput field="currentlyLivingWith" label={l("Tinggal Dengan","Living With")} type="sel" opts={LIVING_WITH_OPTIONS.map(o => [o, livingWithLabel(o, lang === "en" ? "en" : "id")])} draft={draft} locked={isLocked("currentlyLivingWith")} upd={upd} />
                     <EInput field="ownHealthCondition" label={l("Kondisi Kesehatan","Health Condition")} draft={draft} locked={isLocked("ownHealthCondition")} upd={upd} long />
                     <EInput field="whatsappNumber" label={l("WhatsApp","WhatsApp")} draft={draft} locked={isLocked("whatsappNumber")} upd={upd} />
                   </FieldGrid>
@@ -1019,7 +1020,7 @@ export default function CandidateProfilePage() {
                     <Field label={l("Berat","Weight")} value={raw(data,"weight") !== "—" ? `${raw(data,"weight")} kg` : "—"} stranger={stranger} />
                     <Field label={l("Gol. Darah","Blood Type")} value={s("bloodType")} stranger={stranger} />
                     <Field label={l("Lahir Di","Place of Birth")} value={raw(data,"birthPlace")} stranger={stranger} />
-                    <Field label={l("Tinggal Dengan","Living With")} value={raw(data,"currentlyLivingWith")} stranger={stranger} />
+                    <Field label={l("Tinggal Dengan","Living With")} value={livingWithLabel(raw(data,"currentlyLivingWith"), lang === "en" ? "en" : "id")} stranger={stranger} />
                     <Field label={l("Kondisi Kesehatan","Health Condition")} value={raw(data,"ownHealthCondition")} stranger={stranger} long />
                     <Field label={l("WhatsApp","WhatsApp")} value={raw(data,"whatsappNumber")} stranger={false} />
                   </FieldGrid>

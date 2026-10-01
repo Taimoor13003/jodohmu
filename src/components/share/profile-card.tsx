@@ -17,14 +17,21 @@ const GLANCE: { field: string; icon: LucideIcon }[] = [
   { field: "maritalTimeline", icon: CalendarHeart },
 ];
 
-const HERO_FIELDS = new Set(["age", "gender", "maritalStatus", "openToTaaruf", "aboutMe", ...GLANCE.map(g => g.field)]);
+const HERO_FIELDS = new Set(["age", "gender", "locationArea", "maritalStatus", "openToTaaruf", "aboutMe", ...GLANCE.map(g => g.field)]);
 
 export function formatField(field: string, value: unknown, lang: Lang): string | null {
-  const text = displayValue(value, lang);
+  const text = displayValue(value, lang, field);
   if (!text) return null;
   if (field === "height" && /^\d+$/.test(text)) return `${text} cm`;
   if (field === "weight" && /^\d+$/.test(text)) return `${text} kg`;
   return text;
+}
+
+/** "Sleman, Yogyakarta" — the area leads when the link is allowed to show it. */
+export function formatLocation(profile: ProjectedProfile, lang: Lang): string | null {
+  const city = formatField("location", profile.data.location, lang);
+  const area = formatField("locationArea", profile.data.locationArea, lang);
+  return [area, city].filter(Boolean).join(", ") || null;
 }
 
 export function profileTitle(profile: ProjectedProfile, lang: Lang): string {
@@ -146,7 +153,7 @@ export function ProfileCard({
   const f = (field: string) => formatField(field, d[field], lang);
   const title = profileTitle(profile, lang);
   const age = f("age");
-  const location = f("location");
+  const location = formatLocation(profile, lang);
   const about = f("aboutMe");
   const chips = [f("maritalStatus"), f("openToTaaruf"), f("gender")].filter(Boolean) as string[];
   const glance = GLANCE.map(g => ({ ...g, value: f(g.field) })).filter(g => g.value && g.field !== "location");

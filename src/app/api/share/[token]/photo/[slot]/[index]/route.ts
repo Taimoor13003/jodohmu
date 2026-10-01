@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebase-admin";
 import {
   SHARES_COLLECTION,
-  SHARE_VIEWERS_SUBCOLLECTION,
   buildWatermarkedUrl,
   evaluateShare,
   parseCloudinaryUrl,
@@ -49,10 +48,7 @@ export async function GET(
     const selection = share.photoSelection[candidateId] ?? null;
     if (selection !== null && !selection.includes(photoIndex)) return new NextResponse("Forbidden", { status: 403 });
 
-    const [candidateSnap, viewerSnap] = await Promise.all([
-      adminDb().collection("candidate_intake").doc(candidateId).get(),
-      ref.collection(SHARE_VIEWERS_SUBCOLLECTION).doc(claims.vk).get(),
-    ]);
+    const candidateSnap = await adminDb().collection("candidate_intake").doc(candidateId).get();
     const photos = candidateSnap.data()?.photoUrls;
     if (!Array.isArray(photos) || typeof photos[photoIndex] !== "string") {
       return new NextResponse("Not found", { status: 404 });
@@ -62,8 +58,7 @@ export async function GET(
     if (!cloudRef) return new NextResponse("Not found", { status: 404 });
 
     const stamp = new Date(now).toISOString().slice(0, 10);
-    const who = (viewerSnap.data()?.email as string | null) || share.recipientLabel || "—";
-    const label = `Jodohmu · ${who} · ${shareCode(token)} · ${stamp}`;
+    const label = `Jodohmu · ${shareCode(token)} · ${stamp}`;
     const variant = req.nextUrl.searchParams.get("size") === "full" ? "full" : "card";
     const upstream = await fetch(
       buildWatermarkedUrl(cloudRef, { label, tile: `Jodohmu · ${shareCode(token)}`, variant }),

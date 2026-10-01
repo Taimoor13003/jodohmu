@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { auth } from "@/lib/firebase";
+import { LIVING_WITH_OPTIONS } from "@/lib/share-display";
 import SharePanel from "@/components/admin/share-panel";
 import CandidateInvite from "@/components/admin/candidate-invite";
 import SocialPostPanel from "@/components/admin/social-post-panel";
@@ -59,7 +60,7 @@ const SF: Record<string, string[]> = {
   "kriteria":        ["preferredMinAge","preferredMaxAge","preferredReligion","prefReligionLevel","prefHijabBeard","prefMazhab","preferredEducationLevel","prefPreviousStatus","openToDivorcedOrWidowed","openToDifferentEthnicity","preferredLocationOfSpouse","prefDomicile","prefWorkStatus","prefJobField","prefMinIncome","prefMinHeight","prefMaxHeight","prefBodyType","prefChildrenFromPrevious","prefMaxChildren","prefLivingWithFamily","prefPersonalityType","prefSmokingAcceptance","prefWifeCareer","prefHealthCondition","preferredPersonalityTraits","physicalPreferences","spouseDealBreakers"],
   "harapan":         ["roleExpectationsHusband","roleExpectationsWife"],
   "catatan-tim":     ["salesLeadNotes","profileMakerNotes","imamNotes","psychologistNotes","receptionistNotes","internalTeamNotes","emotionalReadinessAssessment","backgroundCheckerNotes"],
-  "sidebar-quick":   ["location","gender","personStatus","openToTaaruf","occupation","educations","maritalStatus"],
+  "sidebar-quick":   ["location","locationArea","gender","personStatus","openToTaaruf","occupation","educations","maritalStatus"],
   "crm-internal":    ["lastContact","nextFollowUp","paket","pic","sumberLead","targetWaktuMenikah"],
   "status-profil":   ["profileStatus","personStatus","openToTaaruf","catatanPersiapan","paket","targetWaktuMenikah","pic","sumberLead","profileActivatedAt","profileActivatedBy","profileNotes","photoVisibility"],
   "keluarga-saudara":["siblingCount","childOrder","maleSiblingCount","femaleSiblingCount"],
@@ -239,6 +240,16 @@ const V: Record<string, Record<Lang, string>> = {
   muhammadiyah:     { id: "Muhammadiyah",                        en: "Muhammadiyah" },
   salafi:           { id: "Salafi / Wahabi",                     en: "Salafi / Wahhabi" },
   netral:           { id: "Netral",                              en: "Neutral" },
+  /* living with */
+  alone:            { id: "Sendiri",                             en: "Alone" },
+  with_parents:     { id: "Orang Tua",                           en: "Parents" },
+  with_mother:      { id: "Ibu",                                 en: "Mother" },
+  with_father:      { id: "Ayah",                                en: "Father" },
+  with_siblings:    { id: "Saudara",                             en: "Siblings" },
+  with_family:      { id: "Keluarga",                            en: "Family" },
+  with_children:    { id: "Anak",                                en: "Children" },
+  with_roommates:   { id: "Teman",                               en: "Roommates" },
+  other:            { id: "Lainnya",                             en: "Other" },
   single_only:      { id: "Lajang Saja",                        en: "Single Only" },
   open_divorced:    { id: "Terbuka Cerai / Janda-Duda",         en: "Open to Divorced/Widowed" },
   open_all:         { id: "Terbuka Semua Status",                en: "Open to All" },
@@ -313,6 +324,7 @@ const OPTS: Record<string, string[]> = {
   idCheckOverallResult:        ["verified","partial","not_verified"],
   jodohmuCriteriaRecommendation: ["approved","conditional","not_approved"],
   childCustody:   ["custody_self","custody_ex","custody_shared"],
+  currentlyLivingWith: [...LIVING_WITH_OPTIONS],
   photoVisibility:["visible_all","after_match"],
   /* partner preferences — new fields */
   prefReligionLevel:        ["very_practicing","practicing","moderate","no_pref"],
@@ -1495,6 +1507,12 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
                     <input className="w-full text-[13px] rounded-lg px-2.5 py-1.5 border focus:outline-none" style={{ borderColor: C.border, color: C.body, background: C.bg }}
                       value={(sectionDraft.location as string) ?? ""} onChange={e => ch("location", e.target.value)} placeholder="—" />
                   </div>
+                  {/* Area within the city */}
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wide mb-1" style={{ color: C.muted }}>{lang === "id" ? "Daerah / Kecamatan" : "Area / District"}</p>
+                    <input className="w-full text-[13px] rounded-lg px-2.5 py-1.5 border focus:outline-none" style={{ borderColor: C.border, color: C.body, background: C.bg }}
+                      value={(sectionDraft.locationArea as string) ?? ""} onChange={e => ch("locationArea", e.target.value)} placeholder={lang === "id" ? "cth. Setiabudi, Sleman" : "e.g. Setiabudi, Sleman"} />
+                  </div>
                   {/* Gender */}
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-wide mb-1.5" style={{ color: C.muted }}>{t.f_gender}</p>
@@ -1610,7 +1628,7 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
                   <div className="px-5 pt-4 pb-3 flex flex-col items-center gap-2" style={{ borderBottom: `1px solid ${C.div}` }}>
                     <div className="flex items-center gap-1.5">
                       <MapPin className="w-3 h-3" style={{ color: C.muted }} />
-                      <span style={{ fontSize: 12, color: C.muted }}>{raw(data,"location") !== "—" ? raw(data,"location") : <span style={{ fontStyle: "italic" }}>{t.not_filled}</span>}</span>
+                      <span style={{ fontSize: 12, color: C.muted }}>{raw(data,"location") !== "—" ? [raw(data,"locationArea"), raw(data,"location")].filter(v => v !== "—").join(", ") : <span style={{ fontStyle: "italic" }}>{t.not_filled}</span>}</span>
                     </div>
                     {/* Taaruf status */}
                     <div className="flex flex-wrap justify-center gap-1.5">
@@ -1806,7 +1824,7 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
                   <FR label={t.f_weight}      value={g("data-pribadi","weight")}       fieldKey="weight"      {...ep("data-pribadi")} />
                   <FR label={t.f_bloodtype}       value={g("data-pribadi","bloodType")}           fieldKey="bloodType"           select={OPTS.bloodType} {...ep("data-pribadi")} />
                   <FR label={t.f_birth_place}     value={g("data-pribadi","birthPlace")}          fieldKey="birthPlace"          {...ep("data-pribadi")} />
-                  <FR label={t.f_living_with}     value={g("data-pribadi","currentlyLivingWith")} fieldKey="currentlyLivingWith" {...ep("data-pribadi")} />
+                  <FR label={t.f_living_with}     value={g("data-pribadi","currentlyLivingWith")} fieldKey="currentlyLivingWith" select={OPTS.currentlyLivingWith} {...ep("data-pribadi")} />
                   <FR label={t.f_whatsapp}        value={g("data-pribadi","whatsappNumber")}      fieldKey="whatsappNumber"      {...ep("data-pribadi")} />
                   <FR label={t.f_own_health}      value={g("data-pribadi","ownHealthCondition")}  fieldKey="ownHealthCondition"  long {...ep("data-pribadi")} />
                 </div>

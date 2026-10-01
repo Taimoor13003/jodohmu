@@ -27,7 +27,7 @@ export const SHARE_SECTIONS: ShareSection[] = [
     key: "ringkasan",
     labelId: "Ringkasan",
     labelEn: "Summary",
-    fields: ["age", "gender", "location", "occupation", "educations", "openToTaaruf", "maritalStatus"],
+    fields: ["age", "gender", "location", "locationArea", "occupation", "educations", "openToTaaruf", "maritalStatus"],
   },
   { key: "tentang-saya", labelId: "Tentang Saya", labelEn: "About", fields: ["aboutMe"] },
   {
@@ -98,12 +98,34 @@ export type Audiences = Record<AudienceTier, AudienceRule>;
 const DEFAULT_MEMBER_SECTIONS = ["ringkasan", "tentang-saya", "profil-agama", "gaya-hidup", "tujuan", "kriteria"];
 
 export function defaultAudiences(): Audiences {
-  const summary = SHARE_SECTIONS[0].fields.filter(f => f !== "educations");
-  const member = SHARE_SECTIONS.filter(s => DEFAULT_MEMBER_SECTIONS.includes(s.key)).flatMap(s => s.fields);
+  return presetAudiences("standard");
+}
+
+/**
+ * One-click starting points for the visibility matrix. Each one only sets a
+ * starting state — every box stays individually editable afterwards.
+ */
+export type AudiencePreset = "brief" | "standard" | "full";
+
+export const AUDIENCE_PRESETS: { key: AudiencePreset; labelId: string; labelEn: string; hintId: string; hintEn: string }[] = [
+  { key: "brief", labelId: "Ringkas", labelEn: "Brief", hintId: "Ringkasan & tentang saya, tanpa nama dan foto", hintEn: "Summary & about, no name or photos" },
+  { key: "standard", labelId: "Standar", labelEn: "Standard", hintId: "Tanpa nama, foto, karir, dan keluarga", hintEn: "No name, photos, career or family" },
+  { key: "full", labelId: "Lengkap", labelEn: "Full", hintId: "Semua data, nama, dan foto", hintEn: "Everything, with name and photos" },
+];
+
+const BRIEF_SECTIONS = ["ringkasan", "tentang-saya"];
+
+export function presetAudiences(preset: AudiencePreset): Audiences {
+  // The exact area narrows down who someone is, so it stays behind sign-in.
+  const summary = SHARE_SECTIONS[0].fields.filter(f => f !== "educations" && f !== "locationArea");
+  const sections =
+    preset === "full" ? SHARE_SECTIONS.map(s => s.key) : preset === "brief" ? BRIEF_SECTIONS : DEFAULT_MEMBER_SECTIONS;
+  const fields = SHARE_SECTIONS.filter(s => sections.includes(s.key)).flatMap(s => s.fields);
+  const open = preset === "full";
   return normalizeAudiences({
     public: { fields: summary, showName: false, showPhotos: false },
-    member: { fields: member, showName: false, showPhotos: false },
-    candidate: { fields: member, showName: false, showPhotos: false },
+    member: { fields, showName: open, showPhotos: open },
+    candidate: { fields, showName: open, showPhotos: open },
   });
 }
 
@@ -160,11 +182,32 @@ export interface ProjectInput {
   photoSrc: (index: number) => string;
 }
 
+/** What the admin editor stores for "not answered" — never worth a row on a link. */
+const PLACEHOLDER_VALUES = new Set(["", "-", "–", "—", "null", "undefined", "n/a", "na"]);
+
 function hasValue(v: unknown): boolean {
   if (v === null || v === undefined) return false;
-  if (typeof v === "string") return v.trim() !== "";
-  if (Array.isArray(v)) return v.length > 0;
+  if (typeof v === "string") return !PLACEHOLDER_VALUES.has(v.trim().toLowerCase());
+  if (Array.isArray(v)) return v.some(hasValue);
   return true;
+}
+
+/** Fields that only make sense for one gender, whatever the profile happens to store. */
+const FIELD_GENDER: Record<string, "male" | "female"> = {
+  hijab: "female",
+  waliAvailability: "female",
+  beard: "male",
+  // each side is only asked what they hope for in the other
+  roleExpectationsHusband: "female",
+  roleExpectationsWife: "male",
+};
+
+/** Whether a field has something real to show for this candidate. */
+export function isShowableField(candidate: Record<string, unknown>, field: string): boolean {
+  const only = FIELD_GENDER[field];
+  const gender = candidate.gender;
+  if (only && (gender === "male" || gender === "female") && gender !== only) return false;
+  return hasValue(candidate[field]);
 }
 
 function selectedPhotoIndexes(candidate: Record<string, unknown>, selection: number[] | null): number[] {
@@ -188,14 +231,14 @@ export function projectProfile(input: ProjectInput): ProjectedProfile {
 
   const data: Record<string, unknown> = {};
   for (const field of rule.fields) {
-    if (hasValue(candidate[field])) data[field] = candidate[field];
+    if (isShowableField(candidate, field)) data[field] = candidate[field];
   }
 
   const realName = candidateDisplayName(candidate);
   const nameHidden = !rule.showName || !realName;
   const photoIndexes = selectedPhotoIndexes(candidate, input.photoSelection);
 
-  const lockedFields = top.fields.filter(f => !rule.fields.includes(f) && hasValue(candidate[f])).length;
+  const lockedFields = top.fields.filter(f => !rule.fields.includes(f) && isShowableField(candidate, f)).length;
 
   return {
     slot: input.slot,

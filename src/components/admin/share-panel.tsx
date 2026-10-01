@@ -5,13 +5,14 @@ import { toast } from "sonner";
 import {
   Activity, Ban, BarChart3, Camera, Check, CheckCircle2, Clock, Copy, Eye, Globe2, HeartHandshake, Image as ImageIcon,
   KeyRound, Link2, Mail, MapPin, Megaphone, MessageCircle, MessageSquareText, Monitor, Plus, RefreshCw,
-  RotateCcw, Smartphone, Tablet, Timer, Users, X,
+  RotateCcw, SlidersHorizontal, Smartphone, Tablet, Timer, Users, X,
 } from "lucide-react";
 import { optionsFor } from "@/lib/share-questions";
 import type { VisitContext } from "@/lib/share-analytics";
 import type { ShareDetail, ShareSummary, ShareViewerRow } from "@/lib/share-types";
 import ShareBuilder from "./share-builder";
 import { authFetch, formatDateTime, shareUrl } from "./share-api";
+import { ShareVisibilityEditor } from "./share-visibility";
 
 type Lang = "id" | "en";
 
@@ -98,7 +99,9 @@ function ShareRow({ share, lang, onChanged, onOpenDetails }: {
 }) {
   const t = (id: string, en: string) => (lang === "id" ? id : en);
   const [busy, setBusy] = useState(false);
+  const [editing, setEditing] = useState(false);
   const badge = STATE_BADGE[share.state];
+  const shown = share.audiences.candidate;
   const access = ACCESS_META[share.access.mode];
   const AccessIcon = access.icon;
   const names = share.candidateIds.map(id => share.candidateNames[id] ?? "—");
@@ -161,6 +164,9 @@ function ShareRow({ share, lang, onChanged, onOpenDetails }: {
           {share.maxOpensPerViewer !== null && ` · ${t("maks", "max")} ${share.maxOpensPerViewer}/${t("orang", "person")}`}
         </span>
         <span className="flex items-center gap-1.5"><Users className="h-3 w-3" />{share.viewerCount} {t("orang", "people")}</span>
+        <span className="flex items-center gap-1.5"><SlidersHorizontal className="h-3 w-3" />
+          {shown.fields.length} {t("data", "fields")} · {shown.showName ? t("nama", "name") : t("tanpa nama", "no name")} · {shown.showPhotos ? t("foto", "photos") : t("tanpa foto", "no photos")}
+        </span>
         {share.questionnaire.enabled && (
           <span className="flex items-center gap-1.5 font-semibold" style={{ color: share.responseCount ? C.green : C.label }}>
             <MessageSquareText className="h-3 w-3" />{share.responseCount} {t("jawaban", "responses")}
@@ -174,6 +180,9 @@ function ShareRow({ share, lang, onChanged, onOpenDetails }: {
           {share.lastOpenedAt && ` · ${t("terakhir dibuka", "last opened")} ${relativeTime(share.lastOpenedAt, lang)}`}
         </span>
         <div className="flex-1" />
+        <button disabled={busy} onClick={() => setEditing(true)} className={btn} style={{ borderColor: C.border, color: C.navy }}>
+          <SlidersHorizontal className="h-3 w-3" /> {t("Atur yang terlihat", "Edit what's visible")}
+        </button>
         {share.state === "revoked" ? (
           <button disabled={busy} onClick={() => patch({ restore: true }, t("Tautan dipulihkan", "Link restored"))} className={btn} style={{ borderColor: C.border, color: C.body }}>
             <RotateCcw className="h-3 w-3" /> {t("Pulihkan", "Restore")}
@@ -196,6 +205,7 @@ function ShareRow({ share, lang, onChanged, onOpenDetails }: {
           </>
         )}
       </div>
+      {editing && <ShareVisibilityEditor share={share} lang={lang} onClose={() => setEditing(false)} onSaved={onChanged} />}
     </div>
   );
 }
