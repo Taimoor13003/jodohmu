@@ -33,6 +33,25 @@ async function googleFont(family: string, spec: string, text: string): Promise<A
   }
 }
 
+/**
+ * The logo as a data URI, or null. On the deployed site the `public` folder is
+ * not always on the function's disk, so fall back to the copy the site serves;
+ * a missing logo must never take the whole preview down with it.
+ */
+async function loadLogo(): Promise<string | null> {
+  try {
+    const file = await readFile(path.join(process.cwd(), "public", "jodohmu-logo.png"));
+    return `data:image/png;base64,${file.toString("base64")}`;
+  } catch { /* not on disk — try the served copy */ }
+  try {
+    const res = await fetch("https://www.jodohmu.com/jodohmu-logo.png", { cache: "force-cache" });
+    if (!res.ok) return null;
+    return `data:image/png;base64,${Buffer.from(await res.arrayBuffer()).toString("base64")}`;
+  } catch {
+    return null;
+  }
+}
+
 function starPath(cx: number, cy: number, outer: number, inner: number): string {
   const points: string[] = [];
   for (let i = 0; i < 16; i++) {
@@ -60,16 +79,17 @@ export default async function OpengraphImage({ params }: { params: { token: stri
       : preview.recipientLabel || "Anda";
 
   const sub = !preview.live
-    ? "Ta'aruf yang terarah dan menjaga kehormatan setiap kandidat."
+    ? "Perkenalan yang terarah dan menjaga kehormatan setiap kandidat."
     : preview.purpose === "promotion"
-      ? "Ta'aruf yang terarah, terverifikasi, dan penuh amanah."
+      ? "Perkenalan yang terarah, terverifikasi, dan penuh amanah."
       : `${preview.profileCount > 1 ? `${preview.profileCount} profil pilihan` : "Satu profil pilihan"}, disiapkan khusus oleh tim Jodohmu.`;
 
   const medallion = preview.live ? String(preview.profileCount) : "✦";
   const medallionLabel = preview.live ? (preview.profileCount > 1 ? "PROFIL" : "PROFIL") : "AMANAH";
   const footer = "Rahasia & terbatas  ·  jodohmu.com";
 
-  const serifText = `${lead}${emphasis}${medallion}`;
+  const wordmark = "Jodohmu";
+  const serifText = `${lead}${emphasis}${medallion}${wordmark}`;
   const sansText = `${eyebrow}${sub}${footer}${medallionLabel}`;
   const [serif, serifItalic, sans, sansBold] = await Promise.all([
     googleFont("Playfair+Display", "wght@500", serifText),
@@ -85,8 +105,7 @@ export default async function OpengraphImage({ params }: { params: { token: stri
     sansBold && { name: "Nunito", data: sansBold, weight: 800 as const, style: "normal" as const },
   ].filter(Boolean) as { name: string; data: ArrayBuffer; weight: 500 | 600 | 800; style: "normal" | "italic" }[];
 
-  const logo = await readFile(path.join(process.cwd(), "public", "jodohmu-logo.png"));
-  const logoSrc = `data:image/png;base64,${logo.toString("base64")}`;
+  const logoSrc = await loadLogo();
 
   const emphasisSize = emphasis.length > 26 ? 52 : emphasis.length > 18 ? 60 : 68;
 
@@ -101,8 +120,12 @@ export default async function OpengraphImage({ params }: { params: { token: stri
     (
       <div style={{ width: "100%", height: "100%", display: "flex", background: C.paper, fontFamily: "Nunito" }}>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", width: 760, padding: "60px 40px 54px 76px" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
-          <img src={logoSrc} width={178} height={80} />
+          {logoSrc ? (
+            // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
+            <img src={logoSrc} width={178} height={80} />
+          ) : (
+            <div style={{ display: "flex", height: 80, alignItems: "center", fontFamily: "Playfair", fontSize: 44, color: C.ink }}>{wordmark}</div>
+          )}
 
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ display: "flex", fontSize: 19, fontWeight: 800, letterSpacing: 6, color: C.accent }}>{eyebrow}</div>

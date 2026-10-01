@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    // The link-preview card reads the logo from disk; make sure it ships with that function.
+    outputFileTracingIncludes: {
+      "/s/[token]/opengraph-image": ["./public/jodohmu-logo.png"],
+    },
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],

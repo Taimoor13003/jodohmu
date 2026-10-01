@@ -44,7 +44,7 @@ export function previewCopy(preview: SharePreview) {
   if (preview.purpose === "promotion") {
     return {
       title: "Profil pilihan dari Jodohmu",
-      description: `${count} dari Jodohmu — ta'aruf yang terarah, terverifikasi, dan menjaga kehormatan setiap kandidat.`,
+      description: `${count} dari Jodohmu — perkenalan yang terarah, terverifikasi, dan menjaga kehormatan setiap kandidat.`,
     };
   }
   return {
