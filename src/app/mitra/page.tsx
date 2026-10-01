@@ -16,6 +16,14 @@ export const metadata: Metadata = {
       "Bantu orang-orang di sekitar Anda menemukan pasangan hidup dengan cara yang serius dan terhormat. Daftar menjadi Mitra Jodohmu.",
     url: `${siteUrl}/mitra`,
     type: "website",
+    siteName: "Jodohmu",
+    locale: "id_ID",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Program Mitra | Jodohmu",
+    description:
+      "Bantu orang-orang di sekitar Anda menemukan pasangan hidup dengan cara yang serius dan terhormat. Daftar menjadi Mitra Jodohmu.",
   },
 };
 

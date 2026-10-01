@@ -1,9 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    // The link-preview card reads the logo from disk; make sure it ships with that function.
+    // The link-preview cards read the logo from disk; make sure it ships with those functions.
     outputFileTracingIncludes: {
       "/s/[token]/opengraph-image": ["./public/jodohmu-logo.png"],
+      "/mitra/opengraph-image": ["./public/jodohmu-logo.png"],
     },
   },
   images: {
