@@ -51,7 +51,7 @@ export default function SocialPostHistory({ candidateId, lang }: { candidateId: 
                     <span className="text-[13px] font-bold" style={{ color: C.text }}>@{p.handle}</span>
                     <span className="rounded-full px-2 py-0.5 text-[10.5px] font-bold" style={{ background: s.bg, color: s.fg }}>{lang === "id" ? s.id : s.en}</span>
                     <span className="text-[11.5px]" style={{ color: C.muted }}>
-                      {p.code}{p.at && ` · ${new Date(p.at).toLocaleString(lang === "id" ? "id-ID" : "en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}`}{p.byName && ` · ${p.byName}`}
+                      {p.code}{p.format === "reel" && " · Reel"}{p.at && ` · ${new Date(p.at).toLocaleString(lang === "id" ? "id-ID" : "en-GB", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}`}{p.byName && ` · ${p.byName}`}
                     </span>
                     {p.permalink && (
                       <a href={p.permalink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-[11.5px] font-bold" style={{ color: C.navy }}>

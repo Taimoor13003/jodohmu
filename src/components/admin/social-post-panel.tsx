@@ -4,8 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { AlertTriangle, CheckCircle2, ExternalLink, Instagram, Loader2, RotateCcw, Send, X } from "lucide-react";
 import {
-  SOCIAL_PAGES, autoValues, buildCard, defaultCaption, defaultChoices, fieldsFor, figureFor, slideCount, suggestPages,
-  type FieldChoices, type FieldMode, type FigureChoice, type SocialFieldKey, type SocialPageKey,
+  SOCIAL_PAGES, autoValues, buildCard, defaultCaption, defaultChoices, fieldsFor, figureFor, formatsFor, hasFigure, reelTiming, slideCount, suggestPages,
+  type FieldChoices, type FieldMode, type FigureChoice, type PostFormat, type SocialFieldKey, type SocialPageKey,
 } from "@/lib/social";
 import { FIGURES, type Figure } from "@/lib/social-figures";
 import { authFetch } from "./share-api";
@@ -14,7 +14,8 @@ import { auth } from "@/lib/firebase";
 type Lang = "id" | "en";
 export type PostRow = {
   candidateId: string; candidateName: string; page: string; handle: string; code: string;
-  status: "publishing" | "published" | "failed" | "deleted"; permalink: string | null; imageUrl: string | null; imageUrls: string[];
+  status: "publishing" | "published" | "failed" | "deleted"; format: PostFormat; videoUrl: string | null;
+  permalink: string | null; imageUrl: string | null; imageUrls: string[];
   error: string | null; changes: string[]; caption: string; byName: string; at: string | null;
 };
 
@@ -75,6 +76,9 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
   const pageInfo = SOCIAL_PAGES.find((p) => p.key === page)!;
   const [choices, setChoices] = useState<FieldChoices>(() => defaultChoices(page));
   const [figure, setFigure] = useState<FigureChoice>("auto");
+  const [format, setFormat] = useState<PostFormat>(() => formatsFor(page)[0]);
+  // A Reel Instagram is still processing after the post request ended
+  const [processing, setProcessing] = useState(false);
   const [caption, setCaption] = useState("");
   const [captionEdited, setCaptionEdited] = useState(false);
   const [consent, setConsent] = useState(false);
@@ -92,6 +96,7 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
   const card = useMemo(() => buildCard(page, candidateId, profile, choices, figure), [page, candidateId, profile, choices, figure]);
   const fields = useMemo(() => fieldsFor(page), [page]);
   const slides = slideCount(page);
+  const reel = reelTiming(page) ?? { seconds: 12, cut: 6 };
   const existing = posts.find((p) => p.page === page);
 
   // Each page has its own template, so switching page starts its card afresh
@@ -100,6 +105,7 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
     if (firstPage.current === page) return;
     firstPage.current = page;
     setChoices(defaultChoices(page));
+    setFormat(formatsFor(page)[0]);
     setCaptionEdited(false);
     setSlide(0);
   }, [page]);
@@ -129,7 +135,7 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
           const res = await fetch("/api/admin/social", {
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ action: "preview", candidateId, page, choices, figure, slide: index }),
+            body: JSON.stringify({ action: "preview", candidateId, page, choices, figure, format, slide: index }),
           });
           if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? "Preview failed");
           return URL.createObjectURL(await res.blob());
@@ -145,7 +151,7 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
       }
     }, 500);
     return () => { cancelled = true; clearTimeout(timer); };
-  }, [candidateId, page, choices, figure, slides]);
+  }, [candidateId, page, choices, figure, format, slides]);
   useEffect(() => () => { previewUrls.current.forEach((u) => URL.revokeObjectURL(u)); }, []);
   const preview = previews[Math.min(slide, previews.length - 1)] ?? null;
 
@@ -159,13 +165,32 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
     });
   };
 
+  // Asks every few seconds until Instagram has finished the video and it's published (up to 5 minutes)
+  const waitForReel = async () => {
+    setProcessing(true);
+    try {
+      for (let i = 0; i < 60; i++) {
+        await new Promise((r) => setTimeout(r, 5000));
+        const res = await authFetch<{ status: string; permalink: string | null }>("/api/admin/social", {
+          method: "POST", body: JSON.stringify({ action: "finish", candidateId, page }),
+        });
+        if (res.status === "published") return res;
+        if (res.status !== "publishing") throw new Error(t("Instagram gagal memproses video.", "Instagram couldn't process the video."));
+      }
+      throw new Error(t("Instagram masih memproses video. Cek lagi nanti; akan terposting otomatis.", "Instagram is still processing the video. Check back later; it will post by itself."));
+    } finally {
+      setProcessing(false);
+    }
+  };
+
   const post = async () => {
     setPosting(true);
     try {
-      const data = await authFetch<{ permalink: string | null }>("/api/admin/social", {
+      let data = await authFetch<{ permalink: string | null; pending?: boolean }>("/api/admin/social", {
         method: "POST",
-        body: JSON.stringify({ action: "post", candidateId, page, choices, figure, caption, consent }),
+        body: JSON.stringify({ action: "post", candidateId, page, choices, figure, format, caption, consent }),
       });
+      if (data.pending) data = await waitForReel();
       toast.success(t(`Terposting di @${pageInfo.handle}`, `Posted on @${pageInfo.handle}`));
       if (data.permalink) window.open(data.permalink, "_blank", "noopener,noreferrer");
       onPosted?.();
@@ -230,7 +255,7 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
                       </div>
                       {choice.mode === "custom" && (
                         <input value={choice.custom} maxLength={140} onChange={(e) => setChoice(f.key, { custom: e.target.value })}
-                          placeholder={f.key === "name" ? t("mis. nama samaran", "e.g. a nickname") : f.key === "intro" ? t("mis. Mencari pasangan yang sabar dan jujur", "e.g. Looking for someone patient and honest") : auto[f.key]}
+                          placeholder={f.key === "name" ? t("mis. nama samaran", "e.g. a nickname") : f.key === "intro" ? t("mis. Mencari pasangan yang sabar dan jujur", "e.g. Looking for someone patient and honest") : f.key === "plan" ? t("mis. Dalam waktu dekat", "e.g. Dalam waktu dekat") : auto[f.key]}
                           className="h-8 w-full rounded-lg border px-2 text-[13px] sm:w-56" style={{ borderColor: C.border }} />
                       )}
                     </div>
@@ -245,7 +270,27 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
               )}
             </section>
 
-            {pageInfo.template === "hello" && (
+            {formatsFor(page).length > 1 && (
+              <section>
+                <p className="mb-2 text-xs font-bold uppercase tracking-wider" style={{ color: C.label }}>{t("Format", "Format")}</p>
+                <div className="flex flex-wrap gap-2">
+                  {formatsFor(page).map((f) => (
+                    <button key={f} type="button" onClick={() => { setFormat(f); setConfirming(false); setSlide(0); }}
+                      className="rounded-lg border px-3 py-1.5 text-[12px] font-bold"
+                      style={format === f ? { background: C.navy, borderColor: C.navy, color: "white" } : { borderColor: C.border, color: C.label }}>
+                      {f === "reel" ? t(`Reel (video ${reel.seconds} detik)`, `Reel (${reel.seconds}-second video)`) : t("Carousel (2 foto)", "Carousel (2 images)")}
+                    </button>
+                  ))}
+                </div>
+                {format === "reel" && (
+                  <p className="mt-1.5 text-[11px]" style={{ color: C.muted }}>
+                    {t(`Bagian pembuka muncul perlahan, lalu berganti ke profil di detik ke-${reel.cut}. Pratinjau menunjukkan kedua bagian itu.`, `The intro fades in, then changes to the profile at ${reel.cut} seconds. The preview shows both parts.`)}
+                  </p>
+                )}
+              </section>
+            )}
+
+            {hasFigure(page) && (
               <section>
                 <p className="mb-2 text-xs font-bold uppercase tracking-wider" style={{ color: C.label }}>{t("Siluet", "Silhouette")}</p>
                 <div className="flex flex-wrap gap-2">
@@ -272,7 +317,7 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
 
           {/* ── preview & post ── */}
           <div className={`space-y-4 border-t p-5 ${compact ? "xl:border-l xl:border-t-0" : "lg:border-l lg:border-t-0"}`} style={{ borderColor: C.border, background: "#F8FAFC" }}>
-            <div className="relative overflow-hidden rounded-xl border bg-white" style={{ borderColor: C.border, aspectRatio: "4 / 5" }}>
+            <div className="relative overflow-hidden rounded-xl border bg-white" style={{ borderColor: C.border, aspectRatio: format === "reel" ? "9 / 16" : "4 / 5", ...(format === "reel" ? { maxWidth: 320, marginInline: "auto" } : {}) }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               {preview && <img src={preview} alt={t("Pratinjau kartu", "Card preview")} className="h-full w-full object-contain" />}
               {(previewLoading || !preview) && (
@@ -287,7 +332,7 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
                     style={{ borderColor: slide === i ? C.navy : C.border, color: slide === i ? C.navy : C.label }}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     {previews[i] && <img src={previews[i]!} alt="" className="h-10 w-8 shrink-0 rounded object-cover" />}
-                    {i + 1}. {i === 0 ? t("Pembuka", "Intro") : t("Profil", "Profile")}
+                    {i + 1}. {i === 0 ? t("Pembuka", "Intro") : t("Profil", "Profile")}{format === "reel" && (i === 0 ? ` · 0–${reel.cut}s` : ` · ${reel.cut}–${reel.seconds}s`)}
                   </button>
                 ))}
               </div>
@@ -335,7 +380,9 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
                     <button type="button" onClick={() => setConfirming(false)} disabled={posting} className="h-11 flex-1 rounded-xl border bg-white text-sm font-bold" style={{ borderColor: C.border, color: C.body }}>{t("Batal", "Cancel")}</button>
                     <button type="button" onClick={post} disabled={posting} className="flex h-11 flex-[2] items-center justify-center gap-2 rounded-xl text-sm font-bold text-white" style={{ background: C.rose }}>
                       {posting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-                      {posting ? t("Memposting…", "Posting…") : t(`Ya, posting sekarang ke @${pageInfo.handle}`, `Yes, post now to @${pageInfo.handle}`)}
+                      {processing ? t("Instagram memproses video…", "Instagram is processing the video…")
+                        : posting ? (format === "reel" ? t("Membuat video… (±1 menit)", "Making the video… (about a minute)") : t("Memposting…", "Posting…"))
+                        : t(`Ya, posting sekarang ke @${pageInfo.handle}`, `Yes, post now to @${pageInfo.handle}`)}
                     </button>
                   </div>
                 ) : (

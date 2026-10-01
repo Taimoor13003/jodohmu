@@ -9,7 +9,15 @@ export const SOCIAL_POSTS = "social_posts";
 export type SocialPageKey = "nikahin_foreigner" | "nikah_lagiyuk" | "taaruf_sekarang" | "temu_chindo" | "kristenmatch";
 export type SocialLang = "id" | "en";
 // "classic": one Indonesian card. "hello": the @nikahin_foreigner Canva look, an intro slide with a silhouette plus a profile slide.
-export type TemplateKey = "classic" | "hello";
+// "sakinah": the @taaruf_sekarang Canva look, sage fading to navy, "Hallo, saya dari …" intro slide plus a profile slide.
+export type TemplateKey = "classic" | "hello" | "sakinah";
+// A swipeable image post, or a short 9:16 video (pages whose template has a Reel design)
+export type PostFormat = "carousel" | "reel";
+// How long each template's Reel runs, and the second its intro gives way to the profile
+export const REEL_TIMING: Partial<Record<TemplateKey, { seconds: number; cut: number }>> = {
+  hello: { seconds: 14, cut: 7 },
+  sakinah: { seconds: 12, cut: 6 },
+};
 
 export const SOCIAL_PAGES: {
   key: SocialPageKey;
@@ -21,16 +29,24 @@ export const SOCIAL_PAGES: {
   // Only pages the Meta system user has been given can post; the rest show as "not connected yet"
   connected: boolean;
   hashtags: string;
+  // Start of the profile code on this page's posts; each page has its own so the pages can't be linked
+  codePrefix: string;
+  // The page can post its card as a Reel as well as a carousel
+  reel?: boolean;
 }[] = [
-  { key: "nikahin_foreigner", handle: "nikahin_foreigner", label: "WNI & WNA", accent: "#761410", template: "hello", lang: "en", connected: true, hashtags: "#nikahbedanegara #mixedmarriage #internationalmarriage #cariJodoh #perkenalan" },
-  { key: "nikah_lagiyuk", handle: "nikah_lagiyuk", label: "Janda / duda", accent: "#9B2242", template: "classic", lang: "id", connected: false, hashtags: "#nikahlagi #jandaduda #cariJodoh #perkenalan" },
-  { key: "taaruf_sekarang", handle: "taaruf_sekarang", label: "Muslim", accent: "#0F6B4F", template: "classic", lang: "id", connected: false, hashtags: "#cariJodohMuslim #nikahsyari #perkenalan" },
-  { key: "temu_chindo", handle: "temu_chindo", label: "Chindo", accent: "#B4232C", template: "classic", lang: "id", connected: false, hashtags: "#chindo #cariJodoh #perkenalan" },
-  { key: "kristenmatch", handle: "kristenmatch.indo", label: "Kristen", accent: "#1D4E89", template: "classic", lang: "id", connected: false, hashtags: "#jodohkristen #cariJodoh #perkenalan" },
+  { key: "nikahin_foreigner", handle: "nikahin_foreigner", label: "WNI & WNA", accent: "#761410", template: "hello", lang: "en", connected: true, hashtags: "#nikahbedanegara #mixedmarriage #internationalmarriage #cariJodoh #perkenalan", codePrefix: "NF", reel: true },
+  { key: "nikah_lagiyuk", handle: "nikah_lagiyuk", label: "Janda / duda", accent: "#9B2242", template: "classic", lang: "id", connected: false, hashtags: "#nikahlagi #jandaduda #cariJodoh #perkenalan", codePrefix: "NL" },
+  { key: "taaruf_sekarang", handle: "taaruf_sekarang", label: "Muslim", accent: "#3E5A4C", template: "sakinah", lang: "id", connected: true, hashtags: "#cariJodohMuslim #nikahsyari #perkenalan", codePrefix: "TS", reel: true },
+  { key: "temu_chindo", handle: "temu_chindo", label: "Chindo", accent: "#B4232C", template: "classic", lang: "id", connected: false, hashtags: "#chindo #cariJodoh #perkenalan", codePrefix: "TC" },
+  { key: "kristenmatch", handle: "kristenmatch.indo", label: "Kristen", accent: "#1D4E89", template: "classic", lang: "id", connected: false, hashtags: "#jodohkristen #cariJodoh #perkenalan", codePrefix: "KM" },
 ];
 
 export const findPage = (key: string) => SOCIAL_PAGES.find((p) => p.key === key) ?? null;
-export const slideCount = (pageKey: SocialPageKey) => (findPage(pageKey)?.template === "hello" ? 2 : 1);
+// Templates with an intro slide carry a silhouette the team can change
+export const hasFigure = (pageKey: SocialPageKey) => findPage(pageKey)?.template !== "classic";
+export const slideCount = (pageKey: SocialPageKey) => (hasFigure(pageKey) ? 2 : 1);
+export const formatsFor = (pageKey: SocialPageKey): PostFormat[] => (findPage(pageKey)?.reel ? ["reel", "carousel"] : ["carousel"]);
+export const reelTiming = (pageKey: SocialPageKey) => REEL_TIMING[findPage(pageKey)?.template ?? "classic"] ?? null;
 
 type Profile = Record<string, unknown>;
 type Bi = { id: string; en: string };
@@ -99,6 +115,8 @@ export const FIELD_DEFS = {
   religion: { label: { id: "Agama", en: "Religion" }, cardLabel: { id: "Agama", en: "Religion" }, icon: "sparkles" },
   ethnicity: { label: { id: "Suku", en: "Ethnicity" }, cardLabel: { id: "Suku", en: "Ethnicity" }, icon: "flag" },
   height: { label: { id: "Tinggi badan", en: "Height" }, cardLabel: { id: "Tinggi", en: "Height" }, icon: "ruler" },
+  // Not in the profile yet, so it is only ever typed in
+  plan: { label: { id: "Rencana menikah", en: "Marriage plan" }, cardLabel: { id: "Rencana Menikah", en: "Marriage plan" }, icon: null },
   intro: { label: { id: "Kalimat singkat", en: "Short intro" }, cardLabel: { id: "", en: "" }, icon: null },
 } satisfies Record<string, { label: Bi; cardLabel: Bi; icon: IconKey | null }>;
 export type SocialFieldKey = keyof typeof FIELD_DEFS;
@@ -117,10 +135,32 @@ const TEMPLATE_FIELDS: Record<TemplateKey, [SocialFieldKey, FieldMode][]> = {
     ["name", "hide"], ["from", "show"], ["gender", "show"], ["nationality", "show"], ["age", "show"], ["marital", "show"],
     ["education", "show"], ["city", "hide"], ["occupation", "hide"], ["religion", "hide"], ["height", "hide"], ["intro", "custom"],
   ],
+  // Mirrors the Canva template: intro slide "Hallo, saya dari Jakarta / 41 Tahun", then Domisili, Status, Lulusan, Pekerjaan, Suku, Rencana Menikah
+  sakinah: [
+    ["name", "hide"], ["age", "show"], ["city", "show"], ["marital", "show"], ["education", "show"], ["occupation", "show"],
+    ["ethnicity", "show"], ["plan", "custom"], ["religion", "hide"], ["height", "hide"], ["intro", "custom"],
+  ],
+};
+// Words a template uses on the card instead of the usual label
+const CARD_LABELS: Partial<Record<TemplateKey, Partial<Record<SocialFieldKey, string>>>> = {
+  sakinah: { education: "Lulusan" },
+};
+// Details that go on the intro slide (or the title) rather than in the list of rows
+const NOT_ROWS: Record<TemplateKey, SocialFieldKey[]> = {
+  classic: ["name", "from"],
+  hello: ["name", "from"],
+  sakinah: ["name", "from", "age"],
 };
 
-export const fieldsFor = (pageKey: SocialPageKey) =>
-  TEMPLATE_FIELDS[findPage(pageKey)?.template ?? "classic"].map(([key, defaultMode]) => ({ key, defaultMode, ...FIELD_DEFS[key] }));
+export const fieldsFor = (pageKey: SocialPageKey) => {
+  const page = findPage(pageKey);
+  const template = page?.template ?? "classic";
+  return TEMPLATE_FIELDS[template].map(([key, defaultMode]) => {
+    const own = CARD_LABELS[template]?.[key];
+    const def = FIELD_DEFS[key];
+    return { key, defaultMode, ...def, cardLabel: own ? { id: own, en: own } : def.cardLabel };
+  });
+};
 
 export const defaultChoices = (pageKey: SocialPageKey): FieldChoices => {
   const all = Object.fromEntries(Object.keys(FIELD_DEFS).map((k) => [k, { mode: "hide" as FieldMode, custom: "" }])) as FieldChoices;
@@ -152,6 +192,7 @@ export function autoValues(p: Profile, lang: SocialLang = "id"): Record<SocialFi
     religion: RELIGION[text(p.religion).toLowerCase()]?.[lang] ?? capitalize(text(p.religion).toLowerCase()),
     ethnicity: capitalize(text(p.ethnicityCustom) || text(p.ethnicity)),
     height: /^\d{3}$/.test(height) ? `${height} cm` : height,
+    plan: "",
     intro: "",
   };
 }
@@ -176,11 +217,13 @@ export type CardContent = {
   rows: CardRow[];
 };
 
-// Short, stable reference for a profile, so people can ask about it without a name
-export function profileCode(candidateId: string) {
+// Short, stable reference for a profile, so people can ask about it without a name.
+// Different on every page, so the same client can't be matched across pages.
+export function profileCode(candidateId: string, pageKey: SocialPageKey) {
+  const page = findPage(pageKey);
   let h = 2166136261;
-  for (const ch of candidateId) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
-  return `JDM-${(h >>> 0).toString(36).toUpperCase().padStart(6, "0").slice(-4)}`;
+  for (const ch of `${candidateId}:${pageKey}`) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+  return `${page?.codePrefix ?? "JDM"}-${(h >>> 0).toString(36).toUpperCase().padStart(6, "0").slice(-4)}`;
 }
 
 const rowIcon = (key: SocialFieldKey, value: string, profile: Profile): IconKey | null => {
@@ -194,16 +237,16 @@ export function buildCard(pageKey: SocialPageKey, candidateId: string, profile: 
   const page = findPage(pageKey)!;
   const auto = autoValues(profile, page.lang);
   const value = (key: SocialFieldKey) => resolveField(choices[key], auto[key]);
-  // "from" and "name" are the intro slide's words, not rows
+  // The intro slide's words (name, "from", and for some templates age) are not rows
   const rows = fieldsFor(pageKey)
-    .filter((f) => f.cardLabel[page.lang] && !["name", "from"].includes(f.key))
+    .filter((f) => f.cardLabel[page.lang] && !NOT_ROWS[page.template].includes(f.key))
     .map((f) => ({ key: f.key, label: f.cardLabel[page.lang], value: value(f.key), icon: rowIcon(f.key, value(f.key), profile) }))
     .filter((r) => r.value);
   return {
     template: page.template,
     lang: page.lang,
     page: { handle: page.handle, label: page.label, accent: page.accent },
-    code: profileCode(candidateId),
+    code: profileCode(candidateId, pageKey),
     title: value("headline") || "Profil pilihan",
     name: value("name"),
     age: value("age"),
@@ -221,8 +264,30 @@ export function helloLines(card: CardContent) {
   return { title, sub };
 }
 
+// The words on the intro slide of the "sakinah" template: "Hallo, saya dari / Jakarta / 41 Tahun"
+export function sakinahLines(card: CardContent) {
+  const city = card.rows.find((r) => r.key === "city")?.value ?? "";
+  const age = card.age.replace(/tahun/i, "Tahun");
+  if (card.name) return { greeting: "Hallo, saya", big: card.name, sub: [age, city ? `dari ${city}` : ""].filter(Boolean).join(" · ") };
+  if (city) return { greeting: "Hallo, saya dari", big: city, sub: age };
+  return { greeting: "Hallo,", big: age ? `saya ${age}` : "salam kenal", sub: "" };
+}
+
 export function defaultCaption(pageKey: SocialPageKey, card: CardContent) {
   const page = findPage(pageKey)!;
+  if (page.template === "sakinah") {
+    const { greeting, big, sub } = sakinahLines(card);
+    return [
+      `${greeting} ${big}${sub ? `, ${sub.toLowerCase()}` : ""} 👋`,
+      "",
+      ...card.rows.map((r) => `• ${r.label}: ${r.value}`),
+      ...(card.intro ? ["", `"${card.intro}"`] : []),
+      "",
+      `Info lebih lanjut? DM kami segera dengan kode ${card.code}, yuk!`,
+      "",
+      page.hashtags,
+    ].join("\n");
+  }
   if (page.template === "hello") {
     const { title, sub } = helloLines(card);
     return [
@@ -268,10 +333,11 @@ export function describeChoices(pageKey: SocialPageKey, choices: FieldChoices, p
     if (choice.mode === "hide") return auto[f.key] ? [`${f.label.en}: hidden`] : [];
     if (choice.mode === "show") return auto[f.key] ? [`${f.label.en}: shown ("${auto[f.key]}")`] : [];
     const value = choice.custom.trim();
-    if (!value) return f.key === "intro" ? [] : [`${f.label.en}: hidden (left empty)`];
+    // Details that start as "type your own" are simply left out when empty
+    if (!value) return f.defaultMode === "custom" ? [] : [`${f.label.en}: hidden (left empty)`];
     return value === auto[f.key] ? [] : [`${f.label.en}: "${value}"${auto[f.key] ? ` (was "${auto[f.key]}")` : ""}`];
   });
-  if (findPage(pageKey)?.template === "hello" && figure !== "auto" && figure !== figureFor(profile)) {
+  if (hasFigure(pageKey) && figure !== "auto" && figure !== figureFor(profile)) {
     changes.push(`Silhouette: ${FIGURE_NAMES[figure]} (profile suggests ${FIGURE_NAMES[figureFor(profile)]})`);
   }
   return changes;
