@@ -5,7 +5,7 @@ import { Loader2, Mail, MessageCircle, Phone, Globe, Instagram, ChevronDown, Clo
 import { addDays, findLabel } from "@/lib/calldesk";
 import {
   MITRA_CHANNELS, MITRA_CLOSED, MITRA_FACILITATOR, MITRA_FAITHS, MITRA_SCORE_QUESTIONS, MITRA_SIGNED, MITRA_SOURCES, MITRA_STAGES, MITRA_TYPES, instagramUrl,
-  type MitraProspect,
+  type MitraLogEntry, type MitraProspect,
 } from "@/lib/mitra";
 import { callDeskFetch, formatDay, telLink, useL, waLink } from "@/components/admin/calldesk/shared";
 import { Tile } from "@/components/admin/calldesk/insights";
@@ -195,6 +195,32 @@ function LogForm({ prospect, today, saving, onLog }: {
   );
 }
 
+// Fixes a history entry logged under the wrong channel, or with a typo in the note
+function LogEntryForm({ entry, saving, onSave, onCancel }: {
+  entry: MitraLogEntry; saving: boolean; onSave: (channel: string, note: string) => void; onCancel: () => void;
+}) {
+  const l = useL();
+  const [channel, setChannel] = useState<string>(entry.channel);
+  const [note, setNote] = useState(entry.note);
+  return (
+    <div className="mt-1 space-y-2">
+      <select className={input} value={channel} onChange={(e) => setChannel(e.target.value)}>
+        {MITRA_CHANNELS.map((c) => <option key={c.value} value={c.value}>{l(c.label)}</option>)}
+      </select>
+      <textarea className="min-h-[64px] w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800"
+        value={note} onChange={(e) => setNote(e.target.value)} />
+      <div className="flex gap-2">
+        <button type="button" disabled={saving} onClick={() => onSave(channel, note)} className="h-9 rounded-lg bg-[#1B3A6B] px-4 text-xs font-bold text-white disabled:opacity-60">
+          {l({ id: "Simpan", en: "Save" })}
+        </button>
+        <button type="button" onClick={onCancel} className="h-9 rounded-lg border border-slate-200 px-3 text-xs font-semibold text-slate-600">
+          {l({ id: "Batal", en: "Cancel" })}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function ContactLinks({ p }: { p: MitraProspect }) {
   const link = "inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50";
   return (
@@ -218,6 +244,8 @@ export function MitraDesk() {
   const [adding, setAdding] = useState(false);
   const [openId, setOpenId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
+  // The history entry being corrected, as "<prospect id>:<entry time>"
+  const [editingLog, setEditingLog] = useState<string | null>(null);
   const [filter, setFilter] = useState<string>("due");
   const [type, setType] = useState("");
   const [faith, setFaith] = useState("");
@@ -444,19 +472,36 @@ export function MitraDesk() {
                         <p className="mt-3 text-xs text-slate-400">{l({ id: "Belum pernah dihubungi.", en: "Not contacted yet." })}</p>
                       ) : (
                         <ol className="mt-3 space-y-3">
-                          {p.log.map((entry, i) => (
+                          {p.log.map((entry, i) => {
+                            const logKey = `${p.id}:${entry.at}`;
+                            const editingEntry = editingLog === logKey;
+                            return (
                             <li key={i} className="border-l-2 border-slate-200 pl-3">
-                              <p className="text-[11px] text-slate-400">
-                                {formatDay(entry.at.slice(0, 10), lang, { day: "numeric", month: "short", year: "numeric" })} · {entry.by} · {l(findLabel(MITRA_CHANNELS, entry.channel))}
-                              </p>
+                              <div className="flex items-start justify-between gap-2">
+                                <p className="text-[11px] text-slate-400">
+                                  {formatDay(entry.at.slice(0, 10), lang, { day: "numeric", month: "short", year: "numeric" })} · {entry.by} · {l(findLabel(MITRA_CHANNELS, entry.channel))}
+                                  {entry.editedAt && <span title={entry.editedBy}> · {l({ id: "diubah", en: "edited" })}</span>}
+                                </p>
+                                {!editingEntry && (
+                                  <button type="button" onClick={() => setEditingLog(logKey)} className="shrink-0 text-[11px] font-bold text-[#0b3a86] hover:underline">
+                                    {l({ id: "Ubah", en: "Edit" })}
+                                  </button>
+                                )}
+                              </div>
                               {entry.stageTo && (
                                 <p className="text-xs text-slate-600">
                                   {l(findLabel(MITRA_STAGES, entry.stageFrom)) || "—"} → <span className="font-semibold">{l(findLabel(MITRA_STAGES, entry.stageTo))}</span>
                                 </p>
                               )}
-                              {entry.note && <p className="whitespace-pre-line text-sm text-slate-700">{entry.note}</p>}
+                              {editingEntry ? (
+                                <LogEntryForm entry={entry} saving={saving} onCancel={() => setEditingLog(null)}
+                                  onSave={async (channel, note) => { if (await post({ action: "editLog", id: p.id, at: entry.at, channel, note })) setEditingLog(null); }} />
+                              ) : (
+                                entry.note && <p className="whitespace-pre-line text-sm text-slate-700">{entry.note}</p>
+                              )}
                             </li>
-                          ))}
+                            );
+                          })}
                         </ol>
                       )}
                     </div>

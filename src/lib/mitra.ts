@@ -93,6 +93,9 @@ export type MitraLogEntry = {
   note: string;
   stageFrom: MitraStage | null;
   stageTo: MitraStage | null;
+  // Set when someone corrects the channel or note afterwards
+  editedAt?: string;
+  editedBy?: string;
 };
 
 export type MitraProspect = {

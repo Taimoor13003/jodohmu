@@ -121,7 +121,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-/* POST /api/admin/mitra — { action: "create" | "edit" | "log", … } */
+/* POST /api/admin/mitra — { action: "create" | "edit" | "stage" | "log" | "editLog", … } */
 export async function POST(req: NextRequest) {
   const caller = await requireMitra(req);
   if (!caller) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -213,6 +213,24 @@ export async function POST(req: NextRequest) {
         stage: finalStage, score: nextScore, referrals, followUpDate, facilitator, meetingsFacilitated, nextAction,
         ...(reached ? { lastContactedAt: now } : {}),
         log: [entry, ...(Array.isArray(current.log) ? current.log : [])].slice(0, MAX_LOG),
+        updatedAt: FieldValue.serverTimestamp(), updatedBy: caller.name,
+      });
+      return NextResponse.json({ success: true });
+    }
+
+    // Correcting a history entry: only the channel and the note; the stage change it recorded stays as it happened
+    if (body.action === "editLog") {
+      const channel = pick(MITRA_CHANNELS, body.channel);
+      if (!channel) return NextResponse.json({ error: "Unknown channel." }, { status: 400 });
+      const log: MitraLogEntry[] = Array.isArray(current.log) ? current.log : [];
+      const index = log.findIndex((entry) => entry.at === body.at);
+      if (index === -1) return NextResponse.json({ error: "History entry not found." }, { status: 404 });
+      const edited: MitraLogEntry = {
+        ...log[index], channel: channel as MitraLogEntry["channel"], note: clean(body.note, 1000),
+        editedAt: now, editedBy: caller.name,
+      };
+      await ref.update({
+        log: log.map((entry, i) => (i === index ? edited : entry)),
         updatedAt: FieldValue.serverTimestamp(), updatedBy: caller.name,
       });
       return NextResponse.json({ success: true });
