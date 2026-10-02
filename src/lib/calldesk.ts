@@ -1,5 +1,7 @@
 // Shared Call Desk definitions — safe to import from both client and server code.
 
+import { SOCIAL_ACCOUNTS, findSocialAccount, type SocialAccountKey } from "@/lib/social-accounts";
+
 export type Bilingual = { id: string; en: string };
 
 export const TEAM_POSITIONS = [
@@ -38,7 +40,7 @@ export const TEAM_PERMISSIONS = [
   {
     value: "social",
     label: { id: "Kelola media sosial", en: "Manage social media" },
-    hint: { id: "Bisa memposting ke Instagram, Facebook & Threads kita, membalas komentar, dan membuat kartu klien di Subpages.", en: "Can post to our Instagram, Facebook and Threads, answer comments, and make client cards on Subpages." },
+    hint: { id: "Bisa memposting ke Instagram, Facebook & Threads kita, membalas komentar, menambah calon klien, dan membuat kartu klien di Subpages.", en: "Can post to our Instagram, Facebook and Threads, answer comments, add leads, and make client cards on Subpages." },
   },
 ] as const;
 export type TeamPermission = (typeof TEAM_PERMISSIONS)[number]["value"];
@@ -127,6 +129,16 @@ export type ContactSource = (typeof CONTACT_SOURCES)[number]["value"];
 // Sources that only arrive through automatic import, never picked by hand
 export const IMPORTED_SOURCES: ContactSource[] = ["contact_form", "chatbot", "registration", "partner"];
 
+// Which of our public accounts a lead belongs to: Jodohmu itself, or one of the subpages.
+// A lead with no tag came in through Jodohmu.
+export type LeadOrigin = SocialAccountKey;
+export const DEFAULT_ORIGIN: LeadOrigin = "jodohmu";
+export const LEAD_ORIGINS = [...SOCIAL_ACCOUNTS].sort((a, b) => Number(b.key === DEFAULT_ORIGIN) - Number(a.key === DEFAULT_ORIGIN));
+export const leadOrigin = (value: unknown): LeadOrigin =>
+  findSocialAccount(typeof value === "string" ? value : "")?.key ?? DEFAULT_ORIGIN;
+export const originLabel = (origin: LeadOrigin) =>
+  origin === DEFAULT_ORIGIN ? "Jodohmu" : `@${findSocialAccount(origin)?.handle ?? origin}`;
+
 export const LOG_ACTIONS = [
   { value: "call_reached", label: { id: "Ditelepon — tersambung", en: "Called — reached" } },
   { value: "call_no_answer", label: { id: "Ditelepon — tidak diangkat", en: "Called — no answer" } },
@@ -211,6 +223,7 @@ export type CallDeskContact = {
   phone: string;
   city: string;
   source: ContactSource;
+  origin: LeadOrigin;
   status: ContactStatus;
   bestTime: string;
   timezone: string;
@@ -269,6 +282,9 @@ export const PROFILE_LABELS: Record<string, Bilingual> = {
   occupation: { id: "Pekerjaan", en: "Occupation" },
   education: { id: "Pendidikan", en: "Education" },
   lookingFor: { id: "Mencari", en: "Looking for" },
+  nationality: { id: "Kewarganegaraan", en: "Nationality" },
+  ethnicity: { id: "Suku", en: "Ethnicity" },
+  hijab: { id: "Berhijab", en: "Wears hijab" },
 };
 
 export type CallDeskActivity = {

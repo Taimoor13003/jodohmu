@@ -2,22 +2,26 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { CheckCircle2, ExternalLink, Images, Inbox, Loader2, Search } from "lucide-react";
+import { CheckCircle2, ExternalLink, Images, Inbox, Loader2, Pencil, Plus, Search } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
-import { autoValues, findPage, suggestPages, type SocialPageKey } from "@/lib/social";
+import { LEAD_PREFIX, autoValues, findPage, suggestPages, type CardPerson, type SocialPageKey } from "@/lib/social";
 import { authFetch } from "@/components/admin/share-api";
 import { SocialComposer, type PostRow } from "./social-post-panel";
 import SocialHub, { type HubData } from "./social-hub";
 import LoginStatus from "./login-status";
+import SubpageLeadForm from "./subpage-lead-form";
+import { OriginBadge, StatusBadge } from "./calldesk/shared";
 import { SOCIAL_ACCOUNTS, findSocialAccount, type SocialAccountKey } from "@/lib/social-accounts";
 
-type ProfileRow = { id: string; personStatus: string | null; isTest: boolean; profile: Record<string, unknown> };
+// How many people the list draws at once; searching narrows it down to the rest
+const LIST_LIMIT = 250;
 
 const C = { border: "#E2E8F0", text: "#0F172A", body: "#334155", label: "#64748B", muted: "#94A3B8", navy: "#1B3A6B" };
 
 /* Admin → Subpages: one tab per public account. "Inbox & posting" handles its Instagram, Facebook and Threads
-   in one place; "Client cards" builds a client's faceless card and posts it to the page's Instagram.
-   The page wraps this with the admin check. */
+   in one place; "Client cards" builds a faceless card for a client or a Call Desk lead and posts it to the
+   page's Instagram, and is where a new lead for that page is added. The page wraps this with the admin check. */
 export default function SubpagesScreen() {
   const { lang: rawLang } = useLanguage();
   const lang = rawLang === "id" ? "id" : "en";
@@ -82,22 +86,29 @@ export default function SubpagesScreen() {
   );
 }
 
-// Pick a profile, shape its card, post it to the page's Instagram
+// Pick a client or lead (or add a lead), shape their card, post it to the page's Instagram
 function ClientCards({ page, lang, selectedId, onSelect }: {
   page: SocialPageKey; lang: "id" | "en"; selectedId: string | null; onSelect: (id: string) => void;
 }) {
   const t = (id: string, en: string) => (lang === "id" ? id : en);
   const pageInfo = findPage(page)!;
-  const [profiles, setProfiles] = useState<ProfileRow[]>([]);
+  const { role, permissions } = useAuth();
+  const canOpenCallDesk = role === "admin" || permissions.includes("calldesk");
+  const [profiles, setProfiles] = useState<CardPerson[]>([]);
   const [posts, setPosts] = useState<PostRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [onlyFits, setOnlyFits] = useState(false);
+  const [kind, setKind] = useState<"all" | "client" | "lead" | "page">("all");
+  // The lead form: adding one to this page, or correcting the one named here
+  const [leadForm, setLeadForm] = useState<"new" | CardPerson | null>(null);
+  // Goes up when a lead's details are corrected, so the composer starts again from the new details
+  const [edits, setEdits] = useState(0);
 
   const load = useCallback(async () => {
     try {
-      const data = await authFetch<{ posts: PostRow[]; profiles: ProfileRow[] }>(`/api/admin/social?page=${page}`);
+      const data = await authFetch<{ posts: PostRow[]; profiles: CardPerson[] }>(`/api/admin/social?page=${page}`);
       setProfiles(data.profiles);
       setPosts(data.posts);
       setError(null);
@@ -115,10 +126,20 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
     return profiles
       .map((p) => ({ ...p, auto: autoValues(p.profile), fits: suggestPages(p.profile).includes(page) }))
       .filter((p) => p.auto.name || p.auto.headline)
+      .filter((p) => kind === "all" || (kind === "page" ? p.origin === page : p.kind === kind))
       .filter((p) => (!onlyFits || p.fits) && (!needle || `${p.auto.name} ${p.auto.city} ${p.auto.occupation}`.toLowerCase().includes(needle)))
-      .sort((a, b) => Number(b.fits) - Number(a.fits) || Number(a.isTest) - Number(b.isTest) || a.auto.name.localeCompare(b.auto.name));
-  }, [profiles, query, onlyFits, page]);
-  const selected = profiles.find((p) => p.id === selectedId) ?? null;
+      // This page's own leads lead the list, then whoever fits the page
+      .sort((a, b) => Number(b.origin === page) - Number(a.origin === page) || Number(b.fits) - Number(a.fits) || Number(a.isTest) - Number(b.isTest) || a.auto.name.localeCompare(b.auto.name));
+  }, [profiles, query, onlyFits, kind, page]);
+  // A link from the Call Desk names the lead; once they have registered, their client profile is the one listed
+  const selected = profiles.find((p) => p.id === selectedId)
+    ?? profiles.find((p) => p.kind === "client" && p.contactId && `${LEAD_PREFIX}${p.contactId}` === selectedId) ?? null;
+  const counts = useMemo(() => ({
+    all: profiles.length,
+    client: profiles.filter((p) => p.kind === "client").length,
+    lead: profiles.filter((p) => p.kind === "lead").length,
+    page: profiles.filter((p) => p.origin === page).length,
+  }), [profiles, page]);
 
   return (
     <div>
@@ -133,7 +154,13 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
         {/* ── choose a profile ── */}
         <aside className="space-y-3">
           <div className="rounded-2xl border bg-white p-3" style={{ borderColor: C.border }}>
-            <p className="text-xs font-bold uppercase tracking-wider" style={{ color: C.label }}>{t("Pilih profil", "Choose a profile")}</p>
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-xs font-bold uppercase tracking-wider" style={{ color: C.label }}>{t("Pilih profil", "Choose a profile")}</p>
+              <button type="button" onClick={() => setLeadForm("new")} title={t(`Tambah calon klien untuk @${pageInfo.handle}`, `Add a lead for @${pageInfo.handle}`)}
+                className="inline-flex h-8 shrink-0 items-center gap-1 rounded-lg px-2.5 text-xs font-bold text-white" style={{ background: pageInfo.accent }}>
+                <Plus className="h-3.5 w-3.5" />{t("Tambah calon klien", "Add lead")}
+              </button>
+            </div>
             <label className="relative mt-2 flex items-center">
               <Search className="pointer-events-none absolute left-3 h-4 w-4 text-slate-400" />
               <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("Cari nama, kota, pekerjaan", "Search name, city, job")} className="h-9 w-full rounded-lg border pl-9 pr-3 text-sm" style={{ borderColor: C.border }} />
@@ -142,13 +169,22 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
               <input type="checkbox" checked={onlyFits} onChange={(e) => setOnlyFits(e.target.checked)} />
               {t(`Hanya yang cocok untuk @${pageInfo.handle}`, `Only profiles that fit @${pageInfo.handle}`)}
             </label>
+            <div className="mt-2 flex flex-wrap gap-1">
+              {([["all", t("Semua", "All")], ["client", t("Klien", "Clients")], ["lead", t("Calon klien", "Leads")], ["page", t(`Dari @${pageInfo.handle}`, `From @${pageInfo.handle}`)]] as const).map(([key, label]) => (
+                <button key={key} type="button" onClick={() => setKind(key)}
+                  className="rounded-full border px-2.5 py-1 text-[11px] font-bold"
+                  style={kind === key ? { background: C.navy, borderColor: C.navy, color: "white" } : { borderColor: C.border, color: C.label }}>
+                  {label} <span className="opacity-70">{counts[key]}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="max-h-[70vh] space-y-1.5 overflow-y-auto pr-1">
             {loading && <div className="grid place-items-center py-10"><Loader2 className="h-5 w-5 animate-spin text-[#1B3A6B]" /></div>}
             {!loading && !rows.length && <p className="py-8 text-center text-sm text-slate-400">{t("Tidak ada profil yang cocok.", "No matching profiles.")}</p>}
-            {rows.map((p) => {
-              const active = p.id === selectedId;
+            {rows.slice(0, LIST_LIMIT).map((p) => {
+              const active = p.id === selected?.id;
               const posted = postedBy.get(p.id);
               return (
                 <button key={p.id} type="button" onClick={() => onSelect(p.id)}
@@ -156,14 +192,22 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
                   style={{ borderColor: active ? pageInfo.accent : C.border, boxShadow: active ? `0 0 0 1px ${pageInfo.accent}` : undefined }}>
                   <div className="flex items-center gap-1.5">
                     <span className="min-w-0 flex-1 truncate text-[13px] font-bold" style={{ color: C.text }}>{p.auto.name || t("(tanpa nama)", "(no name)")}</span>
+                    {p.kind === "lead" && <span className="rounded bg-amber-50 px-1.5 text-[10px] font-bold text-amber-700">{t("calon klien", "lead")}</span>}
                     {p.fits && <span className="rounded bg-emerald-50 px-1.5 text-[10px] font-bold text-emerald-700">{t("cocok", "fits")}</span>}
                     {posted && <span className="rounded bg-indigo-50 px-1.5 text-[10px] font-bold text-indigo-700">{t("terposting", "posted")}</span>}
                     {p.isTest && <span className="rounded bg-slate-100 px-1.5 text-[10px] font-bold text-slate-500">test</span>}
                   </div>
                   <p className="mt-0.5 truncate text-[11px]" style={{ color: C.muted }}>{[p.auto.headline, p.auto.city, p.auto.occupation].filter(Boolean).join(" · ") || "—"}</p>
+                  {/* Which of our pages the person came in through */}
+                  {p.origin && <div className="mt-1.5 flex"><OriginBadge origin={p.origin} /></div>}
                 </button>
               );
             })}
+            {rows.length > LIST_LIMIT && (
+              <p className="py-2 text-center text-[11px]" style={{ color: C.muted }}>
+                {t(`Menampilkan ${LIST_LIMIT} dari ${rows.length}. Cari nama untuk menemukan yang lain.`, `Showing ${LIST_LIMIT} of ${rows.length}. Search by name to find the rest.`)}
+              </p>
+            )}
           </div>
         </aside>
 
@@ -172,13 +216,26 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
           <div className="overflow-hidden rounded-2xl border bg-white" style={{ borderColor: C.border }}>
             {selected ? (
               <>
-                <div className="flex items-center justify-between border-b px-5 py-3" style={{ borderColor: C.border }}>
-                  <p className="text-sm font-bold" style={{ color: C.text }}>
-                    {autoValues(selected.profile).name || "—"} <span className="font-semibold" style={{ color: C.muted }}>→ @{pageInfo.handle}</span>
-                  </p>
-                  <a href={`/admin/candidates/${selected.id}/crm`} className="text-xs font-bold" style={{ color: C.navy }}>{t("Buka CRM", "Open CRM")}</a>
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b px-5 py-3" style={{ borderColor: C.border }}>
+                  <div className="flex min-w-0 flex-wrap items-center gap-1.5">
+                    <p className="text-sm font-bold" style={{ color: C.text }}>
+                      {autoValues(selected.profile).name || "—"} <span className="font-semibold" style={{ color: C.muted }}>→ @{pageInfo.handle}</span>
+                    </p>
+                    {selected.origin && <OriginBadge origin={selected.origin} />}
+                    {selected.leadStatus && <StatusBadge status={selected.leadStatus} />}
+                  </div>
+                  {selected.kind === "lead" ? (
+                    <div className="flex items-center gap-3">
+                      <button type="button" onClick={() => setLeadForm(selected)} className="inline-flex items-center gap-1 text-xs font-bold" style={{ color: C.navy }}>
+                        <Pencil className="h-3 w-3" />{t("Ubah data", "Edit details")}
+                      </button>
+                      {canOpenCallDesk && <a href={`/admin/calls?contact=${encodeURIComponent(selected.contactId ?? "")}`} className="text-xs font-bold" style={{ color: C.navy }}>{t("Buka di Call Desk", "Open in Call Desk")}</a>}
+                    </div>
+                  ) : (
+                    <a href={`/admin/candidates/${selected.id}/crm`} className="text-xs font-bold" style={{ color: C.navy }}>{t("Buka CRM", "Open CRM")}</a>
+                  )}
                 </div>
-                <SocialComposer key={`${selected.id}_${page}`} candidateId={selected.id} profile={selected.profile} lang={lang} page={page} onPosted={load} compact />
+                <SocialComposer key={`${selected.id}_${page}_${edits}`} candidateId={selected.id} profile={selected.profile} lang={lang} page={page} onPosted={load} compact />
               </>
             ) : (
               <p className="px-5 py-16 text-center text-sm" style={{ color: C.muted }}>
@@ -211,6 +268,16 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
           </div>
         </section>
       </div>
+
+      {leadForm && (
+        <SubpageLeadForm
+          page={page}
+          lang={lang}
+          lead={leadForm === "new" ? null : leadForm}
+          onClose={() => setLeadForm(null)}
+          onSaved={async (id) => { await load(); setLeadForm(null); setEdits((n) => n + 1); onSelect(id); }}
+        />
+      )}
     </div>
   );
 }

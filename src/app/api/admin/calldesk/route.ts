@@ -3,11 +3,11 @@ import { FieldValue, type DocumentData } from "firebase-admin/firestore";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import {
   CONTACT_SOURCES, CONTACT_STATUSES, IMPORTED_SOURCES, LEAD_QUALITIES, LOG_ACTIONS, LOST_REASONS, JOURNEY_STAGES, PAID_PACKAGES, PAYMENT_CHANNELS, WAITING_ON, findLabel,
-  DEFAULT_TZ, TEAM_INVITES, addDays, inviteMemberId, isDay, isPastSlot, isTime, isTimeZone, jakartaDay, jakartaTime, toJakarta, weekdayOf,
-  type Bilingual, type CallDeskMember, type ContactStatus,
+  DEFAULT_TZ, TEAM_INVITES, addDays, inviteMemberId, isDay, isPastSlot, isTime, isTimeZone, jakartaDay, jakartaTime, leadOrigin, toJakarta, weekdayOf,
+  type Bilingual, type CallDeskMember, type ContactSource, type ContactStatus,
 } from "@/lib/calldesk";
 import {
-  ACTIVITY, AVAILABILITY, CONTACTS, TRANSCRIPTS, cleanAvailability, importLeads, requireCallDesk, toActivity, toContact,
+  ACTIVITY, AVAILABILITY, CONTACTS, TRANSCRIPTS, cleanAvailability, createContact, importLeads, requireCallDesk, toActivity, toContact,
   type CallDeskCaller,
 } from "@/lib/calldesk-server";
 import { EXPENSE_CATEGORIES, EXPENSE_STATUSES, FINANCE_EXPENSES } from "@/lib/finance";
@@ -277,34 +277,16 @@ export async function POST(req: NextRequest) {
       const assignee = await resolveAssignee(body, caller, null);
       if (!assignee.ok) return NextResponse.json({ error: assignee.error }, { status: 403 });
 
-      const followUp = followUpFields(body);
-      const note = clean(body.note, 1000);
-      const ref = db.collection(CONTACTS).doc();
-      const batch = db.batch();
-      batch.set(ref, {
-        name, phone, source,
+      const id = await createContact({
+        name, phone, source: source as ContactSource, origin: leadOrigin(body.origin),
         city: clean(body.city, 80),
         bestTime: clean(body.bestTime, 100),
         timezone: isTimeZone(body.timezone) ? body.timezone : DEFAULT_TZ,
-        details: note,
-        candidateUid: null,
-        status: "new",
-        ...followUp,
-        ...assignee.value,
-        lastAction: "created",
-        lastActivityAt: now,
-        lastActivityBy: caller.name,
-        createdAt: now,
-        createdByUid: caller.uid,
-        createdByName: caller.name,
-      });
-      batch.set(db.collection(ACTIVITY).doc(), {
-        ...by, ...followUp, ...assignee.value,
-        contactId: ref.id, contactName: name, type: "created", note,
-        statusFrom: null, statusTo: "new",
-      });
-      await batch.commit();
-      return NextResponse.json({ success: true, id: ref.id });
+        note: clean(body.note, 1000),
+        followUp: followUpFields(body),
+        assignee: assignee.value,
+      }, caller);
+      return NextResponse.json({ success: true, id });
     }
 
     const contactId = clean(body.contactId, 120);
@@ -455,10 +437,13 @@ export async function POST(req: NextRequest) {
         city: clean(body.city, 80),
         bestTime: clean(body.bestTime, 100),
         timezone: isTimeZone(body.timezone) ? body.timezone : (contact.timezone ?? DEFAULT_TZ),
+        // The page the lead belongs to; left as it is unless one was picked
+        origin: "origin" in body ? leadOrigin(body.origin) : leadOrigin(contact.origin),
       };
+      const before = (key: keyof typeof updates) => (key === "origin" ? leadOrigin(contact.origin) : contact[key] ?? "");
       const changed = (Object.keys(updates) as (keyof typeof updates)[])
-        .filter((key) => (contact[key] ?? "") !== updates[key])
-        .map((key) => `${key}: "${contact[key] ?? ""}" → "${updates[key]}"`);
+        .filter((key) => before(key) !== updates[key])
+        .map((key) => `${key}: "${before(key)}" → "${updates[key]}"`);
       if (!changed.length) return NextResponse.json({ success: true });
 
       const batch = db.batch();

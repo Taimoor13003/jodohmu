@@ -67,6 +67,12 @@ export function CallDeskApp() {
 
   useEffect(() => { load(); }, [load]);
 
+  // Links from elsewhere (Subpages) open straight on one contact: /admin/calls?contact=…
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("contact");
+    if (id) setOpenId(id);
+  }, []);
+
   // Pick up new website leads and teammates' activity without a manual refresh
   useEffect(() => {
     const interval = setInterval(() => { if (document.visibilityState === "visible") load(); }, 60000);

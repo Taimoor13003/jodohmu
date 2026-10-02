@@ -1,5 +1,6 @@
 import { ageFromDob } from "@/lib/age";
 import type { Figure, IconKey } from "@/lib/social-figures";
+import type { SocialAccountKey } from "@/lib/social-accounts";
 
 /* Posting client profiles to Jodohmu's niche Instagram pages as faceless cards.
    Shared by the admin screens (live preview) and the server (the images and the post). */
@@ -319,6 +320,45 @@ export const CARD_PROFILE_KEYS = [
   "fullName", "name", "gender", "dateOfBirth", "age", "location", "nationality", "nationalityCustom", "occupation",
   "educationLevel", "educations", "maritalStatus", "religion", "ethnicity", "ethnicityCustom", "height", "hijab",
 ] as const;
+
+/* Cards can be made for registered clients and for Call Desk leads. A lead's id carries this prefix
+   wherever a client id is expected (the composer, social_posts), so the two never mix. */
+export const LEAD_PREFIX = "lead:";
+export const isLeadId = (id: string) => id.startsWith(LEAD_PREFIX);
+
+// A Call Desk lead in the shape the cards read
+export function leadCardProfile(lead: { name: string; city: string; profile: Record<string, unknown> }): Profile {
+  const p = lead.profile ?? {};
+  return {
+    name: lead.name, location: lead.city, gender: p.gender, age: p.age, maritalStatus: p.maritalStatus, religion: p.religion,
+    nationality: p.nationality, occupation: p.occupation, educationLevel: p.education, ethnicity: p.ethnicity, height: p.height, hijab: p.hijab,
+  };
+}
+
+// Someone a card can be made for, as listed on Subpages
+export type CardPerson = {
+  id: string;
+  kind: "client" | "lead";
+  // The page a lead was tagged with (for a client: the tag on their Call Desk entry, when they have one)
+  origin: SocialAccountKey | null;
+  // Their Call Desk entry: always set for a lead, and for a client who started as one
+  contactId: string | null;
+  leadStatus: string | null;
+  personStatus: string | null;
+  isTest: boolean;
+  profile: Record<string, unknown>;
+};
+
+// What Subpages asks for when adding a lead or correcting one; all but the name (and, for a new lead, the number) may be left empty
+export type LeadDetails = {
+  name: string; phone: string; city: string; source: string; note: string;
+  gender: string; age: string; maritalStatus: string; religion: string; nationality: string;
+  occupation: string; education: string; ethnicity: string; hijab: string;
+};
+export const EMPTY_LEAD: LeadDetails = {
+  name: "", phone: "", city: "", source: "instagram", note: "",
+  gender: "", age: "", maritalStatus: "", religion: "", nationality: "", occupation: "", education: "", ethnicity: "", hijab: "",
+};
 
 const FIGURE_NAMES: Record<Figure, string> = {
   man: "Man", man_peci: "Man with peci", man_peci_beard: "Man with peci & full beard", woman: "Woman, no hijab", hijab: "Woman in hijab",

@@ -162,6 +162,7 @@ const PROFILE_VALUES: Record<string, Record<string, { id: string; en: string }>>
     never_married: { id: "Belum pernah menikah", en: "Never married" }, divorced: { id: "Cerai", en: "Divorced" },
     widowed: { id: "Cerai mati", en: "Widowed" }, married: { id: "Menikah", en: "Married" },
   },
+  hijab: { yes: { id: "Ya", en: "Yes" }, no: { id: "Tidak", en: "No" } },
 };
 
 // Facts gathered about the person (age, marital status, job…), shown as a compact list

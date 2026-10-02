@@ -9,8 +9,10 @@ import {
   type CallDeskActivity, type CallDeskContact, type CallDeskMember, type LogAction,
 } from "@/lib/calldesk";
 import {
-  ACTION_TONE, SourceBadge, StatusBadge, TimeZoneField, actionLabel, callDeskFetch, followUpTimeLabel, formatDay, formatTime, telLink, useL, waLink,
+  ACTION_TONE, OriginBadge, OriginField, SourceBadge, StatusBadge, TimeZoneField, actionLabel, callDeskFetch, followUpTimeLabel, formatDay, formatTime, telLink, useL, waLink,
 } from "./shared";
+import { useAuth } from "@/context/AuthContext";
+import { LEAD_PREFIX, findPage, leadCardProfile, suggestPages } from "@/lib/social";
 import { AssigneeField, type DeskMe } from "./team-schedule";
 import type { Slot } from "./day-view";
 import { ChatArchive, OutcomeSection, ProfileFacts, QualityBadge, RecordingLinks } from "./outcome";
@@ -59,8 +61,12 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
         assignedTo: contact.assignedTo ?? "",
       };
   const [log, setLog] = useState(emptyLog);
-  const [details, setDetails] = useState({ name: contact.name, phone: contact.phone, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone });
+  const [details, setDetails] = useState({ name: contact.name, phone: contact.phone, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone, origin: contact.origin });
   const [editingSlot, setEditingSlot] = useState(false);
+  // People who manage our social accounts can make this lead's card on a subpage: the page it's tagged with, else the one it fits
+  const { role, permissions } = useAuth();
+  const canPost = role === "admin" || permissions.includes("social");
+  const cardPage = findPage(contact.origin)?.key ?? suggestPages(leadCardProfile(contact))[0] ?? "nikahin_foreigner";
   const [slotForm, setSlotForm] = useState({
     followUpDate: contact.followUpDate ?? "",
     followUpTime: contact.followUpTime ?? "",
@@ -95,7 +101,7 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
       followUpNote: contact.followUpNote ?? "",
       assignedTo: contact.assignedTo ?? "",
     });
-    setDetails({ name: contact.name, phone: contact.phone, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone });
+    setDetails({ name: contact.name, phone: contact.phone, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone, origin: contact.origin });
     loadTimeline();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contact.id, contact.lastActivityAt, preset]);
@@ -158,6 +164,7 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
               <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                 <StatusBadge status={contact.status} />
                 <QualityBadge quality={contact.quality} />
+                <OriginBadge origin={contact.origin} />
                 <SourceBadge source={contact.source} />
                 {contact.city && <span className="text-xs text-slate-500">· {contact.city}</span>}
                 {contact.assignedName && (
@@ -210,6 +217,10 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
                   <TimeZoneField className={input} value={details.timezone} onChange={(timezone) => setDetails({ ...details, timezone })} />
                   {!isTimeZone(details.timezone) && <p className="mt-1 text-xs font-semibold text-rose-600">{l({ id: "Zona waktu tidak dikenal.", en: "Unknown time zone." })}</p>}
                 </div>
+                <label className="text-xs font-semibold text-slate-500 sm:col-span-2">
+                  {l({ id: "Calon klien dari halaman mana?", en: "Which page is this lead from?" })}
+                  <OriginField className={`${input} mt-1`} value={details.origin} onChange={(origin) => setDetails({ ...details, origin })} />
+                </label>
                 <div className="flex gap-2 sm:col-span-2">
                   <button type="button" disabled={saving} onClick={saveDetails} className="h-9 rounded-lg bg-[#1B3A6B] px-4 text-sm font-bold text-white disabled:opacity-60">{l({ id: "Simpan", en: "Save" })}</button>
                   <button type="button" onClick={() => setEditing(false)} className="h-9 rounded-lg border border-slate-200 px-4 text-sm font-semibold text-slate-600">{l({ id: "Batal", en: "Cancel" })}</button>
@@ -229,6 +240,11 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
             {contact.candidateUid && (
               <Link href={`/admin/candidates/${contact.candidateUid}`} className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#C4294A] hover:underline">
                 {l({ id: "Buka profil kandidat", en: "Open candidate profile" })} <ExternalLink className="h-3 w-3" />
+              </Link>
+            )}
+            {canPost && (
+              <Link href={`/admin/subpages?page=${cardPage}&view=cards&profile=${encodeURIComponent(`${LEAD_PREFIX}${contact.id}`)}`} className="mt-3 flex items-center gap-1 text-xs font-bold text-[#1B3A6B] hover:underline">
+                {l({ id: "Buat postingan subpage", en: "Make a subpage post" })} <ExternalLink className="h-3 w-3" />
               </Link>
             )}
           </section>

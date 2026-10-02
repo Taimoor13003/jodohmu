@@ -9,6 +9,7 @@ import {
   type CardContent, type FieldChoices, type FigureChoice, type PostFormat, type SocialPageKey,
 } from "@/lib/social";
 import { figureSvg, iconSvg, type Figure } from "@/lib/social-figures";
+import { cardSubject } from "@/lib/social-leads";
 
 /* Server side of social posting: draws the slides, hosts them, and publishes them through
    the Instagram Graph API as the "Jodohmu Poster Bot" system user. */
@@ -672,9 +673,10 @@ export async function createPost({ candidateId, pageKey, choices, figure, format
   const text = caption.trim().slice(0, 2200);
   if (!text) throw new PostError("Write a caption first.", 400);
 
-  const candidateSnap = await db.collection("candidate_intake").doc(candidateId).get();
-  if (!candidateSnap.exists) throw new PostError("Client not found.", 404);
-  const profile = candidateSnap.data()!;
+  // candidateId is a registered client, or a Call Desk lead ("lead:…")
+  const subject = await cardSubject(candidateId);
+  if (!subject) throw new PostError("Client not found.", 404);
+  const profile = subject.profile;
   const card = buildCard(page.key, candidateId, profile, choices, figure);
   const reel = format === "reel" && Boolean(page.reel) && hasReel(card);
   const changes = describeChoices(page.key, choices, profile, figure);
@@ -687,7 +689,7 @@ export async function createPost({ candidateId, pageKey, choices, figure, format
     if (existing?.status === "published") throw new PostError(`Already posted on @${page.handle}.`, 409);
     if (existing?.status === "publishing" && Date.now() - updated < (existing.containerId ? STALE_REEL_MS : STALE_MS)) throw new PostError("This post is already being published.", 409);
     tx.set(ref, {
-      candidateId, candidateName: String(profile.fullName || profile.name || ""), page: page.key, handle: page.handle,
+      candidateId, candidateName: subject.name, page: page.key, handle: page.handle,
       code: card.code, card, choices, changes, caption: text,
       format: reel ? "reel" : "carousel", status: "publishing", error: null, permalink: null, mediaId: null, imageUrl: null, imageUrls: [],
       videoUrl: null, containerId: null, igUserId: null, publishClaimed: false,

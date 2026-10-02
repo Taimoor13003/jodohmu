@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Loader2, X } from "lucide-react";
-import { CONTACT_SOURCES, DEFAULT_TZ, IMPORTED_SOURCES, addDays, isTimeZone, toJakarta, type CallDeskMember } from "@/lib/calldesk";
-import { TimeZoneField, callDeskFetch, useL } from "./shared";
+import { CONTACT_SOURCES, DEFAULT_ORIGIN, DEFAULT_TZ, IMPORTED_SOURCES, addDays, isTimeZone, toJakarta, type CallDeskMember, type LeadOrigin } from "@/lib/calldesk";
+import { OriginField, TimeZoneField, callDeskFetch, useL } from "./shared";
 import { AssigneeField, type DeskMe } from "./team-schedule";
 import type { Slot } from "./day-view";
 
@@ -22,7 +22,7 @@ export function AddContactDialog({ today, team, me, preset, onClose, onCreated }
 }) {
   const l = useL();
   const [form, setForm] = useState({
-    name: "", phone: "", city: "", source: "whatsapp", bestTime: "", note: "", timezone: DEFAULT_TZ,
+    name: "", phone: "", city: "", source: "whatsapp", origin: DEFAULT_ORIGIN as LeadOrigin, bestTime: "", note: "", timezone: DEFAULT_TZ,
     followUpDate: preset?.day ?? "", followUpTime: preset?.time ?? "", followUpNote: "", assignedTo: preset?.uid ?? "",
   });
   const slot = !form.followUpDate
@@ -77,6 +77,10 @@ export function AddContactDialog({ today, team, me, preset, onClose, onCreated }
             <select className={input} value={form.source} onChange={set("source")}>
               {manualSources.map((source) => <option key={source.value} value={source.value}>{l(source.label)}</option>)}
             </select>
+          </div>
+          <div className="sm:col-span-2">
+            <label className={label}>{l({ id: "Calon klien dari halaman mana?", en: "Which page is this lead from?" })}</label>
+            <OriginField className={input} value={form.origin} onChange={(origin) => setForm({ ...form, origin })} />
           </div>
           <div className="sm:col-span-2">
             <label className={label}>{l({ id: "Zona waktu kontak", en: "Contact's time zone" })}</label>

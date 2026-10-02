@@ -3,8 +3,8 @@
 import { auth } from "@/lib/firebase";
 import { useLanguage } from "@/context/LanguageContext";
 import {
-  CONTACT_SOURCES, CONTACT_STATUSES, LOG_ACTIONS, JAKARTA_TZ, TIMEZONES, findLabel, phoneDigits, timeZoneShort, toJakarta,
-  type ActivityType, type Bilingual, type CallDeskContact,
+  CONTACT_SOURCES, CONTACT_STATUSES, LEAD_ORIGINS, LOG_ACTIONS, JAKARTA_TZ, TIMEZONES, findLabel, originLabel, phoneDigits, timeZoneShort, toJakarta,
+  type ActivityType, type Bilingual, type CallDeskContact, type LeadOrigin,
 } from "@/lib/calldesk";
 
 export function useL() {
@@ -41,6 +41,30 @@ export function SourceBadge({ source }: { source: string }) {
     <span className="inline-flex shrink-0 items-center rounded-md bg-slate-100 px-1.5 py-0.5 text-[11px] font-semibold text-slate-500">
       {l(findLabel(CONTACT_SOURCES, source)) || source}
     </span>
+  );
+}
+
+// Which of our pages the lead belongs to, in that page's colour
+export function OriginBadge({ origin }: { origin: LeadOrigin }) {
+  const l = useL();
+  const accent = LEAD_ORIGINS.find((o) => o.key === origin)?.accent ?? "#64748B";
+  return (
+    <span
+      title={l({ id: `Calon klien dari ${originLabel(origin)}`, en: `Lead from ${originLabel(origin)}` })}
+      className="inline-flex shrink-0 items-center rounded-md border px-1.5 py-0.5 text-[11px] font-bold"
+      style={{ color: accent, borderColor: `${accent}40`, background: `${accent}0D` }}
+    >
+      {originLabel(origin)}
+    </span>
+  );
+}
+
+// Picks the page a lead belongs to
+export function OriginField({ value, onChange, className }: { value: LeadOrigin; onChange: (value: LeadOrigin) => void; className: string }) {
+  return (
+    <select className={className} value={value} onChange={(e) => onChange(e.target.value as LeadOrigin)}>
+      {LEAD_ORIGINS.map((o) => <option key={o.key} value={o.key}>{originLabel(o.key)}{o.key === "jodohmu" ? "" : ` · ${o.label}`}</option>)}
+    </select>
   );
 }
 

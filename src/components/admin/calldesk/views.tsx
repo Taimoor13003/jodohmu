@@ -4,11 +4,11 @@ import { useMemo, useState } from "react";
 import { AlertCircle, CalendarClock, ChevronLeft, ChevronRight, Clock, MessageCircle, Phone, Search, Sparkles } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
-  CONTACT_SOURCES, CONTACT_STATUSES, addDays,
+  CONTACT_SOURCES, CONTACT_STATUSES, LEAD_ORIGINS, addDays, originLabel,
   type Bilingual, type CallDeskActivity, type CallDeskContact, type CallDeskMember,
 } from "@/lib/calldesk";
 import {
-  ACTION_TONE, CLOSED_STATUSES, SourceBadge, StatusBadge, actionLabel, byFollowUp, dueState, followUpTimeLabel, formatDay, formatTime,
+  ACTION_TONE, CLOSED_STATUSES, OriginBadge, SourceBadge, StatusBadge, actionLabel, byFollowUp, dueState, followUpTimeLabel, formatDay, formatTime,
   jakartaFollowUp, telLink, useL, waLink,
 } from "./shared";
 import { AvailabilityList, type DeskMe } from "./team-schedule";
@@ -70,6 +70,7 @@ function ContactRow({ contact, today, onOpen }: { contact: CallDeskContact; toda
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="truncate font-bold text-slate-900">{contact.name}</span>
           <StatusBadge status={contact.status} />
+          <OriginBadge origin={contact.origin} />
           <SourceBadge source={contact.source} />
           {contact.assignedName && (
             <span className="shrink-0 rounded-md bg-indigo-50 px-1.5 py-0.5 text-[11px] font-bold text-indigo-700">→ {contact.assignedName}</span>
@@ -392,11 +393,13 @@ export function ContactsView({ contacts, today, onOpen }: { contacts: CallDeskCo
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
   const [source, setSource] = useState("");
+  const [origin, setOrigin] = useState("");
 
   const filtered = contacts.filter((c) => {
     const needle = query.trim().toLowerCase();
     return (!status || c.status === status)
       && (!source || c.source === source)
+      && (!origin || c.origin === origin)
       && (!needle || `${c.name} ${c.phone} ${c.city}`.toLowerCase().includes(needle));
   });
 
@@ -415,6 +418,10 @@ export function ContactsView({ contacts, today, onOpen }: { contacts: CallDeskCo
         <select className={select} value={source} onChange={(e) => setSource(e.target.value)}>
           <option value="">{l({ id: "Semua sumber", en: "All sources" })}</option>
           {CONTACT_SOURCES.map((s) => <option key={s.value} value={s.value}>{l(s.label)}</option>)}
+        </select>
+        <select className={select} value={origin} onChange={(e) => setOrigin(e.target.value)}>
+          <option value="">{l({ id: "Semua halaman", en: "All pages" })}</option>
+          {LEAD_ORIGINS.map((o) => <option key={o.key} value={o.key}>{originLabel(o.key)}</option>)}
         </select>
       </div>
       <p className="text-xs font-semibold text-slate-400">{filtered.length} {l({ id: "kontak", en: "contacts" })}</p>

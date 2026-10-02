@@ -3,10 +3,11 @@ import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { adminDb } from "@/lib/firebase-admin";
 import { requireSocial } from "@/lib/social-access";
 import {
-  CARD_PROFILE_KEYS, SOCIAL_POSTS, buildCard, defaultChoices, fieldsFor, findPage, formatsFor,
+  SOCIAL_POSTS, buildCard, defaultChoices, fieldsFor, findPage, formatsFor,
   type FieldChoices, type FieldMode, type FigureChoice, type PostFormat, type SocialPageKey,
 } from "@/lib/social";
 import { PostError, createPost, finishPost, mediaExists, metaToken, renderSlides } from "@/lib/social-server";
+import { LeadError, addLead, cardSubject, editLead, listCardPeople } from "@/lib/social-leads";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -52,8 +53,8 @@ const toPost = (x: FirebaseFirestore.DocumentData) => ({
   at: iso(x.publishedAt) ?? iso(x.updatedAt),
 });
 
-/* GET /api/admin/social?candidateId=…  — this client's posts (profile panel, CRM)
-   GET /api/admin/social?page=…         — that page's posts plus every profile to choose from (Subpages) */
+/* GET /api/admin/social?candidateId=…  — this client's (or lead's, "lead:…") posts (profile panel, CRM)
+   GET /api/admin/social?page=…         — that page's posts plus every client and Call Desk lead to choose from (Subpages) */
 export async function GET(req: NextRequest) {
   if (!(await requireAdmin(req))) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const db = adminDb();
@@ -77,22 +78,19 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ connected: Boolean(metaToken()), posts });
   }
   if (page && findPage(page)) {
-    const [postSnap, candidateSnap] = await Promise.all([
+    const [postSnap, profiles] = await Promise.all([
       db.collection(SOCIAL_POSTS).where("page", "==", page).get(),
-      db.collection("candidate_intake").get(),
+      listCardPeople(),
     ]);
-    const profiles = candidateSnap.docs.map((d) => {
-      const x = d.data();
-      const fields = Object.fromEntries(CARD_PROFILE_KEYS.filter((k) => x[k] !== undefined).map((k) => [k, x[k]]));
-      return { id: d.id, personStatus: (x.personStatus as string) ?? null, isTest: x.isTestProfile === true, profile: fields };
-    });
     return NextResponse.json({ connected: Boolean(metaToken()), posts: postSnap.docs.map((d) => toPost(d.data())), profiles });
   }
   return NextResponse.json({ error: "Missing candidateId or page" }, { status: 400 });
 }
 
 /* POST /api/admin/social — { action: "preview" | "post" | "finish", candidateId, page, choices, figure, format, caption, consent, slide }
-   "finish" publishes a Reel that Instagram was still processing when "post" returned { pending: true } */
+   "finish" publishes a Reel that Instagram was still processing when "post" returned { pending: true }
+   { action: "add_lead", page, lead }          — a new lead from that subpage; it lands in the Call Desk tagged with the page
+   { action: "edit_lead", candidateId, lead }  — corrects a lead's name, city and card facts */
 export async function POST(req: NextRequest) {
   const actor = await requireAdmin(req);
   if (!actor) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -100,6 +98,23 @@ export async function POST(req: NextRequest) {
   const body = (await req.json().catch(() => ({}))) as Record<string, unknown>;
   const candidateId = typeof body.candidateId === "string" ? body.candidateId : "";
   const page = findPage(typeof body.page === "string" ? body.page : "");
+
+  if (body.action === "add_lead" || body.action === "edit_lead") {
+    const lead = (body.lead && typeof body.lead === "object" ? body.lead : {}) as Record<string, unknown>;
+    try {
+      if (body.action === "edit_lead") {
+        await editLead(candidateId, lead, actor);
+        return NextResponse.json({ success: true, id: candidateId });
+      }
+      if (!page) return NextResponse.json({ error: "Missing page." }, { status: 400 });
+      return NextResponse.json({ success: true, id: await addLead(page.key, lead, actor) });
+    } catch (err) {
+      if (err instanceof LeadError) return NextResponse.json({ error: err.message }, { status: err.status });
+      console.error("Subpages lead error", err);
+      return NextResponse.json({ error: "Could not save the lead." }, { status: 500 });
+    }
+  }
+
   if (!candidateId || !page) return NextResponse.json({ error: "Missing client or page." }, { status: 400 });
   const choices = cleanChoices(page.key, body.choices);
   const figure = FIGURES.includes(body.figure as FigureChoice) ? (body.figure as FigureChoice) : "auto";
@@ -111,9 +126,9 @@ export async function POST(req: NextRequest) {
   }
 
   if (body.action === "preview") {
-    const snap = await adminDb().collection("candidate_intake").doc(candidateId).get();
-    if (!snap.exists) return NextResponse.json({ error: "Client not found." }, { status: 404 });
-    const slides = await renderSlides(buildCard(page.key, candidateId, snap.data()!, choices, figure), format);
+    const subject = await cardSubject(candidateId);
+    if (!subject) return NextResponse.json({ error: "Client not found." }, { status: 404 });
+    const slides = await renderSlides(buildCard(page.key, candidateId, subject.profile, choices, figure), format);
     const slide = slides[Math.min(Math.max(Number(body.slide) || 0, 0), slides.length - 1)];
     return new NextResponse(slide, { headers: { "Content-Type": "image/png", "Cache-Control": "no-store" } });
   }

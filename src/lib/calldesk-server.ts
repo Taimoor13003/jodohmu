@@ -1,9 +1,9 @@
 import type { NextRequest } from "next/server";
-import type { DocumentData, Timestamp } from "firebase-admin/firestore";
+import { FieldValue, type DocumentData, type Timestamp } from "firebase-admin/firestore";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import {
-  DEFAULT_TZ, EMPTY_AVAILABILITY, WEEKDAYS, isDay, isTime,
-  type Availability, type CallDeskActivity, type CallDeskContact, type ContactSource, type TeamPermission,
+  DEFAULT_TZ, EMPTY_AVAILABILITY, WEEKDAYS, isDay, isTime, jakartaDay, leadOrigin,
+  type Availability, type CallDeskActivity, type CallDeskContact, type ContactSource, type LeadOrigin, type LeadProfile, type TeamPermission,
 } from "@/lib/calldesk";
 
 export type CallDeskCaller = { uid: string; name: string; isAdmin: boolean; canSeeTeam: boolean; canPlan: boolean };
@@ -62,6 +62,7 @@ export const toContact = (id: string, data: DocumentData): CallDeskContact => ({
   phone: str(data.phone),
   city: str(data.city),
   source: data.source,
+  origin: leadOrigin(data.origin),
   status: data.status,
   bestTime: str(data.bestTime),
   timezone: str(data.timezone) || DEFAULT_TZ,
@@ -113,6 +114,49 @@ export const toActivity = (id: string, data: DocumentData): CallDeskActivity => 
   recordingUrl: data.recordingUrl ?? null,
   transcriptId: data.transcriptId ?? null,
 });
+
+/* A lead added by hand, written together with its first timeline entry.
+   Used by the Call Desk and by Subpages, so both make the same kind of contact. */
+export async function createContact(
+  input: {
+    name: string; phone: string; source: ContactSource; origin: LeadOrigin; city: string; bestTime: string; timezone: string; note: string;
+    followUp: { followUpDate: string | null; followUpTime: string | null; followUpNote: string | null };
+    assignee: { assignedTo: string | null; assignedName: string | null };
+    profile?: LeadProfile;
+  },
+  by: { uid: string; name: string },
+) {
+  const db = adminDb();
+  const now = FieldValue.serverTimestamp();
+  const ref = db.collection(CONTACTS).doc();
+  const batch = db.batch();
+  batch.set(ref, {
+    name: input.name, phone: input.phone, source: input.source, origin: input.origin,
+    city: input.city,
+    bestTime: input.bestTime,
+    timezone: input.timezone,
+    details: input.note,
+    candidateUid: null,
+    status: "new",
+    ...input.followUp,
+    ...input.assignee,
+    ...(input.profile && Object.keys(input.profile).length ? { profile: input.profile } : {}),
+    lastAction: "created",
+    lastActivityAt: now,
+    lastActivityBy: by.name,
+    createdAt: now,
+    createdByUid: by.uid,
+    createdByName: by.name,
+  });
+  batch.set(db.collection(ACTIVITY).doc(), {
+    byUid: by.uid, byName: by.name, day: jakartaDay(), createdAt: now,
+    ...input.followUp, ...input.assignee,
+    contactId: ref.id, contactName: input.name, type: "created", note: input.note,
+    statusFrom: null, statusTo: "new",
+  });
+  await batch.commit();
+  return ref.id;
+}
 
 // Keeps only well-formed hours (start before end) and valid days off
 export function cleanAvailability(input: unknown): Availability {
