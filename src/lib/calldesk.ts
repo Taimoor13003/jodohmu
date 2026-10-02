@@ -104,6 +104,9 @@ export const CONTACT_STATUSES = [
   { value: "contacted", label: { id: "Sudah dihubungi", en: "Contacted" }, tone: "bg-sky-50 text-sky-700 border-sky-200" },
   { value: "interested", label: { id: "Tertarik", en: "Interested" }, tone: "bg-violet-50 text-violet-700 border-violet-200" },
   { value: "consultation", label: { id: "Konsultasi dijadwalkan", en: "Consultation booked" }, tone: "bg-indigo-50 text-indigo-700 border-indigo-200" },
+  { value: "awaiting_payment", label: { id: "Menunggu pembayaran", en: "Waiting for payment" }, tone: "bg-teal-50 text-teal-700 border-teal-200" },
+  // Still open, so follow-ups keep showing; "unreachable" is the closed version once we give up
+  { value: "no_reply", label: { id: "Berhenti membalas", en: "Stopped replying" }, tone: "bg-orange-50 text-orange-700 border-orange-200" },
   { value: "paid", label: { id: "Sudah bayar", en: "Paid" }, tone: "bg-emerald-50 text-emerald-700 border-emerald-200" },
   { value: "not_interested", label: { id: "Tidak tertarik", en: "Not interested" }, tone: "bg-slate-100 text-slate-500 border-slate-200" },
   { value: "unreachable", label: { id: "Tidak bisa dihubungi", en: "Unreachable" }, tone: "bg-rose-50 text-rose-600 border-rose-200" },
