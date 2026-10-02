@@ -158,6 +158,40 @@ export async function createContact(
   return ref.id;
 }
 
+// The facts about a person as typed on a lead form (Call Desk or Subpages); null means "not known", which removes the fact
+export function leadFacts(body: Record<string, unknown>): Record<string, string | number | null> {
+  const text = (value: unknown, max: number) => (typeof value === "string" ? value.trim().slice(0, max) : "") || null;
+  const pick = (list: string[], value: unknown) => (typeof value === "string" && list.includes(value) ? value : null);
+  const age = Math.round(Number(body.age));
+  const gender = pick(["male", "female"], body.gender);
+  return {
+    gender,
+    age: age > 15 && age < 100 ? age : null,
+    maritalStatus: pick(["never_married", "divorced", "widowed", "married"], body.maritalStatus),
+    religion: text(body.religion, 40),
+    nationality: text(body.nationality, 60),
+    occupation: text(body.occupation, 80),
+    education: text(body.education, 60),
+    ethnicity: text(body.ethnicity, 60),
+    hijab: gender === "female" ? pick(["yes", "no"], body.hijab) : null,
+  };
+}
+
+// Typed facts laid over a lead's stored ones, keeping whatever else is known about them; `changed` is for the timeline
+export function mergeLeadFacts(stored: unknown, body: Record<string, unknown>): { profile: Record<string, unknown>; changed: string[] } {
+  const current = (stored && typeof stored === "object" ? stored : {}) as Record<string, unknown>;
+  const profile = { ...current };
+  const changed: string[] = [];
+  for (const [key, value] of Object.entries(leadFacts(body))) {
+    const before = current[key] ?? null;
+    if (String(before ?? "") === String(value ?? "")) continue;
+    changed.push(`${key}: "${before ?? ""}" → "${value ?? ""}"`);
+    if (value === null) delete profile[key];
+    else profile[key] = value;
+  }
+  return { profile, changed };
+}
+
 // Keeps only well-formed hours (start before end) and valid days off
 export function cleanAvailability(input: unknown): Availability {
   const raw = (input ?? {}) as { weekly?: Record<string, unknown>; daysOff?: unknown; dayOverrides?: unknown };

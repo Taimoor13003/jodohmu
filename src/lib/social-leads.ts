@@ -4,7 +4,7 @@ import {
   CONTACT_SOURCES, DEFAULT_TZ, IMPORTED_SOURCES, cleanOrigins, jakartaDay, leadOrigins, phoneDigits,
   type ContactSource, type LeadProfile,
 } from "@/lib/calldesk";
-import { ACTIVITY, CONTACTS, createContact, toContact } from "@/lib/calldesk-server";
+import { ACTIVITY, CONTACTS, createContact, leadFacts, mergeLeadFacts, toContact } from "@/lib/calldesk-server";
 import { CARD_PROFILE_KEYS, LEAD_PREFIX, isLeadId, leadCardProfile, type CardPerson, type SocialPageKey } from "@/lib/social";
 
 /* Call Desk leads on Subpages: listed next to registered clients so a card can be made for them,
@@ -65,24 +65,6 @@ export async function listCardPeople(): Promise<CardPerson[]> {
       personStatus: null, isTest: false, profile: leadCardProfile(c),
     }));
   return [...clients, ...leads];
-}
-
-// The facts a card reads, as typed on Subpages; null means "not known", which removes the fact
-function leadFacts(body: Record<string, unknown>): Record<string, string | number | null> {
-  const pick = (list: string[], value: unknown) => (typeof value === "string" && list.includes(value) ? value : null);
-  const age = Math.round(Number(body.age));
-  const gender = pick(["male", "female"], body.gender);
-  return {
-    gender,
-    age: age > 15 && age < 100 ? age : null,
-    maritalStatus: pick(["never_married", "divorced", "widowed", "married"], body.maritalStatus),
-    religion: clean(body.religion, 40) || null,
-    nationality: clean(body.nationality, 60) || null,
-    occupation: clean(body.occupation, 80) || null,
-    education: clean(body.education, 60) || null,
-    ethnicity: clean(body.ethnicity, 60) || null,
-    hijab: gender === "female" ? pick(["yes", "no"], body.hijab) : null,
-  };
 }
 
 // A correction made on Subpages, written to the lead's Call Desk history the way the Call Desk's own edits are
@@ -155,18 +137,12 @@ export async function editLead(id: string, body: Record<string, unknown>, actor:
   if (!name) throw new LeadError("Name is required.", 400);
   const city = clean(body.city, 80);
 
-  const current = (contact.profile && typeof contact.profile === "object" ? contact.profile : {}) as Record<string, unknown>;
-  const profile = { ...current };
+  const facts = mergeLeadFacts(contact.profile, body);
+  const { profile } = facts;
   const changed: string[] = [];
   if ((contact.name ?? "") !== name) changed.push(`name: "${contact.name ?? ""}" → "${name}"`);
   if ((contact.city ?? "") !== city) changed.push(`city: "${contact.city ?? ""}" → "${city}"`);
-  for (const [key, value] of Object.entries(leadFacts(body))) {
-    const before = current[key] ?? null;
-    if (before === value) continue;
-    changed.push(`${key}: "${before ?? ""}" → "${value ?? ""}"`);
-    if (value === null) delete profile[key];
-    else profile[key] = value;
-  }
+  changed.push(...facts.changed);
   if (!changed.length) return;
 
   const db = adminDb();

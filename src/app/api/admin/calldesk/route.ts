@@ -4,10 +4,10 @@ import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import {
   CONTACT_SOURCES, CONTACT_STATUSES, IMPORTED_SOURCES, LEAD_QUALITIES, LOG_ACTIONS, LOST_REASONS, JOURNEY_STAGES, PAID_PACKAGES, PAYMENT_CHANNELS, WAITING_ON, findLabel,
   DEFAULT_TZ, TEAM_INVITES, addDays, inviteMemberId, isDay, isPastSlot, isTime, isTimeZone, jakartaDay, jakartaTime, cleanOrigins, leadOrigins, toJakarta, weekdayOf,
-  type Bilingual, type CallDeskMember, type ContactSource, type ContactStatus,
+  type Bilingual, type CallDeskMember, type ContactSource, type ContactStatus, type LeadProfile,
 } from "@/lib/calldesk";
 import {
-  ACTIVITY, AVAILABILITY, CONTACTS, TRANSCRIPTS, cleanAvailability, createContact, importLeads, requireCallDesk, toActivity, toContact,
+  ACTIVITY, AVAILABILITY, CONTACTS, TRANSCRIPTS, cleanAvailability, createContact, importLeads, leadFacts, mergeLeadFacts, requireCallDesk, toActivity, toContact,
   type CallDeskCaller,
 } from "@/lib/calldesk-server";
 import { EXPENSE_CATEGORIES, EXPENSE_STATUSES, FINANCE_EXPENSES } from "@/lib/finance";
@@ -285,6 +285,8 @@ export async function POST(req: NextRequest) {
         note: clean(body.note, 1000),
         followUp: followUpFields(body),
         assignee: assignee.value,
+        // Age, gender and the like, when the form had them
+        profile: Object.fromEntries(Object.entries(leadFacts(body)).filter(([, value]) => value !== null)) as LeadProfile,
       }, caller);
       return NextResponse.json({ success: true, id });
     }
@@ -445,11 +447,14 @@ export async function POST(req: NextRequest) {
       const changed = (Object.keys(updates) as (keyof typeof updates)[])
         .filter((key) => before(key) !== shown(updates[key]))
         .map((key) => `${key}: "${before(key)}" → "${shown(updates[key])}"`);
+      // Age, gender and the like; left as they are unless the form sent them
+      const facts = "gender" in body ? mergeLeadFacts(contact.profile, body) : null;
+      if (facts) changed.push(...facts.changed);
       if (!changed.length) return NextResponse.json({ success: true });
 
       const batch = db.batch();
       // `origin` is the single tag older leads were saved with; `origins` replaces it
-      batch.update(contactRef, { ...updates, origin: FieldValue.delete() });
+      batch.update(contactRef, { ...updates, ...(facts ? { profile: facts.profile } : {}), origin: FieldValue.delete() });
       batch.set(db.collection(ACTIVITY).doc(), {
         ...by,
         contactId, contactName: name, type: "edited", note: changed.join("\n"),

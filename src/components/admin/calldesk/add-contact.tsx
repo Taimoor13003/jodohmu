@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Loader2, X } from "lucide-react";
 import { CONTACT_SOURCES, DEFAULT_ORIGIN, DEFAULT_TZ, IMPORTED_SOURCES, addDays, isTimeZone, toJakarta, type CallDeskMember, type LeadOrigin } from "@/lib/calldesk";
+import { useLanguage } from "@/context/LanguageContext";
+import LeadFactFields, { EMPTY_FACTS } from "@/components/admin/lead-fact-fields";
 import { OriginField, TimeZoneField, callDeskFetch, useL } from "./shared";
 import { AssigneeField, type DeskMe } from "./team-schedule";
 import type { Slot } from "./day-view";
@@ -21,7 +23,9 @@ export function AddContactDialog({ today, team, me, preset, onClose, onCreated }
   onCreated: (id: string) => Promise<void>;
 }) {
   const l = useL();
+  const { lang } = useLanguage();
   const [form, setForm] = useState({
+    ...EMPTY_FACTS,
     name: "", phone: "", city: "", source: "whatsapp", origins: [DEFAULT_ORIGIN] as LeadOrigin[], bestTime: "", note: "", timezone: DEFAULT_TZ,
     followUpDate: preset?.day ?? "", followUpTime: preset?.time ?? "", followUpNote: "", assignedTo: preset?.uid ?? "",
   });
@@ -78,7 +82,11 @@ export function AddContactDialog({ today, team, me, preset, onClose, onCreated }
               {manualSources.map((source) => <option key={source.value} value={source.value}>{l(source.label)}</option>)}
             </select>
           </div>
-          <div className="sm:col-span-2">
+          <p className="mt-1 text-xs font-bold uppercase tracking-wider text-slate-400 sm:col-span-2">
+            {l({ id: "Tentang orangnya (opsional, bisa dilengkapi nanti)", en: "About the person (optional, can be filled in later)" })}
+          </p>
+          <LeadFactFields lang={lang === "id" ? "id" : "en"} value={form} onChange={(facts) => setForm({ ...form, ...facts })} />
+          <div className="mt-1 border-t border-slate-100 pt-3 sm:col-span-2">
             <label className={label}>{l({ id: "Calon klien dari halaman mana? (boleh lebih dari satu)", en: "Which page is this lead from? (can be more than one)" })}</label>
             <OriginField value={form.origins} onChange={(origins) => setForm({ ...form, origins })} />
           </div>

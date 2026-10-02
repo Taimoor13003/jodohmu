@@ -13,6 +13,7 @@ import {
 } from "./shared";
 import { useAuth } from "@/context/AuthContext";
 import { LEAD_PREFIX, findPage, leadCardProfile, suggestPages } from "@/lib/social";
+import LeadFactFields, { factsOf } from "@/components/admin/lead-fact-fields";
 import { AssigneeField, type DeskMe } from "./team-schedule";
 import type { Slot } from "./day-view";
 import { ChatArchive, OutcomeSection, ProfileFacts, QualityBadge, RecordingLinks } from "./outcome";
@@ -61,7 +62,7 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
         assignedTo: contact.assignedTo ?? "",
       };
   const [log, setLog] = useState(emptyLog);
-  const [details, setDetails] = useState({ name: contact.name, phone: contact.phone, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone, origins: contact.origins });
+  const [details, setDetails] = useState({ ...factsOf(contact.profile), name: contact.name, phone: contact.phone, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone, origins: contact.origins });
   const [editingSlot, setEditingSlot] = useState(false);
   // People who manage our social accounts can make this lead's card on a subpage: one it's tagged with, else the one it fits
   const { role, permissions } = useAuth();
@@ -101,7 +102,7 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
       followUpNote: contact.followUpNote ?? "",
       assignedTo: contact.assignedTo ?? "",
     });
-    setDetails({ name: contact.name, phone: contact.phone, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone, origins: contact.origins });
+    setDetails({ ...factsOf(contact.profile), name: contact.name, phone: contact.phone, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone, origins: contact.origins });
     loadTimeline();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contact.id, contact.lastActivityAt, preset]);
@@ -217,6 +218,8 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
                   <TimeZoneField className={input} value={details.timezone} onChange={(timezone) => setDetails({ ...details, timezone })} />
                   {!isTimeZone(details.timezone) && <p className="mt-1 text-xs font-semibold text-rose-600">{l({ id: "Zona waktu tidak dikenal.", en: "Unknown time zone." })}</p>}
                 </div>
+                <p className="mt-1 text-xs font-bold uppercase tracking-wider text-slate-400 sm:col-span-2">{l({ id: "Tentang orangnya", en: "About the person" })}</p>
+                <LeadFactFields lang={lang === "id" ? "id" : "en"} value={details} onChange={(facts) => setDetails({ ...details, ...facts })} />
                 <div className="sm:col-span-2">
                   <p className="mb-1.5 text-xs font-semibold text-slate-500">{l({ id: "Calon klien dari halaman mana? (boleh lebih dari satu)", en: "Which page is this lead from? (can be more than one)" })}</p>
                   <OriginField value={details.origins} onChange={(origins) => setDetails({ ...details, origins })} />
