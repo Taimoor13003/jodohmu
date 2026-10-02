@@ -1,7 +1,7 @@
 import { FieldValue } from "firebase-admin/firestore";
 import { adminDb } from "@/lib/firebase-admin";
 import {
-  CONTACT_SOURCES, DEFAULT_TZ, IMPORTED_SOURCES, jakartaDay, leadOrigin, originLabel, phoneDigits,
+  CONTACT_SOURCES, DEFAULT_TZ, IMPORTED_SOURCES, cleanOrigins, jakartaDay, leadOrigins, phoneDigits,
   type ContactSource, type LeadProfile,
 } from "@/lib/calldesk";
 import { ACTIVITY, CONTACTS, createContact, toContact } from "@/lib/calldesk-server";
@@ -52,7 +52,7 @@ export async function listCardPeople(): Promise<CardPerson[]> {
     const fields = Object.fromEntries(CARD_PROFILE_KEYS.filter((k) => x[k] !== undefined).map((k) => [k, x[k]]));
     const entry = entryOf.get(d.id);
     return {
-      id: d.id, kind: "client", origin: entry?.origin ?? null, contactId: entry?.id ?? null, leadStatus: null,
+      id: d.id, kind: "client", origins: entry?.origins ?? [], contactId: entry?.id ?? null, leadStatus: null,
       personStatus: (x.personStatus as string) ?? null, isTest: x.isTestProfile === true, profile: fields,
     };
   });
@@ -61,7 +61,7 @@ export async function listCardPeople(): Promise<CardPerson[]> {
   const leads: CardPerson[] = contacts
     .filter((c) => !c.excluded && c.source !== "partner" && !(c.candidateUid && clientIds.has(c.candidateUid)))
     .map((c) => ({
-      id: `${LEAD_PREFIX}${c.id}`, kind: "lead", origin: c.origin, contactId: c.id, leadStatus: c.status ?? null,
+      id: `${LEAD_PREFIX}${c.id}`, kind: "lead", origins: c.origins, contactId: c.id, leadStatus: c.status ?? null,
       personStatus: null, isTest: false, profile: leadCardProfile(c),
     }));
   return [...clients, ...leads];
@@ -85,34 +85,64 @@ function leadFacts(body: Record<string, unknown>): Record<string, string | numbe
   };
 }
 
+// A correction made on Subpages, written to the lead's Call Desk history the way the Call Desk's own edits are
+function logEdit(batch: FirebaseFirestore.WriteBatch, contactId: string, contact: FirebaseFirestore.DocumentData, name: string, note: string, actor: Actor) {
+  batch.set(adminDb().collection(ACTIVITY).doc(), {
+    byUid: actor.uid, byName: actor.name, day: jakartaDay(), createdAt: FieldValue.serverTimestamp(),
+    contactId, contactName: name, type: "edited", note,
+    statusFrom: null, statusTo: null, followUpDate: null, followUpTime: null, followUpNote: null,
+    assignedTo: contact.assignedTo ?? null, assignedName: contact.assignedName ?? null,
+  });
+}
+
+// Adds or removes one page's tag on a lead; a lead can belong to several pages. Returns the tags it ends up with.
+export async function tagLead(id: string, pageKey: SocialPageKey, on: boolean, actor: Actor) {
+  const ref = leadRef(id);
+  const snap = await ref?.get();
+  if (!ref || !snap?.exists) throw new LeadError("Lead not found.", 404);
+  const contact = snap.data()!;
+  const before = leadOrigins(contact);
+  const after = cleanOrigins(on ? [...before, pageKey] : before.filter((o) => o !== pageKey));
+  if (before.join() === after.join()) return after;
+  const batch = adminDb().batch();
+  // `origin` is the single tag older leads were saved with; `origins` replaces it
+  batch.update(ref, { origins: after, origin: FieldValue.delete() });
+  logEdit(batch, ref.id, contact, contact.name ?? "", `origins: "${before.join(", ")}" → "${after.join(", ")}"`, actor);
+  await batch.commit();
+  return after;
+}
+
 /* Adds a lead from a subpage. It lands in the Call Desk like any other lead, tagged with that page.
-   Returns the id Subpages knows it by ("lead:…"). */
-export async function addLead(pageKey: SocialPageKey, body: Record<string, unknown>, actor: Actor): Promise<string> {
+   Someone whose number is already saved is not added twice: their entry gets this page's tag as well.
+   Returns the id Subpages knows the lead by ("lead:…"), and the saved name when it was already there. */
+export async function addLead(pageKey: SocialPageKey, body: Record<string, unknown>, actor: Actor): Promise<{ id: string; existing: string | null }> {
   const name = clean(body.name, 120);
   const phone = clean(body.phone, 30);
   if (!name || !phone) throw new LeadError("Name and WhatsApp number are required.", 400);
   const source = clean(body.source, 30);
 
-  // One entry per person: the same number under a second page would split their history
+  // One entry per person: a second entry for the same number would split their history
   const digits = phoneDigits(phone);
   if (digits.length >= 6) {
-    const saved = await adminDb().collection(CONTACTS).select("name", "phone", "origin").get();
+    const saved = await adminDb().collection(CONTACTS).select("name", "phone").get();
     const twin = saved.docs.find((d) => phoneDigits(String(d.data().phone ?? "")) === digits);
     if (twin) {
-      throw new LeadError(`This number is already saved as ${twin.data().name || "a lead"} (${originLabel(leadOrigin(twin.data().origin))}). Find them in the list instead.`, 409);
+      const id = `${LEAD_PREFIX}${twin.id}`;
+      await tagLead(id, pageKey, true, actor);
+      return { id, existing: String(twin.data().name || "") };
     }
   }
 
   const profile = Object.fromEntries(Object.entries(leadFacts(body)).filter(([, value]) => value !== null)) as LeadProfile;
   const id = await createContact({
-    name, phone, origin: pageKey,
+    name, phone, origins: [pageKey],
     source: (MANUAL_SOURCES.includes(source) ? source : "instagram") as ContactSource,
     city: clean(body.city, 80), bestTime: "", timezone: DEFAULT_TZ, note: clean(body.note, 1000),
     followUp: { followUpDate: null, followUpTime: null, followUpNote: null },
     assignee: { assignedTo: null, assignedName: null },
     profile,
   }, actor);
-  return `${LEAD_PREFIX}${id}`;
+  return { id: `${LEAD_PREFIX}${id}`, existing: null };
 }
 
 // Corrects a lead's name, city and card facts from Subpages; the change is written to the lead's Call Desk history
@@ -142,11 +172,6 @@ export async function editLead(id: string, body: Record<string, unknown>, actor:
   const db = adminDb();
   const batch = db.batch();
   batch.update(ref, { name, city, profile });
-  batch.set(db.collection(ACTIVITY).doc(), {
-    byUid: actor.uid, byName: actor.name, day: jakartaDay(), createdAt: FieldValue.serverTimestamp(),
-    contactId: ref.id, contactName: name, type: "edited", note: changed.join("\n"),
-    statusFrom: null, statusTo: null, followUpDate: null, followUpTime: null, followUpNote: null,
-    assignedTo: contact.assignedTo ?? null, assignedName: contact.assignedName ?? null,
-  });
+  logEdit(batch, ref.id, contact, name, changed.join("\n"), actor);
   await batch.commit();
 }

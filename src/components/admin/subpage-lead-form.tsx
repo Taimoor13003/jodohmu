@@ -30,7 +30,8 @@ export default function SubpageLeadForm({ page, lang, lead, onClose, onSaved }: 
   // Given when correcting a lead; left out when adding one
   lead?: CardPerson | null;
   onClose: () => void;
-  onSaved: (id: string) => Promise<void> | void;
+  // `existing` is the saved name when the number was already in the Call Desk, so that lead was tagged instead
+  onSaved: (id: string, existing?: string | null) => Promise<void> | void;
 }) {
   const t = (id: string, en: string) => (lang === "id" ? id : en);
   const pageInfo = findPage(page)!;
@@ -44,11 +45,11 @@ export default function SubpageLeadForm({ page, lang, lead, onClose, onSaved }: 
     setSaving(true);
     setError(null);
     try {
-      const data = await authFetch<{ id: string }>("/api/admin/social", {
+      const data = await authFetch<{ id: string; existing?: string | null }>("/api/admin/social", {
         method: "POST",
         body: JSON.stringify(lead ? { action: "edit_lead", candidateId: lead.id, lead: form } : { action: "add_lead", page, lead: form }),
       });
-      await onSaved(data.id);
+      await onSaved(data.id, data.existing);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed");
       setSaving(false);
@@ -68,7 +69,7 @@ export default function SubpageLeadForm({ page, lang, lead, onClose, onSaved }: 
         <p className="mt-1 text-sm text-slate-500">
           {lead
             ? t("Data ini mengisi kartu. Perubahan tercatat di riwayat Call Desk.", "These details fill in the card. Changes are noted in the lead's Call Desk history.")
-            : t(`Masuk ke Call Desk dengan tanda @${pageInfo.handle}. Cukup nama dan nomor; sisanya mengisi kartu dan bisa dilengkapi nanti.`, `Goes into the Call Desk tagged @${pageInfo.handle}. Only the name and number are needed; the rest fills in the card and can be added later.`)}
+            : t(`Masuk ke Call Desk dengan tanda @${pageInfo.handle}. Cukup nama dan nomor; sisanya mengisi kartu dan bisa dilengkapi nanti. Kalau nomornya sudah tersimpan, orang itu cukup diberi tanda @${pageInfo.handle} juga.`, `Goes into the Call Desk tagged @${pageInfo.handle}. Only the name and number are needed; the rest fills in the card and can be added later. If the number is already saved, that person just gets the @${pageInfo.handle} tag as well.`)}
         </p>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2">

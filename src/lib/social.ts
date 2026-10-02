@@ -339,8 +339,8 @@ export function leadCardProfile(lead: { name: string; city: string; profile: Rec
 export type CardPerson = {
   id: string;
   kind: "client" | "lead";
-  // The page a lead was tagged with (for a client: the tag on their Call Desk entry, when they have one)
-  origin: SocialAccountKey | null;
+  // The pages a lead is tagged with (for a client: the tags on their Call Desk entry, when they have one)
+  origins: SocialAccountKey[];
   // Their Call Desk entry: always set for a lead, and for a client who started as one
   contactId: string | null;
   leadStatus: string | null;

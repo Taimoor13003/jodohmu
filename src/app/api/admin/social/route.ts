@@ -7,7 +7,7 @@ import {
   type FieldChoices, type FieldMode, type FigureChoice, type PostFormat, type SocialPageKey,
 } from "@/lib/social";
 import { PostError, createPost, finishPost, mediaExists, metaToken, renderSlides } from "@/lib/social-server";
-import { LeadError, addLead, cardSubject, editLead, listCardPeople } from "@/lib/social-leads";
+import { LeadError, addLead, cardSubject, editLead, listCardPeople, tagLead } from "@/lib/social-leads";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -89,8 +89,9 @@ export async function GET(req: NextRequest) {
 
 /* POST /api/admin/social — { action: "preview" | "post" | "finish", candidateId, page, choices, figure, format, caption, consent, slide }
    "finish" publishes a Reel that Instagram was still processing when "post" returned { pending: true }
-   { action: "add_lead", page, lead }          — a new lead from that subpage; it lands in the Call Desk tagged with the page
-   { action: "edit_lead", candidateId, lead }  — corrects a lead's name, city and card facts */
+   { action: "add_lead", page, lead }           — a new lead from that subpage; it lands in the Call Desk tagged with the page
+   { action: "edit_lead", candidateId, lead }   — corrects a lead's name, city and card facts
+   { action: "tag_lead", candidateId, page, on } — adds or removes that page's tag on a lead */
 export async function POST(req: NextRequest) {
   const actor = await requireAdmin(req);
   if (!actor) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -99,7 +100,7 @@ export async function POST(req: NextRequest) {
   const candidateId = typeof body.candidateId === "string" ? body.candidateId : "";
   const page = findPage(typeof body.page === "string" ? body.page : "");
 
-  if (body.action === "add_lead" || body.action === "edit_lead") {
+  if (body.action === "add_lead" || body.action === "edit_lead" || body.action === "tag_lead") {
     const lead = (body.lead && typeof body.lead === "object" ? body.lead : {}) as Record<string, unknown>;
     try {
       if (body.action === "edit_lead") {
@@ -107,7 +108,10 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: true, id: candidateId });
       }
       if (!page) return NextResponse.json({ error: "Missing page." }, { status: 400 });
-      return NextResponse.json({ success: true, id: await addLead(page.key, lead, actor) });
+      if (body.action === "tag_lead") {
+        return NextResponse.json({ success: true, id: candidateId, origins: await tagLead(candidateId, page.key, body.on === true, actor) });
+      }
+      return NextResponse.json({ success: true, ...(await addLead(page.key, lead, actor)) });
     } catch (err) {
       if (err instanceof LeadError) return NextResponse.json({ error: err.message }, { status: err.status });
       console.error("Subpages lead error", err);

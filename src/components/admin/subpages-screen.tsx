@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { CheckCircle2, ExternalLink, Images, Inbox, Loader2, Pencil, Plus, Search } from "lucide-react";
+import { CheckCircle2, ExternalLink, Images, Inbox, Loader2, Pencil, Plus, Search, Tag } from "lucide-react";
+import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { LEAD_PREFIX, autoValues, findPage, suggestPages, type CardPerson, type SocialPageKey } from "@/lib/social";
@@ -11,7 +12,7 @@ import { SocialComposer, type PostRow } from "./social-post-panel";
 import SocialHub, { type HubData } from "./social-hub";
 import LoginStatus from "./login-status";
 import SubpageLeadForm from "./subpage-lead-form";
-import { OriginBadge, StatusBadge } from "./calldesk/shared";
+import { OriginBadges, StatusBadge } from "./calldesk/shared";
 import { SOCIAL_ACCOUNTS, findSocialAccount, type SocialAccountKey } from "@/lib/social-accounts";
 
 // How many people the list draws at once; searching narrows it down to the rest
@@ -126,19 +127,43 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
     return profiles
       .map((p) => ({ ...p, auto: autoValues(p.profile), fits: suggestPages(p.profile).includes(page) }))
       .filter((p) => p.auto.name || p.auto.headline)
-      .filter((p) => kind === "all" || (kind === "page" ? p.origin === page : p.kind === kind))
+      .filter((p) => kind === "all" || (kind === "page" ? p.origins.includes(page) : p.kind === kind))
       .filter((p) => (!onlyFits || p.fits) && (!needle || `${p.auto.name} ${p.auto.city} ${p.auto.occupation}`.toLowerCase().includes(needle)))
       // This page's own leads lead the list, then whoever fits the page
-      .sort((a, b) => Number(b.origin === page) - Number(a.origin === page) || Number(b.fits) - Number(a.fits) || Number(a.isTest) - Number(b.isTest) || a.auto.name.localeCompare(b.auto.name));
+      .sort((a, b) => Number(b.origins.includes(page)) - Number(a.origins.includes(page)) || Number(b.fits) - Number(a.fits) || Number(a.isTest) - Number(b.isTest) || a.auto.name.localeCompare(b.auto.name));
   }, [profiles, query, onlyFits, kind, page]);
   // A link from the Call Desk names the lead; once they have registered, their client profile is the one listed
   const selected = profiles.find((p) => p.id === selectedId)
     ?? profiles.find((p) => p.kind === "client" && p.contactId && `${LEAD_PREFIX}${p.contactId}` === selectedId) ?? null;
+  // This page's tag on the chosen person: on or off. Someone can belong to several pages at once.
+  const [tagging, setTagging] = useState(false);
+  const toggleTag = async () => {
+    if (!selected?.contactId) return;
+    setTagging(true);
+    try {
+      await authFetch("/api/admin/social", {
+        method: "POST",
+        body: JSON.stringify({ action: "tag_lead", candidateId: `${LEAD_PREFIX}${selected.contactId}`, page, on: !selected.origins.includes(page) }),
+      });
+      await load();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Failed");
+    } finally {
+      setTagging(false);
+    }
+  };
+  // Only for people with a Call Desk entry, which is where the tags live
+  const tagButton = selected?.contactId ? (
+    <button type="button" disabled={tagging} onClick={toggleTag} className="inline-flex items-center gap-1 text-xs font-bold disabled:opacity-50" style={{ color: C.navy }}>
+      <Tag className="h-3 w-3" />
+      {selected.origins.includes(page) ? t(`Lepas tanda @${pageInfo.handle}`, `Remove @${pageInfo.handle} tag`) : t(`Tandai @${pageInfo.handle}`, `Tag @${pageInfo.handle}`)}
+    </button>
+  ) : null;
   const counts = useMemo(() => ({
     all: profiles.length,
     client: profiles.filter((p) => p.kind === "client").length,
     lead: profiles.filter((p) => p.kind === "lead").length,
-    page: profiles.filter((p) => p.origin === page).length,
+    page: profiles.filter((p) => p.origins.includes(page)).length,
   }), [profiles, page]);
 
   return (
@@ -198,8 +223,8 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
                     {p.isTest && <span className="rounded bg-slate-100 px-1.5 text-[10px] font-bold text-slate-500">test</span>}
                   </div>
                   <p className="mt-0.5 truncate text-[11px]" style={{ color: C.muted }}>{[p.auto.headline, p.auto.city, p.auto.occupation].filter(Boolean).join(" · ") || "—"}</p>
-                  {/* Which of our pages the person came in through */}
-                  {p.origin && <div className="mt-1.5 flex"><OriginBadge origin={p.origin} /></div>}
+                  {/* Which of our pages the person came in through; it can be more than one */}
+                  {p.origins.length > 0 && <div className="mt-1.5 flex flex-wrap gap-1"><OriginBadges origins={p.origins} /></div>}
                 </button>
               );
             })}
@@ -221,18 +246,22 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
                     <p className="text-sm font-bold" style={{ color: C.text }}>
                       {autoValues(selected.profile).name || "—"} <span className="font-semibold" style={{ color: C.muted }}>→ @{pageInfo.handle}</span>
                     </p>
-                    {selected.origin && <OriginBadge origin={selected.origin} />}
+                    <OriginBadges origins={selected.origins} />
                     {selected.leadStatus && <StatusBadge status={selected.leadStatus} />}
                   </div>
                   {selected.kind === "lead" ? (
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-3">
+                      {tagButton}
                       <button type="button" onClick={() => setLeadForm(selected)} className="inline-flex items-center gap-1 text-xs font-bold" style={{ color: C.navy }}>
                         <Pencil className="h-3 w-3" />{t("Ubah data", "Edit details")}
                       </button>
                       {canOpenCallDesk && <a href={`/admin/calls?contact=${encodeURIComponent(selected.contactId ?? "")}`} className="text-xs font-bold" style={{ color: C.navy }}>{t("Buka di Call Desk", "Open in Call Desk")}</a>}
                     </div>
                   ) : (
-                    <a href={`/admin/candidates/${selected.id}/crm`} className="text-xs font-bold" style={{ color: C.navy }}>{t("Buka CRM", "Open CRM")}</a>
+                    <div className="flex flex-wrap items-center gap-3">
+                      {tagButton}
+                      <a href={`/admin/candidates/${selected.id}/crm`} className="text-xs font-bold" style={{ color: C.navy }}>{t("Buka CRM", "Open CRM")}</a>
+                    </div>
                   )}
                 </div>
                 <SocialComposer key={`${selected.id}_${page}_${edits}`} candidateId={selected.id} profile={selected.profile} lang={lang} page={page} onPosted={load} compact />
@@ -275,7 +304,15 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
           lang={lang}
           lead={leadForm === "new" ? null : leadForm}
           onClose={() => setLeadForm(null)}
-          onSaved={async (id) => { await load(); setLeadForm(null); setEdits((n) => n + 1); onSelect(id); }}
+          onSaved={async (id, existing) => {
+            await load();
+            setLeadForm(null);
+            setEdits((n) => n + 1);
+            onSelect(id);
+            if (existing !== null && existing !== undefined) {
+              toast.success(t(`Nomor ini sudah tersimpan sebagai ${existing || "calon klien"}. Sekarang juga bertanda @${pageInfo.handle}.`, `This number was already saved as ${existing || "a lead"}. They are now tagged @${pageInfo.handle} as well.`));
+            }
+          }}
         />
       )}
     </div>

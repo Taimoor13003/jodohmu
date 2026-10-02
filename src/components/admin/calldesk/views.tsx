@@ -5,10 +5,10 @@ import { AlertCircle, CalendarClock, ChevronLeft, ChevronRight, Clock, MessageCi
 import { useLanguage } from "@/context/LanguageContext";
 import {
   CONTACT_SOURCES, CONTACT_STATUSES, LEAD_ORIGINS, addDays, originLabel,
-  type Bilingual, type CallDeskActivity, type CallDeskContact, type CallDeskMember,
+  type LeadOrigin, type Bilingual, type CallDeskActivity, type CallDeskContact, type CallDeskMember,
 } from "@/lib/calldesk";
 import {
-  ACTION_TONE, CLOSED_STATUSES, OriginBadge, SourceBadge, StatusBadge, actionLabel, byFollowUp, dueState, followUpTimeLabel, formatDay, formatTime,
+  ACTION_TONE, CLOSED_STATUSES, OriginBadges, SourceBadge, StatusBadge, actionLabel, byFollowUp, dueState, followUpTimeLabel, formatDay, formatTime,
   jakartaFollowUp, telLink, useL, waLink,
 } from "./shared";
 import { AvailabilityList, type DeskMe } from "./team-schedule";
@@ -70,7 +70,7 @@ function ContactRow({ contact, today, onOpen }: { contact: CallDeskContact; toda
         <div className="flex flex-wrap items-center gap-1.5">
           <span className="truncate font-bold text-slate-900">{contact.name}</span>
           <StatusBadge status={contact.status} />
-          <OriginBadge origin={contact.origin} />
+          <OriginBadges origins={contact.origins} />
           <SourceBadge source={contact.source} />
           {contact.assignedName && (
             <span className="shrink-0 rounded-md bg-indigo-50 px-1.5 py-0.5 text-[11px] font-bold text-indigo-700">→ {contact.assignedName}</span>
@@ -399,7 +399,7 @@ export function ContactsView({ contacts, today, onOpen }: { contacts: CallDeskCo
     const needle = query.trim().toLowerCase();
     return (!status || c.status === status)
       && (!source || c.source === source)
-      && (!origin || c.origin === origin)
+      && (!origin || c.origins.includes(origin as LeadOrigin))
       && (!needle || `${c.name} ${c.phone} ${c.city}`.toLowerCase().includes(needle));
   });
 

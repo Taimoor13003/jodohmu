@@ -3,7 +3,7 @@
 import { auth } from "@/lib/firebase";
 import { useLanguage } from "@/context/LanguageContext";
 import {
-  CONTACT_SOURCES, CONTACT_STATUSES, LEAD_ORIGINS, LOG_ACTIONS, JAKARTA_TZ, TIMEZONES, findLabel, originLabel, phoneDigits, timeZoneShort, toJakarta,
+  CONTACT_SOURCES, CONTACT_STATUSES, LEAD_ORIGINS, LOG_ACTIONS, JAKARTA_TZ, TIMEZONES, cleanOrigins, findLabel, originLabel, phoneDigits, timeZoneShort, toJakarta,
   type ActivityType, type Bilingual, type CallDeskContact, type LeadOrigin,
 } from "@/lib/calldesk";
 
@@ -44,8 +44,8 @@ export function SourceBadge({ source }: { source: string }) {
   );
 }
 
-// Which of our pages the lead belongs to, in that page's colour
-export function OriginBadge({ origin }: { origin: LeadOrigin }) {
+// One of the pages a lead belongs to, in that page's colour
+function OriginBadge({ origin }: { origin: LeadOrigin }) {
   const l = useL();
   const accent = LEAD_ORIGINS.find((o) => o.key === origin)?.accent ?? "#64748B";
   return (
@@ -59,12 +59,36 @@ export function OriginBadge({ origin }: { origin: LeadOrigin }) {
   );
 }
 
-// Picks the page a lead belongs to
-export function OriginField({ value, onChange, className }: { value: LeadOrigin; onChange: (value: LeadOrigin) => void; className: string }) {
+// Every page a lead belongs to
+export function OriginBadges({ origins }: { origins: LeadOrigin[] }) {
+  return <>{origins.map((origin) => <OriginBadge key={origin} origin={origin} />)}</>;
+}
+
+// Picks the pages a lead belongs to; any number can be on, and one always stays on
+export function OriginField({ value, onChange }: { value: LeadOrigin[]; onChange: (value: LeadOrigin[]) => void }) {
+  const toggle = (key: LeadOrigin) => {
+    const next = value.includes(key) ? value.filter((k) => k !== key) : [...value, key];
+    if (next.length) onChange(cleanOrigins(next));
+  };
   return (
-    <select className={className} value={value} onChange={(e) => onChange(e.target.value as LeadOrigin)}>
-      {LEAD_ORIGINS.map((o) => <option key={o.key} value={o.key}>{originLabel(o.key)}{o.key === "jodohmu" ? "" : ` · ${o.label}`}</option>)}
-    </select>
+    <div className="flex flex-wrap gap-1.5">
+      {LEAD_ORIGINS.map((o) => {
+        const on = value.includes(o.key);
+        return (
+          <button
+            key={o.key}
+            type="button"
+            title={o.label}
+            aria-pressed={on}
+            onClick={() => toggle(o.key)}
+            className="rounded-full border px-3 py-1.5 text-xs font-bold transition"
+            style={on ? { background: o.accent, borderColor: o.accent, color: "white" } : { borderColor: "#E2E8F0", color: "#475569" }}
+          >
+            {originLabel(o.key)}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 

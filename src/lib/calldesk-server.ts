@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { FieldValue, type DocumentData, type Timestamp } from "firebase-admin/firestore";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import {
-  DEFAULT_TZ, EMPTY_AVAILABILITY, WEEKDAYS, isDay, isTime, jakartaDay, leadOrigin,
+  DEFAULT_TZ, EMPTY_AVAILABILITY, WEEKDAYS, isDay, isTime, jakartaDay, leadOrigins,
   type Availability, type CallDeskActivity, type CallDeskContact, type ContactSource, type LeadOrigin, type LeadProfile, type TeamPermission,
 } from "@/lib/calldesk";
 
@@ -62,7 +62,7 @@ export const toContact = (id: string, data: DocumentData): CallDeskContact => ({
   phone: str(data.phone),
   city: str(data.city),
   source: data.source,
-  origin: leadOrigin(data.origin),
+  origins: leadOrigins(data),
   status: data.status,
   bestTime: str(data.bestTime),
   timezone: str(data.timezone) || DEFAULT_TZ,
@@ -119,7 +119,7 @@ export const toActivity = (id: string, data: DocumentData): CallDeskActivity => 
    Used by the Call Desk and by Subpages, so both make the same kind of contact. */
 export async function createContact(
   input: {
-    name: string; phone: string; source: ContactSource; origin: LeadOrigin; city: string; bestTime: string; timezone: string; note: string;
+    name: string; phone: string; source: ContactSource; origins: LeadOrigin[]; city: string; bestTime: string; timezone: string; note: string;
     followUp: { followUpDate: string | null; followUpTime: string | null; followUpNote: string | null };
     assignee: { assignedTo: string | null; assignedName: string | null };
     profile?: LeadProfile;
@@ -131,7 +131,7 @@ export async function createContact(
   const ref = db.collection(CONTACTS).doc();
   const batch = db.batch();
   batch.set(ref, {
-    name: input.name, phone: input.phone, source: input.source, origin: input.origin,
+    name: input.name, phone: input.phone, source: input.source, origins: input.origins,
     city: input.city,
     bestTime: input.bestTime,
     timezone: input.timezone,

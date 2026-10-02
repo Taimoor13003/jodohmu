@@ -129,13 +129,20 @@ export type ContactSource = (typeof CONTACT_SOURCES)[number]["value"];
 // Sources that only arrive through automatic import, never picked by hand
 export const IMPORTED_SOURCES: ContactSource[] = ["contact_form", "chatbot", "registration", "partner"];
 
-// Which of our public accounts a lead belongs to: Jodohmu itself, or one of the subpages.
-// A lead with no tag came in through Jodohmu.
+// Which of our public accounts a lead belongs to: Jodohmu itself, or the subpages. The same person can
+// reach us through several pages, so a lead can carry several tags. A lead with none came in through Jodohmu.
 export type LeadOrigin = SocialAccountKey;
 export const DEFAULT_ORIGIN: LeadOrigin = "jodohmu";
 export const LEAD_ORIGINS = [...SOCIAL_ACCOUNTS].sort((a, b) => Number(b.key === DEFAULT_ORIGIN) - Number(a.key === DEFAULT_ORIGIN));
-export const leadOrigin = (value: unknown): LeadOrigin =>
-  findSocialAccount(typeof value === "string" ? value : "")?.key ?? DEFAULT_ORIGIN;
+// Tidies a list of tags: known pages only, each once, in the usual order, and never empty
+export const cleanOrigins = (value: unknown): LeadOrigin[] => {
+  const asked: unknown[] = Array.isArray(value) ? value : [value];
+  const known = LEAD_ORIGINS.map((o) => o.key).filter((key) => asked.includes(key));
+  return known.length ? known : [DEFAULT_ORIGIN];
+};
+// A stored lead's tags; leads saved before several tags were allowed hold a single `origin`
+export const leadOrigins = (data: { origins?: unknown; origin?: unknown }): LeadOrigin[] =>
+  cleanOrigins(Array.isArray(data.origins) ? data.origins : data.origin);
 export const originLabel = (origin: LeadOrigin) =>
   origin === DEFAULT_ORIGIN ? "Jodohmu" : `@${findSocialAccount(origin)?.handle ?? origin}`;
 
@@ -223,7 +230,7 @@ export type CallDeskContact = {
   phone: string;
   city: string;
   source: ContactSource;
-  origin: LeadOrigin;
+  origins: LeadOrigin[];
   status: ContactStatus;
   bestTime: string;
   timezone: string;

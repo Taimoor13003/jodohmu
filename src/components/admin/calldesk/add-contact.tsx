@@ -22,7 +22,7 @@ export function AddContactDialog({ today, team, me, preset, onClose, onCreated }
 }) {
   const l = useL();
   const [form, setForm] = useState({
-    name: "", phone: "", city: "", source: "whatsapp", origin: DEFAULT_ORIGIN as LeadOrigin, bestTime: "", note: "", timezone: DEFAULT_TZ,
+    name: "", phone: "", city: "", source: "whatsapp", origins: [DEFAULT_ORIGIN] as LeadOrigin[], bestTime: "", note: "", timezone: DEFAULT_TZ,
     followUpDate: preset?.day ?? "", followUpTime: preset?.time ?? "", followUpNote: "", assignedTo: preset?.uid ?? "",
   });
   const slot = !form.followUpDate
@@ -79,8 +79,8 @@ export function AddContactDialog({ today, team, me, preset, onClose, onCreated }
             </select>
           </div>
           <div className="sm:col-span-2">
-            <label className={label}>{l({ id: "Calon klien dari halaman mana?", en: "Which page is this lead from?" })}</label>
-            <OriginField className={input} value={form.origin} onChange={(origin) => setForm({ ...form, origin })} />
+            <label className={label}>{l({ id: "Calon klien dari halaman mana? (boleh lebih dari satu)", en: "Which page is this lead from? (can be more than one)" })}</label>
+            <OriginField value={form.origins} onChange={(origins) => setForm({ ...form, origins })} />
           </div>
           <div className="sm:col-span-2">
             <label className={label}>{l({ id: "Zona waktu kontak", en: "Contact's time zone" })}</label>

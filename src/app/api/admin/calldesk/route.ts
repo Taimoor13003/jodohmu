@@ -3,7 +3,7 @@ import { FieldValue, type DocumentData } from "firebase-admin/firestore";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import {
   CONTACT_SOURCES, CONTACT_STATUSES, IMPORTED_SOURCES, LEAD_QUALITIES, LOG_ACTIONS, LOST_REASONS, JOURNEY_STAGES, PAID_PACKAGES, PAYMENT_CHANNELS, WAITING_ON, findLabel,
-  DEFAULT_TZ, TEAM_INVITES, addDays, inviteMemberId, isDay, isPastSlot, isTime, isTimeZone, jakartaDay, jakartaTime, leadOrigin, toJakarta, weekdayOf,
+  DEFAULT_TZ, TEAM_INVITES, addDays, inviteMemberId, isDay, isPastSlot, isTime, isTimeZone, jakartaDay, jakartaTime, cleanOrigins, leadOrigins, toJakarta, weekdayOf,
   type Bilingual, type CallDeskMember, type ContactSource, type ContactStatus,
 } from "@/lib/calldesk";
 import {
@@ -278,7 +278,7 @@ export async function POST(req: NextRequest) {
       if (!assignee.ok) return NextResponse.json({ error: assignee.error }, { status: 403 });
 
       const id = await createContact({
-        name, phone, source: source as ContactSource, origin: leadOrigin(body.origin),
+        name, phone, source: source as ContactSource, origins: cleanOrigins(body.origins),
         city: clean(body.city, 80),
         bestTime: clean(body.bestTime, 100),
         timezone: isTimeZone(body.timezone) ? body.timezone : DEFAULT_TZ,
@@ -437,17 +437,19 @@ export async function POST(req: NextRequest) {
         city: clean(body.city, 80),
         bestTime: clean(body.bestTime, 100),
         timezone: isTimeZone(body.timezone) ? body.timezone : (contact.timezone ?? DEFAULT_TZ),
-        // The page the lead belongs to; left as it is unless one was picked
-        origin: "origin" in body ? leadOrigin(body.origin) : leadOrigin(contact.origin),
+        // The pages the lead belongs to; left as they are unless some were picked
+        origins: "origins" in body ? cleanOrigins(body.origins) : leadOrigins(contact),
       };
-      const before = (key: keyof typeof updates) => (key === "origin" ? leadOrigin(contact.origin) : contact[key] ?? "");
+      const shown = (value: unknown) => (Array.isArray(value) ? value.join(", ") : String(value ?? ""));
+      const before = (key: keyof typeof updates) => shown(key === "origins" ? leadOrigins(contact) : contact[key]);
       const changed = (Object.keys(updates) as (keyof typeof updates)[])
-        .filter((key) => before(key) !== updates[key])
-        .map((key) => `${key}: "${before(key)}" → "${updates[key]}"`);
+        .filter((key) => before(key) !== shown(updates[key]))
+        .map((key) => `${key}: "${before(key)}" → "${shown(updates[key])}"`);
       if (!changed.length) return NextResponse.json({ success: true });
 
       const batch = db.batch();
-      batch.update(contactRef, updates);
+      // `origin` is the single tag older leads were saved with; `origins` replaces it
+      batch.update(contactRef, { ...updates, origin: FieldValue.delete() });
       batch.set(db.collection(ACTIVITY).doc(), {
         ...by,
         contactId, contactName: name, type: "edited", note: changed.join("\n"),
