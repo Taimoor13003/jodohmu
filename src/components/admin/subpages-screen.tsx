@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { CheckCircle2, ExternalLink, Images, Inbox, Loader2, Pencil, Plus, Search, Tag } from "lucide-react";
+import { CheckCircle2, CircleFadingPlus, ExternalLink, Images, Inbox, Loader2, Pencil, Plus, Search, Tag } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -10,6 +10,7 @@ import { LEAD_PREFIX, autoValues, findPage, suggestPages, type CardPerson, type 
 import { authFetch } from "@/components/admin/share-api";
 import { SocialComposer, type PostRow } from "./social-post-panel";
 import SocialHub, { type HubData } from "./social-hub";
+import SocialStories from "./social-stories";
 import LoginStatus from "./login-status";
 import SubpageLeadForm from "./subpage-lead-form";
 import { OriginBadges, StatusBadge } from "./calldesk/shared";
@@ -21,8 +22,9 @@ const LIST_LIMIT = 250;
 const C = { border: "#E2E8F0", text: "#0F172A", body: "#334155", label: "#64748B", muted: "#94A3B8", navy: "#1B3A6B" };
 
 /* Admin → Subpages: one tab per public account. "Inbox & posting" handles its Instagram, Facebook and Threads
-   in one place; "Client cards" builds a faceless card for a client or a Call Desk lead and posts it to the
-   page's Instagram, and is where a new lead for that page is added. The page wraps this with the admin check. */
+   in one place; "Stories" puts up its Instagram stories and keeps the dated record of them; "Client cards" builds
+   a faceless card for a client or a Call Desk lead and posts it to the page's Instagram, and is where a new lead
+   for that page is added. The page wraps this with the admin check. */
 export default function SubpagesScreen() {
   const { lang: rawLang } = useLanguage();
   const lang = rawLang === "id" ? "id" : "en";
@@ -35,7 +37,8 @@ export default function SubpagesScreen() {
   const account = (findSocialAccount(params.get("page") ?? "")?.key ?? "nikahin_foreigner") as SocialAccountKey;
   const accountInfo = findSocialAccount(account)!;
   const cardPage = findPage(account);
-  const view = params.get("view") === "cards" || (params.get("profile") && params.get("view") !== "inbox") ? "cards" : "inbox";
+  const view = params.get("view") === "stories" ? "stories"
+    : params.get("view") === "cards" || (params.get("profile") && params.get("view") !== "inbox") ? "cards" : "inbox";
   const go = (next: { page?: string; view?: string; profile?: string | null }) => {
     const q = new URLSearchParams({ page: next.page ?? account, view: next.view ?? view });
     const profile = next.profile === undefined ? params.get("profile") : next.profile;
@@ -63,7 +66,7 @@ export default function SubpagesScreen() {
       </div>
 
       <div className="mt-4 inline-flex rounded-xl border bg-white p-1" style={{ borderColor: C.border }}>
-        {([["inbox", t("Inbox & posting", "Inbox & posting"), Inbox], ["cards", t("Kartu klien", "Client cards"), Images]] as const).map(([key, label, Icon]) => (
+        {([["inbox", t("Inbox & posting", "Inbox & posting"), Inbox], ["stories", t("Story", "Stories"), CircleFadingPlus], ["cards", t("Kartu klien", "Client cards"), Images]] as const).map(([key, label, Icon]) => (
           <button key={key} type="button" onClick={() => go({ view: key })}
             className="inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-sm font-bold"
             style={view === key ? { background: C.navy, color: "white" } : { color: C.label }}>
@@ -77,6 +80,8 @@ export default function SubpagesScreen() {
       <div className="mt-4">
         {view === "inbox"
           ? <SocialHub key={account} accountKey={account} lang={lang} notice={notice} onAccounts={setThreadsOn} />
+          : view === "stories"
+            ? <SocialStories key={account} accountKey={account} lang={lang} />
           : cardPage
             ? <ClientCards key={cardPage.key} page={cardPage.key} lang={lang} selectedId={params.get("profile")} onSelect={(id) => go({ profile: id })} />
             : <p className="rounded-2xl border bg-white px-5 py-16 text-center text-sm" style={{ borderColor: C.border, color: C.muted }}>

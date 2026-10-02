@@ -11,7 +11,7 @@ const GRAPH = "https://graph.facebook.com/v23.0";
 const TIMEOUT_MS = 20_000;
 export const HUB_POSTS = "social_hub_posts";
 
-async function graph<T>(token: string, path: string, init?: { method?: "GET" | "POST"; params?: Record<string, string> }): Promise<T> {
+export async function graph<T>(token: string, path: string, init?: { method?: "GET" | "POST"; params?: Record<string, string> }): Promise<T> {
   const params = new URLSearchParams({ ...(init?.params ?? {}), access_token: token });
   const signal = AbortSignal.timeout(TIMEOUT_MS);
   const res = init?.method === "POST"
