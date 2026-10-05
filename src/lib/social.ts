@@ -7,11 +7,12 @@ import type { SocialAccountKey } from "@/lib/social-accounts";
 
 export const SOCIAL_POSTS = "social_posts";
 
-export type SocialPageKey = "nikahin_foreigner" | "nikah_lagiyuk" | "taaruf_sekarang" | "temu_chindo" | "kristenmatch";
+export type SocialPageKey = "nikahin_foreigner" | "nikah_lagiyuk" | "taaruf_sekarang" | "temu_chindo" | "kristenmatch" | "poligami_indonesia";
 export type SocialLang = "id" | "en";
 // "classic": one Indonesian card. "hello": the @nikahin_foreigner Canva look, an intro slide with a silhouette plus a profile slide.
 // "sakinah": the @taaruf_sekarang Canva look, sage fading to navy, "Hallo, saya dari …" intro slide plus a profile slide.
-export type TemplateKey = "classic" | "hello" | "sakinah";
+// "mahligai": the @poligami.indonesia look, light and modern with front-facing figures; rosewood for women, midnight blue for men.
+export type TemplateKey = "classic" | "hello" | "sakinah" | "mahligai";
 // A swipeable image post, or a short 9:16 video (pages whose template has a Reel design)
 export type PostFormat = "carousel" | "reel";
 // How long each template's Reel runs, and the second its intro gives way to the profile
@@ -40,6 +41,7 @@ export const SOCIAL_PAGES: {
   { key: "taaruf_sekarang", handle: "taaruf_sekarang", label: "Muslim", accent: "#3E5A4C", template: "sakinah", lang: "id", connected: true, hashtags: "#cariJodohMuslim #nikahsyari #perkenalan", codePrefix: "TS", reel: true },
   { key: "temu_chindo", handle: "temu_chindo", label: "Chindo", accent: "#B4232C", template: "classic", lang: "id", connected: false, hashtags: "#chindo #cariJodoh #perkenalan", codePrefix: "TC" },
   { key: "kristenmatch", handle: "kristenmatch.indo", label: "Kristen", accent: "#1D4E89", template: "classic", lang: "id", connected: false, hashtags: "#jodohkristen #cariJodoh #perkenalan", codePrefix: "KM" },
+  { key: "poligami_indonesia", handle: "poligami.indonesia", label: "Poligami Indonesia", accent: "#6B4A2B", template: "mahligai", lang: "id", connected: true, hashtags: "#poligami #nikahsyari #cariJodoh #perkenalan", codePrefix: "PI" },
 ];
 
 export const findPage = (key: string) => SOCIAL_PAGES.find((p) => p.key === key) ?? null;
@@ -141,16 +143,22 @@ const TEMPLATE_FIELDS: Record<TemplateKey, [SocialFieldKey, FieldMode][]> = {
     ["name", "hide"], ["age", "show"], ["city", "show"], ["marital", "show"], ["education", "show"], ["occupation", "show"],
     ["ethnicity", "show"], ["plan", "custom"], ["religion", "hide"], ["height", "hide"], ["intro", "custom"],
   ],
+  mahligai: [
+    ["name", "hide"], ["age", "show"], ["city", "show"], ["marital", "show"], ["education", "show"], ["occupation", "show"],
+    ["ethnicity", "show"], ["plan", "custom"], ["religion", "hide"], ["height", "hide"], ["intro", "custom"],
+  ],
 };
 // Words a template uses on the card instead of the usual label
 const CARD_LABELS: Partial<Record<TemplateKey, Partial<Record<SocialFieldKey, string>>>> = {
   sakinah: { education: "Lulusan" },
+  mahligai: { education: "Lulusan" },
 };
 // Details that go on the intro slide (or the title) rather than in the list of rows
 const NOT_ROWS: Record<TemplateKey, SocialFieldKey[]> = {
   classic: ["name", "from"],
   hello: ["name", "from"],
   sakinah: ["name", "from", "age"],
+  mahligai: ["name", "from", "age"],
 };
 
 export const fieldsFor = (pageKey: SocialPageKey) => {
@@ -276,7 +284,7 @@ export function sakinahLines(card: CardContent) {
 
 export function defaultCaption(pageKey: SocialPageKey, card: CardContent) {
   const page = findPage(pageKey)!;
-  if (page.template === "sakinah") {
+  if (page.template === "sakinah" || page.template === "mahligai") {
     const { greeting, big, sub } = sakinahLines(card);
     return [
       `${greeting} ${big}${sub ? `, ${sub.toLowerCase()}` : ""} 👋`,

@@ -406,6 +406,122 @@ async function renderSakinah(card: CardContent, parts: SakinahPart[], { height =
   );
 }
 
+/* ── "mahligai" template: @poligami.indonesia. A light, modern look of its own: bold sans type, a rounded colour tile
+   holding a front-facing figure, and the profile as tiles. Women's cards are rosewood, men's are midnight blue. ── */
+const MAHLIGAI = {
+  paper: "#FAF5F1", ink: "#1E1418", muted: "#8B7A7E", tile: "#FFFFFF", edge: "#EFE4DD",
+  woman: { from: "#84304A", to: "#4A1424", soft: "#F6E4E2", cloth: "#F7ECE6", hair: "#2B0D17", skin: "#EBC8BA" },
+  man: { from: "#2B4272", to: "#111B34", soft: "#E4E9F4", cloth: "#EEF1F7", hair: "#0B1224", skin: "#E5C3B0" },
+};
+const isMan = (figure: Figure) => figure.startsWith("man");
+
+// Front-facing head and shoulders on a 400×440 box, so this page's figures look like no other page's
+function mahligaiFigure(figure: Figure) {
+  const c = isMan(figure) ? MAHLIGAI.man : MAHLIGAI.woman;
+  const body = `<path fill="${c.cloth}" d="M36 440 C36 350 108 312 200 312 C292 312 364 350 364 440 Z"/>`;
+  const neck = `<rect x="170" y="240" width="60" height="96" rx="26" fill="${c.skin}"/>`;
+  const head = `<ellipse cx="200" cy="188" rx="72" ry="86" fill="${c.skin}"/>`;
+  const ears = `<ellipse cx="128" cy="198" rx="11" ry="17" fill="${c.skin}"/><ellipse cx="272" cy="198" rx="11" ry="17" fill="${c.skin}"/>`;
+  const collar = `<path fill="${c.skin}" d="M168 314 L200 356 L232 314 Z"/>`;
+  const parts: Record<Figure, string> = {
+    man: `${body}${neck}${collar}${ears}${head}<path fill="${c.hair}" d="M122 192 C110 118 150 76 204 76 C258 76 292 118 278 192 C275 170 268 156 258 146 C234 150 196 146 168 126 C158 142 136 156 130 170 C126 178 124 186 122 192 Z"/>`,
+    man_peci: `${body}${neck}${collar}${ears}${head}<path fill="${c.hair}" d="M132 132 L142 64 C172 54 228 54 258 64 L268 132 C230 120 170 120 132 132 Z"/>`,
+    man_peci_beard: `${body}${neck}${collar}${ears}${head}<path fill="${c.hair}" d="M129 214 C134 268 166 298 200 298 C234 298 266 268 271 214 C260 244 238 256 200 256 C162 256 140 244 129 214 Z"/><path fill="${c.hair}" d="M132 132 L142 64 C172 54 228 54 258 64 L268 132 C230 120 170 120 132 132 Z"/>`,
+    woman: `<path fill="${c.hair}" d="M108 210 C98 100 150 62 200 62 C250 62 302 100 292 210 C290 260 300 310 310 350 C280 366 120 366 90 350 C100 310 110 260 108 210 Z"/>${body}${neck}${head}<path fill="${c.hair}" d="M194 96 C150 100 120 140 120 204 C118 256 110 304 98 346 C116 356 136 352 144 340 C140 300 134 250 132 204 C134 158 158 122 194 96 Z"/><path fill="${c.hair}" d="M194 96 C240 94 280 132 280 204 C282 256 290 304 302 346 C284 356 264 352 256 340 C260 300 266 250 268 204 C264 158 236 122 194 96 Z"/>`,
+    hijab: `<path fill="${c.cloth}" d="M98 200 C94 98 150 58 200 58 C250 58 306 98 302 200 C302 276 336 322 368 440 L32 440 C64 322 98 276 98 200 Z"/><ellipse cx="200" cy="196" rx="60" ry="76" fill="${c.skin}"/><path fill="none" stroke="${c.soft}" stroke-width="5" d="M146 300 C170 326 230 326 254 300"/>`,
+  };
+  return `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 440">${parts[figure]}</svg>`)}`;
+}
+
+async function renderMahligai(card: CardContent, slide: "intro" | "profile"): Promise<ImageResponse> {
+  const P = MAHLIGAI;
+  const c = isMan(card.figure) ? P.man : P.woman;
+  const { greeting, big, sub } = sakinahLines(card);
+  const heading = card.name || big.replace(/^saya /, "");
+  const text = `@${card.page.handle}${card.code}${greeting}${big}${sub}${card.name}${card.intro}${card.rows.map((r) => r.label.toUpperCase() + r.value).join("")}PROFILGeser untuk melihat profil→Info lebih lanjut?DM kami dengan kode“”·`;
+  const [medium, bold] = await Promise.all([googleFont("Plus+Jakarta+Sans", "wght@500", text), googleFont("Plus+Jakarta+Sans", "wght@800", text)]);
+  const fonts = [
+    medium && { name: "Jakarta", data: medium, weight: 500 as const, style: "normal" as const },
+    bold && { name: "Jakarta", data: bold, weight: 800 as const, style: "normal" as const },
+  ].filter(Boolean) as { name: string; data: ArrayBuffer; weight: 500 | 800; style: "normal" }[];
+  const gradient = `linear-gradient(160deg, ${c.from} 0%, ${c.to} 100%)`;
+  const pill = { display: "flex", alignItems: "center", borderRadius: 999, fontWeight: 800 } as const;
+
+  const header = (
+    <div style={{ position: "absolute", top: 72, left: 80, width: 920, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ display: "flex", fontSize: 28, fontWeight: 800, color: P.ink }}>@{card.page.handle}</div>
+      <div style={{ ...pill, padding: "10px 26px", border: `2.5px solid ${c.from}`, fontSize: 24, letterSpacing: 2, color: c.from }}>{card.code}</div>
+    </div>
+  );
+
+  const bigSize = big.length <= 9 ? 156 : big.length <= 14 ? 112 : 84;
+  const intro = (
+    <>
+      <div style={{ position: "absolute", left: 80, top: 160, width: 920, height: 650, display: "flex", overflow: "hidden", borderRadius: 72, backgroundImage: gradient }}>
+        <div style={{ position: "absolute", left: 130, top: 70, width: 660, height: 660, display: "flex", borderRadius: 999, border: "2px solid rgba(255,255,255,0.16)" }} />
+        <div style={{ position: "absolute", left: 230, top: 170, width: 460, height: 460, display: "flex", borderRadius: 999, background: "rgba(255,255,255,0.08)" }} />
+        {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+        <img src={mahligaiFigure(card.figure)} width={540} height={594} style={{ position: "absolute", left: 190, top: 650 - 594 }} />
+      </div>
+      <div style={{ position: "absolute", left: 80, width: 920, top: 850, display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", flexShrink: 0, fontSize: 36, fontWeight: 500, color: P.muted }}>{greeting}</div>
+        <div style={{ display: "flex", flexShrink: 0, marginTop: 2, fontSize: bigSize, fontWeight: 800, letterSpacing: -bigSize / 30, lineHeight: 1.05, color: P.ink }}>{big}</div>
+        {sub && <div style={{ ...pill, flexShrink: 0, alignSelf: "flex-start", marginTop: 22, padding: "12px 30px", background: c.soft, fontSize: 32, color: c.from }}>{sub}</div>}
+      </div>
+      <div style={{ position: "absolute", left: 80, width: 920, bottom: 76, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ display: "flex", fontSize: 26, fontWeight: 500, color: P.muted }}>Geser untuk melihat profil</div>
+        <div style={{ display: "flex", width: 84, height: 84, borderRadius: 999, alignItems: "center", justifyContent: "center", backgroundImage: gradient, fontSize: 38, fontWeight: 800, color: "#FFFFFF" }}>→</div>
+      </div>
+    </>
+  );
+
+  // Everything switched on must fit the card, so the tiles tighten as they grow
+  const n = card.rows.length + (card.intro ? 2 : 0);
+  const value = n > 8 ? 29 : n > 6 ? 32 : 36;
+  const pad = n > 8 ? 18 : n > 6 ? 22 : 28;
+  const profile = (
+    <>
+      <div style={{ position: "absolute", left: 80, width: 920, top: 160, display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", flexShrink: 0, alignItems: "center" }}>
+          <div style={{ display: "flex", fontSize: 24, fontWeight: 800, letterSpacing: 6, color: c.from }}>PROFIL</div>
+          {sub && !card.name && <div style={{ ...pill, marginLeft: 18, padding: "6px 20px", background: c.soft, fontSize: 24, color: c.from }}>{sub}</div>}
+        </div>
+        <div style={{ display: "flex", flexShrink: 0, marginTop: 6, fontSize: heading.length > 14 ? 68 : 92, fontWeight: 800, letterSpacing: -2, lineHeight: 1.05, color: P.ink }}>{heading}</div>
+        <div style={{ display: "flex", flexShrink: 0, flexWrap: "wrap", marginTop: 34, width: 936 }}>
+          {card.rows.map((row) => (
+            <div key={row.key} style={{ display: "flex", flexDirection: "column", flexGrow: 1, flexBasis: row.value.length > 17 ? 920 : 452, marginRight: 16, marginBottom: 16, padding: `${pad}px 32px`, borderRadius: 32, background: P.tile, border: `2px solid ${P.edge}` }}>
+              <div style={{ display: "flex", fontSize: 19, fontWeight: 800, letterSpacing: 3, color: P.muted }}>{row.label.toUpperCase()}</div>
+              <div style={{ display: "flex", marginTop: 6, fontSize: value, fontWeight: 800, lineHeight: 1.15, color: P.ink }}>{row.value}</div>
+            </div>
+          ))}
+          {card.intro && (
+            <div style={{ display: "flex", flexBasis: 920, flexGrow: 1, marginRight: 16, padding: `${pad}px 32px`, borderRadius: 32, background: c.soft, fontSize: value - 2, fontWeight: 500, lineHeight: 1.3, color: c.to }}>
+              “{card.intro}”
+            </div>
+          )}
+        </div>
+      </div>
+      <div style={{ position: "absolute", left: 80, width: 920, bottom: 70, height: 124, display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 22px 0 44px", borderRadius: 999, backgroundImage: gradient }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", fontSize: 32, fontWeight: 800, color: "#FFFFFF" }}>Info lebih lanjut?</div>
+          <div style={{ display: "flex", fontSize: 24, fontWeight: 500, color: "rgba(255,255,255,0.8)" }}>DM kami dengan kode</div>
+        </div>
+        <div style={{ ...pill, padding: "18px 36px", background: "#FFFFFF", fontSize: 34, letterSpacing: 2, color: c.from }}>{card.code}</div>
+      </div>
+    </>
+  );
+
+  return new ImageResponse(
+    (
+      <div style={{ width: "100%", height: "100%", display: "flex", position: "relative", fontFamily: "Jakarta", background: P.paper }}>
+        {header}
+        {slide === "intro" ? intro : profile}
+      </div>
+    ),
+    { ...CARD_SIZE, fonts },
+  );
+}
+
 /* ── Reels: the design's parts laid over a plain background video on Cloudinary, each fading in on its own ── */
 export const REEL_SIZE = { width: 1080, height: 1920 };
 type ReelDesign = {
@@ -504,6 +620,8 @@ export async function renderSlides(card: CardContent, format: PostFormat = "caro
       ? await Promise.all([renderHello(card, ["header", "figure", "title", "sub", "cta"]), renderHello(card, ["header", "heading", "rows", "cta"])])
       : card.template === "sakinah"
         ? await Promise.all([renderSakinah(card, ["header", "introArt", "introText", "hint"]), renderSakinah(card, ["header", "profile", "cta"])])
+        : card.template === "mahligai"
+          ? await Promise.all([renderMahligai(card, "intro"), renderMahligai(card, "profile")])
         : [await renderClassic(card)];
   return Promise.all(images.map((image) => image.arrayBuffer()));
 }
