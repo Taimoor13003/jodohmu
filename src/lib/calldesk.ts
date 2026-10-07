@@ -279,7 +279,7 @@ export type CallDeskContact = {
 export type LeadProfile = {
   age?: number;
   gender?: "male" | "female";
-  maritalStatus?: "never_married" | "divorced" | "widowed" | "married";
+  maritalStatus?: "never_married" | "separated" | "divorced" | "widowed" | "married";
   children?: number;
   religion?: string;
   occupation?: string;
@@ -358,6 +358,8 @@ export const addDays = (day: string, amount: number) => {
 // Indonesian numbers are often typed as 08…; wa.me needs the international form
 export const phoneDigits = (phone: string) => {
   const digits = phone.replace(/\D/g, "");
+  // Typed with its country code (+886…, +82…): already international
+  if (phone.trim().startsWith("+")) return digits;
   if (digits.startsWith("0")) return `62${digits.slice(1)}`;
   if (digits.startsWith("8")) return `62${digits}`;
   return digits;

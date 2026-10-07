@@ -181,7 +181,7 @@ export function leadFacts(body: Record<string, unknown>): Record<string, string 
   return {
     gender,
     age: age > 15 && age < 100 ? age : null,
-    maritalStatus: pick(["never_married", "divorced", "widowed", "married"], body.maritalStatus),
+    maritalStatus: pick(["never_married", "separated", "divorced", "widowed", "married"], body.maritalStatus),
     religion: text(body.religion, 40),
     nationality: text(body.nationality, 60),
     occupation: text(body.occupation, 80),

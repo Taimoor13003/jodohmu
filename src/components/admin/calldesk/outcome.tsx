@@ -159,7 +159,7 @@ export function OutcomeSection({ contact, today, onSave }: {
 const PROFILE_VALUES: Record<string, Record<string, { id: string; en: string }>> = {
   gender: { male: { id: "Pria", en: "Male" }, female: { id: "Wanita", en: "Female" } },
   maritalStatus: {
-    never_married: { id: "Belum pernah menikah", en: "Never married" }, divorced: { id: "Cerai", en: "Divorced" },
+    never_married: { id: "Belum pernah menikah", en: "Never married" }, separated: { id: "Pisah", en: "Separated" }, divorced: { id: "Cerai", en: "Divorced" },
     widowed: { id: "Cerai mati", en: "Widowed" }, married: { id: "Menikah", en: "Married" },
   },
   hijab: { yes: { id: "Ya", en: "Yes" }, no: { id: "Tidak", en: "No" } },

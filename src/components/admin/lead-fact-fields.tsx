@@ -45,6 +45,7 @@ export default function LeadFactFields({ lang, value, onChange }: {
         <select className={input} value={value.maritalStatus} onChange={set("maritalStatus")}>
           <option value="">{t("Belum tahu", "Not known")}</option>
           <option value="never_married">{t("Belum menikah", "Single")}</option>
+          <option value="separated">{t("Pisah", "Separated")}</option>
           <option value="divorced">{t("Cerai", "Divorced")}</option>
           <option value="widowed">{t("Cerai mati", "Widowed")}</option>
           <option value="married">{t("Menikah", "Married")}</option>

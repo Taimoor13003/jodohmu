@@ -111,8 +111,8 @@ function validate(entry: SyncContact) {
   const profile = entry.profile ?? {};
   if (profile.age != null && !(typeof profile.age === "number" && profile.age > 15 && profile.age < 100)) problems.push("profile.age must be a number");
   if (profile.gender != null && !["male", "female"].includes(profile.gender as string)) problems.push("profile.gender must be male or female");
-  if (profile.maritalStatus != null && !["never_married", "divorced", "widowed", "married"].includes(profile.maritalStatus as string)) {
-    problems.push("profile.maritalStatus must be never_married, divorced, widowed or married");
+  if (profile.maritalStatus != null && !["never_married", "separated", "divorced", "widowed", "married"].includes(profile.maritalStatus as string)) {
+    problems.push("profile.maritalStatus must be never_married, separated, divorced, widowed or married");
   }
   if (entry.chat && (typeof entry.chat.text !== "string" || !entry.chat.text.trim())) problems.push("chat.text is empty");
   for (const a of entry.activities ?? []) {

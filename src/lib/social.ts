@@ -87,7 +87,7 @@ export type FigureChoice = "auto" | Figure;
 
 const MARITAL: Record<string, Bi> = {
   single: { id: "Belum menikah", en: "Single" }, never_married: { id: "Belum menikah", en: "Single" },
-  divorced: { id: "Cerai", en: "Divorced" }, widowed: { id: "Cerai mati", en: "Widowed" }, married: { id: "Menikah", en: "Married" },
+  separated: { id: "Pisah", en: "Separated" }, divorced: { id: "Cerai", en: "Divorced" }, widowed: { id: "Cerai mati", en: "Widowed" }, married: { id: "Menikah", en: "Married" },
 };
 const EDUCATION: Record<string, Bi> = {
   sd: { id: "SD", en: "Primary School" }, smp: { id: "SMP", en: "Junior High School" },
