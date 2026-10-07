@@ -351,20 +351,22 @@ export type CardPerson = {
   origins: SocialAccountKey[];
   // Their Call Desk entry: always set for a lead, and for a client who started as one
   contactId: string | null;
+  // Where the conversation with them lives (a Threads message, an Instagram chat…), when it was saved
+  link: string;
   leadStatus: string | null;
   personStatus: string | null;
   isTest: boolean;
   profile: Record<string, unknown>;
 };
 
-// What Subpages asks for when adding a lead or correcting one; all but the name (and, for a new lead, the number) may be left empty
+// What Subpages asks for when adding a lead or correcting one; all but the name may be left empty
 export type LeadDetails = {
-  name: string; phone: string; city: string; source: string; note: string;
+  name: string; phone: string; email: string; link: string; city: string; source: string; note: string;
   gender: string; age: string; maritalStatus: string; religion: string; nationality: string;
   occupation: string; education: string; ethnicity: string; hijab: string;
 };
 export const EMPTY_LEAD: LeadDetails = {
-  name: "", phone: "", city: "", source: "instagram", note: "",
+  name: "", phone: "", email: "", link: "", city: "", source: "instagram", note: "",
   gender: "", age: "", maritalStatus: "", religion: "", nationality: "", occupation: "", education: "", ethnicity: "", hijab: "",
 };
 

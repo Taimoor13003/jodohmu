@@ -123,6 +123,7 @@ export const CONTACT_SOURCES = [
   { value: "ads", label: { id: "Iklan", en: "Ads" } },
   { value: "whatsapp", label: { id: "WhatsApp", en: "WhatsApp" } },
   { value: "instagram", label: { id: "Instagram", en: "Instagram" } },
+  { value: "threads", label: { id: "Threads", en: "Threads" } },
   { value: "facebook", label: { id: "Facebook Messenger", en: "Facebook Messenger" } },
   { value: "referral", label: { id: "Rekomendasi", en: "Referral" } },
   { value: "walk_in", label: { id: "Datang langsung", en: "Walk-in" } },
@@ -230,7 +231,11 @@ export const SYNC_NAME = "CRM sync";
 export type CallDeskContact = {
   id: string;
   name: string;
+  // Any of the three may be empty: someone who wrote to a subpage often has no number yet
   phone: string;
+  email: string;
+  // Where the conversation with them lives: a Threads message, an Instagram chat, …
+  link: string;
   city: string;
   source: ContactSource;
   origins: LeadOrigin[];
@@ -356,6 +361,27 @@ export const phoneDigits = (phone: string) => {
   if (digits.startsWith("0")) return `62${digits.slice(1)}`;
   if (digits.startsWith("8")) return `62${digits}`;
   return digits;
+};
+
+// A typed web address, tidied ("threads.com/…" gets its https://); "" when it isn't one
+export const cleanLink = (value: unknown) => {
+  const raw = typeof value === "string" ? value.trim().slice(0, 500) : "";
+  if (!raw || /\s/.test(raw)) return "";
+  try {
+    const url = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
+    return url.hostname.includes(".") ? url.toString() : "";
+  } catch {
+    return "";
+  }
+};
+export const isEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+// The site a link points to, for a short label: "threads.com"
+export const linkHost = (link: string) => {
+  try {
+    return new URL(link).hostname.replace(/^www\./, "");
+  } catch {
+    return link;
+  }
 };
 
 export const isDay = (value: unknown): value is string => typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);

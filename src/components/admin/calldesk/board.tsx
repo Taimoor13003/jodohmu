@@ -106,7 +106,7 @@ export function BoardView({ contacts, team, me, today, onOpen, onChanged }: {
     const needle = query.trim().toLowerCase();
     return contacts.filter((c) => !c.excluded
       && (!owner || (owner === "unassigned" ? !c.assignedTo : c.assignedTo === owner))
-      && (!needle || `${c.name} ${c.phone} ${c.city}`.toLowerCase().includes(needle)));
+      && (!needle || `${c.name} ${c.phone} ${c.email} ${c.city}`.toLowerCase().includes(needle)));
   }, [contacts, query, owner]);
 
   const columns: { key: ColumnKey; label: string; step?: number }[] = [

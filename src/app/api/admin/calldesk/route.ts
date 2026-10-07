@@ -7,7 +7,7 @@ import {
   type Bilingual, type CallDeskMember, type ContactSource, type ContactStatus, type LeadProfile,
 } from "@/lib/calldesk";
 import {
-  ACTIVITY, AVAILABILITY, CONTACTS, TRANSCRIPTS, cleanAvailability, createContact, importLeads, leadFacts, mergeLeadFacts, requireCallDesk, toActivity, toContact,
+  ACTIVITY, AVAILABILITY, CONTACTS, TRANSCRIPTS, cleanAvailability, createContact, importLeads, leadFacts, leadReach, mergeLeadFacts, requireCallDesk, toActivity, toContact,
   type CallDeskCaller,
 } from "@/lib/calldesk-server";
 import { EXPENSE_CATEGORIES, EXPENSE_STATUSES, FINANCE_EXPENSES } from "@/lib/finance";
@@ -270,15 +270,16 @@ export async function POST(req: NextRequest) {
 
     if (body.action === "create") {
       const name = clean(body.name, 120);
-      const phone = clean(body.phone, 30);
+      const reach = leadReach(body);
       const source = clean(body.source, 30);
-      if (!name || !phone) return NextResponse.json({ error: "Name and phone are required." }, { status: 400 });
+      if (!name) return NextResponse.json({ error: "Name is required." }, { status: 400 });
+      if (reach.error) return NextResponse.json({ error: reach.error }, { status: 400 });
       if (!MANUAL_SOURCES.includes(source)) return NextResponse.json({ error: "Invalid source." }, { status: 400 });
       const assignee = await resolveAssignee(body, caller, null);
       if (!assignee.ok) return NextResponse.json({ error: assignee.error }, { status: 403 });
 
       const id = await createContact({
-        name, phone, source: source as ContactSource, origins: cleanOrigins(body.origins),
+        name, phone: reach.phone, email: reach.email, link: reach.link, source: source as ContactSource, origins: cleanOrigins(body.origins),
         city: clean(body.city, 80),
         bestTime: clean(body.bestTime, 100),
         timezone: isTimeZone(body.timezone) ? body.timezone : DEFAULT_TZ,
@@ -432,10 +433,14 @@ export async function POST(req: NextRequest) {
 
     if (body.action === "edit") {
       const name = clean(body.name, 120);
-      const phone = clean(body.phone, 30);
-      if (!name || !phone) return NextResponse.json({ error: "Name and phone are required." }, { status: 400 });
+      // Number, email and chat link are left as they are unless the form sent them
+      const reach = leadReach({ phone: contact.phone, email: contact.email, link: contact.link, ...body });
+      if (!name) return NextResponse.json({ error: "Name is required." }, { status: 400 });
+      if (reach.error) return NextResponse.json({ error: reach.error }, { status: 400 });
       const updates = {
-        name, phone,
+        name, phone: reach.phone, email: reach.email, link: reach.link,
+        // The notes about the person; left as they are unless the form sent them
+        details: "note" in body ? clean(body.note, 2000) : (contact.details ?? ""),
         city: clean(body.city, 80),
         bestTime: clean(body.bestTime, 100),
         timezone: isTimeZone(body.timezone) ? body.timezone : (contact.timezone ?? DEFAULT_TZ),

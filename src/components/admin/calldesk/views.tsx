@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from "react";
-import { AlertCircle, CalendarClock, ChevronLeft, ChevronRight, Clock, MessageCircle, Phone, Search, Sparkles } from "lucide-react";
+import { AlertCircle, CalendarClock, ChevronLeft, ChevronRight, Clock, ExternalLink, MessageCircle, Phone, Search, Sparkles } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   CONTACT_SOURCES, CONTACT_STATUSES, LEAD_ORIGINS, addDays, originLabel,
@@ -89,12 +89,21 @@ function ContactRow({ contact, today, onOpen }: { contact: CallDeskContact; toda
         </div>
         {contact.followUpNote && <p className="mt-1 truncate text-xs font-medium text-slate-700">→ {contact.followUpNote}</p>}
       </button>
-      <a href={waLink(contact.phone)} target="_blank" rel="noopener noreferrer" title="WhatsApp" className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-green-50 text-green-700 hover:bg-green-100">
-        <MessageCircle className="h-4 w-4" />
-      </a>
-      <a href={telLink(contact.phone)} title={l({ id: "Telepon", en: "Call" })} className="hidden h-9 w-9 shrink-0 place-items-center rounded-lg bg-slate-100 text-[#1B3A6B] hover:bg-slate-200 sm:grid">
-        <Phone className="h-4 w-4" />
-      </a>
+      {contact.phone && (
+        <a href={waLink(contact.phone)} target="_blank" rel="noopener noreferrer" title="WhatsApp" className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-green-50 text-green-700 hover:bg-green-100">
+          <MessageCircle className="h-4 w-4" />
+        </a>
+      )}
+      {contact.phone && (
+        <a href={telLink(contact.phone)} title={l({ id: "Telepon", en: "Call" })} className="hidden h-9 w-9 shrink-0 place-items-center rounded-lg bg-slate-100 text-[#1B3A6B] hover:bg-slate-200 sm:grid">
+          <Phone className="h-4 w-4" />
+        </a>
+      )}
+      {contact.link && (
+        <a href={contact.link} target="_blank" rel="noopener noreferrer" title={l({ id: "Buka chat", en: "Open chat" })} className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">
+          <ExternalLink className="h-4 w-4" />
+        </a>
+      )}
       <button type="button" onClick={() => onOpen(contact.id)} className="h-9 shrink-0 rounded-lg bg-[#1B3A6B] px-3 text-xs font-bold text-white hover:bg-[#244a85]">
         {l({ id: "Catat", en: "Log" })}
       </button>
@@ -400,7 +409,7 @@ export function ContactsView({ contacts, today, onOpen }: { contacts: CallDeskCo
     return (!status || c.status === status)
       && (!source || c.source === source)
       && (!origin || c.origins.includes(origin as LeadOrigin))
-      && (!needle || `${c.name} ${c.phone} ${c.city}`.toLowerCase().includes(needle));
+      && (!needle || `${c.name} ${c.phone} ${c.email} ${c.city}`.toLowerCase().includes(needle));
   });
 
   const select = "h-10 rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700";

@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 import { FieldValue, type DocumentData, type Timestamp } from "firebase-admin/firestore";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import {
-  DEFAULT_TZ, EMPTY_AVAILABILITY, WEEKDAYS, isDay, isTime, jakartaDay, leadOrigins,
+  DEFAULT_TZ, EMPTY_AVAILABILITY, WEEKDAYS, cleanLink, isDay, isEmail, isTime, jakartaDay, leadOrigins,
   type Availability, type CallDeskActivity, type CallDeskContact, type ContactSource, type LeadOrigin, type LeadProfile, type TeamPermission,
 } from "@/lib/calldesk";
 
@@ -60,6 +60,8 @@ export const toContact = (id: string, data: DocumentData): CallDeskContact => ({
   id,
   name: str(data.name),
   phone: str(data.phone),
+  email: str(data.email),
+  link: str(data.link),
   city: str(data.city),
   source: data.source,
   origins: leadOrigins(data),
@@ -115,11 +117,23 @@ export const toActivity = (id: string, data: DocumentData): CallDeskActivity => 
   transcriptId: data.transcriptId ?? null,
 });
 
+// How to reach a lead, as typed on a lead form. None of it is required; what was typed has to be well-formed.
+export function leadReach(body: Record<string, unknown>): { phone: string; email: string; link: string; error: string | null } {
+  const text = (value: unknown, max: number) => (typeof value === "string" ? value.trim().slice(0, max) : "");
+  const phone = text(body.phone, 30);
+  const email = text(body.email, 120).toLowerCase();
+  const link = cleanLink(body.link);
+  const error = email && !isEmail(email) ? "That email address doesn't look right."
+    : text(body.link, 500) && !link ? "The link has to be a web address, like https://www.threads.com/…"
+    : null;
+  return { phone, email, link, error };
+}
+
 /* A lead added by hand, written together with its first timeline entry.
    Used by the Call Desk and by Subpages, so both make the same kind of contact. */
 export async function createContact(
   input: {
-    name: string; phone: string; source: ContactSource; origins: LeadOrigin[]; city: string; bestTime: string; timezone: string; note: string;
+    name: string; phone: string; email?: string; link?: string; source: ContactSource; origins: LeadOrigin[]; city: string; bestTime: string; timezone: string; note: string;
     followUp: { followUpDate: string | null; followUpTime: string | null; followUpNote: string | null };
     assignee: { assignedTo: string | null; assignedName: string | null };
     profile?: LeadProfile;
@@ -131,7 +145,7 @@ export async function createContact(
   const ref = db.collection(CONTACTS).doc();
   const batch = db.batch();
   batch.set(ref, {
-    name: input.name, phone: input.phone, source: input.source, origins: input.origins,
+    name: input.name, phone: input.phone, email: input.email ?? "", link: input.link ?? "", source: input.source, origins: input.origins,
     city: input.city,
     bestTime: input.bestTime,
     timezone: input.timezone,

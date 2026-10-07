@@ -374,7 +374,7 @@ export function SlotPicker({ slot, contacts, onClose, onPick, onNew }: {
   const needle = query.trim().toLowerCase();
   const matches = contacts
     .filter((c) => !CLOSED_STATUSES.includes(c.status))
-    .filter((c) => !needle || `${c.name} ${c.phone} ${c.city}`.toLowerCase().includes(needle))
+    .filter((c) => !needle || `${c.name} ${c.phone} ${c.email} ${c.city}`.toLowerCase().includes(needle))
     .slice(0, 40);
 
   return (

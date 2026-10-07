@@ -164,6 +164,11 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
       {selected.origins.includes(page) ? t(`Lepas tanda @${pageInfo.handle}`, `Remove @${pageInfo.handle} tag`) : t(`Tandai @${pageInfo.handle}`, `Tag @${pageInfo.handle}`)}
     </button>
   ) : null;
+  const chatLink = selected?.link ? (
+    <a href={selected.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-bold" style={{ color: C.navy }}>
+      <ExternalLink className="h-3 w-3" />{t("Buka chat", "Open chat")}
+    </a>
+  ) : null;
   const counts = useMemo(() => ({
     all: profiles.length,
     client: profiles.filter((p) => p.kind === "client").length,
@@ -257,6 +262,7 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
                   {selected.kind === "lead" ? (
                     <div className="flex flex-wrap items-center gap-3">
                       {tagButton}
+                      {chatLink}
                       <button type="button" onClick={() => setLeadForm(selected)} className="inline-flex items-center gap-1 text-xs font-bold" style={{ color: C.navy }}>
                         <Pencil className="h-3 w-3" />{t("Ubah data", "Edit details")}
                       </button>
@@ -265,6 +271,7 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
                   ) : (
                     <div className="flex flex-wrap items-center gap-3">
                       {tagButton}
+                      {chatLink}
                       <a href={`/admin/candidates/${selected.id}/crm`} className="text-xs font-bold" style={{ color: C.navy }}>{t("Buka CRM", "Open CRM")}</a>
                     </div>
                   )}
@@ -315,7 +322,7 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
             setEdits((n) => n + 1);
             onSelect(id);
             if (existing !== null && existing !== undefined) {
-              toast.success(t(`Nomor ini sudah tersimpan sebagai ${existing || "calon klien"}. Sekarang juga bertanda @${pageInfo.handle}.`, `This number was already saved as ${existing || "a lead"}. They are now tagged @${pageInfo.handle} as well.`));
+              toast.success(t(`Orang ini sudah tersimpan sebagai ${existing || "calon klien"}. Sekarang juga bertanda @${pageInfo.handle}.`, `This person was already saved as ${existing || "a lead"}. They are now tagged @${pageInfo.handle} as well.`));
             }
           }}
         />

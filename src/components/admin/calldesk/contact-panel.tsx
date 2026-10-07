@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { CalendarClock, ExternalLink, Loader2, Lock, MessageCircle, Pencil, Phone, X } from "lucide-react";
+import { CalendarClock, ExternalLink, Loader2, Lock, Mail, MessageCircle, Pencil, Phone, X } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import {
-  CONTACT_STATUSES, DEFAULT_TZ, LOG_ACTIONS, TIMEZONES, addDays, fromJakarta, isPastSlot, isTimeZone, jakartaTime, toJakarta,
+  CONTACT_STATUSES, DEFAULT_TZ, LOG_ACTIONS, TIMEZONES, addDays, fromJakarta, isPastSlot, isTimeZone, jakartaTime, linkHost, toJakarta,
   type CallDeskActivity, type CallDeskContact, type CallDeskMember, type LogAction,
 } from "@/lib/calldesk";
 import {
@@ -62,7 +62,7 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
         assignedTo: contact.assignedTo ?? "",
       };
   const [log, setLog] = useState(emptyLog);
-  const [details, setDetails] = useState({ ...factsOf(contact.profile), name: contact.name, phone: contact.phone, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone, origins: contact.origins });
+  const [details, setDetails] = useState({ ...factsOf(contact.profile), name: contact.name, phone: contact.phone, email: contact.email, link: contact.link, note: contact.details, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone, origins: contact.origins });
   const [editingSlot, setEditingSlot] = useState(false);
   // People who manage our social accounts can make this lead's card on a subpage: one it's tagged with, else the one it fits
   const { role, permissions } = useAuth();
@@ -102,7 +102,7 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
       followUpNote: contact.followUpNote ?? "",
       assignedTo: contact.assignedTo ?? "",
     });
-    setDetails({ ...factsOf(contact.profile), name: contact.name, phone: contact.phone, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone, origins: contact.origins });
+    setDetails({ ...factsOf(contact.profile), name: contact.name, phone: contact.phone, email: contact.email, link: contact.link, note: contact.details, city: contact.city, bestTime: contact.bestTime, timezone: contact.timezone, origins: contact.origins });
     loadTimeline();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contact.id, contact.lastActivityAt, preset]);
@@ -177,23 +177,38 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
               <X className="h-4 w-4" />
             </button>
           </div>
-          <div className="mt-4 grid grid-cols-2 gap-2">
-            <a
-              href={waLink(contact.phone)}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setLog((prev) => ({ ...prev, type: prev.type || "wa_sent" }))}
-              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#16a34a] text-sm font-bold text-white hover:bg-[#15803d]"
-            >
-              <MessageCircle className="h-4 w-4" /> WhatsApp
-            </a>
-            <a
-              href={telLink(contact.phone)}
-              onClick={() => setLog((prev) => ({ ...prev, type: prev.type || "call_reached" }))}
-              className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#1B3A6B] text-sm font-bold text-white hover:bg-[#244a85]"
-            >
-              <Phone className="h-4 w-4" /> {l({ id: "Telepon", en: "Call" })}
-            </a>
+          {/* Only the ways we can actually reach this person */}
+          <div className="mt-4 grid grid-cols-2 gap-2 empty:hidden">
+            {contact.phone && (
+              <a
+                href={waLink(contact.phone)}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setLog((prev) => ({ ...prev, type: prev.type || "wa_sent" }))}
+                className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#16a34a] text-sm font-bold text-white hover:bg-[#15803d]"
+              >
+                <MessageCircle className="h-4 w-4" /> WhatsApp
+              </a>
+            )}
+            {contact.phone && (
+              <a
+                href={telLink(contact.phone)}
+                onClick={() => setLog((prev) => ({ ...prev, type: prev.type || "call_reached" }))}
+                className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#1B3A6B] text-sm font-bold text-white hover:bg-[#244a85]"
+              >
+                <Phone className="h-4 w-4" /> {l({ id: "Telepon", en: "Call" })}
+              </a>
+            )}
+            {contact.link && (
+              <a href={contact.link} target="_blank" rel="noopener noreferrer" className="flex h-11 items-center justify-center gap-2 rounded-xl bg-slate-900 text-sm font-bold text-white hover:bg-slate-700">
+                <ExternalLink className="h-4 w-4" /> {l({ id: "Buka chat", en: "Open chat" })}
+              </a>
+            )}
+            {contact.email && (
+              <a href={`mailto:${contact.email}`} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 text-sm font-bold text-slate-700 hover:bg-slate-50">
+                <Mail className="h-4 w-4" /> Email
+              </a>
+            )}
           </div>
         </div>
 
@@ -212,12 +227,15 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
                 <input className={input} value={details.name} onChange={(e) => setDetails({ ...details, name: e.target.value })} placeholder={l({ id: "Nama", en: "Name" })} />
                 <input className={input} value={details.phone} onChange={(e) => setDetails({ ...details, phone: e.target.value })} placeholder={l({ id: "Nomor telepon", en: "Phone" })} />
+                <input type="email" className={input} value={details.email} onChange={(e) => setDetails({ ...details, email: e.target.value })} placeholder="Email" />
+                <input className={input} value={details.link} onChange={(e) => setDetails({ ...details, link: e.target.value })} placeholder={l({ id: "Link chat (Threads, Instagram, …)", en: "Link to the chat (Threads, Instagram, …)" })} />
                 <input className={input} value={details.city} onChange={(e) => setDetails({ ...details, city: e.target.value })} placeholder={l({ id: "Kota", en: "City" })} />
                 <input className={input} value={details.bestTime} onChange={(e) => setDetails({ ...details, bestTime: e.target.value })} placeholder={l({ id: "Waktu terbaik dihubungi", en: "Best time to call" })} />
                 <div className="sm:col-span-2">
                   <TimeZoneField className={input} value={details.timezone} onChange={(timezone) => setDetails({ ...details, timezone })} />
                   {!isTimeZone(details.timezone) && <p className="mt-1 text-xs font-semibold text-rose-600">{l({ id: "Zona waktu tidak dikenal.", en: "Unknown time zone." })}</p>}
                 </div>
+                <textarea rows={3} value={details.note} onChange={(e) => setDetails({ ...details, note: e.target.value })} placeholder={l({ id: "Catatan", en: "Notes" })} className="w-full rounded-lg border border-slate-200 bg-white p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#1B3A6B]/20 sm:col-span-2" />
                 <p className="mt-1 text-xs font-bold uppercase tracking-wider text-slate-400 sm:col-span-2">{l({ id: "Tentang orangnya", en: "About the person" })}</p>
                 <LeadFactFields lang={lang === "id" ? "id" : "en"} value={details} onChange={(facts) => setDetails({ ...details, ...facts })} />
                 <div className="sm:col-span-2">
@@ -231,14 +249,16 @@ export function ContactPanel({ contact, team, me, today, preset, onClose, onChan
               </div>
             ) : (
               <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm">
-                <dt className="text-slate-400">{l({ id: "Telepon", en: "Phone" })}</dt><dd className="font-semibold text-slate-800">{contact.phone}</dd>
+                <dt className="text-slate-400">{l({ id: "Telepon", en: "Phone" })}</dt><dd className="font-semibold text-slate-800">{contact.phone || "—"}</dd>
+                {contact.email && (<><dt className="text-slate-400">Email</dt><dd className="break-all text-slate-700">{contact.email}</dd></>)}
+                {contact.link && (<><dt className="text-slate-400">{l({ id: "Link chat", en: "Chat link" })}</dt><dd className="min-w-0"><a href={contact.link} target="_blank" rel="noopener noreferrer" className="inline-flex max-w-full items-center gap-1 font-semibold text-[#1B3A6B] hover:underline"><span className="truncate">{linkHost(contact.link)}</span><ExternalLink className="h-3 w-3 shrink-0" /></a></dd></>)}
                 <dt className="text-slate-400">{l({ id: "Waktu terbaik", en: "Best time" })}</dt><dd className="text-slate-700">{contact.bestTime || "—"}</dd>
                 <dt className="text-slate-400">{l({ id: "Zona waktu", en: "Time zone" })}</dt><dd className="text-slate-700">{TIMEZONES.find((tz) => tz.value === contact.timezone)?.label ?? contact.timezone}</dd>
                 {contact.createdAt && (<><dt className="text-slate-400">{l({ id: "Masuk", en: "Added" })}</dt><dd className="text-slate-700">{formatDay(contact.createdAt.slice(0, 10), lang, { day: "numeric", month: "short", year: "numeric" })}</dd></>)}
               </dl>
             )}
             {!editing && <ProfileFacts contact={contact} />}
-            {contact.details && <p className="mt-3 whitespace-pre-line rounded-lg bg-white p-3 text-xs leading-5 text-slate-600">{contact.details}</p>}
+            {!editing && contact.details && <p className="mt-3 whitespace-pre-line rounded-lg bg-white p-3 text-xs leading-5 text-slate-600">{contact.details}</p>}
             <ChatArchive contact={contact} />
             {contact.candidateUid && (
               <Link href={`/admin/candidates/${contact.candidateUid}`} className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#C4294A] hover:underline">

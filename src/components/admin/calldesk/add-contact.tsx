@@ -26,7 +26,7 @@ export function AddContactDialog({ today, team, me, preset, onClose, onCreated }
   const { lang } = useLanguage();
   const [form, setForm] = useState({
     ...EMPTY_FACTS,
-    name: "", phone: "", city: "", source: "whatsapp", origins: [DEFAULT_ORIGIN] as LeadOrigin[], bestTime: "", note: "", timezone: DEFAULT_TZ,
+    name: "", phone: "", email: "", link: "", city: "", source: "whatsapp", origins: [DEFAULT_ORIGIN] as LeadOrigin[], bestTime: "", note: "", timezone: DEFAULT_TZ,
     followUpDate: preset?.day ?? "", followUpTime: preset?.time ?? "", followUpNote: "", assignedTo: preset?.uid ?? "",
   });
   const slot = !form.followUpDate
@@ -69,8 +69,16 @@ export function AddContactDialog({ today, team, me, preset, onClose, onCreated }
             <input required className={input} value={form.name} onChange={set("name")} />
           </div>
           <div>
-            <label className={label}>{l({ id: "Nomor WhatsApp *", en: "WhatsApp number *" })}</label>
-            <input required type="tel" className={input} value={form.phone} onChange={set("phone")} placeholder="0812…" />
+            <label className={label}>{l({ id: "Nomor WhatsApp", en: "WhatsApp number" })}</label>
+            <input type="tel" className={input} value={form.phone} onChange={set("phone")} placeholder="0812…" />
+          </div>
+          <div>
+            <label className={label}>Email</label>
+            <input type="email" className={input} value={form.email} onChange={set("email")} placeholder="nama@email.com" />
+          </div>
+          <div>
+            <label className={label}>{l({ id: "Link chat (Threads, Instagram, …)", en: "Link to the chat (Threads, Instagram, …)" })}</label>
+            <input className={input} value={form.link} onChange={set("link")} placeholder="https://www.threads.com/…" />
           </div>
           <div>
             <label className={label}>{l({ id: "Kota", en: "City" })}</label>
