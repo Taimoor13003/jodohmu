@@ -633,6 +633,9 @@
       }
     }
   },
+  "whatsappNotice": {
+    "message": "WhatsApp Jodohmu sedang tidak dapat digunakan untuk sementara waktu. Silakan hubungi kami lewat email atau DM media sosial:"
+  },
   "footer": {
     "hero": {
       "tagline": "Temukan pasangan hidup dengan pendampingan manusia.",

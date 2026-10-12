@@ -633,6 +633,9 @@
       }
     }
   },
+  "whatsappNotice": {
+    "message": "Jodohmu's WhatsApp is unavailable for the time being. Please reach us by email or social media DM:"
+  },
   "footer": {
     "hero": {
       "tagline": "Find a life partner with human guidance.",
