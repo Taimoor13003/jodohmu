@@ -75,6 +75,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "48x48" },
       { url: "/jodohmu-logo.png", type: "image/png", sizes: "any" },
       { url: "/favicon.svg", type: "image/svg+xml" },
     ],

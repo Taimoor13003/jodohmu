@@ -19,7 +19,8 @@ import { useLanguage } from "@/context/LanguageContext";
 export function TermsContent() {
   const { t, lang } = useLanguage();
   const locale = lang === "id" ? "id-ID" : "en-US";
-  const formattedDate = new Date().toLocaleDateString(locale, {
+  // Date the text last changed. Update by hand when the terms text is edited.
+  const formattedDate = new Date("2026-09-18").toLocaleDateString(locale, {
     year: "numeric",
     month: "long",
     day: "numeric",

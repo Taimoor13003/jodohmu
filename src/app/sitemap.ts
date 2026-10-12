@@ -12,20 +12,23 @@ type Route = {
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  // Real last-change dates. Update a page's date when its content changes;
+  // stamping every page with "now" teaches Google to ignore lastmod.
   const now = new Date();
+  const latestPost = blogPosts.reduce((latest, post) => (post.dateModified > latest ? post.dateModified : latest), "2026-06-02");
 
   const staticRoutes: Route[] = [
-    { path: "/", priority: 1, changeFrequency: "weekly", lastModified: now },
-    { path: "/pricing", priority: 0.9, changeFrequency: "monthly", lastModified: now },
-    { path: "/pricing/international", priority: 0.8, changeFrequency: "monthly", lastModified: now },
-    { path: "/plan-your-jodohmu-way", priority: 0.8, changeFrequency: "monthly", lastModified: now },
-    { path: "/careers", priority: 0.7, changeFrequency: "monthly", lastModified: now },
-    { path: "/mitra", priority: 0.6, changeFrequency: "monthly", lastModified: now },
-    { path: "/blog", priority: 0.8, changeFrequency: "weekly", lastModified: now },
-    { path: "/faq", priority: 0.7, lastModified: now },
-    { path: "/contact", priority: 0.7, lastModified: now },
-    { path: "/privacy", lastModified: now },
-    { path: "/terms", lastModified: now },
+    { path: "/", priority: 1, changeFrequency: "weekly", lastModified: "2026-09-18" },
+    { path: "/pricing", priority: 0.9, changeFrequency: "monthly", lastModified: "2026-09-18" },
+    { path: "/pricing/international", priority: 0.8, changeFrequency: "monthly", lastModified: "2026-09-18" },
+    { path: "/plan-your-jodohmu-way", priority: 0.8, changeFrequency: "monthly", lastModified: "2026-08-16" },
+    { path: "/careers", priority: 0.7, changeFrequency: "monthly", lastModified: "2026-07-04" },
+    { path: "/mitra", priority: 0.6, changeFrequency: "monthly", lastModified: "2026-10-01" },
+    { path: "/blog", priority: 0.8, changeFrequency: "weekly", lastModified: latestPost },
+    { path: "/faq", priority: 0.7, lastModified: "2026-09-18" },
+    { path: "/contact", priority: 0.7, lastModified: "2026-09-18" },
+    { path: "/privacy", lastModified: "2026-09-18" },
+    { path: "/terms", lastModified: "2026-09-18" },
   ];
 
   const articleRoutes: Route[] = blogPosts.map((post) => ({
