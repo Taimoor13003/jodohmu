@@ -256,7 +256,7 @@ export function JodohmuWayPlanner() {
     const message = id
       ? `Halo Jodohmu, saya sudah membuat rencana layanan saya.\n\n${serviceList}\n\nEstimasi total saat ini: ${formatIdr(finalTotal)}${couponApplied ? " (diskon 20% sudah diterapkan)" : ""}\n\nMohon bantu konfirmasi rencana dan harga akhirnya.`
       : `Hello Jodohmu, I have built my service plan.\n\n${serviceList}\n\nCurrent estimated total: ${formatIdr(finalTotal)}${couponApplied ? " (20% discount applied)" : ""}\n\nPlease help me confirm the plan and final pricing.`;
-    window.open(`https://wa.me/6281122210303?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+    window.open(`https://wa.me/628138858595?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
   };
 
   return (

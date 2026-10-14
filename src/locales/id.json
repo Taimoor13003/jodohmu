@@ -470,7 +470,7 @@
           },
           "phone": {
             "label": "Telepon:",
-            "value": "+6281122210303"
+            "value": "+628138858595"
           },
           "location": {
             "label": "Lokasi:",
@@ -623,7 +623,7 @@
           },
           "phone": {
             "label": "Telepon:",
-            "value": "+6281122210303"
+            "value": "+628138858595"
           },
           "location": {
             "label": "Lokasi:",
@@ -634,7 +634,7 @@
     }
   },
   "whatsappNotice": {
-    "message": "WhatsApp Jodohmu sedang tidak dapat digunakan untuk sementara waktu. Silakan hubungi kami lewat email atau DM media sosial:"
+    "message": "Nomor WhatsApp Jodohmu telah diperbarui. Hubungi kami di"
   },
   "footer": {
     "hero": {
@@ -659,8 +659,8 @@
       "title": "Terhubung dengan Kami",
       "description": "Dapatkan informasi, acara, dan tips yang kami kurasi untuk perjalanan Anda menuju pernikahan.",
       "email": "info@jodohmu.com",
-      "phone": "+6281122210303",
-      "whatsapp": "6281122210303"
+      "phone": "+628138858595",
+      "whatsapp": "628138858595"
     },
     "subfooter": {
       "copyright": "© {{year}} Jodohmu",

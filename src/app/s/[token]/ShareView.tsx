@@ -19,7 +19,7 @@ import { SwipeDeck, type CaptureKind, type Decision } from "@/components/share/s
 import { Eyebrow, GeometricPattern, GoogleMark, T, cardShadow, serif } from "@/components/share/share-theme";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 
-const WHATSAPP = "https://wa.me/6281122210303";
+const WHATSAPP = "https://wa.me/628138858595";
 
 type View =
   | { kind: "loading" }

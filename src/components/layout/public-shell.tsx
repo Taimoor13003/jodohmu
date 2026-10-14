@@ -6,9 +6,9 @@ import { Footer } from "./footer";
 import { WhatsAppFab } from "./whatsapp-fab";
 import { WhatsAppNotice } from "./whatsapp-notice";
 
-// While true, the site shows a notice pointing to email and social DMs, and
-// hides the floating WhatsApp button. Set back to false when WhatsApp returns.
-const WHATSAPP_UNAVAILABLE = true;
+// While true, the site shows a banner announcing the new WhatsApp number.
+// Set to false once people have had time to see it.
+const SHOW_WHATSAPP_NOTICE = true;
 
 const APP_PREFIXES = ["/dashboard", "/admin", "/profile/", "/s/", "/invite/","/presentations/foreign", "/presentations/indonesia", "/presentations/entrepreneurship"];
 
@@ -31,13 +31,13 @@ export function PublicShell({
   // its own loading state instead of hiding the whole shell.
   return (
     <>
-      {WHATSAPP_UNAVAILABLE && <WhatsAppNotice />}
+      {SHOW_WHATSAPP_NOTICE && <WhatsAppNotice />}
       <Header />
       <main id="main-content" role="main">
         {children}
       </main>
       <Footer />
-      {!WHATSAPP_UNAVAILABLE && <WhatsAppFab href={whatsappHref} />}
+      <WhatsAppFab href={whatsappHref} />
       {/* The lead chatbot is paused until the client-success handoff process is ready. */}
     </>
   );

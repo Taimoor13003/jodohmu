@@ -13,7 +13,7 @@ import { AtSign, Eye, EyeOff, Lock } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 import CoverImage from "@/assets/login-cover.png";
 
-const WA_FORGOT = "https://wa.me/6281122210303?text=Assalamualaikum%2C%20saya%20lupa%20password%20akun%20Jodohmu%20saya.";
+const WA_FORGOT = "https://wa.me/628138858595?text=Assalamualaikum%2C%20saya%20lupa%20password%20akun%20Jodohmu%20saya.";
 
 export default function LoginPage() {
   const router      = useRouter();

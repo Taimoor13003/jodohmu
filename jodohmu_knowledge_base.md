@@ -13,7 +13,7 @@
 
 - **Website:** jodohmu.com
 - **Instagram:** @jodohmu_official
-- **WhatsApp:** 0811-2221-0303
+- **WhatsApp:** 0813-885-8595
 - **Brand Colors:** Pink `#e8147a` (dominant), Navy `#1630a0` (secondary)
 - **Status:** Pre-revenue. No completed matches yet. Pool is still being built.
 
@@ -189,7 +189,7 @@ Ruby is at a **50% founding member launch discount**. Pearl is **Rp 2,500,000** 
 - No Quran ayat — touching quotes instead
 - Stats used: 500K+ divorces/year, 33% youth zina, 2× delayed marriage
 - Photo areas: placeholder for real couple photos before printing
-- Contact: WhatsApp 0811-2221-0303, IG @jodohmu_official, jodohmu.com
+- Contact: WhatsApp 0813-885-8595, IG @jodohmu_official, jodohmu.com
 
 ### WhatsApp Business
 - Greeting message set up

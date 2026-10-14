@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/context/LanguageContext";
 import { analytics } from "@/lib/analytics";
 
-const wa = "https://wa.me/6281122210303";
+const wa = "https://wa.me/628138858595";
 
 const partnerTypes = [
   { value: "faith", Icon: Church, id: ["Pemuka agama", "Ustaz, pendeta, pastor, romo, pandita, dan pengurus rumah ibadah dari keyakinan apa pun."], en: ["Faith leaders", "Ustaz, pastors, priests, monks, and place-of-worship committees of any faith."] },

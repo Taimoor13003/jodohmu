@@ -11,7 +11,7 @@ const jobs = [
   { colors: ["bg-blue-50 text-[#164494]", "bg-rose-50 text-rose-700"], name: "Sales%20Consultant", do: 5, get: 5, are: 5 },
   { colors: ["bg-blue-50 text-[#164494]", "bg-amber-50 text-amber-700"], name: "Operations%20Assistant", do: 6, get: 5, are: 6 },
 ];
-const wa = "https://wa.me/6281122210303";
+const wa = "https://wa.me/628138858595";
 
 export function CareersPage() {
   const { t, lang } = useLanguage();

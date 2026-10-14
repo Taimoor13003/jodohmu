@@ -237,7 +237,7 @@ export default function DashboardPage() {
             {l("Ada pertanyaan? Tim kami siap membantu.", "Have questions? Our team is ready to help.")}
           </p>
           <a
-            href="https://wa.me/6281122210303?text=Assalamualaikum%2C%20saya%20ingin%20bertanya%20tentang%20proses%20Jodohmu."
+            href="https://wa.me/628138858595?text=Assalamualaikum%2C%20saya%20ingin%20bertanya%20tentang%20proses%20Jodohmu."
             target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold text-white shrink-0 transition hover:opacity-90"
             style={{ background: "linear-gradient(to right, #C4294A, #1B3A6B)" }}>

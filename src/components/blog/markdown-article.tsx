@@ -12,7 +12,7 @@ type ArticleSection = { heading: string; paragraphs: string[]; list?: string[]; 
 type ArticleFaq = { question: string; answer: string };
 type ArticleContent = { tag: string; title: string; summary: string; author: string; date: string; readTime: string; heroImage?: string; heroImageAlt?: string; sections: ArticleSection[]; faqs?: ArticleFaq[]; ctaTitle: string; ctaBody: string };
 type MarkdownArticleProps = { content: Record<"id" | "en", ArticleContent>; relatedSlug?: string };
-const whatsappHref = "https://wa.me/6281122210303?text=" + encodeURIComponent("Halo Jodohmu, saya ingin memahami Joble dan paket yang cocok untuk saya.");
+const whatsappHref = "https://wa.me/628138858595?text=" + encodeURIComponent("Halo Jodohmu, saya ingin memahami Joble dan paket yang cocok untuk saya.");
 const defaultHeroImage = "/images/blog/default-article-hero.png";
 
 function renderInlineText(text: string) {

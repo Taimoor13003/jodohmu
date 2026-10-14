@@ -13,7 +13,7 @@ import { GoogleMark } from "@/components/share/share-theme";
 import type { InvitePublicPayload, InviteState } from "@/lib/account-invites";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 
-const WA = `https://wa.me/6281122210303?text=${encodeURIComponent("Assalamualaikum, saya butuh link baru untuk masuk ke profil Jodohmu saya.")}`;
+const WA = `https://wa.me/628138858595?text=${encodeURIComponent("Assalamualaikum, saya butuh link baru untuk masuk ke profil Jodohmu saya.")}`;
 
 type L = (id: string, en: string) => string;
 type Problem = { kind: "wrong_account"; emailHint: string; signedInAs: string } | { kind: "error" };

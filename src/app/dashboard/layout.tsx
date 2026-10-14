@@ -97,7 +97,7 @@ function Sidebar({ open, onClose, onMouseEnter, onMouseLeave, onLogout, lang, da
 }) {
   const pathname = usePathname();
 
-  const WA = "https://wa.me/6281122210303?text=Assalamualaikum%2C%20saya%20ingin%20bertanya%20tentang%20akun%20Jodohmu%20saya.";
+  const WA = "https://wa.me/628138858595?text=Assalamualaikum%2C%20saya%20ingin%20bertanya%20tentang%20akun%20Jodohmu%20saya.";
 
   return (
     <div

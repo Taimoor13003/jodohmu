@@ -89,7 +89,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const whatsappHref = `https://wa.me/6281122210303?text=${encodeURIComponent(
+  const whatsappHref = `https://wa.me/628138858595?text=${encodeURIComponent(
     "Halo, saya ingin menjadwalkan panggilan dengan tim Jodohmu."
   )}`;
 
@@ -155,7 +155,7 @@ export default function RootLayout({
                     ],
                     inLanguage: ["id", "en"],
                     knowsLanguage: ["id", "en"],
-                    telephone: "+62 811 222 10303",
+                    telephone: "+62 813 885 8595",
                     email: "info@jodohmu.com",
                     sameAs: [
                       "https://www.facebook.com/profile.php?id=61583458260206",

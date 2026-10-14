@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 const whatsappHref =
-  "https://wa.me/6281122210303?text=" +
+  "https://wa.me/628138858595?text=" +
   encodeURIComponent(
     "Hello, I'm interested in Jodohmu's international matchmaking service. Could you please share more details?"
   );

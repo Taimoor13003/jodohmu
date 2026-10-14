@@ -1358,7 +1358,7 @@ function ContactSlide({ language }: { language: "id" | "en" }) {
   const cards = [
     { src: "/qr-instagram-jodohmu.svg", label: "Instagram", handle: "@jodohmu_official", hint: isId ? "Cerita, edukasi, dan kabar terbaru." : "Stories, education, and updates." },
     { src: "/qr-website-jodohmu.svg", label: "Website", handle: "www.jodohmu.com", hint: isId ? "Paket, proses, dan cara memulai." : "Packages, process, and how to begin." },
-    { src: "/qr-whatsapp-jodohmu.svg", label: "WhatsApp", handle: "0811 2221 0303", hint: isId ? "Bicara langsung dengan tim kami." : "Talk to our team directly." },
+    { src: "/qr-whatsapp-jodohmu.svg", label: "WhatsApp", handle: "0813 885 8595", hint: isId ? "Bicara langsung dengan tim kami." : "Talk to our team directly." },
   ];
   return <div className="mx-auto w-full max-w-6xl">
     <p className="text-center text-xs font-bold uppercase tracking-[.28em] text-[#e6bd69]">{isId ? "Terima kasih" : "Thank you"}</p>

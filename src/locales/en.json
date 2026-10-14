@@ -470,7 +470,7 @@
           },
           "phone": {
             "label": "Phone:",
-            "value": "+62 811 222 10303"
+            "value": "+62 813 885 8595"
           },
           "location": {
             "label": "Location:",
@@ -623,7 +623,7 @@
           },
           "phone": {
             "label": "Phone:",
-            "value": "+62 811 222 10303"
+            "value": "+62 813 885 8595"
           },
           "location": {
             "label": "Location:",
@@ -634,7 +634,7 @@
     }
   },
   "whatsappNotice": {
-    "message": "Jodohmu's WhatsApp is unavailable for the time being. Please reach us by email or social media DM:"
+    "message": "Our WhatsApp number has been updated. Reach Jodohmu at"
   },
   "footer": {
     "hero": {
@@ -659,8 +659,8 @@
       "title": "Connect With Us",
       "description": "Receive information, events, and practical guidance curated for your journey toward marriage.",
       "email": "info@jodohmu.com",
-      "phone": "+62 811 222 10303",
-      "whatsapp": "6281122210303"
+      "phone": "+62 813 885 8595",
+      "whatsapp": "628138858595"
     },
     "subfooter": {
       "copyright": "© {{year}} Jodohmu",

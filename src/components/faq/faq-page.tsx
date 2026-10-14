@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
-const wa = "https://wa.me/6281122210303";
+const wa = "https://wa.me/628138858595";
 
 type Copy = { id: string; en: string };
 type Faq = { q: Copy; a: Copy; link?: { href: string; label: Copy } };

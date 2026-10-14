@@ -24,8 +24,8 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import { analytics } from "@/lib/analytics";
 
-const phoneHref = "tel:+6281122210303";
-const whatsappBase = "https://wa.me/6281122210303";
+const phoneHref = "tel:+628138858595";
+const whatsappBase = "https://wa.me/628138858595";
 
 const packageWhatsappHref = (name: string) =>
   `${whatsappBase}?text=${encodeURIComponent(`Halo, saya tertarik dengan paket ${name} dari Jodohmu. Saya ingin menjadwalkan panggilan untuk membahasnya.`)}`;
@@ -534,7 +534,7 @@ export function PricingPage() {
             </Button>
             <Link href={phoneHref} onClick={() => analytics.ctaClick("direct_phone", "pricing")} className="rounded-2xl border border-white/25 bg-white/10 px-5 py-3 text-center text-white transition hover:bg-white/15">
               <span className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-white/65">{l("Lebih nyaman bicara langsung?", "Prefer to speak directly?")}</span>
-              <span className="mt-1 flex items-center justify-center gap-2 text-sm font-extrabold"><Phone className="h-4 w-4" /> +62 811-2221-0303</span>
+              <span className="mt-1 flex items-center justify-center gap-2 text-sm font-extrabold"><Phone className="h-4 w-4" /> +62 813-885-8595</span>
             </Link>
           </div>
         </div>
