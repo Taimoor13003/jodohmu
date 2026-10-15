@@ -5,7 +5,7 @@ export type SocialAccountKey = "nikahin_foreigner" | "nikah_lagiyuk" | "taaruf_s
 
 export const SOCIAL_ACCOUNTS: { key: SocialAccountKey; handle: string; label: string; accent: string }[] = [
   { key: "nikahin_foreigner", handle: "nikahin_foreigner", label: "WNI & WNA", accent: "#761410" },
-  { key: "nikah_lagiyuk", handle: "nikah_lagiyuk", label: "Janda / duda", accent: "#9B2242" },
+  { key: "nikah_lagiyuk", handle: "nikah_lagiyuk", label: "Janda / duda", accent: "#C8502F" },
   { key: "taaruf_sekarang", handle: "taaruf_sekarang", label: "Muslim", accent: "#3E5A4C" },
   { key: "temu_chindo", handle: "temu_chindo", label: "Chindo", accent: "#B4232C" },
   { key: "kristenmatch", handle: "kristenmatch.indo", label: "Kristen", accent: "#1D4E89" },

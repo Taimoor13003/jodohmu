@@ -5,7 +5,7 @@ import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import cloudinary from "@/lib/cloudinary";
 import { adminDb } from "@/lib/firebase-admin";
 import {
-  REEL_TIMING, SOCIAL_POSTS, buildCard, describeChoices, findPage, helloLines, sakinahLines,
+  REEL_TIMING, SOCIAL_POSTS, bersemiLines, buildCard, describeChoices, findPage, helloLines, sakinahLines,
   type CardContent, type FieldChoices, type FigureChoice, type PostFormat, type SocialPageKey,
 } from "@/lib/social";
 import { figureSvg, iconSvg, type Figure } from "@/lib/social-figures";
@@ -173,6 +173,14 @@ const SAKINAH_FIGURE_FILES: Record<Figure, string> = {
   man_peci_beard: path.join(process.cwd(), "public", "social-figures", "sakinah", "man-peci-beard.png"),
   woman: path.join(process.cwd(), "public", "social-figures", "sakinah", "woman.png"),
   hijab: path.join(process.cwd(), "public", "social-figures", "sakinah", "hijab.png"),
+};
+// The same figures painted plum for @nikah_lagiyuk, where they stand against the sun
+const BERSEMI_FIGURE_FILES: Record<Figure, string> = {
+  man: path.join(process.cwd(), "public", "social-figures", "bersemi", "man.png"),
+  man_peci: path.join(process.cwd(), "public", "social-figures", "bersemi", "man-peci.png"),
+  man_peci_beard: path.join(process.cwd(), "public", "social-figures", "bersemi", "man-peci-beard.png"),
+  woman: path.join(process.cwd(), "public", "social-figures", "bersemi", "woman.png"),
+  hijab: path.join(process.cwd(), "public", "social-figures", "bersemi", "hijab.png"),
 };
 const figureCache = new Map<string, string>();
 
@@ -522,6 +530,125 @@ async function renderMahligai(card: CardContent, slide: "intro" | "profile"): Pr
   );
 }
 
+/* ── "bersemi" template: @nikah_lagiyuk. A new morning: cream paper, a rising sun with the silhouette against it,
+   a soft serif, and the profile set out as a ledger above a horizon line. ── */
+const B = {
+  paper: "#FFF5E9", plum: "#3A1B34", muted: "#93757F", line: "#EBD6C4", soft: "#FCE5D2",
+  sunTop: "#F8B65C", sunBottom: "#E2573A", ember: "#C8502F",
+};
+
+async function renderBersemi(card: CardContent, slide: "intro" | "profile"): Promise<ImageResponse> {
+  const { greeting, big, sub } = bersemiLines(card);
+  const heading = card.name || big.replace(/^saya /, "");
+  const sans = `@${card.page.handle}${card.code}${greeting}${sub}${card.rows.map((r) => r.label + r.value).join("")}PROFILGeser untuk lihat profil→DM kami dan sebut kode·`;
+  const serif = `${big}${heading}${sub}${card.intro}${card.rows.map((r) => r.value).join("")}“”Mau kenal lebih dekat?`;
+  // Fraunces' italic has swash letters that are hard to read, so the light lines use its upright regular instead
+  const [medium, bold, display, displayLight] = await Promise.all([
+    googleFont("DM+Sans", "wght@500", sans), googleFont("DM+Sans", "wght@700", sans),
+    googleFont("Fraunces", "wght@600", serif), googleFont("Fraunces", "wght@400", serif),
+  ]);
+  const fonts = [
+    medium && { name: "DM Sans", data: medium, weight: 500 as const, style: "normal" as const },
+    bold && { name: "DM Sans", data: bold, weight: 700 as const, style: "normal" as const },
+    display && { name: "Fraunces", data: display, weight: 600 as const, style: "normal" as const },
+    displayLight && { name: "Fraunces", data: displayLight, weight: 400 as const, style: "normal" as const },
+  ].filter(Boolean) as { name: string; data: ArrayBuffer; weight: 400 | 500 | 600 | 700; style: "normal" }[];
+  const sunFill = `linear-gradient(180deg, ${B.sunTop} 0%, ${B.sunBottom} 100%)`;
+
+  const header = (
+    <div style={{ position: "absolute", top: 76, left: 80, width: 920, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ display: "flex", fontSize: 28, fontWeight: 700, color: B.plum }}>@{card.page.handle}</div>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ display: "flex", width: 14, height: 14, borderRadius: 999, marginRight: 12, backgroundImage: sunFill }} />
+        <div style={{ display: "flex", fontSize: 26, fontWeight: 700, letterSpacing: 3, color: B.ember }}>{card.code}</div>
+      </div>
+    </div>
+  );
+
+  // The sun rises off the bottom edge: its disc, two rings of light, and the figure in front
+  const sun = { cx: 540, cy: 1030, r: 440 };
+  const ring = (r: number, opacity: number) => (
+    <div key={r} style={{ position: "absolute", left: sun.cx - r, top: sun.cy - r, width: r * 2, height: r * 2, display: "flex", borderRadius: 9999, border: `2.5px solid rgba(226,87,58,${opacity})` }} />
+  );
+  const fig = { width: 540, height: 648 };
+  const bigSize = big.length <= 9 ? 164 : big.length <= 14 ? 122 : 90;
+  const intro = (
+    <>
+      {ring(sun.r + 62, 0.38)}
+      {ring(sun.r + 132, 0.18)}
+      <div style={{ position: "absolute", left: sun.cx - sun.r, top: sun.cy - sun.r, width: sun.r * 2, height: sun.r * 2, display: "flex", borderRadius: 9999, backgroundImage: sunFill }} />
+      {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+      <img src={await figureImage(card.figure, BERSEMI_FIGURE_FILES)} width={fig.width} height={fig.height} style={{ position: "absolute", left: sun.cx - fig.width / 2 + 20, top: CARD_SIZE.height - fig.height }} />
+      <div style={{ position: "absolute", left: 80, width: 920, top: 176, display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", flexShrink: 0, fontSize: 38, fontWeight: 500, color: B.muted }}>{greeting}</div>
+        <div style={{ display: "flex", flexShrink: 0, marginTop: 4, fontFamily: "Fraunces", fontSize: bigSize, fontWeight: 600, letterSpacing: -bigSize / 40, lineHeight: 1.05, color: B.plum }}>{big}</div>
+        {sub && (
+          <div style={{ display: "flex", flexShrink: 0, alignItems: "center", marginTop: 14 }}>
+            <div style={{ display: "flex", width: 64, height: 3, marginRight: 22, background: B.ember }} />
+            <div style={{ display: "flex", fontFamily: "Fraunces", fontWeight: 400, fontSize: 50, color: B.ember }}>{sub}</div>
+          </div>
+        )}
+      </div>
+      <div style={{ position: "absolute", left: 0, width: CARD_SIZE.width, bottom: 64, display: "flex", justifyContent: "center" }}>
+        <div style={{ display: "flex", flexShrink: 0, whiteSpace: "nowrap", padding: "16px 38px", borderRadius: 999, background: B.paper, fontSize: 27, fontWeight: 700, color: B.plum }}>Geser untuk lihat profil →</div>
+      </div>
+    </>
+  );
+
+  // Everything switched on must fit the card, so the ledger tightens as it grows
+  // The heading already says the city, so the ledger doesn't repeat it
+  const rows = card.rows.filter((r) => r.value !== heading);
+  const n = rows.length + (card.intro ? 2 : 0);
+  const value = n > 8 ? 33 : n > 6 ? 37 : n > 4 ? 42 : 46;
+  const pad = n > 8 ? 13 : n > 6 ? 17 : n > 4 ? 24 : 32;
+  const profile = (
+    <>
+      <div style={{ position: "absolute", left: 80, width: 920, top: 172, display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", flexShrink: 0, alignItems: "center" }}>
+          <div style={{ display: "flex", fontSize: 24, fontWeight: 700, letterSpacing: 7, color: B.ember }}>PROFIL</div>
+          {sub && !card.name && <div style={{ display: "flex", marginLeft: 16, fontSize: 26, fontWeight: 500, color: B.muted }}>·  {sub}</div>}
+        </div>
+        <div style={{ display: "flex", flexShrink: 0, marginTop: 4, fontFamily: "Fraunces", fontSize: heading.length > 14 ? 72 : 96, fontWeight: 600, letterSpacing: -2, lineHeight: 1.08, color: B.plum }}>{heading}</div>
+        <div style={{ display: "flex", flexShrink: 0, flexDirection: "column", marginTop: 26, borderTop: `3px solid ${B.plum}` }}>
+          {rows.map((row) => (
+            <div key={row.key} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: `${pad}px 0`, borderBottom: `2px solid ${B.line}` }}>
+              <div style={{ display: "flex", flexShrink: 0, width: 300, fontSize: value - 12, fontWeight: 500, color: B.muted }}>{row.label}</div>
+              <div style={{ display: "flex", flex: 1, justifyContent: "flex-end", textAlign: "right", fontFamily: "Fraunces", fontSize: value, fontWeight: 600, lineHeight: 1.15, color: B.plum }}>{row.value}</div>
+            </div>
+          ))}
+          {card.intro && (
+            <div style={{ display: "flex", marginTop: pad + 8, padding: `${pad + 6}px 34px`, borderRadius: 28, background: B.soft, fontFamily: "Fraunces", fontWeight: 400, fontSize: value - 4, lineHeight: 1.3, color: B.plum }}>
+              “{card.intro}”
+            </div>
+          )}
+        </div>
+      </div>
+      {/* The horizon: a half sun on a line, the invitation above it and the code below */}
+      <div style={{ position: "absolute", left: 80, width: 920, bottom: 66, display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", alignItems: "flex-end" }}>
+          <div style={{ display: "flex", width: 132, height: 66, marginRight: 30, borderRadius: "66px 66px 0 0", backgroundImage: sunFill }} />
+          <div style={{ display: "flex", paddingBottom: 10, fontFamily: "Fraunces", fontWeight: 400, fontSize: 52, color: B.plum }}>Mau kenal lebih dekat?</div>
+        </div>
+        <div style={{ display: "flex", height: 3, background: B.plum }} />
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 18 }}>
+          <div style={{ display: "flex", fontSize: 29, fontWeight: 500, color: B.muted }}>DM kami dan sebut kode</div>
+          <div style={{ display: "flex", fontSize: 40, fontWeight: 700, letterSpacing: 3, color: B.ember }}>{card.code}</div>
+        </div>
+      </div>
+    </>
+  );
+
+  return new ImageResponse(
+    (
+      <div style={{ width: "100%", height: "100%", display: "flex", position: "relative", overflow: "hidden", fontFamily: "DM Sans", background: B.paper }}>
+        {slide === "intro" ? intro : profile}
+        {header}
+      </div>
+    ),
+    { ...CARD_SIZE, fonts },
+  );
+}
+
 /* ── Reels: the design's parts laid over a plain background video on Cloudinary, each fading in on its own ── */
 export const REEL_SIZE = { width: 1080, height: 1920 };
 type ReelDesign = {
@@ -622,6 +749,8 @@ export async function renderSlides(card: CardContent, format: PostFormat = "caro
         ? await Promise.all([renderSakinah(card, ["header", "introArt", "introText", "hint"]), renderSakinah(card, ["header", "profile", "cta"])])
         : card.template === "mahligai"
           ? await Promise.all([renderMahligai(card, "intro"), renderMahligai(card, "profile")])
+          : card.template === "bersemi"
+            ? await Promise.all([renderBersemi(card, "intro"), renderBersemi(card, "profile")])
         : [await renderClassic(card)];
   return Promise.all(images.map((image) => image.arrayBuffer()));
 }

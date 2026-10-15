@@ -12,7 +12,8 @@ export type SocialLang = "id" | "en";
 // "classic": one Indonesian card. "hello": the @nikahin_foreigner Canva look, an intro slide with a silhouette plus a profile slide.
 // "sakinah": the @taaruf_sekarang Canva look, sage fading to navy, "Hallo, saya dari …" intro slide plus a profile slide.
 // "mahligai": the @poligami.indonesia look, light and modern with front-facing figures; rosewood for women, midnight blue for men.
-export type TemplateKey = "classic" | "hello" | "sakinah" | "mahligai";
+// "bersemi": the @nikah_lagiyuk look, a sunrise on cream paper: the silhouette stands against a rising sun, the profile is a ledger.
+export type TemplateKey = "classic" | "hello" | "sakinah" | "mahligai" | "bersemi";
 // A swipeable image post, or a short 9:16 video (pages whose template has a Reel design)
 export type PostFormat = "carousel" | "reel";
 // How long each template's Reel runs, and the second its intro gives way to the profile
@@ -37,7 +38,7 @@ export const SOCIAL_PAGES: {
   reel?: boolean;
 }[] = [
   { key: "nikahin_foreigner", handle: "nikahin_foreigner", label: "WNI & WNA", accent: "#761410", template: "hello", lang: "en", connected: true, hashtags: "#nikahbedanegara #mixedmarriage #internationalmarriage #cariJodoh #perkenalan", codePrefix: "NF", reel: true },
-  { key: "nikah_lagiyuk", handle: "nikah_lagiyuk", label: "Janda / duda", accent: "#9B2242", template: "classic", lang: "id", connected: false, hashtags: "#nikahlagi #jandaduda #cariJodoh #perkenalan", codePrefix: "NL" },
+  { key: "nikah_lagiyuk", handle: "nikah_lagiyuk", label: "Janda / duda", accent: "#C8502F", template: "bersemi", lang: "id", connected: true, hashtags: "#nikahlagi #jandaduda #mulailagi #cariJodoh #perkenalan", codePrefix: "NL" },
   { key: "taaruf_sekarang", handle: "taaruf_sekarang", label: "Muslim", accent: "#3E5A4C", template: "sakinah", lang: "id", connected: true, hashtags: "#cariJodohMuslim #nikahsyari #perkenalan", codePrefix: "TS", reel: true },
   { key: "temu_chindo", handle: "temu_chindo", label: "Chindo", accent: "#B4232C", template: "classic", lang: "id", connected: false, hashtags: "#chindo #cariJodoh #perkenalan", codePrefix: "TC" },
   { key: "kristenmatch", handle: "kristenmatch.indo", label: "Kristen", accent: "#1D4E89", template: "classic", lang: "id", connected: false, hashtags: "#jodohkristen #cariJodoh #perkenalan", codePrefix: "KM" },
@@ -118,6 +119,7 @@ export const FIELD_DEFS = {
   religion: { label: { id: "Agama", en: "Religion" }, cardLabel: { id: "Agama", en: "Religion" }, icon: "sparkles" },
   ethnicity: { label: { id: "Suku", en: "Ethnicity" }, cardLabel: { id: "Suku", en: "Ethnicity" }, icon: "flag" },
   height: { label: { id: "Tinggi badan", en: "Height" }, cardLabel: { id: "Tinggi", en: "Height" }, icon: "ruler" },
+  children: { label: { id: "Anak", en: "Children" }, cardLabel: { id: "Anak", en: "Children" }, icon: null },
   // Not in the profile yet, so it is only ever typed in
   plan: { label: { id: "Rencana menikah", en: "Marriage plan" }, cardLabel: { id: "Rencana Menikah", en: "Marriage plan" }, icon: null },
   intro: { label: { id: "Kalimat singkat", en: "Short intro" }, cardLabel: { id: "", en: "" }, icon: null },
@@ -147,6 +149,11 @@ const TEMPLATE_FIELDS: Record<TemplateKey, [SocialFieldKey, FieldMode][]> = {
     ["name", "hide"], ["age", "show"], ["city", "show"], ["marital", "show"], ["education", "show"], ["occupation", "show"],
     ["ethnicity", "show"], ["plan", "custom"], ["religion", "hide"], ["height", "hide"], ["intro", "custom"],
   ],
+  // A page for people marrying again: status and children come first, and faith is shown because the page is for every faith
+  bersemi: [
+    ["name", "hide"], ["age", "show"], ["city", "show"], ["marital", "show"], ["children", "show"], ["occupation", "show"],
+    ["education", "show"], ["religion", "show"], ["ethnicity", "hide"], ["height", "hide"], ["plan", "custom"], ["intro", "custom"],
+  ],
 };
 // Words a template uses on the card instead of the usual label
 const CARD_LABELS: Partial<Record<TemplateKey, Partial<Record<SocialFieldKey, string>>>> = {
@@ -159,6 +166,7 @@ const NOT_ROWS: Record<TemplateKey, SocialFieldKey[]> = {
   hello: ["name", "from"],
   sakinah: ["name", "from", "age"],
   mahligai: ["name", "from", "age"],
+  bersemi: ["name", "from", "age"],
 };
 
 export const fieldsFor = (pageKey: SocialPageKey) => {
@@ -187,6 +195,10 @@ export function autoValues(p: Profile, lang: SocialLang = "id"): Record<SocialFi
   const nationality = text(p.nationalityCustom) || text(p.nationality);
   const indonesian = /^indonesia/i.test(nationality);
   const marital = text(p.maritalStatus).toLowerCase();
+  // Only what was actually answered: a number of children, or a clear "no"
+  const childCount = Number(text(p.childrenCount)) || 0;
+  const children = text(p.hasChildren) === "no" ? (lang === "en" ? "None" : "Belum ada")
+    : childCount > 0 ? (lang === "en" ? `${childCount} ${childCount === 1 ? "child" : "children"}` : `${childCount} anak`) : "";
   return {
     name: text(p.fullName) || text(p.name),
     headline: [gender, age ? `${age} tahun` : ""].filter(Boolean).join(", "),
@@ -201,6 +213,7 @@ export function autoValues(p: Profile, lang: SocialLang = "id"): Record<SocialFi
     religion: RELIGION[text(p.religion).toLowerCase()]?.[lang] ?? capitalize(text(p.religion).toLowerCase()),
     ethnicity: capitalize(text(p.ethnicityCustom) || text(p.ethnicity)),
     height: /^\d{3}$/.test(height) ? `${height} cm` : height,
+    children,
     plan: "",
     intro: "",
   };
@@ -282,8 +295,27 @@ export function sakinahLines(card: CardContent) {
   return { greeting: "Hallo,", big: age ? `saya ${age}` : "salam kenal", sub: "" };
 }
 
+// The words on the intro slide of the "bersemi" template: "Halo, saya dari / Bandung / 41 tahun"
+export function bersemiLines(card: CardContent) {
+  const { greeting, big, sub } = sakinahLines(card);
+  return { greeting: greeting.replace("Hallo", "Halo"), big, sub: sub.replace(/Tahun/g, "tahun") };
+}
+
 export function defaultCaption(pageKey: SocialPageKey, card: CardContent) {
   const page = findPage(pageKey)!;
+  if (page.template === "bersemi") {
+    const { greeting, big, sub } = bersemiLines(card);
+    return [
+      `${greeting} ${big}${sub ? `, ${sub}` : ""} 🌤️`,
+      "",
+      ...card.rows.map((r) => `${r.label}: ${r.value}`),
+      ...(card.intro ? ["", `"${card.intro}"`] : []),
+      "",
+      `Mau kenal lebih dekat? DM kami dan sebut kode ${card.code}.`,
+      "",
+      page.hashtags,
+    ].join("\n");
+  }
   if (page.template === "sakinah" || page.template === "mahligai") {
     const { greeting, big, sub } = sakinahLines(card);
     return [
@@ -327,6 +359,7 @@ export function defaultCaption(pageKey: SocialPageKey, card: CardContent) {
 export const CARD_PROFILE_KEYS = [
   "fullName", "name", "gender", "dateOfBirth", "age", "location", "nationality", "nationalityCustom", "occupation",
   "educationLevel", "educations", "maritalStatus", "religion", "ethnicity", "ethnicityCustom", "height", "hijab",
+  "hasChildren", "childrenCount",
 ] as const;
 
 /* Cards can be made for registered clients and for Call Desk leads. A lead's id carries this prefix
@@ -339,7 +372,7 @@ export function leadCardProfile(lead: { name: string; city: string; profile: Rec
   const p = lead.profile ?? {};
   return {
     name: lead.name, location: lead.city, gender: p.gender, age: p.age, maritalStatus: p.maritalStatus, religion: p.religion,
-    nationality: p.nationality, occupation: p.occupation, educationLevel: p.education, ethnicity: p.ethnicity, height: p.height, hijab: p.hijab,
+    nationality: p.nationality, occupation: p.occupation, educationLevel: p.education, ethnicity: p.ethnicity, height: p.height, hijab: p.hijab, childrenCount: p.children,
   };
 }
 
