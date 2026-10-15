@@ -166,3 +166,15 @@ export async function editLead(id: string, body: Record<string, unknown>, actor:
   logEdit(batch, ref.id, contact, name, changed.join("\n"), actor);
   await batch.commit();
 }
+
+/* When a page's Threads message inbox was last read into the Call Desk. The next read only needs the chats
+   that moved after `through`; chats are matched by their link, so reading one twice never adds it twice. */
+export type InboxSync = { through: string; chats: number; leads: number };
+const inboxSyncRef = (pageKey: SocialPageKey) => adminDb().doc(`calldesk_sync/threads_${pageKey}`);
+export async function inboxSync(pageKey: SocialPageKey): Promise<InboxSync | null> {
+  const data = (await inboxSyncRef(pageKey).get()).data();
+  return data?.through ? { through: data.through, chats: data.chats ?? 0, leads: data.leads ?? 0 } : null;
+}
+export async function markInboxSync(pageKey: SocialPageKey, sync: InboxSync) {
+  await inboxSyncRef(pageKey).set({ ...sync, updatedAt: FieldValue.serverTimestamp() });
+}

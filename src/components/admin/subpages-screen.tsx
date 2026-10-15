@@ -102,6 +102,8 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
   const canOpenCallDesk = role === "admin" || permissions.includes("calldesk");
   const [profiles, setProfiles] = useState<CardPerson[]>([]);
   const [posts, setPosts] = useState<PostRow[]>([]);
+  // When this page's Threads messages were last read into the Call Desk
+  const [threadsSync, setThreadsSync] = useState<{ through: string; chats: number } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
@@ -114,8 +116,9 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
 
   const load = useCallback(async () => {
     try {
-      const data = await authFetch<{ posts: PostRow[]; profiles: CardPerson[] }>(`/api/admin/social?page=${page}`);
+      const data = await authFetch<{ posts: PostRow[]; profiles: CardPerson[]; threadsSync?: { through: string; chats: number } | null }>(`/api/admin/social?page=${page}`);
       setProfiles(data.profiles);
+      setThreadsSync(data.threadsSync ?? null);
       setPosts(data.posts);
       setError(null);
     } catch (err) {
@@ -196,6 +199,11 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
                 <Plus className="h-3.5 w-3.5" />{t("Tambah calon klien", "Add lead")}
               </button>
             </div>
+            {threadsSync && (
+              <p className="mt-1.5 text-[11px]" style={{ color: C.muted }}>
+                {t("Pesan Threads masuk sampai", "Threads messages synced through")} {new Date(threadsSync.through).toLocaleString(lang === "id" ? "id-ID" : "en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" })} WIB · {threadsSync.chats} chat
+              </p>
+            )}
             <label className="relative mt-2 flex items-center">
               <Search className="pointer-events-none absolute left-3 h-4 w-4 text-slate-400" />
               <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("Cari nama, kota, pekerjaan", "Search name, city, job")} className="h-9 w-full rounded-lg border pl-9 pr-3 text-sm" style={{ borderColor: C.border }} />

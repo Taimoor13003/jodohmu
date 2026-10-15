@@ -7,7 +7,7 @@ import {
   type FieldChoices, type FieldMode, type FigureChoice, type PostFormat, type SocialPageKey,
 } from "@/lib/social";
 import { PostError, createPost, finishPost, mediaExists, metaToken, renderSlides } from "@/lib/social-server";
-import { LeadError, addLead, cardSubject, editLead, listCardPeople, tagLead } from "@/lib/social-leads";
+import { LeadError, addLead, cardSubject, editLead, inboxSync, listCardPeople, tagLead } from "@/lib/social-leads";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -78,11 +78,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ connected: Boolean(metaToken()), posts });
   }
   if (page && findPage(page)) {
-    const [postSnap, profiles] = await Promise.all([
+    const [postSnap, profiles, threadsSync] = await Promise.all([
       db.collection(SOCIAL_POSTS).where("page", "==", page).get(),
       listCardPeople(),
+      inboxSync(findPage(page)!.key),
     ]);
-    return NextResponse.json({ connected: Boolean(metaToken()), posts: postSnap.docs.map((d) => toPost(d.data())), profiles });
+    return NextResponse.json({ connected: Boolean(metaToken()), posts: postSnap.docs.map((d) => toPost(d.data())), profiles, threadsSync });
   }
   return NextResponse.json({ error: "Missing candidateId or page" }, { status: 400 });
 }
