@@ -5,7 +5,7 @@ import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import cloudinary from "@/lib/cloudinary";
 import { adminDb } from "@/lib/firebase-admin";
 import {
-  REEL_TIMING, SOCIAL_POSTS, bersemiLines, buildCard, describeChoices, findPage, helloLines, sakinahLines,
+  REEL_TIMING, SOCIAL_POSTS, bersemiLines, buildCard, lenteraLines, describeChoices, findPage, helloLines, sakinahLines,
   type CardContent, type FieldChoices, type FigureChoice, type PostFormat, type SocialPageKey,
 } from "@/lib/social";
 import { figureSvg, iconSvg, type Figure } from "@/lib/social-figures";
@@ -181,6 +181,14 @@ const BERSEMI_FIGURE_FILES: Record<Figure, string> = {
   man_peci_beard: path.join(process.cwd(), "public", "social-figures", "bersemi", "man-peci-beard.png"),
   woman: path.join(process.cwd(), "public", "social-figures", "bersemi", "woman.png"),
   hijab: path.join(process.cwd(), "public", "social-figures", "bersemi", "hijab.png"),
+};
+// Painted ink for @temu_chindo, standing in its moon gate
+const LENTERA_FIGURE_FILES: Record<Figure, string> = {
+  man: path.join(process.cwd(), "public", "social-figures", "lentera", "man.png"),
+  man_peci: path.join(process.cwd(), "public", "social-figures", "lentera", "man-peci.png"),
+  man_peci_beard: path.join(process.cwd(), "public", "social-figures", "lentera", "man-peci-beard.png"),
+  woman: path.join(process.cwd(), "public", "social-figures", "lentera", "woman.png"),
+  hijab: path.join(process.cwd(), "public", "social-figures", "lentera", "hijab.png"),
 };
 const figureCache = new Map<string, string>();
 
@@ -649,6 +657,123 @@ async function renderBersemi(card: CardContent, slide: "intro" | "profile"): Pro
   );
 }
 
+/* ── "lentera" template: @temu_chindo. Red lacquer and gold: the silhouette stands in a gold moon gate, the code is
+   pressed into a gold seal, and the profile is laid out as tiles inside a gold frame. ── */
+const LT = {
+  lacquerTop: "#A8231F", lacquerBottom: "#741015", cream: "#FBEFD9", muted: "rgba(251,239,217,0.7)", gold: "#E3B861",
+  tile: "rgba(60,4,8,0.28)", line: "rgba(227,184,97,0.45)", mistTop: "#FCEFD8", mistBottom: "#EFC79A",
+};
+
+async function renderLentera(card: CardContent, slide: "intro" | "profile"): Promise<ImageResponse> {
+  const { greeting, big, sub } = lenteraLines(card);
+  const [prefix, serial] = card.code.split("-");
+  const sans = `@${card.page.handle}${card.code}${greeting.toUpperCase()}${sub}${card.rows.map((r) => r.label.toUpperCase()).join("")}PROFILgeser untuk lihat profil→Kirim DM dengan kode ini·`;
+  const serif = `${big}${sub}${card.intro}${card.rows.map((r) => r.value).join("")}“”Tertarik kenalan?${prefix}${serial}`;
+  const [medium, bold, display] = await Promise.all([
+    googleFont("Manrope", "wght@500", sans), googleFont("Manrope", "wght@700", sans),
+    googleFont("Noto+Serif+Display", "wght@600", serif),
+  ]);
+  const fonts = [
+    medium && { name: "Manrope", data: medium, weight: 500 as const, style: "normal" as const },
+    bold && { name: "Manrope", data: bold, weight: 700 as const, style: "normal" as const },
+    display && { name: "Noto Serif Display", data: display, weight: 600 as const, style: "normal" as const },
+  ].filter(Boolean) as { name: string; data: ArrayBuffer; weight: 500 | 600 | 700; style: "normal" }[];
+
+  // The code as a square chop: prefix over serial, ivory on vermilion
+  const seal = (size: number) => (
+    <div style={{ display: "flex", flexShrink: 0, padding: size * 0.06, width: size, height: size, borderRadius: size * 0.1, background: LT.gold }}>
+      <div style={{ display: "flex", flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center", borderRadius: size * 0.05, border: `${Math.max(2, Math.round(size * 0.018))}px solid rgba(116,16,21,0.55)` }}>
+        <div style={{ display: "flex", fontFamily: "Noto Serif Display", fontSize: size * 0.28, fontWeight: 600, lineHeight: 1, color: LT.lacquerBottom }}>{prefix}</div>
+        <div style={{ display: "flex", marginTop: size * 0.05, fontFamily: "Noto Serif Display", fontSize: size * 0.2, fontWeight: 600, letterSpacing: size * 0.015, lineHeight: 1, color: LT.lacquerBottom }}>{serial}</div>
+      </div>
+    </div>
+  );
+  const header = (
+    <div style={{ position: "absolute", top: 70, left: 80, width: 920, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ display: "flex", fontSize: 28, fontWeight: 700, color: LT.cream }}>@{card.page.handle}</div>
+      {seal(96)}
+    </div>
+  );
+
+  // The moon gate: a round doorway with a thick ink frame, mist inside, the figure standing in it
+  const gate = { cx: 540, cy: 1010, r: 370, frame: 24 };
+  const fig = { width: 520, height: 624 };
+  const bigSize = big.length <= 9 ? 150 : big.length <= 14 ? 112 : 84;
+  const intro = (
+    <>
+      <div style={{ position: "absolute", left: gate.cx - gate.r - 46, top: gate.cy - gate.r - 46, width: (gate.r + 46) * 2, height: (gate.r + 46) * 2, display: "flex", borderRadius: 9999, border: `2px solid ${LT.line}` }} />
+      <div style={{ position: "absolute", left: gate.cx - gate.r, top: gate.cy - gate.r, width: gate.r * 2, height: gate.r * 2, display: "flex", overflow: "hidden", borderRadius: 9999, border: `${gate.frame}px solid ${LT.gold}`, backgroundImage: `linear-gradient(180deg, ${LT.mistTop} 0%, ${LT.mistBottom} 100%)` }}>
+        {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+        <img src={await figureImage(card.figure, LENTERA_FIGURE_FILES)} width={fig.width} height={fig.height} style={{ position: "absolute", left: gate.r - gate.frame - fig.width / 2 + 16, top: CARD_SIZE.height - (gate.cy - gate.r) - gate.frame - fig.height }} />
+      </div>
+      <div style={{ position: "absolute", left: 60, width: 960, top: 200, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div style={{ display: "flex", fontSize: 26, fontWeight: 700, letterSpacing: 9, color: LT.gold }}>{greeting.toUpperCase()}</div>
+        <div style={{ display: "flex", marginTop: 10, fontFamily: "Noto Serif Display", fontSize: bigSize, fontWeight: 600, letterSpacing: -bigSize / 50, lineHeight: 1.05, color: LT.cream }}>{big}</div>
+        {sub && (
+          <div style={{ display: "flex", alignItems: "center", marginTop: 14 }}>
+            <div style={{ display: "flex", width: 56, height: 2, background: LT.gold }} />
+            <div style={{ display: "flex", margin: "0 22px", fontSize: 40, fontWeight: 500, color: LT.cream }}>{sub}</div>
+            <div style={{ display: "flex", width: 56, height: 2, background: LT.gold }} />
+          </div>
+        )}
+        <div style={{ display: "flex", marginTop: 22, fontSize: 25, fontWeight: 500, color: LT.muted }}>geser untuk lihat profil →</div>
+      </div>
+    </>
+  );
+
+  // Two tiles a row; everything switched on must fit, so the tiles tighten as they grow
+  const rows = card.rows.filter((r) => r.value !== big);
+  const tileRows = Math.ceil(rows.length / 2) + (card.intro ? 1 : 0);
+  const value = tileRows > 4 ? 36 : tileRows > 3 ? 40 : 46;
+  const pad = tileRows > 4 ? 20 : tileRows > 3 ? 24 : 30;
+  const profile = (
+    <>
+      <div style={{ position: "absolute", left: 80, width: 920, top: 150, bottom: 290, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ display: "flex", fontSize: 24, fontWeight: 700, letterSpacing: 9, color: LT.gold }}>PROFIL</div>
+          {sub && !card.name && <div style={{ display: "flex", marginLeft: 8, fontSize: 27, fontWeight: 500, color: LT.muted }}>·  {sub}</div>}
+        </div>
+        <div style={{ display: "flex", marginTop: 6, fontFamily: "Noto Serif Display", fontSize: big.length > 14 ? 70 : 92, fontWeight: 600, letterSpacing: -2, lineHeight: 1.08, color: LT.cream }}>{big}</div>
+        <div style={{ display: "flex", flexDirection: "column", width: 920, marginTop: 34 }}>
+          {Array.from({ length: Math.ceil(rows.length / 2) }, (_, i) => rows.slice(i * 2, i * 2 + 2)).map((pair) => (
+            <div key={pair[0].key} style={{ display: "flex", marginBottom: 24 }}>
+              {pair.map((row, j) => (
+                <div key={row.key} style={{ display: "flex", flexDirection: "column", flex: 1, marginLeft: j ? 24 : 0, padding: `${pad}px 30px`, borderRadius: 22, background: LT.tile }}>
+                  <div style={{ display: "flex", fontSize: 19, fontWeight: 700, letterSpacing: 4, color: LT.gold }}>{row.label.toUpperCase()}</div>
+                  <div style={{ display: "flex", marginTop: 8, fontFamily: "Noto Serif Display", fontSize: value, fontWeight: 600, lineHeight: 1.15, color: LT.cream }}>{row.value}</div>
+                </div>
+              ))}
+            </div>
+          ))}
+          {card.intro && (
+            <div style={{ display: "flex", width: 920, padding: `${pad}px 34px`, borderRadius: 22, border: `2px solid ${LT.line}`, fontFamily: "Noto Serif Display", fontSize: value - 6, fontWeight: 600, lineHeight: 1.3, color: LT.cream }}>
+              “{card.intro}”
+            </div>
+          )}
+        </div>
+      </div>
+      <div style={{ position: "absolute", left: 80, width: 920, bottom: 70, display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 30, borderTop: `2px solid ${LT.line}` }}>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <div style={{ display: "flex", fontFamily: "Noto Serif Display", fontSize: 54, fontWeight: 600, color: LT.cream }}>Tertarik kenalan?</div>
+          <div style={{ display: "flex", marginTop: 6, fontSize: 29, fontWeight: 500, color: LT.muted }}>Kirim DM dengan kode ini</div>
+        </div>
+        {seal(150)}
+      </div>
+    </>
+  );
+
+  return new ImageResponse(
+    (
+      <div style={{ width: "100%", height: "100%", display: "flex", position: "relative", overflow: "hidden", fontFamily: "Manrope", backgroundImage: `linear-gradient(170deg, ${LT.lacquerTop} 0%, ${LT.lacquerBottom} 100%)` }}>
+        <div style={{ position: "absolute", left: 32, top: 32, right: 32, bottom: 32, display: "flex", border: `2px solid ${LT.line}`, borderRadius: 6 }} />
+        {slide === "intro" ? intro : profile}
+        {slide === "intro" ? header : <div style={{ position: "absolute", top: 70, left: 80, display: "flex", fontSize: 28, fontWeight: 700, color: LT.cream }}>@{card.page.handle}</div>}
+      </div>
+    ),
+    { ...CARD_SIZE, fonts },
+  );
+}
+
 /* ── Reels: the design's parts laid over a plain background video on Cloudinary, each fading in on its own ── */
 export const REEL_SIZE = { width: 1080, height: 1920 };
 type ReelDesign = {
@@ -751,6 +876,8 @@ export async function renderSlides(card: CardContent, format: PostFormat = "caro
           ? await Promise.all([renderMahligai(card, "intro"), renderMahligai(card, "profile")])
           : card.template === "bersemi"
             ? await Promise.all([renderBersemi(card, "intro"), renderBersemi(card, "profile")])
+          : card.template === "lentera"
+            ? await Promise.all([renderLentera(card, "intro"), renderLentera(card, "profile")])
         : [await renderClassic(card)];
   return Promise.all(images.map((image) => image.arrayBuffer()));
 }

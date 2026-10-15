@@ -13,7 +13,8 @@ export type SocialLang = "id" | "en";
 // "sakinah": the @taaruf_sekarang Canva look, sage fading to navy, "Hallo, saya dari …" intro slide plus a profile slide.
 // "mahligai": the @poligami.indonesia look, light and modern with front-facing figures; rosewood for women, midnight blue for men.
 // "bersemi": the @nikah_lagiyuk look, a sunrise on cream paper: the silhouette stands against a rising sun, the profile is a ledger.
-export type TemplateKey = "classic" | "hello" | "sakinah" | "mahligai" | "bersemi";
+// "lentera": the @temu_chindo look, red lacquer and gold: the silhouette stands in a gold moon gate, the code sits in a gold seal.
+export type TemplateKey = "classic" | "hello" | "sakinah" | "mahligai" | "bersemi" | "lentera";
 // A swipeable image post, or a short 9:16 video (pages whose template has a Reel design)
 export type PostFormat = "carousel" | "reel";
 // How long each template's Reel runs, and the second its intro gives way to the profile
@@ -40,7 +41,7 @@ export const SOCIAL_PAGES: {
   { key: "nikahin_foreigner", handle: "nikahin_foreigner", label: "WNI & WNA", accent: "#761410", template: "hello", lang: "en", connected: true, hashtags: "#nikahbedanegara #mixedmarriage #internationalmarriage #cariJodoh #perkenalan", codePrefix: "NF", reel: true },
   { key: "nikah_lagiyuk", handle: "nikah_lagiyuk", label: "Janda / duda", accent: "#C8502F", template: "bersemi", lang: "id", connected: true, hashtags: "#nikahlagi #jandaduda #mulailagi #cariJodoh #perkenalan", codePrefix: "NL" },
   { key: "taaruf_sekarang", handle: "taaruf_sekarang", label: "Muslim", accent: "#3E5A4C", template: "sakinah", lang: "id", connected: true, hashtags: "#cariJodohMuslim #nikahsyari #perkenalan", codePrefix: "TS", reel: true },
-  { key: "temu_chindo", handle: "temu_chindo", label: "Chindo", accent: "#B4232C", template: "classic", lang: "id", connected: false, hashtags: "#chindo #cariJodoh #perkenalan", codePrefix: "TC" },
+  { key: "temu_chindo", handle: "temu_chindo", label: "Chindo", accent: "#B4232C", template: "lentera", lang: "id", connected: true, hashtags: "#chindo #cariJodoh #perkenalan", codePrefix: "TC" },
   { key: "kristenmatch", handle: "kristenmatch.indo", label: "Kristen", accent: "#1D4E89", template: "classic", lang: "id", connected: false, hashtags: "#jodohkristen #cariJodoh #perkenalan", codePrefix: "KM" },
   { key: "poligami_indonesia", handle: "poligami.indonesia", label: "Poligami Indonesia", accent: "#6B4A2B", template: "mahligai", lang: "id", connected: true, hashtags: "#poligami #nikahsyari #cariJodoh #perkenalan", codePrefix: "PI" },
 ];
@@ -154,6 +155,11 @@ const TEMPLATE_FIELDS: Record<TemplateKey, [SocialFieldKey, FieldMode][]> = {
     ["name", "hide"], ["age", "show"], ["city", "show"], ["marital", "show"], ["children", "show"], ["occupation", "show"],
     ["education", "show"], ["religion", "show"], ["ethnicity", "hide"], ["height", "hide"], ["plan", "custom"], ["intro", "custom"],
   ],
+  // Everyone on the page is Chindo, so ethnicity stays off; faith matters here (Kristen, Katolik, Buddha, Konghucu…), and so does height
+  lentera: [
+    ["name", "hide"], ["age", "show"], ["city", "show"], ["religion", "show"], ["marital", "show"], ["occupation", "show"],
+    ["education", "show"], ["height", "show"], ["ethnicity", "hide"], ["children", "hide"], ["plan", "custom"], ["intro", "custom"],
+  ],
 };
 // Words a template uses on the card instead of the usual label
 const CARD_LABELS: Partial<Record<TemplateKey, Partial<Record<SocialFieldKey, string>>>> = {
@@ -167,6 +173,7 @@ const NOT_ROWS: Record<TemplateKey, SocialFieldKey[]> = {
   sakinah: ["name", "from", "age"],
   mahligai: ["name", "from", "age"],
   bersemi: ["name", "from", "age"],
+  lentera: ["name", "from", "age"],
 };
 
 export const fieldsFor = (pageKey: SocialPageKey) => {
@@ -301,8 +308,29 @@ export function bersemiLines(card: CardContent) {
   return { greeting: greeting.replace("Hallo", "Halo"), big, sub: sub.replace(/Tahun/g, "tahun") };
 }
 
+// The words on the intro slide of the "lentera" template: "Kenalan yuk / Surabaya / 29 tahun"
+export function lenteraLines(card: CardContent) {
+  const city = card.rows.find((r) => r.key === "city")?.value ?? "";
+  const age = card.age.replace(/tahun/i, "tahun");
+  if (card.name) return { greeting: "Kenalan yuk", big: card.name, sub: [age, city].filter(Boolean).join(" · ") };
+  return { greeting: "Kenalan yuk", big: city || "Salam kenal", sub: age };
+}
+
 export function defaultCaption(pageKey: SocialPageKey, card: CardContent) {
   const page = findPage(pageKey)!;
+  if (page.template === "lentera") {
+    const { big, sub } = lenteraLines(card);
+    return [
+      `Kenalan yuk 🏮 ${big}${sub ? `, ${sub}` : ""}`,
+      "",
+      ...card.rows.map((r) => `▪️ ${r.label}: ${r.value}`),
+      ...(card.intro ? ["", `"${card.intro}"`] : []),
+      "",
+      `Tertarik kenalan? Kirim DM dengan kode ${card.code} ya.`,
+      "",
+      page.hashtags,
+    ].join("\n");
+  }
   if (page.template === "bersemi") {
     const { greeting, big, sub } = bersemiLines(card);
     return [
