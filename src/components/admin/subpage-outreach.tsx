@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CalendarClock, Check, ChevronDown, Copy, ExternalLink, Instagram, Loader2, Mail, Undo2 } from "lucide-react";
+import { CalendarClock, Check, ChevronDown, Copy, Globe, Instagram, Loader2, Mail, Phone, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { authFetch } from "@/components/admin/share-api";
@@ -103,6 +103,7 @@ export default function SubpageOutreach({ accountKey, lang }: { accountKey: Outr
             <div key={item.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border bg-amber-50/60 px-4 py-2.5 text-sm" style={{ borderColor: "#FDE68A" }}>
               <span><b style={{ color: C.text }}>{item.organization || item.name}</b> <span style={{ color: C.label }}>· {t("terkirim", "sent")} {item.outreach.sentAt?.slice(0, 10)}</span></span>
               {canOpenMitra && <a href="/admin/mitra" className="text-xs font-bold" style={{ color: C.navy }}>{t("Catat di Mitra", "Log on Mitra")}</a>}
+              <div className="w-full"><ContactRow item={item} lang={lang} /></div>
             </div>
           ))}
         </Section>
@@ -118,12 +119,16 @@ export default function SubpageOutreach({ accountKey, lang }: { accountKey: Outr
                   <details key={item.id} className="group rounded-xl border bg-white" style={{ borderColor: C.border }}>
                     <summary className="flex cursor-pointer list-none items-center gap-2 px-4 py-2.5 text-sm">
                       <ChannelIcon channel={item.outreach.channel} />
-                      <span className="min-w-0 flex-1 truncate font-semibold" style={{ color: C.text }}>{item.organization || item.name}</span>
+                      <span className="min-w-0 flex-1 truncate font-semibold" style={{ color: C.text }}>
+                        {item.organization || item.name}
+                        <span className="font-normal" style={{ color: C.muted }}> · {item.outreach.channel === "email" ? item.email : `@${item.instagram}`}</span>
+                      </span>
                       <ChevronDown className="h-4 w-4 shrink-0 text-slate-400 transition-transform group-open:rotate-180" />
                     </summary>
-                    <div className="border-t px-4 py-3" style={{ borderColor: C.border }}>
+                    <div className="space-y-2 border-t px-4 py-3" style={{ borderColor: C.border }}>
+                      <ContactRow item={item} lang={lang} />
                       <p className="text-xs" style={{ color: C.body }}>{item.reason}</p>
-                      <pre className="mt-2 whitespace-pre-wrap rounded-lg bg-slate-50 p-3 font-sans text-[13px]" style={{ color: C.body }}>{item.outreach.message}</pre>
+                      <pre className="whitespace-pre-wrap rounded-lg bg-slate-50 p-3 font-sans text-[13px]" style={{ color: C.body }}>{item.outreach.message}</pre>
                     </div>
                   </details>
                 ))}
@@ -137,6 +142,7 @@ export default function SubpageOutreach({ accountKey, lang }: { accountKey: Outr
         <Section title={t("Sudah terkirim", "Sent")}>
           {sent.map((item) => (
             <div key={item.id} className="flex flex-wrap items-center gap-2 rounded-xl border bg-white px-4 py-2.5 text-sm" style={{ borderColor: C.border }}>
+              <div className="w-full"><ContactRow item={item} lang={lang} /></div>
               <Check className="h-4 w-4 text-emerald-600" />
               <span className="min-w-0 flex-1 truncate"><b style={{ color: C.text }}>{item.organization || item.name}</b>
                 <span style={{ color: C.muted }}> · {item.outreach.sentAt?.slice(0, 10)} · {item.outreach.sentBy} · {item.stage}</span></span>
@@ -161,6 +167,42 @@ function Section({ title, empty, children }: { title: string; empty?: string; ch
   );
 }
 
+/* Every way to reach them, as links. The planned channel comes first and is highlighted; the phone is shown
+   for a call only, since a first message never goes out on WhatsApp. */
+function ContactRow({ item, lang }: { item: OutreachItem; lang: "id" | "en" }) {
+  const t = (id: string, en: string) => (lang === "id" ? id : en);
+  const email = item.outreach.channel === "email";
+  const pill = "inline-flex max-w-full items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-bold";
+  const main = { borderColor: "#1B3A6B", background: "#1B3A6B", color: "white" };
+  const other = { borderColor: C.border, color: C.navy };
+  const site = item.website && !item.website.includes(" ") ? (/^https?:\/\//.test(item.website) ? item.website : `https://${item.website}`) : "";
+  const links = [
+    item.instagram && (
+      <a key="ig" href={instagramUrl(item.instagram)} target="_blank" rel="noopener noreferrer" className={pill} style={email ? other : main}>
+        <Instagram className="h-3.5 w-3.5 shrink-0" /><span className="truncate">{t("Buka profil", "Open profile")} @{item.instagram}</span>
+      </a>
+    ),
+    item.email && (
+      <a key="em" href={email ? `mailto:${item.email}?subject=${encodeURIComponent(item.outreach.subject)}&body=${encodeURIComponent(item.outreach.message)}` : `mailto:${item.email}`}
+        className={pill} style={email ? main : other}>
+        <Mail className="h-3.5 w-3.5 shrink-0" /><span className="truncate">{item.email}</span>
+      </a>
+    ),
+    site && (
+      <a key="web" href={site} target="_blank" rel="noopener noreferrer" className={pill} style={other}>
+        <Globe className="h-3.5 w-3.5 shrink-0" /><span className="truncate">{item.website.replace(/^https?:\/\//, "")}</span>
+      </a>
+    ),
+    item.phone && (
+      <a key="ph" href={`tel:${item.phone.replace(/[^\d+]/g, "")}`} className={pill} style={other} title={t("Untuk telepon saja, bukan WhatsApp", "For a call only, not WhatsApp")}>
+        <Phone className="h-3.5 w-3.5 shrink-0" /><span className="truncate">{item.phone}</span>
+      </a>
+    ),
+  ].filter(Boolean);
+  if (!links.length) return <p className="text-xs font-semibold text-rose-600">{t("Belum ada kontak — cek di halaman Mitra.", "No contact saved — check the Mitra page.")}</p>;
+  return <div className="flex flex-wrap gap-1.5">{links}</div>;
+}
+
 function ChannelIcon({ channel }: { channel: "instagram" | "email" }) {
   return channel === "email" ? <Mail className="h-4 w-4 shrink-0 text-sky-600" /> : <Instagram className="h-4 w-4 shrink-0 text-pink-600" />;
 }
@@ -179,7 +221,6 @@ function OutreachCard({ item, today, lang, busy, accent, onSent, onMove, moveLab
       toast.error(t("Gagal menyalin", "Couldn't copy"));
     }
   };
-  const mailto = `mailto:${item.email}?subject=${encodeURIComponent(outreach.subject)}&body=${encodeURIComponent(outreach.message)}`;
 
   return (
     <div className="overflow-hidden rounded-2xl border bg-white" style={{ borderColor: C.border }}>
@@ -193,11 +234,9 @@ function OutreachCard({ item, today, lang, busy, accent, onSent, onMove, moveLab
             {outreach.day < today && <span className="font-bold text-rose-600"> · {t("terlambat", "overdue")} ({outreach.day})</span>}
           </p>
         </div>
-        {email
-          ? <a href={mailto} className="inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-bold" style={{ borderColor: C.border, color: C.navy }}><Mail className="h-3.5 w-3.5" />{item.email}</a>
-          : <a href={instagramUrl(item.instagram)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-bold" style={{ borderColor: C.border, color: C.navy }}><ExternalLink className="h-3.5 w-3.5" />@{item.instagram}</a>}
       </div>
       <div className="space-y-3 px-4 py-3">
+        <ContactRow item={item} lang={lang} />
         <details>
           <summary className="cursor-pointer text-xs font-bold" style={{ color: C.label }}>{t("Kenapa mereka", "Why them")}</summary>
           <p className="mt-1 whitespace-pre-line text-xs" style={{ color: C.body }}>{item.reason}{item.notes ? `\n\n${item.notes}` : ""}</p>

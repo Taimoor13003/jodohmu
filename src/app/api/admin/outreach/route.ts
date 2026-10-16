@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
       if (!outreach) return [];
       return [{
         id: doc.id, name: str(d.name), organization: str(d.organization), city: str(d.city), instagram: str(d.instagram),
-        email: str(d.email), phone: str(d.phone), reason: str(d.reason), notes: str(d.notes), stage: str(d.stage) || "prospect",
+        email: str(d.email), phone: str(d.phone), website: str(d.website), reason: str(d.reason), notes: str(d.notes), stage: str(d.stage) || "prospect",
         followUpDate: d.followUpDate ?? null, outreach,
       }];
     });

@@ -159,7 +159,7 @@ export type MitraOutreach = {
 
 // One row of an account's outreach queue on Subpages
 export type OutreachItem = {
-  id: string; name: string; organization: string; city: string; instagram: string; email: string; phone: string;
+  id: string; name: string; organization: string; city: string; instagram: string; email: string; phone: string; website: string;
   reason: string; notes: string; stage: string; followUpDate: string | null; outreach: MitraOutreach;
 };
 
