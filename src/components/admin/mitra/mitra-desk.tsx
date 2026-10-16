@@ -10,6 +10,7 @@ import {
 import { callDeskFetch, formatDay, telLink, useL, waLink } from "@/components/admin/calldesk/shared";
 import { Tile } from "@/components/admin/calldesk/insights";
 import { MitraBoard } from "./mitra-board";
+import { findSocialAccount } from "@/lib/social-accounts";
 import { useLanguage } from "@/context/LanguageContext";
 
 const input = "h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-800";
@@ -454,6 +455,15 @@ export function MitraDesk() {
                               <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">{l({ id: "Kenapa ada di daftar", en: "Why they're here" })}</p>
                               <p className="mt-0.5 whitespace-pre-line text-xs text-slate-700">{p.reason}</p>
                             </div>
+                          )}
+                          {p.outreach && (
+                            <p className="mt-3 rounded-lg bg-sky-50/70 px-3 py-2 text-xs text-slate-700">
+                              <span className="font-bold text-sky-800">Outreach · @{findSocialAccount(p.outreach.account)?.handle ?? p.outreach.account}</span>
+                              {" · "}{p.outreach.channel === "email" ? "Email" : "Instagram DM"}
+                              {" · "}{p.outreach.sentAt
+                                ? `${l({ id: "terkirim", en: "sent" })} ${formatDay(p.outreach.sentAt.slice(0, 10), lang)} (${p.outreach.sentBy})`
+                                : `${l({ id: "dijadwalkan", en: "planned for" })} ${formatDay(p.outreach.day, lang)}`}
+                            </p>
                           )}
                           {p.nextAction && (
                             <div className="mt-3 rounded-lg bg-rose-50/60 px-3 py-2">

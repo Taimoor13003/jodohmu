@@ -5,7 +5,7 @@ import { isDay, jakartaDay } from "@/lib/calldesk";
 import { requireMitra } from "@/lib/calldesk-server";
 import {
   MITRA_CHANNELS, MITRA_FACILITATOR, MITRA_FAITHS, MITRA_PROSPECTS, MITRA_SOURCES, MITRA_STAGES, MITRA_TYPES,
-  type MitraLogEntry, type MitraProspect,
+  toOutreach, type MitraLogEntry, type MitraProspect,
 } from "@/lib/mitra";
 
 const clean = (value: unknown, max: number) => (typeof value === "string" ? value.trim().slice(0, max) : "");
@@ -46,6 +46,7 @@ const toProspect = (id: string, d: DocumentData): MitraProspect => ({
   createdAt: iso(d.createdAt),
   createdBy: str(d.createdBy),
   log: Array.isArray(d.log) ? d.log : [],
+  outreach: toOutreach(d.outreach),
 });
 
 // Fields shared by create and edit

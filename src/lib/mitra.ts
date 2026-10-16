@@ -133,6 +133,60 @@ export type MitraProspect = {
   createdAt: string | null;
   createdBy: string;
   log: MitraLogEntry[];
+  // The first message, sent by hand from one of our accounts on a planned day (see OUTREACH_ACCOUNTS)
+  outreach: MitraOutreach | null;
+};
+
+/* Outreach: each prospect is written to by one of our accounts only, never by two, so nobody gets the same pitch
+   twice. The CRM only prepares the message and the day; a person sends it by hand from the Instagram app or their
+   email, because Instagram doesn't let a business start a DM through its API and automated DMs get accounts blocked. */
+export const OUTREACH_ACCOUNTS = ["jodohmu", "taaruf_sekarang", "nikahin_foreigner", "temu_chindo", "nikah_lagiyuk", "kristenmatch", "poligami_indonesia"] as const;
+export type OutreachAccount = (typeof OUTREACH_ACCOUNTS)[number];
+export const isOutreachAccount = (value: unknown): value is OutreachAccount =>
+  typeof value === "string" && (OUTREACH_ACCOUNTS as readonly string[]).includes(value);
+
+export type MitraOutreach = {
+  account: OutreachAccount;
+  channel: "instagram" | "email";
+  // The Jakarta day it is planned for
+  day: string;
+  // Only for email
+  subject: string;
+  message: string;
+  sentAt: string | null;
+  sentBy: string;
+};
+
+// One row of an account's outreach queue on Subpages
+export type OutreachItem = {
+  id: string; name: string; organization: string; city: string; instagram: string; email: string; phone: string;
+  reason: string; notes: string; stage: string; followUpDate: string | null; outreach: MitraOutreach;
+};
+
+// Reads the stored outreach plan; anything malformed counts as no plan
+export const toOutreach = (value: unknown): MitraOutreach | null => {
+  const o = value as Record<string, unknown> | null | undefined;
+  if (!o || !isOutreachAccount(o.account) || typeof o.day !== "string" || typeof o.message !== "string") return null;
+  return {
+    account: o.account,
+    channel: o.channel === "email" ? "email" : "instagram",
+    day: o.day,
+    subject: typeof o.subject === "string" ? o.subject : "",
+    message: o.message,
+    sentAt: typeof o.sentAt === "string" ? o.sentAt : null,
+    sentBy: typeof o.sentBy === "string" ? o.sentBy : "",
+  };
+};
+
+// Nobody works on Sunday, so outreach and its follow-ups never land on one
+export const nextWorkday = (day: string, after = 1) => {
+  const date = new Date(`${day}T00:00:00Z`);
+  let left = after;
+  while (left > 0) {
+    date.setUTCDate(date.getUTCDate() + 1);
+    if (date.getUTCDay() !== 0) left--;
+  }
+  return date.toISOString().slice(0, 10);
 };
 
 export const instagramUrl = (handle: string) => `https://www.instagram.com/${handle.replace(/^@/, "").trim()}/`;
