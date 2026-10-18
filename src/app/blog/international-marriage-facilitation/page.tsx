@@ -8,7 +8,7 @@ const image = `${siteUrl}/images/blog/international-marriage-indonesia-hero.png`
 const datePublished = "2026-08-18";
 
 export const metadata: Metadata = {
-  title: "How to Marry an Indonesian Partner | International Matchmaking | Jodohmu",
+  title: "How to Marry an Indonesian Partner | International Matchmaking",
   description: "Discover Jodohmu's personal international matchmaking service for foreign nationals seeking an Indonesian spouse: paid discovery, Safar and Amanah packages, verification, ta'aruf, and meetings in Indonesia.",
   keywords: ["international matchmaking Indonesia", "marry Indonesian", "international ta'aruf", "Safar package", "Amanah package", "cross-border marriage"],
   alternates: { canonical: articleUrl },

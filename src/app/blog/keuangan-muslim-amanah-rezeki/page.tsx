@@ -8,7 +8,7 @@ const image = siteUrl + "/images/blog/muslim-finance-hero-v1.png";
 const datePublished = "2026-08-27";
 
 export const metadata: Metadata = {
-  title: "Keuangan Muslim: Rezeki, Kekayaan, dan Amanah | Jodohmu",
+  title: "Keuangan Muslim: Rezeki, Kekayaan, dan Amanah",
   description: "Apakah Muslim harus mengejar kekayaan atau memilih hidup sederhana? Panduan reflektif tentang rezeki, usaha halal, kedermawanan, dan amanah harta.",
   keywords: ["keuangan Muslim", "rezeki", "harta dalam Islam", "usaha halal", "zakat", "sedekah", "keuangan keluarga Muslim"],
   alternates: { canonical: articleUrl },

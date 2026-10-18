@@ -9,7 +9,7 @@ const dateModified = "2026-08-01";
 const articleUrl = `${siteUrl}/blog/joble-jodohmu-table`;
 
 export const metadata: Metadata = {
-  title: "Joble: A Planned Meeting for Marriage | Jodohmu",
+  title: "Joble: A Planned Meeting for Marriage",
   description: "Learn how a Joble works: a private, marriage-focused meeting with a format, guests, facilitator, and food that fit your Jodohmu package.",
   openGraph: {
     title: "Joble: A Planned Meeting for Marriage | Jodohmu",
