@@ -8,6 +8,7 @@ export type BlogPost = {
 };
 
 export const blogPosts: BlogPost[] = [
+  { slug: "/blog/stigma-janda-di-indonesia", articleKey: "blogArticle.stigmaJandaDiIndonesia", datePublished: "2026-10-18", dateModified: "2026-10-18", heroImage: "/images/blog/stigma-janda-hero.png", readTime: 18 },
   { slug: "/blog/keuangan-muslim-amanah-rezeki", articleKey: "blogArticle.keuanganMuslimAmanahRezeki", datePublished: "2026-08-27", dateModified: "2026-08-27", heroImage: "/images/blog/muslim-finance-hero-v1.png", readTime: 18 },
   { slug: "/blog/international-marriage-facilitation", articleKey: "blogArticle.internationalMarriageFacilitation", datePublished: "2026-08-18", dateModified: "2026-08-18", heroImage: "/images/blog/international-marriage-indonesia-hero.png", readTime: 8 },
   { slug: "/blog/registrasi-jodohmu", articleKey: "blogArticle.registrasiJodohmu", datePublished: "2026-08-06", dateModified: "2026-08-06", heroImage: "/images/blog/registrasi-jodohmu-hero-v5.png", readTime: 5 },
