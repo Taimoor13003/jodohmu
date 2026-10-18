@@ -8,7 +8,7 @@ const image = siteUrl + "/images/blog/stigma-janda-hero.png";
 const datePublished = "2026-10-18";
 
 export const metadata: Metadata = {
-  title: "Stigma Janda di Indonesia: Luka, Kenyataan, dan Jalan Menikah Lagi",
+  title: "Stigma Janda di Indonesia dan Jalan Menikah Lagi",
   description: "Mengapa kata janda begitu berat di Indonesia, mengapa banyak janda enggan menikah lagi, apa kata Al-Qur'an, Alkitab, dan sejarah, dan bagaimana kita menghidupkan kembali budaya menikah.",
   keywords: ["stigma janda", "janda", "arti janda", "janda kembang", "janda menikah lagi", "menikah lagi setelah cerai", "ibu tunggal", "janda dalam Islam", "janda dalam Alkitab"],
   alternates: { canonical: articleUrl },
