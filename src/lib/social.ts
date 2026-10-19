@@ -242,7 +242,8 @@ export function resolveField(choice: FieldChoice | undefined, auto: string, limi
    read into groups of rows plus the two long answers. Contact details, the name and the photo line are dropped:
    people reach the candidate through the page's code, never directly. */
 export type CvRow = { label: string; value: string };
-export type CvContent = { groups: CvRow[][]; criteria: string; vision: string };
+// Groups are objects, not nested lists: Firestore can't store a list inside a list
+export type CvContent = { groups: { rows: CvRow[] }[]; criteria: string; vision: string };
 
 const CV_SKIP = /^(nama|kontak|contact|no\.? ?(hp|wa|telp)|whatsapp|wa\b|email|e-mail|telp|telepon|instagram|ig\b|foto|photo)/i;
 const scrub = (v: string) => v
@@ -252,6 +253,9 @@ const scrub = (v: string) => v
   .replace(/\s+:\s*/g, " ")
   .replace(/\s+/g, " ")
   .trim();
+
+// What the blank form already says, so a line left unanswered isn't shown ("Anak ke :  dari :  bersaudara")
+const CV_FILLER = /^(dari|bersaudara|belum pernah menikah\/duda\/janda|\(jarang\/tidak\/terjaga\)|\(.*\)|\s)*$/i;
 
 export function parseCv(raw: string): CvContent | null {
   const groups: CvRow[][] = [[]];
@@ -279,13 +283,13 @@ export function parseCv(raw: string): CvContent | null {
     last = row;
   }
   const out = {
-    groups: groups.map((g) => g.map((r) => ({ ...r, value: capitalize(scrub(r.value)) })).filter((r) => r.value)).filter((g) => g.length),
+    groups: groups.map((g) => ({ rows: g.map((r) => ({ ...r, value: capitalize(scrub(r.value)) })).filter((r) => !CV_FILLER.test(r.value)) })).filter((g) => g.rows.length),
     criteria: capitalize(scrub(criteria)),
     vision: capitalize(scrub(vision)),
   };
   return out.groups.length || out.criteria || out.vision ? out : null;
 }
-const cvValue = (cv: CvContent | null, label: RegExp) => cv?.groups.flat().find((r) => label.test(r.label))?.value ?? "";
+const cvValue = (cv: CvContent | null, label: RegExp) => cv?.groups.flatMap((g) => g.rows).find((r) => label.test(r.label))?.value ?? "";
 
 export type CardRow = { key: SocialFieldKey; label: string; value: string; icon: IconKey | null };
 export type CardContent = {
@@ -421,10 +425,11 @@ export function defaultCaption(pageKey: SocialPageKey, card: CardContent) {
       `${greeting} ${big}${sub ? `, ${sub.toLowerCase()}` : ""} 👋`,
       "",
       `🌿 CV PERKENALAN · ${card.code} 🌿`,
-      "",
-      ...groups.flatMap((g, i) => [...(i ? [""] : []), ...g.map((r) => `${r.label} : ${r.value}`)]),
-      ...(criteria ? ["", `🌿 Kriteria calon : ${criteria}`] : []),
-      ...(vision ? [`${criteria ? "" : "\n"}🌿 Visi misi pernikahan : ${vision}`] : []),
+      // Only what was filled in: each group, then the long answers, a blank line between
+      ...[
+        ...groups.map((g) => g.rows.map((r) => `${r.label} : ${r.value}`).join("\n")),
+        [criteria && `🌿 Kriteria calon : ${criteria}`, vision && `🌿 Visi misi pernikahan : ${vision}`].filter(Boolean).join("\n"),
+      ].filter(Boolean).flatMap((block) => ["", block]),
       "",
       `Tertarik berkenalan? DM kami dengan kode ${card.code}, yuk!`,
       "",

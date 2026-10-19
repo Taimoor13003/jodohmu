@@ -305,7 +305,7 @@ const S = {
 
 async function sakinahFonts(card: CardContent) {
   const { greeting, big, sub } = sakinahLines(card);
-  const cvRows = card.cv?.groups.flat() ?? [];
+  const cvRows = card.cv?.groups.flatMap((g) => g.rows) ?? [];
   const labels = [...card.rows, ...cvRows].map((r) => r.label + r.label.toUpperCase()).join("")
     + (card.cv ? `${card.cv.criteria}${card.cv.vision}${CV_PARAGRAPHS.join("")}${CV_PARAGRAPHS.join("").toUpperCase()}CV PERKENALAN` : "");
   const sans = `${cvRows.map((r) => r.value).join("")}@${card.page.handle.toUpperCase()}${greeting}${greeting.toUpperCase()}${big}${sub}${sub.toUpperCase()}${labels}${card.rows.map((r) => r.value).join("")}${card.code}PROFIL PILIHANPROFILGeser untuk melihat profil→DM kami dengan kode·`;
@@ -334,7 +334,7 @@ function cvSizes(cv: NonNullable<CardContent["cv"]>, room: number) {
   for (const fs of [32, 30, 28, 26, 24, 22, 21, 20]) {
     const pad = Math.round(fs * 0.28);
     const label = Math.round(fs * 0.68);
-    const rows = cv.groups.flat().reduce((h, r) => h + Math.max(
+    const rows = cv.groups.flatMap((g) => g.rows).reduce((h, r) => h + Math.max(
       lines(r.value.length, panel - labelCol - gap, fs) * fs * 1.25,
       lines(r.label.length, labelCol, label) * label * 1.3,
     ) + 2 * pad, 0);
@@ -411,13 +411,14 @@ async function sakinahParts(card: CardContent, height: number): Promise<Record<S
       </div>
     ),
     profile: cv && cvSize ? (
-      <div key="profile" style={{ position: "absolute", top: cvTop, left: 70, right: 70, display: "flex", flexDirection: "column", alignItems: "center" }}>
+      // A short CV sits in the middle of the space rather than at its top
+      <div key="profile" style={{ position: "absolute", top: cvTop, bottom: cvCta ? ctaBottom + 170 : 80, left: 70, right: 70, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
         <div style={{ display: "flex", flexShrink: 0, fontFamily: "Cormorant", fontSize: 58, fontWeight: 600, color: S.cream, lineHeight: 1 }}>{heading}</div>
         <div style={{ ...eyebrow, flexShrink: 0, marginTop: 10, fontSize: 20, letterSpacing: 7 }}>{["CV PERKENALAN", /\d/.test(heading) ? "" : sub.toUpperCase()].filter(Boolean).join("  ·  ")}</div>
         <div style={{ display: "flex", flexShrink: 0, flexDirection: "column", width: "100%", marginTop: 26, padding: "24px 44px", background: S.cream, borderRadius: 24 }}>
           {cv.groups.map((group, g) => (
             <div key={g} style={{ display: "flex", flexDirection: "column", ...(g ? { marginTop: cvSize.fs * 0.45, paddingTop: cvSize.fs * 0.45, borderTop: `1.5px solid ${S.line}` } : {}) }}>
-              {group.map((row, i) => (
+              {group.rows.map((row, i) => (
                 <div key={i} style={{ display: "flex", alignItems: "flex-start", padding: `${cvSize.pad}px 0` }}>
                   <div style={{ display: "flex", flexShrink: 0, width: cvSize.labelCol, marginRight: cvSize.gap, marginTop: (cvSize.fs - cvSize.label) * 0.55, fontSize: cvSize.label, fontWeight: 500, letterSpacing: 1.5, lineHeight: 1.3, color: S.muted }}>{row.label.toUpperCase()}</div>
                   <div style={{ display: "flex", flex: 1, fontSize: cvSize.fs, fontWeight: 400, color: S.ink, lineHeight: 1.25 }}>{row.value}</div>
@@ -426,7 +427,7 @@ async function sakinahParts(card: CardContent, height: number): Promise<Record<S
             </div>
           ))}
           {[cv.criteria, cv.vision].map((body, i) => body && (
-            <div key={`p${i}`} style={{ display: "flex", flexDirection: "column", marginTop: cvSize.fs * 0.45, paddingTop: cvSize.fs * 0.45, borderTop: `1.5px solid ${S.line}` }}>
+            <div key={`p${i}`} style={{ display: "flex", flexDirection: "column", ...(cv.groups.length || (i && cv.criteria) ? { marginTop: cvSize.fs * 0.45, paddingTop: cvSize.fs * 0.45, borderTop: `1.5px solid ${S.line}` } : {}) }}>
               <div style={{ display: "flex", fontSize: cvSize.label, fontWeight: 500, letterSpacing: 1.5, color: S.gold }}>{CV_PARAGRAPHS[i].toUpperCase()}</div>
               <div style={{ display: "flex", marginTop: cvSize.label * 0.5, fontSize: cvSize.fs, fontWeight: 400, color: S.ink, lineHeight: 1.3 }}>{body}</div>
             </div>
