@@ -20,7 +20,8 @@ export type PostFormat = "carousel" | "reel";
 // How long each template's Reel runs, and the second its intro gives way to the profile
 export const REEL_TIMING: Partial<Record<TemplateKey, { seconds: number; cut: number }>> = {
   hello: { seconds: 14, cut: 7 },
-  sakinah: { seconds: 12, cut: 6 },
+  // The profile is a full CV, so it gets most of the time
+  sakinah: { seconds: 12, cut: 4 },
 };
 
 export const SOCIAL_PAGES: {
@@ -124,6 +125,8 @@ export const FIELD_DEFS = {
   // Not in the profile yet, so it is only ever typed in
   plan: { label: { id: "Rencana menikah", en: "Marriage plan" }, cardLabel: { id: "Rencana Menikah", en: "Marriage plan" }, icon: null },
   intro: { label: { id: "Kalimat singkat", en: "Short intro" }, cardLabel: { id: "", en: "" }, icon: null },
+  // The candidate's filled-in CV form, pasted whole; it becomes the profile page and the caption (see parseCv)
+  cv: { label: { id: "CV perkenalan (tempel formulir)", en: "Introduction CV (paste the form)" }, cardLabel: { id: "", en: "" }, icon: null },
 } satisfies Record<string, { label: Bi; cardLabel: Bi; icon: IconKey | null }>;
 export type SocialFieldKey = keyof typeof FIELD_DEFS;
 export type FieldMode = "show" | "custom" | "hide";
@@ -143,7 +146,7 @@ const TEMPLATE_FIELDS: Record<TemplateKey, [SocialFieldKey, FieldMode][]> = {
   ],
   // Mirrors the Canva template: intro slide "Hallo, saya dari Jakarta / 41 Tahun", then Domisili, Status, Lulusan, Pekerjaan, Suku, Rencana Menikah
   sakinah: [
-    ["name", "hide"], ["age", "show"], ["city", "show"], ["marital", "show"], ["education", "show"], ["occupation", "show"],
+    ["cv", "custom"], ["name", "hide"], ["age", "show"], ["city", "show"], ["marital", "show"], ["education", "show"], ["occupation", "show"],
     ["ethnicity", "show"], ["plan", "custom"], ["religion", "hide"], ["height", "hide"], ["intro", "custom"],
   ],
   mahligai: [
@@ -223,13 +226,66 @@ export function autoValues(p: Profile, lang: SocialLang = "id"): Record<SocialFi
     children,
     plan: "",
     intro: "",
+    cv: "",
   };
 }
 
-export function resolveField(choice: FieldChoice | undefined, auto: string) {
+// How much can be typed into a detail; the CV is a whole form
+export const customLimit = (key: SocialFieldKey) => (key === "cv" ? 2000 : 140);
+
+export function resolveField(choice: FieldChoice | undefined, auto: string, limit = 140) {
   if (!choice || choice.mode === "hide") return "";
-  return choice.mode === "custom" ? choice.custom.trim().slice(0, 140) : auto;
+  return choice.mode === "custom" ? choice.custom.trim().slice(0, limit) : auto;
 }
+
+/* The CV form candidates fill in ("Domisili/asal : Bandung", one detail a line, blank lines between groups),
+   read into groups of rows plus the two long answers. Contact details, the name and the photo line are dropped:
+   people reach the candidate through the page's code, never directly. */
+export type CvRow = { label: string; value: string };
+export type CvContent = { groups: CvRow[][]; criteria: string; vision: string };
+
+const CV_SKIP = /^(nama|kontak|contact|no\.? ?(hp|wa|telp)|whatsapp|wa\b|email|e-mail|telp|telepon|instagram|ig\b|foto|photo)/i;
+const scrub = (v: string) => v
+  .replace(/\S+@\S+\.\S+/g, "")
+  .replace(/(\+?\d[\d\s-]{8,}\d)/g, "")
+  .replace(/https?:\/\/\S+/g, "")
+  .replace(/\s+:\s*/g, " ")
+  .replace(/\s+/g, " ")
+  .trim();
+
+export function parseCv(raw: string): CvContent | null {
+  const groups: CvRow[][] = [[]];
+  let criteria = "", vision = "";
+  // Where a line without a colon continues: the last row, or one of the long answers
+  let last: CvRow | "criteria" | "vision" | null = null;
+  for (const line of raw.split(/\r?\n/)) {
+    // Leading emoji and bullets ("🍉 Kriteria calon :")
+    const clean = line.replace(/^[^A-Za-z0-9\u00C0-\u024F]+/, "").trim();
+    if (!clean) { if (groups[groups.length - 1].length) groups.push([]); last = null; continue; }
+    if (/^cv\b/i.test(clean) || CV_SKIP.test(clean)) { last = null; continue; }
+    const at = clean.indexOf(":");
+    if (at < 0) {
+      if (last === "criteria") criteria += ` ${clean}`;
+      else if (last === "vision") vision += ` ${clean}`;
+      else if (last) last.value += ` ${clean}`;
+      continue;
+    }
+    const label = clean.slice(0, at).replace(/\s+/g, " ").trim();
+    const value = clean.slice(at + 1).trim();
+    if (/kr[ie]+teria/i.test(label)) { criteria = value; last = "criteria"; continue; }
+    if (/^(visi|misi)/i.test(label)) { vision = value; last = "vision"; continue; }
+    const row = { label: capitalize(label), value };
+    groups[groups.length - 1].push(row);
+    last = row;
+  }
+  const out = {
+    groups: groups.map((g) => g.map((r) => ({ ...r, value: capitalize(scrub(r.value)) })).filter((r) => r.value)).filter((g) => g.length),
+    criteria: capitalize(scrub(criteria)),
+    vision: capitalize(scrub(vision)),
+  };
+  return out.groups.length || out.criteria || out.vision ? out : null;
+}
+const cvValue = (cv: CvContent | null, label: RegExp) => cv?.groups.flat().find((r) => label.test(r.label))?.value ?? "";
 
 export type CardRow = { key: SocialFieldKey; label: string; value: string; icon: IconKey | null };
 export type CardContent = {
@@ -244,6 +300,8 @@ export type CardContent = {
   intro: string;
   figure: Figure;
   rows: CardRow[];
+  // The pasted CV, which then is the whole profile page (templates that offer it)
+  cv?: CvContent | null;
 };
 
 // Short, stable reference for a profile, so people can ask about it without a name.
@@ -265,12 +323,23 @@ const rowIcon = (key: SocialFieldKey, value: string, profile: Profile): IconKey 
 export function buildCard(pageKey: SocialPageKey, candidateId: string, profile: Profile, choices: FieldChoices, figure: FigureChoice = "auto"): CardContent {
   const page = findPage(pageKey)!;
   const auto = autoValues(profile, page.lang);
-  const value = (key: SocialFieldKey) => resolveField(choices[key], auto[key]);
+  const value = (key: SocialFieldKey) => resolveField(choices[key], auto[key], customLimit(key));
   // The intro slide's words (name, "from", and for some templates age) are not rows
   const rows = fieldsFor(pageKey)
     .filter((f) => f.cardLabel[page.lang] && !NOT_ROWS[page.template].includes(f.key))
     .map((f) => ({ key: f.key, label: f.cardLabel[page.lang], value: value(f.key), icon: rowIcon(f.key, value(f.key), profile) }))
     .filter((r) => r.value);
+  const cv = fieldsFor(pageKey).some((f) => f.key === "cv") ? parseCv(value("cv")) : null;
+  // The intro slide's city and age follow the CV: it is what the candidate wrote most recently
+  const cvCity = cvValue(cv, /domisili/i).split(/[/,]/)[0].trim();
+  if (cvCity && choices.city?.mode !== "hide") {
+    const city = { key: "city" as const, label: "Domisili", value: titleCase(cvCity), icon: "pin" as const };
+    const at = rows.findIndex((r) => r.key === "city");
+    if (at >= 0) rows[at] = city; else rows.push(city);
+  }
+  // "2000/26" or "26 tahun": the last two-digit number
+  const cvAge = Array.from(cvValue(cv, /umur|usia/i).matchAll(/\b(1[89]|[2-7]\d)\b/g)).pop()?.[1];
+  const age = cvAge && choices.age?.mode !== "hide" ? `${cvAge} tahun` : value("age");
   return {
     template: page.template,
     lang: page.lang,
@@ -278,11 +347,12 @@ export function buildCard(pageKey: SocialPageKey, candidateId: string, profile: 
     code: profileCode(candidateId, pageKey),
     title: value("headline") || "Profil pilihan",
     name: value("name"),
-    age: value("age"),
+    age,
     from: value("from"),
     intro: value("intro"),
     figure: figure === "auto" ? figureFor(profile) : figure,
     rows,
+    cv,
   };
 }
 
@@ -340,6 +410,23 @@ export function defaultCaption(pageKey: SocialPageKey, card: CardContent) {
       ...(card.intro ? ["", `"${card.intro}"`] : []),
       "",
       `Mau kenal lebih dekat? DM kami dan sebut kode ${card.code}.`,
+      "",
+      page.hashtags,
+    ].join("\n");
+  }
+  if (page.template === "sakinah" && card.cv) {
+    const { greeting, big, sub } = sakinahLines(card);
+    const { groups, criteria, vision } = card.cv;
+    return [
+      `${greeting} ${big}${sub ? `, ${sub.toLowerCase()}` : ""} 👋`,
+      "",
+      `🌿 CV PERKENALAN · ${card.code} 🌿`,
+      "",
+      ...groups.flatMap((g, i) => [...(i ? [""] : []), ...g.map((r) => `${r.label} : ${r.value}`)]),
+      ...(criteria ? ["", `🌿 Kriteria calon : ${criteria}`] : []),
+      ...(vision ? [`${criteria ? "" : "\n"}🌿 Visi misi pernikahan : ${vision}`] : []),
+      "",
+      `Tertarik berkenalan? DM kami dengan kode ${card.code}, yuk!`,
       "",
       page.hashtags,
     ].join("\n");

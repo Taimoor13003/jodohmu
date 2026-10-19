@@ -305,8 +305,10 @@ const S = {
 
 async function sakinahFonts(card: CardContent) {
   const { greeting, big, sub } = sakinahLines(card);
-  const labels = card.rows.map((r) => r.label + r.label.toUpperCase()).join("");
-  const sans = `@${card.page.handle.toUpperCase()}${greeting}${greeting.toUpperCase()}${big}${sub}${sub.toUpperCase()}${labels}${card.rows.map((r) => r.value).join("")}${card.code}PROFIL PILIHANPROFILGeser untuk melihat profil→DM kami dengan kode·`;
+  const cvRows = card.cv?.groups.flat() ?? [];
+  const labels = [...card.rows, ...cvRows].map((r) => r.label + r.label.toUpperCase()).join("")
+    + (card.cv ? `${card.cv.criteria}${card.cv.vision}${CV_PARAGRAPHS.join("")}${CV_PARAGRAPHS.join("").toUpperCase()}CV PERKENALAN` : "");
+  const sans = `${cvRows.map((r) => r.value).join("")}@${card.page.handle.toUpperCase()}${greeting}${greeting.toUpperCase()}${big}${sub}${sub.toUpperCase()}${labels}${card.rows.map((r) => r.value).join("")}${card.code}PROFIL PILIHANPROFILGeser untuk melihat profil→DM kami dengan kode·`;
   const serif = `${big}${card.name}${card.intro}“”Info lebih lanjut?`;
   const [regular, medium, display, displayItalic] = await Promise.all([
     googleFont("Jost", "wght@400", sans), googleFont("Jost", "wght@500", sans),
@@ -321,6 +323,28 @@ async function sakinahFonts(card: CardContent) {
 }
 
 const eyebrow = { display: "flex", fontSize: 24, fontWeight: 500, letterSpacing: 6, color: S.gold } as const;
+const CV_PARAGRAPHS = ["Kriteria calon", "Visi misi pernikahan"];
+
+/* The CV page: every detail of the form in one cream panel, so the type is sized to what was written.
+   Satori can't measure text, so lines are estimated from the characters (Jost averages about half an em wide). */
+function cvSizes(cv: NonNullable<CardContent["cv"]>, room: number) {
+  const panel = 1080 - 2 * 70 - 2 * 44, labelCol = 250, gap = 22;
+  const lines = (chars: number, width: number, fs: number) => Math.max(1, Math.ceil((chars * fs * 0.52) / width));
+  const paragraphs = [cv.criteria, cv.vision].filter(Boolean);
+  for (const fs of [32, 30, 28, 26, 24, 22, 21, 20]) {
+    const pad = Math.round(fs * 0.28);
+    const label = Math.round(fs * 0.68);
+    const rows = cv.groups.flat().reduce((h, r) => h + Math.max(
+      lines(r.value.length, panel - labelCol - gap, fs) * fs * 1.25,
+      lines(r.label.length, labelCol, label) * label * 1.3,
+    ) + 2 * pad, 0);
+    const groupGaps = (cv.groups.length - 1) * fs * 0.9;
+    const paras = paragraphs.reduce((h, t) => h + fs * 0.9 + label * 1.6 + lines(t.length, panel, fs) * fs * 1.3, 0);
+    // Rendered lines run taller than the estimate, so leave a fifth spare
+    if ((rows + groupGaps + paras + 48) * 1.2 <= room) return { fs, pad, label, labelCol, gap };
+  }
+  return { fs: 20, pad: 5, label: 14, labelCol, gap };
+}
 type SakinahPart = "header" | "introArt" | "introText" | "hint" | "profile" | "cta";
 
 // Every part of the design, placed for a canvas of the given height (the 4:5 layout sits centred on a 9:16 one)
@@ -337,10 +361,19 @@ async function sakinahParts(card: CardContent, height: number): Promise<Record<S
   const n = card.rows.length + (card.intro ? 2 : 0);
   const value = n > 8 ? 32 : n > 6 ? 35 : 38;
   const pad = n > 8 ? 15 : n > 6 ? 19 : 24;
+  // A CV fills the page, so on the tall Reel canvas it uses the height the 4:5 layout leaves empty
+  const cv = card.cv ?? null;
+  const tall = Boolean(cv) && dy > 0;
+  const headerTop = tall ? 180 : 82 + dy;
+  const ctaBottom = tall ? 250 : 88 + dy;
+  const cvTop = headerTop + 64;
+  // The 4:5 slide has no room for the button under a CV; the code is in the header and the caption
+  const cvCta = tall;
+  const cvSize = cv ? cvSizes(cv, height - cvTop - 115 - (cvCta ? ctaBottom + 170 : 80)) : null;
 
   return {
     header: (
-      <div key="header" style={{ position: "absolute", top: 82 + dy, left: 90, right: 90, display: "flex", justifyContent: "space-between" }}>
+      <div key="header" style={{ position: "absolute", top: headerTop, left: 90, right: 90, display: "flex", justifyContent: "space-between" }}>
         <div style={eyebrow}>@{card.page.handle.toUpperCase()}</div>
         <div style={eyebrow}>{card.code}</div>
       </div>
@@ -377,7 +410,30 @@ async function sakinahParts(card: CardContent, height: number): Promise<Record<S
         Geser untuk melihat profil →
       </div>
     ),
-    profile: (
+    profile: cv && cvSize ? (
+      <div key="profile" style={{ position: "absolute", top: cvTop, left: 70, right: 70, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <div style={{ display: "flex", flexShrink: 0, fontFamily: "Cormorant", fontSize: 58, fontWeight: 600, color: S.cream, lineHeight: 1 }}>{heading}</div>
+        <div style={{ ...eyebrow, flexShrink: 0, marginTop: 10, fontSize: 20, letterSpacing: 7 }}>{["CV PERKENALAN", /\d/.test(heading) ? "" : sub.toUpperCase()].filter(Boolean).join("  ·  ")}</div>
+        <div style={{ display: "flex", flexShrink: 0, flexDirection: "column", width: "100%", marginTop: 26, padding: "24px 44px", background: S.cream, borderRadius: 24 }}>
+          {cv.groups.map((group, g) => (
+            <div key={g} style={{ display: "flex", flexDirection: "column", ...(g ? { marginTop: cvSize.fs * 0.45, paddingTop: cvSize.fs * 0.45, borderTop: `1.5px solid ${S.line}` } : {}) }}>
+              {group.map((row, i) => (
+                <div key={i} style={{ display: "flex", alignItems: "flex-start", padding: `${cvSize.pad}px 0` }}>
+                  <div style={{ display: "flex", flexShrink: 0, width: cvSize.labelCol, marginRight: cvSize.gap, marginTop: (cvSize.fs - cvSize.label) * 0.55, fontSize: cvSize.label, fontWeight: 500, letterSpacing: 1.5, lineHeight: 1.3, color: S.muted }}>{row.label.toUpperCase()}</div>
+                  <div style={{ display: "flex", flex: 1, fontSize: cvSize.fs, fontWeight: 400, color: S.ink, lineHeight: 1.25 }}>{row.value}</div>
+                </div>
+              ))}
+            </div>
+          ))}
+          {[cv.criteria, cv.vision].map((body, i) => body && (
+            <div key={`p${i}`} style={{ display: "flex", flexDirection: "column", marginTop: cvSize.fs * 0.45, paddingTop: cvSize.fs * 0.45, borderTop: `1.5px solid ${S.line}` }}>
+              <div style={{ display: "flex", fontSize: cvSize.label, fontWeight: 500, letterSpacing: 1.5, color: S.gold }}>{CV_PARAGRAPHS[i].toUpperCase()}</div>
+              <div style={{ display: "flex", marginTop: cvSize.label * 0.5, fontSize: cvSize.fs, fontWeight: 400, color: S.ink, lineHeight: 1.3 }}>{body}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ) : (
       <div key="profile" style={{ position: "absolute", top: 168 + dy, left: 90, right: 90, display: "flex", flexDirection: "column", alignItems: "center" }}>
         <div style={{ ...eyebrow, flexShrink: 0, letterSpacing: 8 }}>{above}</div>
         <div style={{ display: "flex", flexShrink: 0, marginTop: 8, fontFamily: /\d/.test(heading) ? "Jost" : "Cormorant", fontSize: heading.length > 18 ? 66 : 84, fontWeight: 600, color: S.cream, lineHeight: 1.05, textAlign: "center" }}>{heading}</div>
@@ -396,8 +452,8 @@ async function sakinahParts(card: CardContent, height: number): Promise<Record<S
         </div>
       </div>
     ),
-    cta: (
-      <div key="cta" style={{ position: "absolute", bottom: 88 + dy, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center" }}>
+    cta: cv && !cvCta ? null : (
+      <div key="cta" style={{ position: "absolute", bottom: ctaBottom, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center" }}>
         <div style={{ display: "flex", flexShrink: 0, fontFamily: "Cormorant", fontStyle: "italic", fontWeight: 500, fontSize: 50, color: S.cream }}>Info lebih lanjut?</div>
         <div style={{ display: "flex", flexShrink: 0, alignItems: "center", marginTop: 14 }}>
           <div style={{ display: "flex", fontSize: 28, fontWeight: 400, letterSpacing: 1, color: S.sage }}>DM kami dengan kode</div>
@@ -800,7 +856,7 @@ const REELS: Partial<Record<CardContent["template"], ReelDesign>> = {
   },
   sakinah: {
     video: "social-reels/base/sakinah-v1", still: "social-reels/base/sakinah-bg-v1",
-    timeline: [["introArt", 0, 1000], ["introText", 0.8, 900], ["background", 5.6, 600], ["header", 0, 600], ["profile", 6.0, 700], ["cta", 6.8, 800]],
+    timeline: [["introArt", 0, 900], ["introText", 0.6, 800], ["background", 3.6, 600], ["header", 0, 600], ["profile", 4.0, 700], ["cta", 4.8, 800]],
     stills: [["header", "introArt", "introText"], ["header", "profile", "cta"]],
     render: (card, parts, bare) => renderSakinah(card, parts as SakinahPart[], { height: REEL_SIZE.height, bare }),
   },

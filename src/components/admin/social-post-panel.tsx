@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { AlertTriangle, CheckCircle2, ExternalLink, Instagram, Loader2, RotateCcw, Send, X } from "lucide-react";
 import {
-  SOCIAL_PAGES, autoValues, buildCard, defaultCaption, defaultChoices, fieldsFor, figureFor, formatsFor, hasFigure, reelTiming, slideCount, suggestPages,
+  SOCIAL_PAGES, autoValues, buildCard, customLimit, defaultCaption, defaultChoices, fieldsFor, figureFor, formatsFor, hasFigure, reelTiming, slideCount, suggestPages,
   type FieldChoices, type FieldMode, type FigureChoice, type PostFormat, type SocialFieldKey, type SocialPageKey,
 } from "@/lib/social";
 import { FIGURES, type Figure } from "@/lib/social-figures";
@@ -239,13 +239,13 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
                 {fields.map((f) => {
                   const choice = choices[f.key];
                   return (
-                    <div key={f.key} className="flex flex-col gap-2 px-3 py-2.5 sm:flex-row sm:items-center">
+                    <div key={f.key} className={`flex flex-col gap-2 px-3 py-2.5 sm:flex-row sm:items-center ${f.key === "cv" ? "sm:flex-wrap" : ""}`}>
                       <div className="min-w-0 flex-1">
                         <p className="text-[13px] font-semibold" style={{ color: C.text }}>{lang === "id" ? f.label.id : f.label.en}</p>
-                        <p className="truncate text-[11px]" style={{ color: C.muted }}>{auto[f.key] || t("(kosong di profil)", "(empty in profile)")}</p>
+                        <p className="truncate text-[11px]" style={{ color: C.muted }}>{f.key === "cv" ? t("Jadi halaman profil dan caption", "Becomes the profile page and the caption") : auto[f.key] || t("(kosong di profil)", "(empty in profile)")}</p>
                       </div>
                       <div className="flex shrink-0 rounded-lg border p-0.5" style={{ borderColor: C.border }}>
-                        {(["show", "custom", "hide"] as FieldMode[]).map((m) => (
+                        {((f.key === "cv" ? ["custom", "hide"] : ["show", "custom", "hide"]) as FieldMode[]).map((m) => (
                           <button key={m} type="button" onClick={() => setChoice(f.key, { mode: m })}
                             className="rounded-md px-2.5 py-1 text-[11px] font-bold"
                             style={choice.mode === m ? { background: m === "hide" ? "#475569" : C.navy, color: "white" } : { color: C.label }}>
@@ -253,7 +253,12 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
                           </button>
                         ))}
                       </div>
-                      {choice.mode === "custom" && (
+                      {choice.mode === "custom" && f.key === "cv" && (
+                        <textarea value={choice.custom} maxLength={customLimit("cv")} rows={10} onChange={(e) => setChoice(f.key, { custom: e.target.value })}
+                          placeholder={t("Tempel CV yang diisi kandidat (Domisili/asal : …, Hobi : …). Nama, kontak dan foto otomatis tidak ditampilkan.", "Paste the CV the candidate filled in (Domisili/asal : …, Hobi : …). Name, contact details and photo are left out automatically.")}
+                          className="w-full rounded-lg border p-2 text-[12px] leading-relaxed sm:basis-full" style={{ borderColor: C.border }} />
+                      )}
+                      {choice.mode === "custom" && f.key !== "cv" && (
                         <input value={choice.custom} maxLength={140} onChange={(e) => setChoice(f.key, { custom: e.target.value })}
                           placeholder={f.key === "name" ? t("mis. nama samaran", "e.g. a nickname") : f.key === "intro" ? t("mis. Mencari pasangan yang sabar dan jujur", "e.g. Looking for someone patient and honest") : f.key === "plan" ? t("mis. Dalam waktu dekat", "e.g. Dalam waktu dekat") : auto[f.key]}
                           className="h-8 w-full rounded-lg border px-2 text-[13px] sm:w-56" style={{ borderColor: C.border }} />

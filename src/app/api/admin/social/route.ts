@@ -3,7 +3,7 @@ import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import { adminDb } from "@/lib/firebase-admin";
 import { requireSocial } from "@/lib/social-access";
 import {
-  SOCIAL_POSTS, buildCard, defaultChoices, fieldsFor, findPage, formatsFor,
+  SOCIAL_POSTS, buildCard, customLimit, defaultChoices, fieldsFor, findPage, formatsFor,
   type FieldChoices, type FieldMode, type FigureChoice, type PostFormat, type SocialPageKey,
 } from "@/lib/social";
 import { PostError, createPost, finishPost, mediaExists, metaToken, renderSlides } from "@/lib/social-server";
@@ -27,7 +27,7 @@ function cleanChoices(pageKey: SocialPageKey, input: unknown): FieldChoices {
     if (!c) continue;
     out[f.key] = {
       mode: MODES.includes(c.mode as FieldMode) ? (c.mode as FieldMode) : f.defaultMode,
-      custom: typeof c.custom === "string" ? c.custom.slice(0, 140) : "",
+      custom: typeof c.custom === "string" ? c.custom.slice(0, customLimit(f.key)) : "",
     };
   }
   return out;
