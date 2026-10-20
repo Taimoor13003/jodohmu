@@ -41,6 +41,8 @@ const amanah = [
   "2 psychology assessments + 2 background checks",
   "1 family gathering",
   "4 Joble meetings in Indonesia",
+  "1-hour consultation with a marriage lawyer",
+  "Premarital health check for both of you",
 ];
 
 const steps = [
@@ -377,7 +379,7 @@ export default function InternationalPricingPage() {
               >
                 Enquire about Amanah
               </a>
-              <p className="mt-4 text-center text-xs leading-5 text-white/65">Travel, visas, accommodation, legal services, and third-party professional fees are not included.</p>
+              <p className="mt-4 text-center text-xs leading-5 text-white/65">Travel, visas, accommodation, notary and further legal work, and other third-party professional fees are not included.</p>
             </div>
           </div>
 
