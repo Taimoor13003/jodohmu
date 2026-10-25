@@ -23,17 +23,17 @@ import { Globe, Menu, X } from "lucide-react";
 
 export function Header() {
   const { user, loading } = useAuth();
-  const { lang, setLang, t } = useLanguage();
+  const { lang, setLang, t, localize } = useLanguage();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const pathname = usePathname();
 
   const navLinkClass = (href: string) =>
-    pathname === href
+    pathname === localize(href)
       ? "inline-flex items-center gap-1.5 rounded-full border border-[#9B2242]/40 bg-[#9B2242]/10 px-3 py-2 text-sm font-semibold text-[#9B2242] shadow-sm shadow-[#9B2242]/15 transition-all duration-200"
       : "inline-flex items-center gap-1.5 rounded-full border border-[#0b3a86]/15 bg-white/80 px-3 py-2 text-sm font-semibold text-[#0b3a86] shadow-sm shadow-[#0b3a86]/10 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#9B2242]/40 hover:text-[#9B2242] hover:shadow-md hover:shadow-[#9B2242]/15";
 
   const mobileNavLinkClass = (href: string) =>
-    pathname === href
+    pathname === localize(href)
       ? "rounded-xl border border-[#9B2242]/30 bg-[#9B2242]/8 px-4 py-3 text-sm font-semibold text-[#9B2242] transition-colors"
       : "rounded-xl border border-[#0b3a86]/10 px-4 py-3 text-sm font-semibold text-[#0b3a86] hover:border-[#9B2242]/30 hover:text-[#9B2242] transition-colors";
 
@@ -51,7 +51,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 h-20 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70 shadow-sm border-b">
       <div className="container mx-auto flex h-full items-center px-4 relative">
-        <Link className="flex items-center justify-center" href="/">
+        <Link className="flex items-center justify-center" href={localize("/")}>
           <Image
             src={LogoIcon}
             alt="Jodohmu"
@@ -60,16 +60,16 @@ export function Header() {
           />
         </Link>
         <nav className="ml-auto hidden items-center gap-2 sm:gap-3 sm:flex" aria-label="Primary">
-          <Link href="/blog" className={navLinkClass("/blog")}>
+          <Link href={localize("/blog")} className={navLinkClass("/blog")}>
             {t("header.blog")}
           </Link>
-          <Link href="/pricing" className={navLinkClass("/pricing")}>
+          <Link href={localize("/pricing")} className={navLinkClass("/pricing")}>
             {t("header.pricing")}
           </Link>
-          <Link href="/faq" className={navLinkClass("/faq")}>
+          <Link href={localize("/faq")} className={navLinkClass("/faq")}>
             {t("header.faq")}
           </Link>
-          <Link href="/careers" className={navLinkClass("/careers")}>
+          <Link href={localize("/careers")} className={navLinkClass("/careers")}>
             {t("header.careers")}
           </Link>
           <DropdownMenu>
@@ -197,16 +197,16 @@ export function Header() {
             aria-label="Primary mobile"
           >
             <div className="flex flex-col gap-2">
-              <Link href="/blog" className={mobileNavLinkClass("/blog")} onClick={() => setIsMobileOpen(false)}>
+              <Link href={localize("/blog")} className={mobileNavLinkClass("/blog")} onClick={() => setIsMobileOpen(false)}>
                 {t("header.blog")}
               </Link>
-              <Link href="/pricing" className={mobileNavLinkClass("/pricing")} onClick={() => setIsMobileOpen(false)}>
+              <Link href={localize("/pricing")} className={mobileNavLinkClass("/pricing")} onClick={() => setIsMobileOpen(false)}>
                 {t("header.pricing")}
               </Link>
-              <Link href="/faq" className={mobileNavLinkClass("/faq")} onClick={() => setIsMobileOpen(false)}>
+              <Link href={localize("/faq")} className={mobileNavLinkClass("/faq")} onClick={() => setIsMobileOpen(false)}>
                 {t("header.faq")}
               </Link>
-              <Link href="/careers" className={mobileNavLinkClass("/careers")} onClick={() => setIsMobileOpen(false)}>
+              <Link href={localize("/careers")} className={mobileNavLinkClass("/careers")} onClick={() => setIsMobileOpen(false)}>
                 {t("header.careers")}
               </Link>
             </div>

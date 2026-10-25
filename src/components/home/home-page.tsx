@@ -25,7 +25,7 @@ const OfficeLocationMap = dynamic(
 );
 
 export default function HomePage() {
-  const { t } = useLanguage();
+  const { t, lang, localize } = useLanguage();
 
   const featureCards = [
     {
@@ -196,7 +196,7 @@ export default function HomePage() {
                     size="lg"
                     className="rounded-full border-white/70 bg-white/10 px-10 py-6 text-lg font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white/20"
                   >
-                    <Link href="/contact" onClick={() => analytics.ctaClick('hero_contact', 'home')}>{t("homepage.hero.secondaryCta")}</Link>
+                    <Link href={localize("/contact")} onClick={() => analytics.ctaClick('hero_contact', 'home')}>{t("homepage.hero.secondaryCta")}</Link>
                   </Button>
                 </div>
               </motion.div>
@@ -679,13 +679,13 @@ export default function HomePage() {
         <div className="w-full border-y border-[#0b3a86]/10 bg-[#f5f8ff] py-3">
           <div className="container flex flex-wrap items-center justify-center gap-3 text-center sm:justify-between">
             <p className="text-sm font-semibold text-[#0b3a86]">
-              🌙 We are hiring — 3 open positions
+              {lang === "id" ? "🌙 Kami sedang merekrut — 3 posisi terbuka" : "🌙 We are hiring — 3 open positions"}
             </p>
             <Link
-              href="/careers"
+              href={localize("/careers")}
               className="shrink-0 rounded-full border border-[#0b3a86]/30 bg-white px-4 py-1.5 text-xs font-bold text-[#0b3a86] shadow-sm transition-colors hover:border-[#9B2242]/40 hover:text-[#9B2242]"
             >
-              View Roles →
+              {lang === "id" ? "Lihat Posisi →" : "View Roles →"}
             </Link>
           </div>
         </div>

@@ -27,8 +27,12 @@ import { analytics } from "@/lib/analytics";
 const phoneHref = "tel:+628138858595";
 const whatsappBase = "https://wa.me/628138858595";
 
-const packageWhatsappHref = (name: string) =>
-  `${whatsappBase}?text=${encodeURIComponent(`Halo, saya tertarik dengan paket ${name} dari Jodohmu. Saya ingin menjadwalkan panggilan untuk membahasnya.`)}`;
+const packageWhatsappHref = (name: string, lang: "id" | "en") =>
+  `${whatsappBase}?text=${encodeURIComponent(
+    lang === "id"
+      ? `Halo, saya tertarik dengan paket ${name} dari Jodohmu. Saya ingin menjadwalkan panggilan untuk membahasnya.`
+      : `Hello, I'm interested in Jodohmu's ${name} package. I'd like to schedule a call to discuss it.`
+  )}`;
 
 type PkgConfig = {
   key: "awal" | "serius" | "istimewa";
@@ -50,7 +54,7 @@ const packageBlogHref: Record<PkgConfig["key"], string> = {
 };
 
 export function PricingPage() {
-  const { t, lang } = useLanguage();
+  const { t, lang, localize } = useLanguage();
   const router = useRouter();
   const id = lang === "id";
   const l = (idText: string, enText: string) => (id ? idText : enText);
@@ -171,7 +175,7 @@ export function PricingPage() {
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild className="h-[52px] rounded-full bg-[#d92f63] px-7 text-base font-bold text-white shadow-[0_14px_35px_rgba(217,47,99,.25)] hover:bg-[#bf2454]">
-                <Link href={callbackWhatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.whatsappClick("hero_callback")}>
+                <Link href={callbackWhatsappHref} target="_blank" rel="noopener noreferrer" data-wa-source="hero_callback">
                   <MessageCircle className="mr-2 h-4 w-4" />
                   {l("Mulai via WhatsApp", "Start on WhatsApp")}
                 </Link>
@@ -184,7 +188,7 @@ export function PricingPage() {
               <Headphones className="h-4 w-4 text-[#2f68cc]" />
               {l("Panggilan awal gratis, tanpa kewajiban membeli paket.", "The first call is free, with no obligation to purchase.")}
             </p>
-            <Link href="/plan-your-jodohmu-way" className="mt-4 inline-flex items-center gap-2 text-sm font-extrabold text-[#c62d5c] hover:underline">
+            <Link href={localize("/plan-your-jodohmu-way")} className="mt-4 inline-flex items-center gap-2 text-sm font-extrabold text-[#c62d5c] hover:underline">
               <SlidersHorizontal className="h-4 w-4" />
               {l("Rancang layanan Anda sendiri", "Build your own service plan")}
             </Link>
@@ -197,10 +201,10 @@ export function PricingPage() {
                 </div>
               </div>
               <div className="flex shrink-0 flex-wrap gap-2">
-                <Link href={registrationWhatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.whatsappClick("hero_registration")} className="inline-flex items-center justify-center gap-1 rounded-full bg-[#fff0f5] px-4 py-2.5 text-sm font-extrabold text-[#c62d5c] transition hover:bg-[#ffe3ec] hover:text-[#a91f4c]">
+                <Link href={registrationWhatsappHref} target="_blank" rel="noopener noreferrer" data-wa-source="hero_registration" className="inline-flex items-center justify-center gap-1 rounded-full bg-[#fff0f5] px-4 py-2.5 text-sm font-extrabold text-[#c62d5c] transition hover:bg-[#ffe3ec] hover:text-[#a91f4c]">
                   {l("Tentang registrasi", "About registration")} <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href="/blog/registrasi-jodohmu" className="inline-flex items-center justify-center gap-1 rounded-full border border-[#d8e2f4] bg-white px-4 py-2.5 text-sm font-extrabold text-[#173778] transition hover:border-[#9db8e4] hover:bg-[#f6f9ff]">
+                <Link href={localize("/blog/registrasi-jodohmu")} className="inline-flex items-center justify-center gap-1 rounded-full border border-[#d8e2f4] bg-white px-4 py-2.5 text-sm font-extrabold text-[#173778] transition hover:border-[#9db8e4] hover:bg-[#f6f9ff]">
                   {l("Pelajari lengkap", "Learn more")} <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -235,7 +239,7 @@ export function PricingPage() {
               <p className="text-center text-sm leading-6 text-[#53617d]">
                 {l("Pertemuan yang Anda rancang untuk saling mengenal dengan tujuan pernikahan.", "A meeting you design to get to know each other with marriage in mind.")}
               </p>
-              <Link href="/blog/joble-jodohmu-table" className="mt-5 flex items-center justify-center gap-2 text-sm font-bold text-[#c62d5c] hover:underline">
+              <Link href={localize("/blog/joble-jodohmu-table")} className="mt-5 flex items-center justify-center gap-2 text-sm font-bold text-[#c62d5c] hover:underline">
                 {l("Pelajari Joble", "Learn about Joble")} <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -296,7 +300,7 @@ export function PricingPage() {
                   <strong className="text-[#102457]">{l("Jika pilihan berbeda?", "If preferences differ?")}</strong>{" "}
                   {l("Tim Jodohmu menentukan format akhir yang nyaman dan aman bagi semua.", "The Jodohmu team determines a final format that is comfortable and safe for everyone.")}
                 </div>
-                <Link href="/blog/joble-jodohmu-table" className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-[#c62d5c] hover:underline">
+                <Link href={localize("/blog/joble-jodohmu-table")} className="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-[#c62d5c] hover:underline">
                   {l("Baca panduan lengkap Joble", "Read the complete Joble guide")} <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -387,7 +391,7 @@ export function PricingPage() {
               <span className="font-bold text-[#102457]">{l("Setiap paket adalah perjalanan yang didampingi.", "Every package is a guided journey.")}</span>{" "}
               {l("Verifikasi, kurasi, koordinasi Joble, dan dukungan tim sudah menjadi bagian dari proses.", "Verification, curation, Joble coordination, and team support are built into the process.")}
             </p>
-            <Link href={callbackWhatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.whatsappClick("pricing_question")} className="shrink-0 text-sm font-bold text-[#d72d62] hover:underline">{l("Tanya tim kami", "Ask our team")} →</Link>
+            <Link href={callbackWhatsappHref} target="_blank" rel="noopener noreferrer" data-wa-source="pricing_question" className="shrink-0 text-sm font-bold text-[#d72d62] hover:underline">{l("Tanya tim kami", "Ask our team")} →</Link>
           </div>
 
           <div className="mt-12 grid gap-7 lg:grid-cols-3 lg:items-stretch">
@@ -401,11 +405,11 @@ export function PricingPage() {
                   role="link"
                   tabIndex={0}
                   aria-label={l(`Baca selengkapnya tentang paket ${name}`, `Learn more about the ${name} package`)}
-                  onClick={() => router.push(packageBlogHref[pkg.key])}
+                  onClick={() => router.push(localize(packageBlogHref[pkg.key]))}
                   onKeyDown={(event) => {
                     if (event.key === "Enter" || event.key === " ") {
                       event.preventDefault();
-                      router.push(packageBlogHref[pkg.key]);
+                      router.push(localize(packageBlogHref[pkg.key]));
                     }
                   }}
                   className={`relative flex flex-col rounded-[2rem] bg-white p-7 transition-transform duration-300 hover:-translate-y-1 sm:p-8 ${
@@ -447,7 +451,7 @@ export function PricingPage() {
                   </ul>
 
                   <Button asChild className={`mt-8 h-12 w-full rounded-full text-sm font-extrabold text-white ${popular ? "bg-gradient-to-r from-[#df3268] to-[#356fd4] hover:opacity-90" : "bg-[#102457] hover:bg-[#1a3b83]"}`}>
-                    <Link href={packageWhatsappHref(name)} target="_blank" rel="noopener noreferrer" onClick={(event) => { event.stopPropagation(); analytics.whatsappClick(`package_${pkg.key}`); }}>
+                    <Link href={packageWhatsappHref(name, lang)} target="_blank" rel="noopener noreferrer" data-wa-source={`package_${pkg.key}`} onClick={(event) => event.stopPropagation()}>
                       {l("Jadwalkan Panggilan", "Schedule a Call")}
                     </Link>
                   </Button>
@@ -471,7 +475,7 @@ export function PricingPage() {
                 </div>
               </div>
               <Button asChild className="h-12 shrink-0 rounded-full bg-[#102457] px-6 font-extrabold text-white hover:bg-[#1a3b83]">
-                <Link href="/pricing/international">{l("Lihat paket internasional", "View international packages")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                <Link href={localize("/pricing/international")}>{l("Lihat paket internasional", "View international packages")} <ArrowRight className="ml-2 h-4 w-4" /></Link>
               </Button>
             </div>
           </section>
@@ -511,7 +515,7 @@ export function PricingPage() {
           </div>
           <div className="mt-9 text-center">
             <Button asChild className="h-12 rounded-full bg-[#102457] px-7 font-extrabold text-white hover:bg-[#1a3b83]">
-              <Link href={callbackWhatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.whatsappClick("process_callback")}>
+              <Link href={callbackWhatsappHref} target="_blank" rel="noopener noreferrer" data-wa-source="process_callback">
                 <MessageCircle className="mr-2 h-4 w-4" /> {l("Mulai percakapan", "Start the conversation")}
               </Link>
             </Button>
@@ -528,7 +532,7 @@ export function PricingPage() {
           </div>
           <div className="mt-8 flex shrink-0 flex-col gap-3 sm:flex-row lg:mt-0 lg:flex-col">
             <Button asChild className="h-[52px] rounded-full bg-white px-8 font-extrabold text-[#bd2857] hover:bg-[#fff4f7]">
-              <Link href={callbackWhatsappHref} target="_blank" rel="noopener noreferrer" onClick={() => analytics.whatsappClick("final_callback")}>
+              <Link href={callbackWhatsappHref} target="_blank" rel="noopener noreferrer" data-wa-source="final_callback">
                 <MessageCircle className="mr-2 h-4 w-4" /> {l("Mulai via WhatsApp", "Start on WhatsApp")}
               </Link>
             </Button>

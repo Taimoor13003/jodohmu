@@ -23,8 +23,18 @@ export function trackEvent({ action, category, label, value }: GTagEvent) {
 
 // Pre-built events for common conversions
 export const analytics = {
-  whatsappClick: (source: string) =>
-    trackEvent({ action: "whatsapp_click", category: "engagement", label: source }),
+  // Every tap that opens WhatsApp. Anchor links are caught site-wide by
+  // WhatsAppClickTracker; call this only where code opens WhatsApp (window.open).
+  whatsappClick: (source: string) => {
+    if (typeof window === "undefined" || typeof window.gtag !== "function") return;
+    window.gtag("event", "whatsapp_click", {
+      event_category: "engagement",
+      event_label: source,
+      button: source,
+      page_path: window.location.pathname,
+      page_language: window.location.pathname === "/en" || window.location.pathname.startsWith("/en/") ? "en" : "id",
+    });
+  },
 
   ctaClick: (ctaName: string, page: string) =>
     trackEvent({ action: "cta_click", category: "conversion", label: `${ctaName}_${page}` }),

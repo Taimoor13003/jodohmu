@@ -21,12 +21,17 @@ const categories: { key: string; Icon: typeof Sparkles; label: Copy; items: Faq[
     label: { id: "Tentang Jodohmu", en: "About Jodohmu" },
     items: [
       {
+        q: { id: "Apa itu Jodohmu?", en: "What is Jodohmu?" },
+        a: { id: "Jodohmu adalah jasa perjodohan yang dijalankan oleh manusia untuk lajang yang serius menikah. Seorang matchmaker mengenal Anda secara pribadi, memverifikasi setiap kandidat, lalu memfasilitasi perkenalan online dan tatap muka hingga tahap keluarga. Jodohmu terbuka untuk semua keyakinan dan melayani klien di seluruh Indonesia maupun di luar negeri.", en: "Jodohmu is a human-led matchmaking service for singles who are serious about marriage. A matchmaker gets to know you personally, verifies every candidate, and facilitates online and in-person introductions through to meeting the families. Jodohmu is open to every faith and serves clients across Indonesia and abroad." },
+        link: { href: "/blog/cara-mencari-pasangan-hidup", label: { id: "Cara mencari pasangan hidup", en: "How to find a life partner" } },
+      },
+      {
         q: { id: "Apa beda Jodohmu dengan aplikasi kencan?", en: "How is Jodohmu different from dating apps?" },
         a: { id: "Di Jodohmu tidak ada geser-geser profil. Tim kami mengenal Anda secara pribadi, memilihkan kandidat yang benar-benar serius menikah, lalu memfasilitasi setiap perkenalan — online maupun tatap muka — dengan melibatkan keluarga.", en: "There's no swiping at Jodohmu. Our team gets to know you personally, selects candidates who are genuinely serious about marriage, and facilitates every introduction — online and in person — with family involved." },
       },
       {
         q: { id: "Apakah Jodohmu hanya untuk satu agama?", en: "Is Jodohmu only for one religion?" },
-        a: { id: "Tidak. Jodohmu terbuka untuk semua keyakinan. Setiap proses menghormati nilai dan keyakinan Anda, dan pendamping dari keyakinan Anda dapat hadir sesuai permintaan.", en: "No. Jodohmu is open to all faiths. Every step respects your values and beliefs, and a facilitator from your own faith can be present on request." },
+        a: { id: "Tidak. Jodohmu terbuka untuk semua keyakinan: Islam, Kristen, Katolik, Hindu, Buddha, dan Konghucu. Setiap proses menghormati nilai dan keyakinan Anda, dan pendamping dari keyakinan Anda dapat hadir sesuai permintaan.", en: "No. Jodohmu is open to all faiths: Muslim, Christian, Catholic, Hindu, Buddhist and Confucian. Every step respects your values and beliefs, and a facilitator from your own faith can be present on request." },
       },
       {
         q: { id: "Apakah layanannya online atau tatap muka?", en: "Is the service online or in person?" },
@@ -35,6 +40,11 @@ const categories: { key: string; Icon: typeof Sparkles; label: Copy; items: Faq[
       {
         q: { id: "Apakah melayani klien dari kota lain?", en: "Do you serve clients in other cities?" },
         a: { id: "Ya. Kami melayani klien dari berbagai kota di Indonesia, dan mengatur pertemuan online atau tatap muka sesuai lokasi serta preferensi Anda.", en: "Yes. We serve clients from cities across Indonesia and arrange online or in-person meetings based on your location and preferences." },
+      },
+      {
+        q: { id: "Saya tinggal di luar negeri. Bisakah memakai Jodohmu?", en: "I live outside Indonesia. Can I use Jodohmu?" },
+        a: { id: "Bisa. Kami melayani klien internasional yang ingin bertemu pasangan Indonesia. Perkenalan dimulai secara online dengan pendampingan, lalu dilanjutkan dengan pertemuan tatap muka di Indonesia bersama keluarga.", en: "Yes. We serve international clients who want to meet an Indonesian partner. Introductions start online with guidance, then continue with in-person meetings in Indonesia with family involved." },
+        link: { href: "/pricing/international", label: { id: "Paket internasional", en: "International packages" } },
       },
     ],
   },
@@ -129,7 +139,7 @@ const categories: { key: string; Icon: typeof Sparkles; label: Copy; items: Faq[
 ];
 
 export function FaqPage() {
-  const { lang } = useLanguage();
+  const { lang, localize } = useLanguage();
   const l = (copy: Copy) => (lang === "id" ? copy.id : copy.en);
   const [activeCategory, setActiveCategory] = useState("all");
   const [query, setQuery] = useState("");
@@ -261,7 +271,7 @@ export function FaqPage() {
                           <div className="border-t border-[#f0f3f9] px-5 pb-5 pt-4 sm:px-6">
                             <p className="leading-7 text-[#53617d]">{l(item.a)}</p>
                             {item.link && (
-                              <Link href={item.link.href} className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-[#d52e62] hover:underline">
+                              <Link href={localize(item.link.href)} className="mt-3 inline-flex items-center gap-1 text-sm font-bold text-[#d52e62] hover:underline">
                                 {l(item.link.label)} <ArrowRight className="h-4 w-4" />
                               </Link>
                             )}
@@ -287,12 +297,12 @@ export function FaqPage() {
                 {l({ id: "Ceritakan kota Anda, target waktu menikah, dan apa yang Anda cari. Tim kami akan menyiapkan rencana yang sesuai untuk Anda.", en: "Tell us your city, your marriage timeline, and what you're looking for. Our team will prepare a plan that fits you." })}
               </p>
               <Button asChild className="mt-6 h-12 w-full rounded-full bg-white font-extrabold text-[#13316c] hover:bg-[#fff1f5]">
-                <Link href={`${wa}?text=${encodeURIComponent("Halo Jodohmu, saya punya pertanyaan tentang layanan Jodohmu.")}`} target="_blank" rel="noopener noreferrer">
+                <Link href={`${wa}?text=${encodeURIComponent(l({ id: "Halo Jodohmu, saya punya pertanyaan tentang layanan Jodohmu.", en: "Hello Jodohmu, I have a question about your services." }))}`} target="_blank" rel="noopener noreferrer">
                   <MessageCircle className="mr-2 h-4 w-4" />{l({ id: "Chat via WhatsApp", en: "Chat on WhatsApp" })}
                 </Link>
               </Button>
               <Button asChild variant="outline" className="mt-3 h-12 w-full rounded-full border-white/30 bg-transparent font-extrabold text-white hover:bg-white/10 hover:text-white">
-                <Link href="/register">{l({ id: "Daftar sekarang", en: "Register now" })}</Link>
+                <Link href={localize("/register")}>{l({ id: "Daftar sekarang", en: "Register now" })}</Link>
               </Button>
             </div>
             <ul className="space-y-3 border-t border-white/10 bg-white/[.04] p-7 text-sm text-white/85">
@@ -323,10 +333,10 @@ export function FaqPage() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild className="h-12 rounded-full bg-white px-6 font-extrabold text-[#9B2242] hover:bg-[#fff1f5]">
-              <Link href="/pricing">{l({ id: "Lihat paket", en: "See packages" })} <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              <Link href={localize("/pricing")}>{l({ id: "Lihat paket", en: "See packages" })} <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
             <Button asChild variant="outline" className="h-12 rounded-full border-white/40 bg-transparent px-6 font-extrabold text-white hover:bg-white/10 hover:text-white">
-              <Link href="/plan-your-jodohmu-way">{l({ id: "Rencanakan perjalanan Anda", en: "Plan your journey" })}</Link>
+              <Link href={localize("/plan-your-jodohmu-way")}>{l({ id: "Rencanakan perjalanan Anda", en: "Plan your journey" })}</Link>
             </Button>
           </div>
         </div>

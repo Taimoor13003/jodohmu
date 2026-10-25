@@ -1,6 +1,8 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { isEnglishPath, localizeHref, switchLanguagePath, toEnglishPath } from "@/lib/i18n-routes";
 
 type Language = "id" | "en";
 
@@ -8,6 +10,8 @@ interface LanguageContextType {
   lang: Language;
   setLang: (lang: Language) => void;
   t: (key: string, vars?: Record<string, string | number>) => string;
+  // Internal link for the current language: /pricing becomes /en/pricing on English pages
+  localize: (href: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -50,29 +54,49 @@ const resolveTranslation = (node: TranslationNode | undefined, segments: string[
   return typeof current === "string" ? current : undefined;
 };
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Language>("id");
+// Pages with an English twin get their language from the URL (routeLang) and
+// the switcher navigates between the two. Pages without one (dashboard, admin,
+// careers, older posts) keep the saved preference and translate in place.
+export function LanguageProvider({ children, routeLang = "id" }: { children: ReactNode; routeLang?: Language }) {
+  const pathname = usePathname() ?? "/";
+  const router = useRouter();
+  const translatesInPlace = !isEnglishPath(pathname) && !toEnglishPath(pathname);
+  const [savedLang, setSavedLang] = useState<Language>(routeLang);
 
   useEffect(() => {
-    const saved = typeof window !== "undefined" 
-      ? (localStorage.getItem("lang") as Language | null) 
-      : null;
-    const initial = saved || "id";
-    setLang(initial);
-    if (typeof document !== "undefined") {
-      document.documentElement.lang = initial;
+    if (!translatesInPlace) {
+      // Remember the language of the URL the visitor is reading, so in-place pages follow it
+      try {
+        localStorage.setItem("lang", routeLang);
+      } catch {}
+      document.documentElement.lang = routeLang;
+      return;
     }
-  }, []);
+    let saved: Language | null = null;
+    try {
+      saved = localStorage.getItem("lang") as Language | null;
+    } catch {}
+    const initial = saved === "en" || saved === "id" ? saved : routeLang;
+    setSavedLang(initial);
+    document.documentElement.lang = initial;
+  }, [translatesInPlace, routeLang]);
+
+  const lang = translatesInPlace ? savedLang : routeLang;
 
   const selectLang = (value: Language) => {
-    setLang(value);
-    if (typeof window !== "undefined") {
+    try {
       localStorage.setItem("lang", value);
-    }
-    if (typeof document !== "undefined") {
+    } catch {}
+    if (translatesInPlace) {
+      setSavedLang(value);
       document.documentElement.lang = value;
+      return;
     }
+    if (value !== routeLang) router.push(switchLanguagePath(pathname, value));
   };
+
+  // Follows the language on screen, so an in-place page showing English links back to /en
+  const localize = (href: string) => localizeHref(href, lang);
 
   // Translation function
   const t = (key: string, vars?: Record<string, string | number>): string => {
@@ -92,7 +116,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <LanguageContext.Provider value={{ lang, setLang: selectLang, t }}>
+    <LanguageContext.Provider value={{ lang, setLang: selectLang, t, localize }}>
       {children}
     </LanguageContext.Provider>
   );

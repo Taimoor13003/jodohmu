@@ -45,6 +45,27 @@ const nextConfig = {
         destination: "/:path*",
         permanent: true,
       },
+      // The English guide moved under /en when English got its own URLs.
+      {
+        source: "/blog/how-to-find-a-life-partner",
+        destination: "/en/blog/how-to-find-a-life-partner",
+        permanent: true,
+      },
+      // Oct 2026: eleven thin 2024–25 posts were merged into four full guides.
+      // Each old URL points at the guide that now covers its topic. Keep forever.
+      ...[
+        ["why-dating-apps-fail", "dating-app-vs-biro-jodoh"],
+        ["perjodohan-halal-vs-dating-app", "dating-app-vs-biro-jodoh"],
+        ["cari-jodoh-serius", "dating-app-vs-biro-jodoh"],
+        ["what-makes-taaruf-different-from-dating", "dating-app-vs-biro-jodoh"],
+        ["step-by-step-process", "cara-kerja-jodohmu"],
+        ["how-we-verify-every-candidate", "cara-kerja-jodohmu"],
+        ["how-meetings-are-supervised", "cara-kerja-jodohmu"],
+        ["syariah-safeguards", "cara-kerja-jodohmu"],
+        ["tips-taaruf-pertama", "perkenalan-pertama-dan-keluarga"],
+        ["family-involvement", "perkenalan-pertama-dan-keluarga"],
+        ["does-jodohmu-guarantee-a-match", "apakah-biro-jodoh-menjamin-jodoh"],
+      ].map(([from, to]) => ({ source: `/blog/${from}`, destination: `/blog/${to}`, permanent: true })),
     ];
   },
   async headers() {

@@ -2,12 +2,15 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Facebook, Instagram, Mail, Phone, Heart, Youtube } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 import { useLanguage } from "@/context/LanguageContext";
+import { switchLanguagePath } from "@/lib/i18n-routes";
 
 export function Footer() {
-  const { t } = useLanguage();
+  const { t, localize } = useLanguage();
+  const pathname = usePathname() ?? "/";
   const year = new Date().getFullYear();
   const phoneDisplay = t("footer.connect.phone");
   const phoneHref = phoneDisplay.replace(/\s+/g, "");
@@ -29,15 +32,15 @@ export function Footer() {
           <div className="space-y-4">
             <h3 className="font-bold text-brand-blue">{t("footer.quickLinks.title")}</h3>
             <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm font-semibold">
-              <Link href="/blog" className="hover:text-brand-rose transition-colors">{t("header.blog")}</Link>
-              <Link href="/pricing" className="hover:text-brand-rose transition-colors">{t("header.pricing")}</Link>
-              <Link href="/presentations" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.presentations")}</Link>
-              <Link href="/faq" className="hover:text-brand-rose transition-colors">{t("header.faq")}</Link>
-              <Link href="/careers" className="hover:text-brand-rose transition-colors">{t("header.careers")}</Link>
-              <Link href="/mitra" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.mitra")}</Link>
-              <Link href="/contact" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.contact")}</Link>
-              <Link href="/privacy" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.privacy")}</Link>
-              <Link href="/terms" className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.terms")}</Link>
+              <Link href={localize("/blog")} className="hover:text-brand-rose transition-colors">{t("header.blog")}</Link>
+              <Link href={localize("/pricing")} className="hover:text-brand-rose transition-colors">{t("header.pricing")}</Link>
+              <Link href={localize("/presentations")} className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.presentations")}</Link>
+              <Link href={localize("/faq")} className="hover:text-brand-rose transition-colors">{t("header.faq")}</Link>
+              <Link href={localize("/careers")} className="hover:text-brand-rose transition-colors">{t("header.careers")}</Link>
+              <Link href={localize("/mitra")} className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.mitra")}</Link>
+              <Link href={localize("/contact")} className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.contact")}</Link>
+              <Link href={localize("/privacy")} className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.privacy")}</Link>
+              <Link href={localize("/terms")} className="hover:text-brand-rose transition-colors">{t("footer.quickLinks.terms")}</Link>
             </div>
           </div>
 
@@ -93,6 +96,12 @@ export function Footer() {
             <span>•</span>
             <span>{t("footer.subfooter.rights")}</span>
           </p>
+          {/* Plain links so crawlers find each page's other-language version */}
+          <nav aria-label="Language" className="flex items-center gap-3">
+            <Link href={switchLanguagePath(pathname, "id")} hrefLang="id" className="hover:text-brand-rose transition-colors">Bahasa Indonesia</Link>
+            <span>•</span>
+            <Link href={switchLanguagePath(pathname, "en")} hrefLang="en" className="hover:text-brand-rose transition-colors">English</Link>
+          </nav>
           <p className="flex items-center gap-1">
             <span>{t("footer.subfooter.crafted")}</span>
             <Heart className="h-4 w-4 text-brand-rose" />

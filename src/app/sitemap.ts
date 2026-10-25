@@ -1,6 +1,8 @@
-// INVARIANT: see /SEO.md before changing anything in this file. URLs may be added, never removed.
+// INVARIANT: see /SEO.md before changing anything in this file. URLs may be added, never removed
+// (except a URL that now 301s; it leaves when its blogPosts entry goes, see SEO.md rule 6).
 import { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blog-posts";
+import { toEnglishPath } from "@/lib/i18n-routes";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
 
@@ -38,12 +40,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(post.dateModified),
   }));
 
-  return [...staticRoutes, ...articleRoutes].map(
-    ({ path, priority = 0.6, changeFrequency = "monthly", lastModified = now }) => ({
-      url: `${siteUrl}${path}`,
-      lastModified,
-      changeFrequency,
-      priority,
-    })
+  const absolute = (path: string) => (path === "/" ? siteUrl : `${siteUrl}${path}`);
+
+  // Each page with an English twin is listed in both languages, and both entries
+  // carry the same hreflang set (Google wants it reciprocal).
+  return [...staticRoutes, ...articleRoutes].flatMap(
+    ({ path, priority = 0.6, changeFrequency = "monthly", lastModified = now }) => {
+      const enPath = toEnglishPath(path);
+      const alternates = enPath
+        ? { languages: { id: absolute(path), en: absolute(enPath), "x-default": absolute(path) } }
+        : undefined;
+      const entry = { lastModified, changeFrequency, priority, alternates };
+      return enPath
+        ? [{ url: absolute(path), ...entry }, { url: absolute(enPath), ...entry }]
+        : [{ url: absolute(path), ...entry }];
+    }
   );
 }
