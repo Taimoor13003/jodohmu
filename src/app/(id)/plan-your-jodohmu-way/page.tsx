@@ -5,12 +5,12 @@ import { languageAlternates } from "@/lib/i18n-routes";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
 
 export const metadata: Metadata = {
-  title: "Plan Your Jodohmu Way",
-  description: "Build a private matchmaking plan around the Jodohmu services that matter most to you.",
+  title: "Rancang Jalan Jodohmu Anda",
+  description: "Susun rencana perjodohan pribadi dari layanan Jodohmu yang paling penting bagi Anda, lengkap dengan estimasi biaya.",
   alternates: languageAlternates("/plan-your-jodohmu-way", "id"),
   openGraph: {
-    title: "Plan Your Jodohmu Way | Jodohmu",
-    description: "Choose the support you need and build your own Jodohmu journey.",
+    title: "Rancang Jalan Jodohmu Anda | Jodohmu",
+    description: "Pilih pendampingan yang Anda butuhkan dan susun perjalanan Jodohmu Anda sendiri.",
     url: `${siteUrl}/plan-your-jodohmu-way`,
     type: "website",
   },
