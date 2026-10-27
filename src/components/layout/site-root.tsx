@@ -105,6 +105,7 @@ export function SiteRoot({ lang, children }: { lang: Lang; children: React.React
                       "https://www.instagram.com/jodohmu_official/",
                       "https://www.tiktok.com/@jodohmu.official",
                       "https://www.youtube.com/@jodohmu_official",
+                      "https://www.linkedin.com/company/jodohmu",
                     ],
                   },
                   {

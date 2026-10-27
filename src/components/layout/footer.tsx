@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Facebook, Instagram, Mail, Phone, Heart, Youtube } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail, Phone, Heart, Youtube } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 import { useLanguage } from "@/context/LanguageContext";
 import { switchLanguagePath } from "@/lib/i18n-routes";
@@ -84,6 +84,9 @@ export function Footer() {
               </Link>
               <Link href="https://www.youtube.com/@jodohmu_official" target="_blank" rel="noopener noreferrer" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue hover:bg-brand-rose/10 hover:text-brand-rose transition-colors">
                 <Youtube className="h-5 w-5" />
+              </Link>
+              <Link href="https://www.linkedin.com/company/jodohmu" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue hover:bg-brand-rose/10 hover:text-brand-rose transition-colors">
+                <Linkedin className="h-5 w-5" />
               </Link>
             </div>
           </div>
