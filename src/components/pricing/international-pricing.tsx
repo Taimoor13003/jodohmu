@@ -1,37 +1,105 @@
+import Image from "next/image";
 import Link from "next/link";
-import { localizeHref, type Lang } from "@/lib/i18n-routes";
+import {
+  ArrowLeft,
+  ArrowRight,
+  BadgeCheck,
+  BookOpen,
+  Check,
+  ChevronDown,
+  Fingerprint,
+  Globe2,
+  HeartHandshake,
+  Home,
+  Languages,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Scale,
+  ShieldCheck,
+  Sparkles,
+  Users,
+  Utensils,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { localizeHref, siteUrl, type Lang } from "@/lib/i18n-routes";
+
+const phoneHref = "tel:+628138858595";
+const whatsappBase = "https://wa.me/628138858595";
+
+const guideHrefs = {
+  international: "/blog/international-marriage-facilitation",
+  joble: "/blog/joble-jodohmu-table",
+  trends: "/blog/tren-menikah-dengan-wna",
+  family: "/blog/perkenalan-pertama-dan-keluarga",
+};
 
 // Shared by /pricing/international (Indonesian) and /en/pricing/international (English)
 const copy = {
   en: {
     whatsapp: "Hello, I'm interested in Jodohmu's international matchmaking service. Could you please share more details?",
-    badge: "International Matchmaking",
-    heroTitle: "Seeking an Indonesian Spouse —",
-    heroAccent: "Done Right.",
-    heroP1: "You are serious about marriage. You want someone genuine, family-involved, and committed to building something real — not a profile to swipe past, not a casual connection. You want to do this the right way.",
-    heroP2: "Jodohmu's international service was built for exactly this. Not a dating app. Not a listing site. A fully facilitated, human-led journey — from first introduction to meeting in Indonesia.",
+    packageWhatsapp: (name: string) => `Hello, I'm interested in Jodohmu's international ${name} package. I'd like to schedule a call to discuss it.`,
+    badge: "For clients outside Indonesia",
+    heroTitle: "Looking for an Indonesian spouse?",
+    heroAccent: "Meet people who are verified and serious about marriage.",
+    heroBody: "From another country, it is hard to know who is genuine. We take that risk off your shoulders: we verify both sides, sit in on every introduction, involve the family, and arrange your meeting in Indonesia when you are both ready.",
     enquire: "Enquire on WhatsApp",
     viewPackages: "View Packages",
-    policies: [
-      { icon: "✈️", text: "When both hearts are ready, we arrange a beautiful first meeting in Indonesia" },
-      { icon: "🎥", text: "All introduction sessions are online via video call with a facilitator present" },
-      { icon: "💳", text: "Your journey begins with a minimum 20% payment — we agree a clear payment plan together" },
-      { icon: "📅", text: "Every service is delivered with full care within your package window — we give our best from day one" },
+    heroNote: "The first conversation is free. We speak English, Arabic and Bahasa Indonesia.",
+    heroImageAlt: "An international client meeting a potential spouse and her parents in Indonesia",
+    heroChecks: ["Both sides verified", "Every introduction facilitated", "Family involved from the start"],
+    heroFrom: "From $1,200",
+    trust: [
+      { title: "Human matchmakers", desc: "A real person handles your case, not an algorithm." },
+      { title: "Both sides verified", desc: "Identity, intent and background are checked." },
+      { title: "Always facilitated", desc: "No unsupervised contact at any stage." },
+      { title: "Any country", desc: "Serious clients are welcome from anywhere." },
     ],
-    howTitle: "How It Works",
-    howIntro: "A clear, structured journey designed to protect both parties and honour the seriousness of your intention.",
+    worriesLabel: "Built for the risks of distance",
+    worriesTitle: "What worries people abroad, and what we do about it",
+    worriesIntro: "These are the questions almost every international client asks on the first call. Here are the straight answers.",
+    worries: [
+      { q: "How do I know the person is real?", a: "We assess every Indonesian candidate ourselves and check their identity and intent before you see a profile. You are verified too: passport, employment, social media and a call with your family. Trust runs both ways." },
+      { q: "Do they actually want to marry someone from abroad?", a: "Yes. Every candidate confirms they are open to an international marriage before any introduction. You only meet people who chose this path." },
+      { q: "Isn't it risky to travel for someone I met online?", a: "You never talk to a candidate alone, and personal contact details are only exchanged after you meet in Indonesia. There is no private channel for pressure, games or requests for money." },
+      { q: "Will their family accept me?", a: "In Indonesia, marriage involves the family. A family gathering is part of every package, and we explain customs and expectations beforehand so you arrive prepared." },
+      { q: "I don't speak Bahasa Indonesia.", a: "You don't need to. We work in English, Arabic and Bahasa Indonesia, and a facilitator joins every introduction to keep the conversation clear." },
+      { q: "What about the legal side of a mixed marriage?", a: "Amanah includes a one-hour consultation with a marriage lawyer. Our guide to mixed marriages in Indonesia covers the practical steps to prepare." },
+    ],
+    worriesLink: "Read the guide",
+    howLabel: "How it works",
+    howTitle: "How marrying an Indonesian partner works with Jodohmu",
     steps: [
-      { num: "01", title: "Apply", desc: "Fill out our intake form and confirm your place with a minimum 20% payment to begin your journey." },
-      { num: "02", title: "Verify", desc: "We verify your documents, conduct a video call with a family member, and complete a psychology assessment." },
-      { num: "03", title: "Match", desc: "Our team builds your profile and presents verified Indonesian candidates suited to you." },
-      { num: "04", title: "Introductions", desc: "Online facilitated sessions via video call — a facilitator is present at every meeting." },
-      { num: "05", title: "Meet in Indonesia", desc: "When both parties are ready, we arrange an in-person meeting in Indonesia. This is where your story truly begins — and where we ensure everything is handled with the care it deserves." },
+      { title: "Apply", desc: "Tell us about yourself and confirm your place to begin." },
+      { title: "Verify", desc: "We verify your documents, speak with a family member and complete a psychology assessment." },
+      { title: "Match", desc: "We build your profile and present verified Indonesian candidates suited to you." },
+      { title: "Video introductions", desc: "Online sessions from wherever you live, with a facilitator present at every one." },
+      { title: "Meet in Indonesia", desc: "When both of you want to continue, we plan your visit and accompany every meeting." },
     ],
-    packagesTitle: "Choose Your Package",
-    packagesIntro: "To begin your journey, a minimum 20% payment confirms your place — we'll agree a clear payment plan together. From that moment, our team is fully dedicated to you.",
-    safarLabel: "The Journey",
-    safarWindow: "6-month active matching window",
-    safarDiscount: "22% off list price",
+    youTitle: "You focus on the person.",
+    youSub: "We handle everything around it.",
+    youLabel: "What you do",
+    you: ["Share your story and who you hope to meet", "Join video introductions from home", "Travel to Indonesia once you are both ready"],
+    weLabel: "What we handle",
+    we: ["Searching and verifying candidates", "Scheduling across time zones", "Facilitating every introduction", "Planning your Joble and the family gathering", "Explaining customs before you arrive"],
+    visitLabel: "Your visit to Indonesia",
+    visitTitle: "The trip where it becomes real",
+    visitBody: "When you both want to continue, you come to Indonesia to meet in person. Nothing is improvised: we plan the meetings, invite the family and stay with you throughout.",
+    visitImageAlt: "A table prepared for a Joble meeting",
+    visit: [
+      { title: "Joble meetings", desc: "A planned meeting at a table we prepare, meal included. You choose the facilitator: an imam, a priest, our team or none. Safar includes 2, Amanah 4." },
+      { title: "A family gathering", desc: "Meet the family in a setting that respects their role in such an important decision." },
+      { title: "Contact details, after you meet", desc: "Personal contacts are exchanged only once you have met face to face. It protects both of you." },
+      { title: "Amanah extras", desc: "A premarital health check for both of you and a one-hour consultation with a marriage lawyer." },
+    ],
+    jobleLink: "Read the Joble guide",
+    packagesLabel: "International packages",
+    packagesTitle: "International matchmaking packages and prices",
+    packagesIntro: "Each package covers verification, curation, facilitated introductions and meetings in Indonesia, coordinated by our team throughout.",
+    months: "months",
+    popular: "Most complete",
+    priceNote: "Complete international package",
+    safarTagline: "A focused six-month search with the essentials covered.",
     safar: [
       "Onboarding: your story & who you're looking for",
       "Profile built + identity, passport & employment verified",
@@ -40,12 +108,8 @@ const copy = {
       "1 family gathering",
       "2 Joble meetings in Indonesia",
     ],
-    safarCta: "Enquire about Safar",
     safarExcluded: "Travel, visas, accommodation, legal services, and third-party professional fees are not included.",
-    amanahBadge: "Most Complete",
-    amanahLabel: "The Trust",
-    amanahWindow: "12-month active matching window",
-    amanahDiscount: "18% off list price",
+    amanahTagline: "Twelve months with a dedicated matchmaker and legal and health support.",
     amanah: [
       "Deep onboarding + personality assessment",
       "Dedicated matchmaker, priority search",
@@ -56,61 +120,106 @@ const copy = {
       "1-hour consultation with a marriage lawyer",
       "Premarital health check for both of you",
     ],
-    amanahCta: "Enquire about Amanah",
     amanahExcluded: "Travel, visas, accommodation, notary and further legal work, and other third-party professional fees are not included.",
-    unsure: "Not sure which package is right for you? Message us on WhatsApp — we're happy to help you decide.",
-    whyTitle: "Why Jodohmu?",
-    whyIntro: "We are not a platform. We are a team that takes personal responsibility for your journey.",
-    trust: [
-      { title: "Structured & Dignified", desc: "Every step — from first contact to in-person meeting — is conducted with a facilitator present. No unsupervised contact. No casual exchanges. Dignity is built into the process." },
-      { title: "Human-Led, Not Algorithmic", desc: "Your case is handled by a real person who knows the Indonesian community deeply — not a swipe-based app. We invest real time into your journey." },
-      { title: "Rigorous Verification", desc: "Every Indonesian candidate on our platform is screened, ID-verified, and vetted for serious intent. You will never be matched with someone we haven't personally assessed." },
-      { title: "End-to-End Support", desc: "From your first message to meeting in Indonesia, we are alongside you — coordinating logistics, translating cultural nuances, and keeping the process dignified." },
-    ],
-    faqTitle: "Common Questions",
+    cta: "Schedule a Call",
+    paymentTitle: "Flexible payment.",
+    paymentBody: "A minimum 20% payment confirms your place, and we agree a clear plan for the rest together.",
+    customTitle: "Need something different?",
+    customBody: "For two foreign nationals, or needs that don't fit either package, we can design a custom plan.",
+    askTeam: "Ask our team",
+    localLabel: "Living in Indonesia?",
+    localTitle: "Our local packages may suit you better",
+    localBody: "Pearl, Ruby and Diamond are designed for clients who can meet in person more easily.",
+    localCta: "View local packages",
+    guidesLabel: "Read before you decide",
+    guidesTitle: "Guides for marrying across borders",
+    guides: [
+      { key: "international", title: "How Jodohmu facilitates marriage across borders", desc: "The full international process, from onboarding to meeting in Indonesia." },
+      { key: "joble", title: "Joble: what a planned meeting looks like", desc: "Facilitators, guests, food, and how the format is agreed with both people." },
+      { key: "trends", title: "Are more Indonesians marrying foreigners?", desc: "What the official data says, and the practical steps to prepare." },
+      { key: "family", title: "First introductions and the role of family", desc: "How to prepare, what to ask, and how to involve parents well." },
+    ] as { key: keyof typeof guideHrefs; title: string; desc: string }[],
+    faqLabel: "Questions",
+    faqTitle: "Questions about marrying an Indonesian partner",
     faqs: [
-      { q: "Do I need to speak Bahasa Indonesia?", a: "Not at all. We're here to bridge every gap — language included. We communicate in English, Arabic, and Bahasa Indonesia, and will do our best to accommodate you in other languages too. Just reach out and we'll make it work." },
       { q: "Why must I visit Indonesia before exchanging contact details?", a: "This protects both parties. We verify identity and seriousness in person before any direct contact is made. It ensures every introduction is dignified and safe." },
-      { q: "What happens if my package window expires before a match is found?", a: "We work hard to find your match well within your window insha Allah. If genuine circumstances arise, please reach out to us — we review every situation with care and understanding." },
       { q: "Can I do everything remotely without visiting Indonesia?", a: "The online verification, psychology assessment, and introduction sessions are all remote. The in-person Indonesia visit is only required when both parties wish to proceed after the introductions — it is not required upfront." },
-      { q: "Are the Indonesian candidates aware they may be matched with someone from abroad?", a: "Yes. Every candidate in our pool has confirmed they are open to an international match before any introduction is made." },
+      { q: "Can I pay in instalments?", a: "Yes. A minimum 20% payment confirms your place, and we agree a clear plan for the rest together before the search begins." },
+      { q: "We are both foreign nationals. Can Jodohmu help us?", a: "Yes. We facilitate cases involving two foreign nationals, including people of different nationalities, usually through a custom plan. Indonesia can be the meeting location when it suits you both." },
+      { q: "What happens if my package window expires before a match is found?", a: "We work hard to find your match well within your window insha Allah. If genuine circumstances arise, please reach out to us — we review every situation with care and understanding." },
       { q: "What countries do you accept international clients from?", a: "We accept serious clients from any country worldwide. There are no geographic restrictions." },
     ],
-    readyTitle: "Ready to Begin?",
-    readyBody: "Send us a message on WhatsApp. Tell us a little about yourself and what you are looking for. No pressure, no rush — just an honest conversation about your hopes and what you're looking for.",
-    readyCta: "Message Us on WhatsApp",
-    readyNote: "We typically respond within a few hours. All enquiries are treated with full confidentiality.",
-    back: "← Back to main pricing page",
+    readyLabel: "Free first conversation",
+    readyTitle: "Tell us what you are looking for.",
+    readyBody: "Send a short WhatsApp message about yourself and the person you hope to meet. We usually reply within a few hours, and every enquiry stays confidential.",
+    readyCta: "Message us on WhatsApp",
+    phoneLabel: "Prefer to speak directly?",
+    back: "Back to main pricing page",
   },
   id: {
     whatsapp: "Halo, saya tertarik dengan layanan perjodohan internasional Jodohmu. Boleh saya minta informasi lebih lanjut?",
-    badge: "Perjodohan Internasional",
-    heroTitle: "Mencari Pasangan dari Indonesia —",
-    heroAccent: "Dengan Cara yang Benar.",
-    heroP1: "Anda serius ingin menikah. Anda mencari seseorang yang tulus, melibatkan keluarga, dan berkomitmen membangun sesuatu yang nyata — bukan profil untuk digeser, bukan hubungan sambil lalu. Anda ingin menjalaninya dengan cara yang benar.",
-    heroP2: "Layanan internasional Jodohmu dibangun tepat untuk itu. Bukan aplikasi kencan. Bukan situs daftar profil. Perjalanan yang sepenuhnya didampingi manusia — dari perkenalan pertama hingga bertemu di Indonesia.",
+    packageWhatsapp: (name: string) => `Halo, saya tertarik dengan paket internasional ${name} dari Jodohmu. Saya ingin menjadwalkan panggilan untuk membahasnya.`,
+    badge: "Untuk klien di luar Indonesia",
+    heroTitle: "Mencari pasangan dari Indonesia?",
+    heroAccent: "Bertemu orang terverifikasi yang serius menikah.",
+    heroBody: "Dari negara lain, sulit mengetahui siapa yang sungguh-sungguh. Kami mengambil alih risiko itu: kami memverifikasi kedua pihak, mendampingi setiap perkenalan, melibatkan keluarga, dan mengatur pertemuan Anda di Indonesia saat keduanya siap.",
     enquire: "Tanya lewat WhatsApp",
     viewPackages: "Lihat Paket",
-    policies: [
-      { icon: "✈️", text: "Saat kedua hati sudah siap, kami mengatur pertemuan pertama yang indah di Indonesia" },
-      { icon: "🎥", text: "Semua sesi perkenalan dilakukan online lewat video call dengan fasilitator yang hadir" },
-      { icon: "💳", text: "Perjalanan Anda dimulai dengan pembayaran minimal 20% — kami sepakati rencana pembayaran yang jelas bersama" },
-      { icon: "📅", text: "Setiap layanan diberikan dengan sepenuh hati selama masa paket Anda — kami memberi yang terbaik sejak hari pertama" },
+    heroNote: "Percakapan pertama gratis. Kami melayani dalam bahasa Inggris, Arab, dan Indonesia.",
+    heroImageAlt: "Klien internasional bertemu calon pasangan dan orang tuanya di Indonesia",
+    heroChecks: ["Kedua pihak diverifikasi", "Setiap perkenalan didampingi", "Keluarga terlibat sejak awal"],
+    heroFrom: "Mulai $1,200",
+    trust: [
+      { title: "Matchmaker manusia", desc: "Orang sungguhan menangani kasus Anda, bukan algoritma." },
+      { title: "Kedua pihak diverifikasi", desc: "Identitas, niat, dan latar belakang diperiksa." },
+      { title: "Selalu didampingi", desc: "Tidak ada kontak tanpa pendampingan di tahap mana pun." },
+      { title: "Negara mana pun", desc: "Klien yang serius diterima dari seluruh dunia." },
     ],
-    howTitle: "Cara Kerjanya",
-    howIntro: "Perjalanan yang jelas dan terstruktur, dirancang untuk melindungi kedua pihak dan menghormati keseriusan niat Anda.",
+    worriesLabel: "Dirancang untuk risiko jarak jauh",
+    worriesTitle: "Kekhawatiran klien dari luar negeri, dan cara kami menjawabnya",
+    worriesIntro: "Hampir setiap klien internasional menanyakan hal ini di panggilan pertama. Ini jawaban jujurnya.",
+    worries: [
+      { q: "Bagaimana saya tahu orang itu nyata?", a: "Kami menilai sendiri setiap kandidat Indonesia serta memeriksa identitas dan niatnya sebelum Anda melihat profilnya. Anda pun diverifikasi: paspor, pekerjaan, media sosial, dan panggilan dengan keluarga Anda. Kepercayaan berjalan dua arah." },
+      { q: "Apakah mereka benar-benar mau menikah dengan orang luar negeri?", a: "Ya. Setiap kandidat menyatakan terbuka untuk pernikahan internasional sebelum perkenalan apa pun. Anda hanya bertemu orang yang memang memilih jalan ini." },
+      { q: "Bukankah berisiko bepergian untuk orang yang dikenal online?", a: "Anda tidak pernah berbicara dengan kandidat tanpa pendamping, dan kontak pribadi baru ditukar setelah bertemu di Indonesia. Tidak ada jalur pribadi untuk tekanan, permainan, atau permintaan uang." },
+      { q: "Apakah keluarganya akan menerima saya?", a: "Di Indonesia, pernikahan melibatkan keluarga. Pertemuan keluarga termasuk dalam setiap paket, dan kami menjelaskan adat serta harapan keluarga sebelumnya agar Anda datang dengan siap." },
+      { q: "Saya tidak bisa berbahasa Indonesia.", a: "Tidak masalah. Kami melayani dalam bahasa Inggris, Arab, dan Indonesia, dan fasilitator hadir di setiap perkenalan agar percakapan tetap jelas." },
+      { q: "Bagaimana dengan urusan hukum pernikahan campuran?", a: "Amanah mencakup konsultasi satu jam dengan pengacara pernikahan. Panduan kami tentang pernikahan campuran di Indonesia membahas langkah praktis untuk bersiap." },
+    ],
+    worriesLink: "Baca panduannya",
+    howLabel: "Cara kerjanya",
+    howTitle: "Cara kerja perjodohan internasional Jodohmu",
     steps: [
-      { num: "01", title: "Daftar", desc: "Isi formulir pendaftaran kami dan amankan tempat Anda dengan pembayaran minimal 20% untuk memulai perjalanan." },
-      { num: "02", title: "Verifikasi", desc: "Kami memverifikasi dokumen Anda, melakukan video call dengan anggota keluarga, dan menyelesaikan asesmen psikologi." },
-      { num: "03", title: "Pencocokan", desc: "Tim kami menyusun profil Anda dan menghadirkan kandidat Indonesia terverifikasi yang sesuai untuk Anda." },
-      { num: "04", title: "Perkenalan", desc: "Sesi online yang difasilitasi lewat video call — fasilitator hadir di setiap pertemuan." },
-      { num: "05", title: "Bertemu di Indonesia", desc: "Saat kedua pihak sudah siap, kami mengatur pertemuan langsung di Indonesia. Di sinilah kisah Anda benar-benar dimulai — dan kami memastikan semuanya ditangani dengan kepedulian yang layak." },
+      { title: "Daftar", desc: "Ceritakan tentang diri Anda dan amankan tempat Anda untuk memulai." },
+      { title: "Verifikasi", desc: "Kami memverifikasi dokumen, berbicara dengan anggota keluarga, dan menyelesaikan asesmen psikologi." },
+      { title: "Pencocokan", desc: "Kami menyusun profil Anda dan menghadirkan kandidat Indonesia terverifikasi yang sesuai." },
+      { title: "Perkenalan video", desc: "Sesi online dari tempat Anda tinggal, dengan fasilitator hadir di setiap sesi." },
+      { title: "Bertemu di Indonesia", desc: "Saat Anda berdua ingin melanjutkan, kami merencanakan kunjungan dan mendampingi setiap pertemuan." },
     ],
-    packagesTitle: "Pilih Paket Anda",
-    packagesIntro: "Untuk memulai perjalanan Anda, pembayaran minimal 20% mengamankan tempat Anda — kami sepakati rencana pembayaran yang jelas bersama. Sejak saat itu, tim kami sepenuhnya berdedikasi untuk Anda.",
-    safarLabel: "Sang Perjalanan",
-    safarWindow: "Masa pencarian aktif 6 bulan",
-    safarDiscount: "Hemat 22% dari harga normal",
+    youTitle: "Anda fokus pada orangnya.",
+    youSub: "Kami mengurus semua hal di sekitarnya.",
+    youLabel: "Yang Anda lakukan",
+    you: ["Ceritakan kisah Anda dan sosok yang ingin Anda temui", "Ikuti perkenalan video dari rumah", "Datang ke Indonesia saat Anda berdua siap"],
+    weLabel: "Yang kami urus",
+    we: ["Mencari dan memverifikasi kandidat", "Menjadwalkan lintas zona waktu", "Mendampingi setiap perkenalan", "Merencanakan Joble dan pertemuan keluarga", "Menjelaskan adat sebelum Anda tiba"],
+    visitLabel: "Kunjungan Anda ke Indonesia",
+    visitTitle: "Perjalanan saat semuanya menjadi nyata",
+    visitBody: "Saat Anda berdua ingin melanjutkan, Anda datang ke Indonesia untuk bertemu langsung. Tidak ada yang serba dadakan: kami merencanakan pertemuan, mengundang keluarga, dan mendampingi Anda sepanjang waktu.",
+    visitImageAlt: "Meja yang disiapkan untuk pertemuan Joble",
+    visit: [
+      { title: "Pertemuan Joble", desc: "Pertemuan terencana di meja yang kami siapkan, makanan termasuk. Anda memilih fasilitator: imam, pendeta, tim kami, atau tanpa fasilitator. Safar mencakup 2, Amanah 4." },
+      { title: "Pertemuan keluarga", desc: "Bertemu keluarga dalam suasana yang menghormati peran mereka dalam keputusan sepenting ini." },
+      { title: "Kontak ditukar setelah bertemu", desc: "Kontak pribadi baru ditukar setelah Anda bertemu langsung. Ini melindungi kalian berdua." },
+      { title: "Tambahan Amanah", desc: "Pemeriksaan kesehatan pranikah untuk Anda berdua dan konsultasi satu jam dengan pengacara pernikahan." },
+    ],
+    jobleLink: "Baca panduan Joble",
+    packagesLabel: "Paket internasional",
+    packagesTitle: "Paket dan harga perjodohan internasional",
+    packagesIntro: "Setiap paket mencakup verifikasi, kurasi, perkenalan yang didampingi, dan pertemuan di Indonesia, dikoordinasikan oleh tim kami dari awal hingga akhir.",
+    months: "bulan",
+    popular: "Paling lengkap",
+    priceNote: "Paket internasional lengkap",
+    safarTagline: "Pencarian terarah enam bulan dengan semua hal penting tercakup.",
     safar: [
       "Onboarding: cerita Anda & sosok yang Anda cari",
       "Profil disusun + identitas, paspor & pekerjaan diverifikasi",
@@ -119,12 +228,8 @@ const copy = {
       "1 pertemuan keluarga",
       "2 pertemuan Joble di Indonesia",
     ],
-    safarCta: "Tanya tentang Safar",
     safarExcluded: "Belum termasuk perjalanan, visa, akomodasi, layanan hukum, dan biaya profesional pihak ketiga.",
-    amanahBadge: "Paling Lengkap",
-    amanahLabel: "Sang Kepercayaan",
-    amanahWindow: "Masa pencarian aktif 12 bulan",
-    amanahDiscount: "Hemat 18% dari harga normal",
+    amanahTagline: "Dua belas bulan bersama matchmaker khusus, plus dukungan hukum dan kesehatan.",
     amanah: [
       "Onboarding mendalam + asesmen kepribadian",
       "Matchmaker khusus, pencarian prioritas",
@@ -135,417 +240,519 @@ const copy = {
       "Konsultasi 1 jam dengan pengacara pernikahan",
       "Pemeriksaan kesehatan pranikah untuk Anda berdua",
     ],
-    amanahCta: "Tanya tentang Amanah",
     amanahExcluded: "Belum termasuk perjalanan, visa, akomodasi, notaris dan pekerjaan hukum lanjutan, serta biaya profesional pihak ketiga lainnya.",
-    unsure: "Belum yakin paket mana yang tepat? Kirim pesan lewat WhatsApp — kami dengan senang hati membantu Anda memilih.",
-    whyTitle: "Mengapa Jodohmu?",
-    whyIntro: "Kami bukan platform. Kami adalah tim yang bertanggung jawab secara pribadi atas perjalanan Anda.",
-    trust: [
-      { title: "Terstruktur & Terhormat", desc: "Setiap langkah — dari kontak pertama hingga pertemuan langsung — dilakukan dengan fasilitator yang hadir. Tanpa kontak tanpa pendampingan. Tanpa obrolan sambil lalu. Kehormatan menjadi bagian dari prosesnya." },
-      { title: "Dipandu Manusia, Bukan Algoritma", desc: "Kasus Anda ditangani oleh orang sungguhan yang memahami komunitas Indonesia secara mendalam — bukan aplikasi geser. Kami meluangkan waktu nyata untuk perjalanan Anda." },
-      { title: "Verifikasi yang Ketat", desc: "Setiap kandidat Indonesia di platform kami disaring, diverifikasi identitasnya, dan diperiksa keseriusan niatnya. Anda tidak akan pernah dipertemukan dengan seseorang yang belum kami nilai secara langsung." },
-      { title: "Dukungan dari Awal hingga Akhir", desc: "Dari pesan pertama hingga bertemu di Indonesia, kami mendampingi Anda — mengatur logistik, menjembatani perbedaan budaya, dan menjaga proses tetap terhormat." },
-    ],
-    faqTitle: "Pertanyaan Umum",
+    cta: "Jadwalkan Panggilan",
+    paymentTitle: "Pembayaran fleksibel.",
+    paymentBody: "Pembayaran minimal 20% mengamankan tempat Anda, dan sisanya kita sepakati bersama dalam rencana yang jelas.",
+    customTitle: "Butuh yang berbeda?",
+    customBody: "Untuk dua warga negara asing, atau kebutuhan yang tidak cocok dengan kedua paket, kami bisa merancang rencana khusus.",
+    askTeam: "Tanya tim kami",
+    localLabel: "Tinggal di Indonesia?",
+    localTitle: "Paket lokal kami mungkin lebih cocok",
+    localBody: "Pearl, Ruby, dan Diamond dirancang untuk klien yang lebih mudah bertemu langsung.",
+    localCta: "Lihat paket lokal",
+    guidesLabel: "Baca sebelum memutuskan",
+    guidesTitle: "Panduan menikah lintas negara",
+    guides: [
+      { key: "international", title: "Cara Jodohmu mendampingi pernikahan lintas negara", desc: "Proses internasional lengkap, dari onboarding hingga bertemu di Indonesia." },
+      { key: "joble", title: "Joble: seperti apa pertemuan yang direncanakan", desc: "Fasilitator, pendamping, makanan, dan cara format disepakati kedua pihak." },
+      { key: "trends", title: "Benarkah makin banyak yang menikah dengan WNA?", desc: "Apa kata data resmi, dan langkah praktis untuk bersiap." },
+      { key: "family", title: "Perkenalan pertama dan peran keluarga", desc: "Cara bersiap, apa yang perlu ditanyakan, dan cara melibatkan orang tua." },
+    ] as { key: keyof typeof guideHrefs; title: string; desc: string }[],
+    faqLabel: "Pertanyaan",
+    faqTitle: "Pertanyaan seputar perjodohan internasional",
     faqs: [
-      { q: "Apakah saya harus bisa berbahasa Indonesia?", a: "Sama sekali tidak. Kami hadir untuk menjembatani setiap jarak — termasuk bahasa. Kami berkomunikasi dalam bahasa Inggris, Arab, dan Indonesia, dan akan berusaha sebaik mungkin melayani Anda dalam bahasa lain juga. Hubungi kami saja, kami akan mencari jalannya." },
       { q: "Mengapa saya harus datang ke Indonesia sebelum bertukar kontak?", a: "Ini melindungi kedua pihak. Kami memverifikasi identitas dan keseriusan secara langsung sebelum ada kontak pribadi. Dengan begitu setiap perkenalan tetap terhormat dan aman." },
-      { q: "Bagaimana jika masa paket saya habis sebelum menemukan pasangan?", a: "Kami berusaha keras menemukan pasangan Anda jauh sebelum masa paket berakhir, insyaAllah. Jika ada keadaan yang benar-benar di luar kendali, silakan hubungi kami — kami meninjau setiap situasi dengan cermat dan penuh pengertian." },
       { q: "Bisakah semuanya dilakukan dari jauh tanpa datang ke Indonesia?", a: "Verifikasi online, asesmen psikologi, dan sesi perkenalan semuanya dilakukan dari jauh. Kunjungan langsung ke Indonesia hanya diperlukan ketika kedua pihak ingin melanjutkan setelah perkenalan — tidak diwajibkan di awal." },
-      { q: "Apakah kandidat Indonesia tahu bahwa mereka mungkin dipertemukan dengan seseorang dari luar negeri?", a: "Ya. Setiap kandidat di pool kami sudah menyatakan terbuka untuk pasangan internasional sebelum perkenalan apa pun dilakukan." },
+      { q: "Bisakah saya membayar dengan cicilan?", a: "Bisa. Pembayaran minimal 20% mengamankan tempat Anda, dan sisanya kita sepakati bersama dalam rencana yang jelas sebelum pencarian dimulai." },
+      { q: "Kami berdua warga negara asing. Bisakah Jodohmu membantu?", a: "Bisa. Kami mendampingi kasus dua warga negara asing, termasuk yang berbeda kewarganegaraan, biasanya lewat rencana khusus. Indonesia bisa menjadi tempat bertemu jika sesuai untuk kalian berdua." },
+      { q: "Bagaimana jika masa paket saya habis sebelum menemukan pasangan?", a: "Kami berusaha keras menemukan pasangan Anda jauh sebelum masa paket berakhir, insyaAllah. Jika ada keadaan yang benar-benar di luar kendali, silakan hubungi kami — kami meninjau setiap situasi dengan cermat dan penuh pengertian." },
       { q: "Dari negara mana saja klien internasional diterima?", a: "Kami menerima klien yang serius dari negara mana pun di dunia. Tidak ada batasan wilayah." },
     ],
-    readyTitle: "Siap Memulai?",
-    readyBody: "Kirimkan pesan kepada kami lewat WhatsApp. Ceritakan sedikit tentang diri Anda dan sosok yang Anda cari. Tanpa tekanan, tanpa terburu-buru — hanya percakapan jujur tentang harapan Anda.",
-    readyCta: "Kirim Pesan lewat WhatsApp",
-    readyNote: "Kami biasanya membalas dalam beberapa jam. Setiap pertanyaan dijaga kerahasiaannya sepenuhnya.",
-    back: "← Kembali ke halaman harga utama",
+    readyLabel: "Percakapan pertama gratis",
+    readyTitle: "Ceritakan apa yang Anda cari.",
+    readyBody: "Kirim pesan WhatsApp singkat tentang diri Anda dan sosok yang ingin Anda temui. Kami biasanya membalas dalam beberapa jam, dan setiap pertanyaan dijaga kerahasiaannya.",
+    readyCta: "Kirim pesan lewat WhatsApp",
+    phoneLabel: "Lebih nyaman bicara langsung?",
+    back: "Kembali ke halaman harga utama",
   },
 };
 
-const trustIcons = [
-  (
-      <svg key="trust-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
-        <path d="M12 2l7 4v6c0 4.4-3.1 8.5-7 9.9C8.1 20.5 5 16.4 5 12V6l7-4z" />
-      </svg>
-  ),
-  (
-      <svg key="trust-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
-        <circle cx="12" cy="8" r="4" />
-        <path d="M4 20v-1a8 8 0 0116 0v1" />
-      </svg>
-  ),
-  (
-      <svg key="trust-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
-        <path d="M9 12l2 2 4-4" />
-        <path d="M12 2a10 10 0 100 20A10 10 0 0012 2z" />
-      </svg>
-  ),
-  (
-      <svg key="trust-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
-        <path d="M3 12h18M12 3l9 9-9 9" />
-      </svg>
-  ),
-];
+const packageSchema = {
+  safar: { price: 1200, months: 6 },
+  amanah: { price: 3000, months: 12 },
+};
+
+export const internationalShareImage = (alt: string) => ({
+  url: `${siteUrl}/images/blog/international-marriage-indonesia-hero.png`,
+  width: 1672,
+  height: 941,
+  alt,
+});
+
+// Page-level schema: the service with its two USD offers, plus the FAQ shown on the page
+export function internationalPricingSchema(lang: Lang) {
+  const c = copy[lang];
+  const pageUrl = `${siteUrl}${localizeHref("/pricing/international", lang)}`;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": `${pageUrl}#service`,
+        name: lang === "id" ? "Perjodohan internasional Jodohmu" : "Jodohmu international matchmaking",
+        serviceType: "International marriage matchmaking",
+        description: c.heroBody,
+        provider: { "@id": `${siteUrl}#organization` },
+        areaServed: "Worldwide",
+        url: pageUrl,
+        inLanguage: lang,
+        offers: (["safar", "amanah"] as const).map((key) => ({
+          "@type": "Offer",
+          name: key === "safar" ? "Safar" : "Amanah",
+          description: (key === "safar" ? c.safar : c.amanah).join("; "),
+          price: packageSchema[key].price,
+          priceCurrency: "USD",
+          eligibleDuration: { "@type": "QuantitativeValue", value: packageSchema[key].months, unitCode: "MON" },
+          availability: "https://schema.org/InStock",
+          url: `${pageUrl}#packages`,
+        })),
+      },
+      {
+        "@type": "FAQPage",
+        "@id": `${pageUrl}#faq`,
+        inLanguage: lang,
+        mainEntity: [...c.worries, ...c.faqs].map((faq) => ({
+          "@type": "Question",
+          name: faq.q,
+          acceptedAnswer: { "@type": "Answer", text: faq.a },
+        })),
+      },
+    ],
+  };
+}
+
+const trustIcons = [HeartHandshake, BadgeCheck, Users, Globe2];
+const worryIcons = [Fingerprint, HeartHandshake, ShieldCheck, Home, Languages, Scale];
+const worryLinks: (keyof typeof guideHrefs | null)[] = [null, null, null, "family", null, "trends"];
+const visitIcons = [Utensils, Users, ShieldCheck, Sparkles];
 
 export function InternationalPricing({ lang }: { lang: Lang }) {
   const c = copy[lang];
-  const whatsappHref = "https://wa.me/628138858595?text=" + encodeURIComponent(c.whatsapp);
+  const href = (path: string) => localizeHref(path, lang);
+  const whatsappHref = `${whatsappBase}?text=${encodeURIComponent(c.whatsapp)}`;
+  const packageHref = (name: string) => `${whatsappBase}?text=${encodeURIComponent(c.packageWhatsapp(name))}`;
+
+  const packages = [
+    { name: "Safar", key: "safar", price: "$1,200", months: 6, tagline: c.safarTagline, features: c.safar, excluded: c.safarExcluded, popular: false },
+    { name: "Amanah", key: "amanah", price: "$3,000", months: 12, tagline: c.amanahTagline, features: c.amanah, excluded: c.amanahExcluded, popular: true },
+  ];
 
   return (
-    <div className="pb-24">
+    <div className="pricing-fonts">
+      <div className="overflow-hidden bg-[#fffdfd] text-[#101f4d]">
+        <section className="relative isolate border-b border-[#dce7ff] bg-[linear-gradient(125deg,#fff5f8_0%,#ffffff_46%,#edf5ff_100%)] py-16 sm:py-24">
+          <div className="absolute -left-24 top-8 -z-10 h-72 w-72 rounded-full bg-[#ff8fb1]/20 blur-3xl" />
+          <div className="absolute -right-20 bottom-0 -z-10 h-80 w-80 rounded-full bg-[#5d8cff]/20 blur-3xl" />
 
-      {/* ── HERO ── */}
-      <section className="relative overflow-hidden bg-[#0b1535] py-24">
-        {/* Subtle pattern overlay */}
-        <div
-          className="pointer-events-none absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(45deg, #fff 0, #fff 1px, transparent 0, transparent 50%)",
-            backgroundSize: "20px 20px",
-          }}
-        />
-        {/* Pink glow */}
-        <div className="pointer-events-none absolute -top-32 right-0 h-[500px] w-[500px] rounded-full bg-[#e8147a]/10 blur-[120px]" />
+          <div className="container grid max-w-7xl items-center gap-12 lg:grid-cols-[1fr_1fr]">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#e986a3]/30 bg-white/80 px-4 py-2 text-xs font-extrabold uppercase tracking-[0.18em] text-[#c62d5c] shadow-sm">
+                <Globe2 className="h-4 w-4" />
+                {c.badge}
+              </span>
 
-        <div className="container relative max-w-4xl text-center">
-          <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#e8147a]/40 bg-[#e8147a]/10 px-5 py-2 text-sm font-semibold text-[#f080b0]">
-            <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
-              <path d="M10 3.22l-.61 2.034A9 9 0 006 6.22l-2.034-.61-.61 2.034 1.63 1.224a9.043 9.043 0 000 2.264L3.356 12.356l.61 2.034L6 13.78a9 9 0 003.39 1.566l.61 2.034h2l.61-2.034A9 9 0 0016 13.78l2.034.61.61-2.034-1.63-1.224a9.043 9.043 0 000-2.264l1.63-1.224-.61-2.034L16 6.22a9 9 0 00-3.39-1.566L12 2.61l-2 .61z" />
-            </svg>
-            {c.badge}
-          </span>
+              <h1 className="mt-7 max-w-3xl font-serif text-4xl font-bold leading-[1.05] tracking-[-0.035em] text-[#102457] sm:text-5xl lg:text-[3.5rem]">
+                <span className="block">{c.heroTitle}</span>{" "}
+                <span className="mt-2 block text-[#d72d62]">{c.heroAccent}</span>
+              </h1>
+              <p className="mt-6 max-w-xl text-base leading-8 text-[#4a5877] sm:text-lg">{c.heroBody}</p>
 
-          <h1 className="font-serif text-5xl font-bold leading-tight text-white sm:text-6xl">
-            {c.heroTitle}{" "}
-            <span className="italic text-[#e8147a]">{c.heroAccent}</span>
-          </h1>
-
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/70">
-            {c.heroP1}
-          </p>
-          <p className="mx-auto mt-3 max-w-2xl text-lg leading-relaxed text-white/70">
-            {c.heroP2}
-          </p>
-
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 rounded-full bg-[#e8147a] px-8 py-4 text-base font-bold text-white shadow-lg transition hover:bg-[#c90f68]"
-            >
-              <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-                <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.535 5.856L.057 23.625a.75.75 0 00.918.919l5.85-1.48A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.717 9.717 0 01-4.953-1.354l-.355-.211-3.682.931.978-3.591-.232-.371A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z" />
-              </svg>
-              {c.enquire}
-            </a>
-            <a
-              href="#packages"
-              className="inline-flex items-center gap-2 rounded-full border border-white/30 px-8 py-4 text-base font-semibold text-white/80 transition hover:border-white/60 hover:text-white"
-            >
-              {c.viewPackages}
-              <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
-                <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* ── IMPORTANT POLICIES ── */}
-      <section className="border-b border-[#e8147a]/20 bg-[#fdf0f6] py-8">
-        <div className="container max-w-5xl">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {c.policies.map((p, i) => (
-              <div key={i} className="flex items-start gap-3 rounded-2xl bg-white px-4 py-4 shadow-sm">
-                <span className="text-2xl">{p.icon}</span>
-                <p className="text-sm leading-snug text-[#3d2a3a]">{p.text}</p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <Button asChild className="h-[52px] rounded-full bg-[#d92f63] px-7 text-base font-bold text-white shadow-[0_14px_35px_rgba(217,47,99,.25)] hover:bg-[#bf2454]">
+                  <a href={whatsappHref} target="_blank" rel="noopener noreferrer" data-wa-source="intl_hero">
+                    <MessageCircle className="mr-2 h-4 w-4" />
+                    {c.enquire}
+                  </a>
+                </Button>
+                <Button asChild variant="outline" className="h-[52px] rounded-full border-[#204ea7]/25 bg-white/80 px-7 text-base font-bold text-[#153778] hover:bg-[#edf4ff]">
+                  <a href="#packages">{c.viewPackages}</a>
+                </Button>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── HOW IT WORKS ── */}
-      <section className="py-20">
-        <div className="container max-w-5xl">
-          <div className="mb-14 text-center">
-            <h2 className="font-serif text-4xl font-bold text-[#0b1535] sm:text-5xl">
-              {c.howTitle}
-            </h2>
-            <div className="my-4 flex items-center justify-center gap-3">
-              <span className="h-px w-14 bg-[#e8147a]/40" />
-              <svg viewBox="0 0 20 18" fill="none" stroke="#e8147a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                <path d="M10 17S1 11 1 5.5A4.5 4.5 0 0110 2a4.5 4.5 0 019 3.5C19 11 10 17 10 17z" />
-              </svg>
-              <span className="h-px w-14 bg-[#e8147a]/40" />
+              <p className="mt-4 flex items-start gap-2 text-sm leading-6 text-[#687590]">
+                <Languages className="mt-0.5 h-4 w-4 shrink-0 text-[#2f68cc]" />
+                {c.heroNote}
+              </p>
             </div>
-            <p className="mx-auto max-w-xl text-base text-[#5a4a5a]">
-              {c.howIntro}
-            </p>
+
+            <div className="relative mx-auto w-full max-w-xl pb-10 lg:pb-0">
+              <div className="absolute -inset-4 rounded-[2.5rem] bg-gradient-to-br from-[#ef4779]/20 to-[#3175df]/20 blur-2xl" />
+              <div className="relative overflow-hidden rounded-[2rem] border-4 border-white shadow-[0_30px_80px_rgba(24,51,111,.18)]">
+                <Image
+                  src="/images/blog/international-marriage-indonesia-hero.png"
+                  alt={c.heroImageAlt}
+                  width={1672}
+                  height={941}
+                  priority
+                  sizes="(min-width: 1024px) 560px, 100vw"
+                  className="aspect-[4/3] w-full object-cover object-[30%_center]"
+                />
+                <span className="absolute right-4 top-4 rounded-full bg-white/90 px-3 py-1.5 text-xs font-extrabold text-[#2359b9] shadow-sm backdrop-blur">{c.heroFrom}</span>
+              </div>
+              <div className="absolute -bottom-2 left-4 right-4 rounded-2xl border border-white/80 bg-white/95 p-4 shadow-[0_18px_45px_rgba(24,51,111,.16)] backdrop-blur sm:left-auto sm:right-[-1rem] sm:w-72 lg:-bottom-8">
+                <ul className="space-y-2.5">
+                  {c.heroChecks.map((item) => (
+                    <li key={item} className="flex items-center gap-3 text-sm font-bold text-[#102457]">
+                      <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#ef6d94] to-[#316ed4] text-white">
+                        <Check className="h-3.5 w-3.5" strokeWidth={3} />
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
+        </section>
 
-          <div className="relative">
-            {/* Connector line */}
-            <div className="absolute left-[28px] top-10 hidden h-[calc(100%-80px)] w-px bg-gradient-to-b from-[#e8147a]/60 to-[#1630a0]/30 lg:left-1/2 lg:block" />
+        <section className="relative z-10 -mt-6 px-4">
+          <div className="container grid max-w-7xl gap-px overflow-hidden rounded-3xl border border-[#dce6fb] bg-[#dce6fb] shadow-[0_16px_50px_rgba(24,51,111,.1)] sm:grid-cols-2 lg:grid-cols-4">
+            {c.trust.map(({ title, desc }, i) => {
+              const Icon = trustIcons[i];
+              return (
+                <div key={title} className="flex gap-4 bg-white px-5 py-6">
+                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#fff0f5] to-[#eaf2ff] text-[#d72d62]">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-extrabold text-[#102457]">{title}</h3>
+                    <p className="mt-1 text-xs leading-5 text-[#6a7690]">{desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
 
-            <div className="space-y-8">
-              {c.steps.map((step, i) => (
-                <div
-                  key={i}
-                  className={`relative flex items-start gap-6 lg:items-center ${
-                    i % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"
+        <section className="py-24 sm:py-28">
+          <div className="container max-w-7xl">
+            <div className="mx-auto max-w-3xl text-center">
+              <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#d72d62]">{c.worriesLabel}</span>
+              <h2 className="mt-4 font-serif text-4xl font-bold leading-tight text-[#102457] sm:text-5xl">{c.worriesTitle}</h2>
+              <p className="mt-5 text-base leading-7 text-[#65718a]">{c.worriesIntro}</p>
+            </div>
+
+            <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {c.worries.map((worry, i) => {
+                const Icon = worryIcons[i];
+                const link = worryLinks[i];
+                return (
+                  <div key={worry.q} className="flex flex-col rounded-3xl border border-[#dce5f5] bg-white p-6 shadow-[0_12px_35px_rgba(24,51,111,.06)] sm:p-7">
+                    <div className="flex items-start gap-4">
+                      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#fff0f5] to-[#eaf2ff] text-[#d72d62]">
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <h3 className="pt-1 text-base font-extrabold leading-6 text-[#102457]">“{worry.q}”</h3>
+                    </div>
+                    <p className="mt-4 flex-1 text-sm leading-6 text-[#65718a]">{worry.a}</p>
+                    {link && (
+                      <Link href={href(guideHrefs[link])} className="mt-4 inline-flex items-center gap-1.5 text-sm font-extrabold text-[#c62d5c] hover:underline">
+                        {c.worriesLink} <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-[linear-gradient(180deg,#fffdfd_0%,#f5f8ff_100%)] pb-24 sm:pb-28">
+          <div className="container max-w-7xl">
+            <div className="grid gap-10 lg:grid-cols-[1.1fr_.9fr] lg:items-start">
+              <div>
+                <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#2d69ce]">{c.howLabel}</span>
+                <h2 className="mt-4 max-w-2xl font-serif text-4xl font-bold leading-tight text-[#102457] sm:text-5xl">{c.howTitle}</h2>
+                <ol className="mt-10 space-y-3">
+                  {c.steps.map((step, i) => {
+                    const last = i === c.steps.length - 1;
+                    return (
+                      <li key={step.title} className={`flex gap-5 rounded-2xl border bg-white p-5 ${last ? "border-[#efadc1] ring-4 ring-[#fff0f5]" : "border-[#dce5f5]"}`}>
+                        <span className={`w-10 shrink-0 font-serif text-3xl font-bold ${last ? "text-[#d72d62]" : "text-[#80a3df]"}`}>{String(i + 1).padStart(2, "0")}</span>
+                        <div>
+                          <h3 className="text-base font-extrabold text-[#102457]">{step.title}</h3>
+                          <p className="mt-1 text-sm leading-6 text-[#65718a]">{step.desc}</p>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ol>
+              </div>
+
+              <div className="overflow-hidden rounded-[2rem] border border-[#cadcff] bg-[linear-gradient(140deg,#fff0f5_0%,#ffffff_50%,#e7f1ff_100%)] p-7 shadow-[0_24px_70px_rgba(29,69,145,.1)] sm:p-9 lg:sticky lg:top-28 lg:mt-24">
+                <p className="font-serif text-3xl font-bold leading-tight text-[#102457]">{c.youTitle}</p>
+                <p className="mt-1 font-serif text-3xl font-bold leading-tight text-[#d72d62]">{c.youSub}</p>
+
+                <p className="mt-8 text-xs font-extrabold uppercase tracking-[0.16em] text-[#8893a8]">{c.youLabel}</p>
+                <ul className="mt-3 space-y-2.5">
+                  {c.you.map((item) => (
+                    <li key={item} className="flex items-start gap-3 text-sm leading-6 text-[#4f5e7b]">
+                      <span className="mt-1 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[#edf4ff] text-[#245fc3]">
+                        <Check className="h-3 w-3" strokeWidth={3} />
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="my-6 h-px bg-[#e3eaf7]" />
+
+                <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#c62d5c]">{c.weLabel}</p>
+                <ul className="mt-3 space-y-2.5">
+                  {c.we.map((item) => (
+                    <li key={item} className="flex items-start gap-3 text-sm font-semibold leading-6 text-[#102457]">
+                      <span className="mt-1 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#ef6d94] to-[#316ed4] text-white">
+                        <Check className="h-3 w-3" strokeWidth={3} />
+                      </span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-24 sm:py-28">
+          <div className="container max-w-7xl">
+            <div className="overflow-hidden rounded-[2.25rem] border border-[#cadcff] bg-white shadow-[0_24px_80px_rgba(29,69,145,.1)]">
+              <div className="grid lg:grid-cols-[.95fr_1.05fr]">
+                <div className="relative min-h-72 lg:min-h-full">
+                  <Image
+                    src="/images/blog/joble-table.png"
+                    alt={c.visitImageAlt}
+                    fill
+                    sizes="(min-width: 1024px) 600px, 100vw"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#102457]/70 via-[#102457]/10 to-transparent" />
+                  <div className="absolute bottom-6 left-6 right-6 text-white">
+                    <p className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.18em] text-white/80">
+                      <MapPin className="h-4 w-4" /> {c.visitLabel}
+                    </p>
+                    <p className="mt-2 font-serif text-2xl font-bold">Joble · Jodohmu Table</p>
+                  </div>
+                </div>
+
+                <div className="p-7 sm:p-10 lg:p-12">
+                  <h2 className="font-serif text-4xl font-bold leading-tight text-[#102457] sm:text-[2.75rem]">{c.visitTitle}</h2>
+                  <p className="mt-4 text-base leading-7 text-[#53617d]">{c.visitBody}</p>
+
+                  <div className="mt-8 grid gap-5 sm:grid-cols-2">
+                    {c.visit.map((item, i) => {
+                      const Icon = visitIcons[i];
+                      return (
+                        <div key={item.title}>
+                          <span className="grid h-10 w-10 place-items-center rounded-xl bg-[#edf4ff] text-[#245fc3]">
+                            <Icon className="h-5 w-5" />
+                          </span>
+                          <h3 className="mt-3 text-sm font-extrabold text-[#102457]">{item.title}</h3>
+                          <p className="mt-1 text-sm leading-6 text-[#65718a]">{item.desc}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <Link href={href(guideHrefs.joble)} className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#fff0f5] px-5 py-3 text-sm font-extrabold text-[#c62d5c] transition hover:bg-[#ffe3ec]">
+                    {c.jobleLink} <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="packages" className="relative scroll-mt-20 bg-[#f7f9ff] py-24 sm:py-28">
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#ef88a7] to-transparent" />
+          <div className="container max-w-6xl">
+            <div className="mx-auto max-w-3xl text-center">
+              <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#d72d62]">{c.packagesLabel}</span>
+              <h2 className="mt-4 font-serif text-4xl text-[#102457] sm:text-5xl">{c.packagesTitle}</h2>
+              <p className="mt-5 text-base leading-7 text-[#65718a]">{c.packagesIntro}</p>
+            </div>
+
+            <div className="mx-auto mt-14 grid max-w-5xl gap-7 lg:grid-cols-2 lg:items-stretch">
+              {packages.map((pkg) => (
+                <article
+                  key={pkg.key}
+                  className={`relative flex flex-col rounded-[2rem] bg-white p-7 sm:p-8 ${
+                    pkg.popular
+                      ? "border-2 border-transparent shadow-[0_24px_70px_rgba(65,79,150,.18)] [background:linear-gradient(white,white)_padding-box,linear-gradient(145deg,#ef4779,#397ee8)_border-box]"
+                      : "border border-[#dce5f5] shadow-[0_16px_45px_rgba(24,51,111,.08)]"
                   }`}
                 >
-                  {/* Number bubble */}
-                  <div className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#e8147a] font-serif text-lg font-bold text-white shadow-lg lg:mx-auto">
-                    {step.num}
+                  {pkg.popular && (
+                    <span className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-r from-[#df3268] to-[#356fd4] px-5 py-2 text-[11px] font-extrabold uppercase tracking-[0.16em] text-white shadow-lg">
+                      {c.popular}
+                    </span>
+                  )}
+
+                  <div className="flex items-start justify-between gap-4 pt-2">
+                    <div>
+                      <h3 className={`font-serif text-3xl font-bold ${pkg.popular ? "text-[#d72d62]" : "text-[#102457]"}`}>{pkg.name}</h3>
+                      <p className="mt-2 min-h-10 text-sm leading-5 text-[#7b6980]">{pkg.tagline}</p>
+                    </div>
+                    <span className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${pkg.popular ? "bg-[#fff0f5] text-[#c82d5b]" : "bg-[#edf4ff] text-[#2457ad]"}`}>
+                      {pkg.months} {c.months}
+                    </span>
                   </div>
-                  {/* Content */}
-                  <div className={`flex-1 rounded-2xl border border-[#e8d0e0] bg-white px-6 py-5 shadow-sm lg:max-w-[calc(50%-48px)] ${i % 2 !== 0 ? "lg:text-right" : ""}`}>
-                    <h3 className="font-serif text-xl font-bold text-[#0b1535]">{step.title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-[#5a4a5a]">{step.desc}</p>
+
+                  <div className="my-7 border-y border-[#e8edf7] py-6">
+                    <p className={`text-4xl font-extrabold tracking-tight ${pkg.popular ? "text-[#d72d62]" : "text-[#102457]"}`}>
+                      {pkg.price} <span className="text-base font-bold text-[#8893a8]">USD</span>
+                    </p>
+                    <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-[#8893a8]">{c.priceNote}</p>
                   </div>
-                  {/* Spacer for opposite side on desktop */}
-                  <div className="hidden lg:block lg:flex-1" />
+
+                  <ul className="flex-1 space-y-3">
+                    {pkg.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-3 text-sm leading-6 text-[#4f5e7b]">
+                        <span className={`mt-1 grid h-5 w-5 shrink-0 place-items-center rounded-full ${pkg.popular ? "bg-[#fff0f5] text-[#d72d62]" : "bg-[#edf4ff] text-[#245fc3]"}`}>
+                          <Check className="h-3 w-3" strokeWidth={3} />
+                        </span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Button asChild className={`mt-8 h-12 w-full rounded-full text-sm font-extrabold text-white ${pkg.popular ? "bg-gradient-to-r from-[#df3268] to-[#356fd4] hover:opacity-90" : "bg-[#102457] hover:bg-[#1a3b83]"}`}>
+                    <a href={packageHref(pkg.name)} target="_blank" rel="noopener noreferrer" data-wa-source={`intl_package_${pkg.key}`}>
+                      {c.cta}
+                    </a>
+                  </Button>
+                  <p className="mt-4 text-center text-xs leading-5 text-[#8893a8]">{pkg.excluded}</p>
+                </article>
+              ))}
+            </div>
+
+            <div className="mx-auto mt-10 grid max-w-5xl overflow-hidden rounded-2xl border border-[#d9e5fb] bg-white shadow-sm sm:grid-cols-2 sm:divide-x sm:divide-[#e4eaf5]">
+              <p className="px-5 py-4 text-sm leading-6 text-[#53617d]">
+                <span className="font-bold text-[#102457]">{c.paymentTitle}</span> {c.paymentBody}
+              </p>
+              <p className="border-t border-[#e4eaf5] px-5 py-4 text-sm leading-6 text-[#53617d] sm:border-t-0">
+                <span className="font-bold text-[#102457]">{c.customTitle}</span> {c.customBody}{" "}
+                <a href={whatsappHref} target="_blank" rel="noopener noreferrer" data-wa-source="intl_custom_plan" className="font-bold text-[#d72d62] hover:underline">
+                  {c.askTeam} →
+                </a>
+              </p>
+            </div>
+
+            <section className="relative mx-auto mt-6 max-w-5xl overflow-hidden rounded-[2rem] border border-[#c9d9f2] bg-[#eef5ff] p-6 shadow-[0_16px_40px_rgba(30,78,154,.10)] sm:p-8">
+              <div className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-[#f7bad0]/45 blur-3xl" />
+              <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex max-w-2xl gap-4 sm:gap-5">
+                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-white text-[#2457ad] shadow-sm sm:h-14 sm:w-14">
+                    <MapPin className="h-6 w-6" />
+                  </span>
+                  <div>
+                    <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#c62d5c]">{c.localLabel}</p>
+                    <h3 className="mt-2 font-serif text-2xl font-bold text-[#102457]">{c.localTitle}</h3>
+                    <p className="mt-2 text-sm leading-6 text-[#52627f]">{c.localBody}</p>
+                  </div>
                 </div>
+                <Button asChild className="h-12 shrink-0 rounded-full bg-[#102457] px-6 font-extrabold text-white hover:bg-[#1a3b83]">
+                  <Link href={href("/pricing")}>
+                    {c.localCta} <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <section className="py-24 sm:py-28">
+          <div className="container max-w-6xl">
+            <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+              <div>
+                <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#2d69ce]">{c.guidesLabel}</span>
+                <h2 className="mt-4 font-serif text-4xl font-bold leading-tight text-[#102457] sm:text-5xl">{c.guidesTitle}</h2>
+              </div>
+            </div>
+
+            <div className="mt-10 grid gap-5 sm:grid-cols-2">
+              {c.guides.map((guide) => (
+                <Link
+                  key={guide.key}
+                  href={href(guideHrefs[guide.key])}
+                  className="group flex gap-5 rounded-3xl border border-[#dce5f5] bg-white p-6 shadow-[0_12px_35px_rgba(24,51,111,.06)] transition hover:-translate-y-0.5 hover:border-[#efadc1] sm:p-7"
+                >
+                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#fff0f5] to-[#eaf2ff] text-[#d72d62]">
+                    <BookOpen className="h-5 w-5" />
+                  </span>
+                  <div className="flex-1">
+                    <h3 className="text-base font-extrabold leading-6 text-[#102457] group-hover:text-[#c62d5c]">{guide.title}</h3>
+                    <p className="mt-1.5 text-sm leading-6 text-[#65718a]">{guide.desc}</p>
+                  </div>
+                  <ArrowRight className="mt-1 h-5 w-5 shrink-0 text-[#80a3df] transition group-hover:translate-x-1 group-hover:text-[#c62d5c]" />
+                </Link>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ── PACKAGES ── */}
-      <section id="packages" className="bg-[#0b1535] py-24">
-        <div className="container max-w-5xl">
-          <div className="mb-14 text-center">
-            <h2 className="font-serif text-4xl font-bold text-white sm:text-5xl">
-              {c.packagesTitle}
-            </h2>
-            <div className="my-4 flex items-center justify-center gap-3">
-              <span className="h-px w-14 bg-[#e8147a]/50" />
-              <svg viewBox="0 0 20 18" fill="none" stroke="#e8147a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                <path d="M10 17S1 11 1 5.5A4.5 4.5 0 0110 2a4.5 4.5 0 019 3.5C19 11 10 17 10 17z" />
-              </svg>
-              <span className="h-px w-14 bg-[#e8147a]/50" />
+        <section className="bg-[linear-gradient(180deg,#fffdfd_0%,#f5f8ff_100%)] pb-24 sm:pb-28">
+          <div className="container max-w-3xl">
+            <div className="text-center">
+              <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#d72d62]">{c.faqLabel}</span>
+              <h2 className="mt-4 font-serif text-4xl font-bold text-[#102457] sm:text-5xl">{c.faqTitle}</h2>
             </div>
-            <p className="mx-auto max-w-xl text-base text-white/60">
-              {c.packagesIntro}
-            </p>
+
+            <div className="mt-12 overflow-hidden rounded-3xl border border-[#dce5f5] bg-white shadow-[0_16px_45px_rgba(24,51,111,.06)]">
+              {c.faqs.map((faq, i) => (
+                <details key={faq.q} className={`group ${i > 0 ? "border-t border-[#e8edf7]" : ""}`}>
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-6 py-5 transition hover:bg-[#f8fbff] [&::-webkit-details-marker]:hidden">
+                    <span className="text-[15px] font-extrabold text-[#102457]">{faq.q}</span>
+                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#edf4ff] text-[#245fc3] transition-transform group-open:rotate-180">
+                      <ChevronDown className="h-4 w-4" />
+                    </span>
+                  </summary>
+                  <p className="px-6 pb-6 text-sm leading-7 text-[#65718a]">{faq.a}</p>
+                </details>
+              ))}
+            </div>
           </div>
+        </section>
 
-          <div className="grid gap-8 lg:grid-cols-2">
-            {/* SAFAR */}
-            <div className="flex flex-col rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
-              <div className="mb-6 flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-[#e8147a]">{c.safarLabel}</p>
-                  <h3 className="mt-1 font-serif text-3xl font-bold text-white">Safar</h3>
-                  <p className="mt-1 text-sm italic text-white/50">{c.safarWindow}</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-serif text-4xl font-extrabold text-[#e8147a]">$1,200</p>
-                  <p className="mt-0.5 text-xs font-bold text-white/40">{c.safarDiscount}</p>
-                </div>
-              </div>
-
-              <div className="mb-8 h-px bg-white/10" />
-
-              <ul className="flex-1 space-y-3">
-                {c.safar.map((f, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <svg viewBox="0 0 24 24" fill="none" className="mt-0.5 h-5 w-5 shrink-0">
-                      <circle cx="12" cy="12" r="10" stroke="#e8147a" strokeWidth="1.4" />
-                      <path d="M7.5 12l3 3 5-5" stroke="#e8147a" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <span className="text-sm leading-relaxed text-white/80">{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 flex items-center justify-center gap-2 rounded-full border border-[#e8147a] bg-transparent px-6 py-4 text-base font-bold text-[#e8147a] transition hover:bg-[#e8147a] hover:text-white"
-              >
-                {c.safarCta}
+        <section className="px-4 pb-16">
+          <div className="container max-w-7xl overflow-hidden rounded-[2.25rem] bg-[linear-gradient(115deg,#d92f63_0%,#a43787_45%,#155ec6_100%)] px-7 py-12 text-white shadow-[0_30px_80px_rgba(32,69,145,.22)] sm:px-12 lg:flex lg:items-center lg:justify-between lg:gap-12">
+            <div>
+              <p className="flex items-center gap-2 text-xs font-extrabold uppercase tracking-[0.2em] text-white/75">
+                <Sparkles className="h-4 w-4" /> {c.readyLabel}
+              </p>
+              <h2 className="mt-3 max-w-3xl font-serif text-4xl font-bold leading-tight sm:text-5xl">{c.readyTitle}</h2>
+              <p className="mt-4 max-w-2xl text-sm leading-7 text-white/80 sm:text-base">{c.readyBody}</p>
+            </div>
+            <div className="mt-8 flex shrink-0 flex-col gap-3 sm:flex-row lg:mt-0 lg:flex-col">
+              <Button asChild className="h-[52px] rounded-full bg-white px-8 font-extrabold text-[#bd2857] hover:bg-[#fff4f7]">
+                <a href={whatsappHref} target="_blank" rel="noopener noreferrer" data-wa-source="intl_final">
+                  <MessageCircle className="mr-2 h-4 w-4" /> {c.readyCta}
+                </a>
+              </Button>
+              <a href={phoneHref} className="rounded-2xl border border-white/25 bg-white/10 px-5 py-3 text-center text-white transition hover:bg-white/15">
+                <span className="block text-[10px] font-extrabold uppercase tracking-[0.16em] text-white/65">{c.phoneLabel}</span>
+                <span className="mt-1 flex items-center justify-center gap-2 text-sm font-extrabold">
+                  <Phone className="h-4 w-4" /> +62 813-885-8595
+                </span>
               </a>
-              <p className="mt-4 text-center text-xs leading-5 text-white/40">{c.safarExcluded}</p>
-            </div>
-
-            {/* AMANAH */}
-            <div className="relative flex flex-col overflow-hidden rounded-3xl bg-[#e8147a] p-8 shadow-2xl shadow-[#e8147a]/30">
-              {/* Popular badge */}
-              <div className="absolute right-6 top-6 rounded-full bg-white px-3 py-1 text-xs font-bold text-[#e8147a]">
-                {c.amanahBadge}
-              </div>
-
-              <div className="mb-6 flex items-start justify-between">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-white/70">{c.amanahLabel}</p>
-                  <h3 className="mt-1 font-serif text-3xl font-bold text-white">Amanah</h3>
-                  <p className="mt-1 text-sm italic text-white/60">{c.amanahWindow}</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-serif text-4xl font-extrabold text-white">$3,000</p>
-                  <p className="mt-0.5 text-xs font-bold text-white/65">{c.amanahDiscount}</p>
-                </div>
-              </div>
-
-              <div className="mb-8 h-px bg-white/20" />
-
-              <ul className="flex-1 space-y-3">
-                {c.amanah.map((f, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <svg viewBox="0 0 24 24" fill="none" className="mt-0.5 h-5 w-5 shrink-0">
-                      <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="1.4" />
-                      <path d="M7.5 12l3 3 5-5" stroke="white" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    <span className="text-sm leading-relaxed text-white/90">{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 flex items-center justify-center gap-2 rounded-full bg-white px-6 py-4 text-base font-bold text-[#e8147a] transition hover:bg-white/90"
-              >
-                {c.amanahCta}
-              </a>
-              <p className="mt-4 text-center text-xs leading-5 text-white/65">{c.amanahExcluded}</p>
             </div>
           </div>
+        </section>
 
-          {/* Assessment fee note */}
-          <p className="mt-8 text-center text-sm text-white/40">
-            {c.unsure}
-          </p>
+        <div className="container pb-20 text-center">
+          <Link href={href("/pricing")} className="inline-flex items-center gap-2 text-sm font-bold text-[#687590] hover:text-[#d72d62]">
+            <ArrowLeft className="h-4 w-4" /> {c.back}
+          </Link>
         </div>
-      </section>
-
-      {/* ── WHY JODOHMU INTERNATIONAL ── */}
-      <section className="py-20">
-        <div className="container max-w-5xl">
-          <div className="mb-14 text-center">
-            <h2 className="font-serif text-4xl font-bold text-[#0b1535] sm:text-5xl">
-              {c.whyTitle}
-            </h2>
-            <div className="my-4 flex items-center justify-center gap-3">
-              <span className="h-px w-14 bg-[#e8147a]/40" />
-              <svg viewBox="0 0 20 18" fill="none" stroke="#e8147a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                <path d="M10 17S1 11 1 5.5A4.5 4.5 0 0110 2a4.5 4.5 0 019 3.5C19 11 10 17 10 17z" />
-              </svg>
-              <span className="h-px w-14 bg-[#e8147a]/40" />
-            </div>
-            <p className="mx-auto max-w-xl text-base text-[#5a4a5a]">
-              {c.whyIntro}
-            </p>
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-2">
-            {c.trust.map((t, i) => (
-              <div key={i} className="flex items-start gap-5 rounded-2xl border border-[#eee0ea] bg-white p-6 shadow-sm">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#fce8f3] text-[#e8147a]">
-                  {trustIcons[i]}
-                </div>
-                <div>
-                  <h3 className="font-serif text-lg font-bold text-[#0b1535]">{t.title}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-[#5a4a5a]">{t.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FAQ ── */}
-      <section className="bg-[#fdf0f6] py-20">
-        <div className="container max-w-3xl">
-          <div className="mb-14 text-center">
-            <h2 className="font-serif text-4xl font-bold text-[#0b1535] sm:text-5xl">
-              {c.faqTitle}
-            </h2>
-            <div className="my-4 flex items-center justify-center gap-3">
-              <span className="h-px w-14 bg-[#e8147a]/40" />
-              <svg viewBox="0 0 20 18" fill="none" stroke="#e8147a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                <path d="M10 17S1 11 1 5.5A4.5 4.5 0 0110 2a4.5 4.5 0 019 3.5C19 11 10 17 10 17z" />
-              </svg>
-              <span className="h-px w-14 bg-[#e8147a]/40" />
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {c.faqs.map((faq, i) => (
-              <details
-                key={i}
-                className="group rounded-2xl border border-[#ecd8e8] bg-white shadow-sm"
-              >
-                <summary className="flex cursor-pointer list-none items-start justify-between gap-4 px-6 py-5">
-                  <span className="font-serif text-base font-bold text-[#0b1535]">{faq.q}</span>
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="mt-0.5 h-5 w-5 shrink-0 text-[#e8147a] transition-transform group-open:rotate-180"
-                  >
-                    <path d="M6 9l6 6 6-6" />
-                  </svg>
-                </summary>
-                <div className="px-6 pb-5">
-                  <p className="text-sm leading-relaxed text-[#5a4a5a]">{faq.a}</p>
-                </div>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FINAL CTA ── */}
-      <section className="py-24">
-        <div className="container max-w-3xl text-center">
-          <h2 className="font-serif text-4xl font-bold text-[#0b1535] sm:text-5xl">
-            {c.readyTitle}
-          </h2>
-          <p className="mx-auto mt-5 max-w-lg text-lg leading-relaxed text-[#5a4a5a]">
-            {c.readyBody}
-          </p>
-
-          <a
-            href={whatsappHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-10 inline-flex items-center gap-3 rounded-full bg-[#e8147a] px-10 py-5 text-lg font-bold text-white shadow-xl shadow-[#e8147a]/30 transition hover:bg-[#c90f68]"
-          >
-            <svg viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.535 5.856L.057 23.625a.75.75 0 00.918.919l5.85-1.48A11.95 11.95 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75a9.717 9.717 0 01-4.953-1.354l-.355-.211-3.682.931.978-3.591-.232-.371A9.718 9.718 0 012.25 12C2.25 6.615 6.615 2.25 12 2.25S21.75 6.615 21.75 12 17.385 21.75 12 21.75z" />
-            </svg>
-            {c.readyCta}
-          </a>
-
-          <p className="mt-5 text-sm text-[#8a7a8a]">
-            {c.readyNote}
-          </p>
-        </div>
-      </section>
-
-      {/* ── BACK LINK ── */}
-      <div className="container pb-4 text-center">
-        <Link
-          href={localizeHref("/pricing", lang)}
-          className="text-sm text-[#8a7a8a] underline underline-offset-4 hover:text-[#e8147a]"
-        >
-          {c.back}
-        </Link>
       </div>
     </div>
   );

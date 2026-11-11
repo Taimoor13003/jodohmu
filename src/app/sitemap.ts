@@ -22,7 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes: Route[] = [
     { path: "/", priority: 1, changeFrequency: "weekly", lastModified: "2026-09-18" },
     { path: "/pricing", priority: 0.9, changeFrequency: "monthly", lastModified: "2026-09-18" },
-    { path: "/pricing/international", priority: 0.8, changeFrequency: "monthly", lastModified: "2026-09-18" },
+    { path: "/pricing/international", priority: 0.8, changeFrequency: "monthly", lastModified: "2026-11-11" },
     { path: "/plan-your-jodohmu-way", priority: 0.8, changeFrequency: "monthly", lastModified: "2026-08-16" },
     { path: "/careers", priority: 0.7, changeFrequency: "monthly", lastModified: "2026-07-04" },
     { path: "/mitra", priority: 0.6, changeFrequency: "monthly", lastModified: "2026-10-01" },

@@ -1,24 +1,36 @@
 import type { Metadata } from "next";
-import { InternationalPricing } from "@/components/pricing/international-pricing";
-import { languageAlternates } from "@/lib/i18n-routes";
+import { InternationalPricing, internationalPricingSchema, internationalShareImage } from "@/components/pricing/international-pricing";
+import { languageAlternates, siteUrl } from "@/lib/i18n-routes";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.jodohmu.com";
+const title = "Biro Jodoh Internasional untuk WNA — Paket & Harga";
+const description =
+  "Biro jodoh bagi WNA yang ingin menikah dengan pasangan Indonesia terverifikasi. Perkenalan online didampingi, bertemu di Indonesia. Mulai $1,200.";
 
 export const metadata: Metadata = {
-  title: "Paket Internasional",
-  description:
-    "Layanan perjodohan internasional Jodohmu bagi WNA yang serius mencari pasangan Indonesia terverifikasi — dijalankan dengan terhormat, didampingi penuh, dan dengan niat yang sungguh-sungguh.",
+  title,
+  description,
   openGraph: {
-    title: "Paket Internasional | Jodohmu",
-    description:
-      "Perjodohan internasional Jodohmu bagi WNA yang mencari pasangan Indonesia terverifikasi — didampingi penuh dan serius.",
+    title: `${title} | Jodohmu`,
+    description,
     url: `${siteUrl}/pricing/international`,
     type: "website",
     locale: "id_ID",
+    images: [internationalShareImage("Perjodohan internasional bersama Jodohmu")],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${title} | Jodohmu`,
+    description,
+    images: [internationalShareImage("Perjodohan internasional bersama Jodohmu").url],
   },
   alternates: languageAlternates("/pricing/international", "id"),
 };
 
 export default function InternationalPricingPage() {
-  return <InternationalPricing lang="id" />;
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(internationalPricingSchema("id")) }} />
+      <InternationalPricing lang="id" />
+    </>
+  );
 }
