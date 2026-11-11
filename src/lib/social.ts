@@ -239,13 +239,15 @@ export function resolveField(choice: FieldChoice | undefined, auto: string, limi
 }
 
 /* The CV form candidates fill in ("Domisili/asal : Bandung", one detail a line, blank lines between groups),
-   read into groups of rows plus the two long answers. Contact details, the name and the photo line are dropped:
+   read into groups of rows plus the two long answers. Contact details, the name, the photo and the prayer line are dropped:
    people reach the candidate through the page's code, never directly. */
 export type CvRow = { label: string; value: string };
 // Groups are objects, not nested lists: Firestore can't store a list inside a list
 export type CvContent = { groups: { rows: CvRow[] }[]; criteria: string; vision: string };
 
 const CV_SKIP = /^(nama|kontak|contact|no\.? ?(hp|wa|telp)|whatsapp|wa\b|email|e-mail|telp|telepon|instagram|ig\b|foto|photo)/i;
+// How often someone prays is for the matchmaker, not a public post. Only the form's question line, so a vision line mentioning sholat stays
+const CV_PRIVATE = /^(sholat|shalat|salat|solat|prayers?)\b[^:]*:/i;
 const scrub = (v: string) => v
   .replace(/\S+@\S+\.\S+/g, "")
   .replace(/(\+?\d[\d\s-]{8,}\d)/g, "")
@@ -266,7 +268,7 @@ export function parseCv(raw: string): CvContent | null {
     // Leading emoji and bullets ("🍉 Kriteria calon :")
     const clean = line.replace(/^[^A-Za-z0-9\u00C0-\u024F]+/, "").trim();
     if (!clean) { if (groups[groups.length - 1].length) groups.push([]); last = null; continue; }
-    if (/^cv\b/i.test(clean) || CV_SKIP.test(clean)) { last = null; continue; }
+    if (/^cv\b/i.test(clean) || CV_SKIP.test(clean) || CV_PRIVATE.test(clean)) { last = null; continue; }
     const at = clean.indexOf(":");
     if (at < 0) {
       if (last === "criteria") criteria += ` ${clean}`;
