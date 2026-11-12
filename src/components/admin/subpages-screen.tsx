@@ -14,6 +14,7 @@ import SocialStories from "./social-stories";
 import LoginStatus from "./login-status";
 import SubpageLeadForm from "./subpage-lead-form";
 import SubpageOutreach from "./subpage-outreach";
+import OutreachPlan from "./outreach-plan";
 import { isOutreachAccount } from "@/lib/mitra";
 import { OriginBadges, StatusBadge } from "./calldesk/shared";
 import { SOCIAL_ACCOUNTS, findSocialAccount, type SocialAccountKey } from "@/lib/social-accounts";
@@ -50,6 +51,8 @@ export default function SubpagesScreen() {
     router.replace(`${pathname}?${q.toString()}`, { scroll: false });
   };
   const [threadsOn, setThreadsOn] = useState<HubData["accounts"]>([]);
+  // Outreach opens on the plan for every account; picking an account tab shows just that one
+  const [outreachScope, setOutreachScope] = useState<"all" | "page">("all");
   const notice = params.get("connected") ? t("Threads terhubung.", "Threads connected.") : null;
   const loginError = params.get("error");
 
@@ -60,7 +63,7 @@ export default function SubpagesScreen() {
 
       <div className="mt-5 flex gap-1 overflow-x-auto rounded-xl border bg-white p-1" style={{ borderColor: C.border }}>
         {SOCIAL_ACCOUNTS.map((a) => (
-          <button key={a.key} type="button" onClick={() => go({ page: a.key, profile: null })}
+          <button key={a.key} type="button" onClick={() => { go({ page: a.key, profile: null }); setOutreachScope("page"); }}
             className="flex shrink-0 flex-col items-start rounded-lg px-4 py-2 text-left transition"
             style={account === a.key ? { background: a.accent, color: "white" } : { color: C.label }}>
             <span className="text-sm font-bold">@{a.handle}</span>
@@ -87,9 +90,18 @@ export default function SubpagesScreen() {
           : view === "stories"
             ? <SocialStories key={account} accountKey={account} lang={lang} />
           : view === "outreach"
-            ? isOutreachAccount(account)
-              ? <SubpageOutreach key={account} accountKey={account} lang={lang} />
-              : null
+            ? <>
+                <div className="mb-4 inline-flex rounded-xl border bg-white p-1" style={{ borderColor: C.border }}>
+                  {([["all", t("Semua akun · 10 hari", "All pages · 10 days")], ["page", `@${accountInfo.handle}`]] as const).map(([key, label]) => (
+                    <button key={key} type="button" onClick={() => setOutreachScope(key)}
+                      className="rounded-lg px-3 py-1.5 text-sm font-bold"
+                      style={outreachScope === key ? { background: C.navy, color: "white" } : { color: C.label }}>{label}</button>
+                  ))}
+                </div>
+                {outreachScope === "all"
+                  ? <OutreachPlan lang={lang} />
+                  : isOutreachAccount(account) ? <SubpageOutreach key={account} accountKey={account} lang={lang} /> : null}
+              </>
           : cardPage
             ? <ClientCards key={cardPage.key} page={cardPage.key} lang={lang} selectedId={params.get("profile")} onSelect={(id) => go({ profile: id })} />
             : <p className="rounded-2xl border bg-white px-5 py-16 text-center text-sm" style={{ borderColor: C.border, color: C.muted }}>

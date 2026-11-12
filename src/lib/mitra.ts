@@ -133,13 +133,14 @@ export type MitraProspect = {
   createdAt: string | null;
   createdBy: string;
   log: MitraLogEntry[];
-  // The first message, sent by hand from one of our accounts on a planned day (see OUTREACH_ACCOUNTS)
+  // The first message, sent from one of our accounts on a planned day (see OUTREACH_ACCOUNTS)
   outreach: MitraOutreach | null;
 };
 
 /* Outreach: each prospect is written to by one of our accounts only, never by two, so nobody gets the same pitch
-   twice. The CRM only prepares the message and the day; a person sends it by hand from the Instagram app or their
-   email, because Instagram doesn't let a business start a DM through its API and automated DMs get accounts blocked. */
+   twice. The CRM plans the message and the day. Instagram DMs go out each morning from a scheduled Claude run in the
+   office Chrome (scripts/outreach.mjs, at most 2 per account a day), and emails from info@jodohmu.com (at most 3 a day).
+   Replies are the team's. */
 export const OUTREACH_ACCOUNTS = ["jodohmu", "taaruf_sekarang", "nikahin_foreigner", "temu_chindo", "nikah_lagiyuk", "kristenmatch", "poligami_indonesia"] as const;
 export type OutreachAccount = (typeof OUTREACH_ACCOUNTS)[number];
 export const isOutreachAccount = (value: unknown): value is OutreachAccount =>
@@ -155,7 +156,12 @@ export type MitraOutreach = {
   message: string;
   sentAt: string | null;
   sentBy: string;
+  // Why the last try didn't go out, e.g. the account only takes DMs from people it follows
+  issue: OutreachIssue | null;
 };
+
+export const OUTREACH_ISSUES = ["follow_first", "not_found", "no_fit", "needs_person"] as const;
+export type OutreachIssue = { kind: (typeof OUTREACH_ISSUES)[number]; note: string; at: string };
 
 // One row of an account's outreach queue on Subpages
 export type OutreachItem = {
@@ -175,7 +181,14 @@ export const toOutreach = (value: unknown): MitraOutreach | null => {
     message: o.message,
     sentAt: typeof o.sentAt === "string" ? o.sentAt : null,
     sentBy: typeof o.sentBy === "string" ? o.sentBy : "",
+    issue: toIssue(o.issue),
   };
+};
+
+const toIssue = (value: unknown): OutreachIssue | null => {
+  const i = value as Record<string, unknown> | null | undefined;
+  if (!i || !(OUTREACH_ISSUES as readonly unknown[]).includes(i.kind)) return null;
+  return { kind: i.kind as OutreachIssue["kind"], note: typeof i.note === "string" ? i.note : "", at: typeof i.at === "string" ? i.at : "" };
 };
 
 // Nobody works on Sunday, so outreach and its follow-ups never land on one

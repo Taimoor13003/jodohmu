@@ -7,8 +7,8 @@ import { requireSocial } from "@/lib/social-access";
 import { findSocialAccount } from "@/lib/social-accounts";
 import { MITRA_PROSPECTS, nextWorkday, toOutreach, type MitraLogEntry, type OutreachItem } from "@/lib/mitra";
 
-/* Planned first messages to Mitra prospects, one queue per account. Sending happens by hand in the Instagram app or
-   email; this only lists what is due and records that it went out. Open to whoever manages our social accounts and
+/* Planned first messages to Mitra prospects, one queue per account. Instagram DMs are sent by the daily Claude run
+   and emails (scripts/outreach.mjs writes straight to Firestore); this lists the plan and records what went out. Open to whoever manages our social accounts and
    whoever works the Mitra list. */
 
 // The log lives on the prospect doc; same cap as the Mitra API
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
         stageFrom: from === "prospect" ? "prospect" : null, stageTo: from === "prospect" ? "contacted" : null,
       };
       await ref.update({
-        outreach: { ...outreach, sentAt: now, sentBy: actor.name },
+        outreach: { ...outreach, sentAt: now, sentBy: actor.name, issue: null },
         stage: from === "prospect" ? "contacted" : from,
         lastContactedAt: now,
         followUpDate: nextWorkday(today, REPLY_WAIT),
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
       let day = isDay(body.day) ? body.day : nextWorkday(today);
       if (new Date(`${day}T00:00:00Z`).getUTCDay() === 0) day = nextWorkday(day);
       await ref.update({
-        outreach: { ...outreach, day }, followUpDate: day,
+        outreach: { ...outreach, day, issue: null }, followUpDate: day,
         updatedAt: FieldValue.serverTimestamp(), updatedBy: actor.name,
       });
       return NextResponse.json({ success: true, day });

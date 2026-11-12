@@ -1,18 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CalendarClock, Check, ChevronDown, Copy, Globe, Instagram, Loader2, Mail, Phone, Undo2 } from "lucide-react";
+import { AlertTriangle, CalendarClock, Check, ChevronDown, Copy, Globe, Instagram, Loader2, Mail, Phone, Undo2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
 import { authFetch } from "@/components/admin/share-api";
 import { findSocialAccount } from "@/lib/social-accounts";
-import { instagramUrl, nextWorkday, type OutreachAccount, type OutreachItem } from "@/lib/mitra";
+import { instagramUrl, nextWorkday, type OutreachAccount, type OutreachIssue, type OutreachItem } from "@/lib/mitra";
 
 const C = { border: "#E2E8F0", text: "#0F172A", body: "#334155", label: "#64748B", muted: "#94A3B8", navy: "#1B3A6B" };
 const API = "/api/admin/outreach";
 
-/* Subpages → Outreach: the Mitra prospects this account writes to first, a few each working day. Whoever is on duty
-   copies the message, sends it by hand from the app (switched to this account) or from email, and taps Sent.
+/* Subpages → Outreach: the Mitra prospects this account writes to first, a few each day. Claude sends the DMs and
+   emails each morning (scripts/outreach.mjs); Sent is only for something a teammate sent by hand.
    Replies come into the account's own inbox and are logged on the Mitra page. */
 export default function SubpageOutreach({ accountKey, lang }: { accountKey: OutreachAccount; lang: "id" | "en" }) {
   const t = (id: string, en: string) => (lang === "id" ? id : en);
@@ -69,15 +69,15 @@ export default function SubpageOutreach({ accountKey, lang }: { accountKey: Outr
   return (
     <div className="space-y-5">
       <div className="rounded-2xl border bg-white p-4 text-sm" style={{ borderColor: C.border, color: C.body }}>
-        <p className="font-bold" style={{ color: C.text }}>{t(`Cara kirim dari @${account.handle}`, `How to send from @${account.handle}`)}</p>
+        <p className="font-bold" style={{ color: C.text }}>{t(`Cara kerja outreach @${account.handle}`, `How outreach works for @${account.handle}`)}</p>
         <ol className="mt-1.5 list-decimal space-y-0.5 pl-5 text-[13px]">
-          <li>{t(`Di aplikasi Instagram, pindah ke akun @${account.handle}. Follow mereka dan like satu post dulu.`, `In the Instagram app, switch to @${account.handle}. Follow them and like one post first.`)}</li>
-          <li>{t("Salin pesan, tempel di DM (atau email), sesuaikan satu kalimat kalau perlu. Jangan tambahkan link.", "Copy the message, paste it into the DM (or email), adjust a line if needed. Don't add links.")}</li>
-          <li>{t("Tekan Terkirim. Follow-up otomatis dijadwalkan 3 hari kerja kemudian.", "Tap Sent. A follow-up is planned 3 working days later.")}</li>
-          <li>{t(`Cek inbox @${account.handle} setiap hari. Balasan dicatat di halaman Mitra.`, `Check @${account.handle}'s inbox every day. Log replies on the Mitra page.`)}</li>
+          <li>{t("DM Instagram dikirim otomatis oleh Claude setiap pagi, maksimal 2 per akun per hari. Pesan yang akan dikirim bisa dilihat di bawah. Tombol Terkirim hanya untuk yang dikirim manual.", "Instagram DMs are sent by Claude every morning, at most 2 per account a day. The messages it will send are listed below. Tap Sent only for something you sent by hand.")}</li>
+          <li>{t(`Tim cek inbox @${account.handle} setiap hari dan membalas. Balasan dicatat di halaman Mitra.`, `The team checks @${account.handle}'s inbox every day and replies. Log replies on the Mitra page.`)}</li>
+          <li>{t("Yang ditandai \"Perlu orang\" tidak bisa dikirim Claude: kirim manual, atau pindahkan harinya.", "Anything marked \"Needs a person\" couldn't be sent by Claude: send it by hand, or move its day.")}</li>
+          <li>{t("Email juga dikirim otomatis dari info@jodohmu.com (maks. 3 per hari). Balasan masuk ke inbox info@jodohmu.com.", "Emails are sent automatically too, from info@jodohmu.com (at most 3 a day). Replies arrive in the info@jodohmu.com inbox.")}</li>
         </ol>
         <p className="mt-2 text-[12px]" style={{ color: C.muted }}>
-          {t("Jangan pernah kirim pesan pertama lewat WhatsApp, dan jangan pakai alat kirim otomatis.", "Never send the first message on WhatsApp, and never use an automatic sending tool.")}
+          {t("Jangan pernah kirim pesan pertama lewat WhatsApp.", "Never send the first message on WhatsApp.")}
         </p>
       </div>
 
@@ -203,6 +203,21 @@ function ContactRow({ item, lang }: { item: OutreachItem; lang: "id" | "en" }) {
   return <div className="flex flex-wrap gap-1.5">{links}</div>;
 }
 
+export const issueLabel = (kind: OutreachIssue["kind"], lang: "id" | "en") => ({
+  follow_first: lang === "id" ? "Harus follow dulu, dicoba lagi" : "Must follow first, will retry",
+  not_found: lang === "id" ? "Akun tidak ditemukan" : "Account not found",
+  no_fit: lang === "id" ? "Tidak cocok" : "Not a fit",
+  needs_person: lang === "id" ? "Perlu orang" : "Needs a person",
+})[kind];
+
+function IssueNote({ issue, lang }: { issue: OutreachIssue; lang: "id" | "en" }) {
+  return (
+    <p className="mt-1 flex items-start gap-1 text-xs font-semibold text-amber-700">
+      <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />{issueLabel(issue.kind, lang)}{issue.note ? `: ${issue.note}` : ""}
+    </p>
+  );
+}
+
 function ChannelIcon({ channel }: { channel: "instagram" | "email" }) {
   return channel === "email" ? <Mail className="h-4 w-4 shrink-0 text-sky-600" /> : <Instagram className="h-4 w-4 shrink-0 text-pink-600" />;
 }
@@ -233,6 +248,7 @@ function OutreachCard({ item, today, lang, busy, accent, onSent, onMove, moveLab
             {item.name !== item.organization ? `${item.name} · ` : ""}{item.city}
             {outreach.day < today && <span className="font-bold text-rose-600"> · {t("terlambat", "overdue")} ({outreach.day})</span>}
           </p>
+          {outreach.issue && <IssueNote issue={outreach.issue} lang={lang} />}
         </div>
       </div>
       <div className="space-y-3 px-4 py-3">
