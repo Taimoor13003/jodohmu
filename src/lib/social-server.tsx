@@ -5,7 +5,7 @@ import { FieldValue, Timestamp } from "firebase-admin/firestore";
 import cloudinary from "@/lib/cloudinary";
 import { adminDb } from "@/lib/firebase-admin";
 import {
-  REEL_TIMING, SOCIAL_POSTS, bersemiLines, buildCard, lenteraLines, describeChoices, findPage, helloLines, sakinahLines,
+  ASANIKAH_CTA, CV_PARAGRAPHS as CV_TITLES, REEL_TIMING, asanikahLines, lookingFor, SOCIAL_POSTS, bersemiLines, buildCard, lenteraLines, describeChoices, findPage, helloLines, sakinahLines,
   type CardContent, type FieldChoices, type FigureChoice, type PostFormat, type SocialPageKey,
 } from "@/lib/social";
 import { figureSvg, iconSvg, type Figure } from "@/lib/social-figures";
@@ -130,7 +130,8 @@ function globeMarkup(cx: number, cy: number, r: number, tilt: number) {
 
 async function helloFonts(card: CardContent) {
   const { title, sub } = helloLines(card);
-  const text = `@${card.page.handle}${title}${sub}Profile${card.rows.map((r) => r.label + r.value).join("")}${card.intro}“”more info?klik DM now!${card.code}:·`;
+  const cv = card.cv ? [...card.cv.groups.flatMap((g) => g.rows).map((r) => r.label + r.value), card.cv.criteria, card.cv.vision, ...CV_TITLES.en.map((t) => t.toUpperCase())].join("") : "";
+  const text = `@${card.page.handle}${title}${sub}Profile${card.rows.map((r) => r.label + r.value).join("")}${card.intro}${cv}“”more info?klik DM now!${card.code}:·`;
   const [regular, bold] = await Promise.all([googleFont("Inter", "wght@600", text), googleFont("Inter", "wght@800", text)]);
   return [
     regular && { name: "Inter", data: regular, weight: 600 as const, style: "normal" as const },
@@ -190,6 +191,14 @@ const LENTERA_FIGURE_FILES: Record<Figure, string> = {
   woman: path.join(process.cwd(), "public", "social-figures", "lentera", "woman.png"),
   hijab: path.join(process.cwd(), "public", "social-figures", "lentera", "hijab.png"),
 };
+// The approved 3D avatars for @asanikah.pk (Gemini), square, on their own green background
+const ASANIKAH_FIGURE_FILES: Record<Figure, string> = {
+  man: path.join(process.cwd(), "public", "social-figures", "asanikah", "man.png"),
+  man_peci: path.join(process.cwd(), "public", "social-figures", "asanikah", "man-peci.png"),
+  man_peci_beard: path.join(process.cwd(), "public", "social-figures", "asanikah", "man-peci-beard.png"),
+  woman: path.join(process.cwd(), "public", "social-figures", "asanikah", "woman.png"),
+  hijab: path.join(process.cwd(), "public", "social-figures", "asanikah", "hijab.png"),
+};
 const figureCache = new Map<string, string>();
 
 // The artwork if we have it, otherwise the drawn silhouette
@@ -225,10 +234,35 @@ async function helloParts(card: CardContent, height: number): Promise<Record<Hel
       {sub && <div style={{ display: "flex", opacity: show === "sub" ? 1 : 0, marginTop: 16, fontSize: 60, fontWeight: 800, color: "#FFFFFF", letterSpacing: -2 }}>{sub}</div>}
     </div>
   );
+  // A pasted CV takes the rows' place: every detail the candidate filled in, then their criteria and marriage vision
+  const cv = card.cv ?? null;
+  const cvPanel = 920, cvLabelCol = 260;
+  const cvSize = cv ? cvSizes(cv, height - L.profileTop - L.band - 30 - 150, { panel: cvPanel, labelCol: cvLabelCol, em: 0.56 }) : null;
+  const cvBody = cv && cvSize && (
+    <div style={{ display: "flex", flexDirection: "column", marginTop: 30, width: cvPanel }}>
+      {cv.groups.map((group, g) => (
+        <div key={g} style={{ display: "flex", flexDirection: "column", ...(g ? { marginTop: cvSize.fs * 0.45, paddingTop: cvSize.fs * 0.45, borderTop: "1.5px solid rgba(255,255,255,0.22)" } : {}) }}>
+          {group.rows.map((row, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "flex-start", padding: `${cvSize.pad}px 0` }}>
+              <div style={{ display: "flex", flexShrink: 0, width: cvSize.labelCol, marginRight: cvSize.gap, marginTop: (cvSize.fs - cvSize.label) * 0.5, fontSize: cvSize.label, fontWeight: 600, lineHeight: 1.3, color: "rgba(255,255,255,0.7)" }}>{row.label}</div>
+              <div style={{ display: "flex", flex: 1, fontSize: cvSize.fs, fontWeight: 800, color: "#FFFFFF", lineHeight: 1.25, letterSpacing: -0.5 }}>{row.value}</div>
+            </div>
+          ))}
+        </div>
+      ))}
+      {[cv.criteria, cv.vision].map((body, i) => body && (
+        <div key={`p${i}`} style={{ display: "flex", flexDirection: "column", ...(cv.groups.length || (i && cv.criteria) ? { marginTop: cvSize.fs * 0.45, paddingTop: cvSize.fs * 0.45, borderTop: "1.5px solid rgba(255,255,255,0.22)" } : {}) }}>
+          <div style={{ display: "flex", fontSize: cvSize.label, fontWeight: 800, letterSpacing: 2, color: "rgba(255,255,255,0.7)" }}>{CV_TITLES.en[i].toUpperCase()}</div>
+          <div style={{ display: "flex", marginTop: cvSize.label * 0.5, fontSize: cvSize.fs, fontWeight: 600, color: "#FFFFFF", lineHeight: 1.3 }}>{body}</div>
+        </div>
+      ))}
+    </div>
+  );
   // The same for the profile: heading and rows sit centred together in the space between the handle and the band
   const profile = (show: "heading" | "rows") => (
     <div key={show} style={{ position: "absolute", top: L.profileTop, bottom: L.band + 30, left: 0, right: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-      <div style={{ display: "flex", opacity: show === "heading" ? 1 : 0, fontSize: dense ? 88 : 104, fontWeight: 800, color: "#FFFFFF", letterSpacing: -3 }}>Profile</div>
+      <div style={{ display: "flex", opacity: show === "heading" ? 1 : 0, fontSize: cv ? 80 : dense ? 88 : 104, fontWeight: 800, color: "#FFFFFF", letterSpacing: -3 }}>Profile</div>
+      {cvBody ? <div style={{ display: "flex", flexDirection: "column", opacity: show === "rows" ? 1 : 0 }}>{cvBody}</div> : (
       <div style={{ display: "flex", flexDirection: "column", opacity: show === "rows" ? 1 : 0 }}>
         <div style={{ display: "flex", flexDirection: "column", marginTop: dense ? 26 : 46, width: 840 }}>
           {card.rows.map((row, i) => (
@@ -248,6 +282,7 @@ async function helloParts(card: CardContent, height: number): Promise<Record<Hel
           </div>
         )}
       </div>
+      )}
     </div>
   );
 
@@ -323,13 +358,13 @@ async function sakinahFonts(card: CardContent) {
 }
 
 const eyebrow = { display: "flex", fontSize: 24, fontWeight: 500, letterSpacing: 6, color: S.gold } as const;
-const CV_PARAGRAPHS = ["Kriteria calon", "Visi misi pernikahan"];
+const CV_PARAGRAPHS = CV_TITLES.id;
 
 /* The CV page: every detail of the form in one cream panel, so the type is sized to what was written.
    Satori can't measure text, so lines are estimated from the characters (Jost averages about half an em wide). */
-function cvSizes(cv: NonNullable<CardContent["cv"]>, room: number) {
-  const panel = 1080 - 2 * 70 - 2 * 44, labelCol = 250, gap = 22;
-  const lines = (chars: number, width: number, fs: number) => Math.max(1, Math.ceil((chars * fs * 0.52) / width));
+function cvSizes(cv: NonNullable<CardContent["cv"]>, room: number, { panel = 1080 - 2 * 70 - 2 * 44, labelCol = 250, em = 0.52 } = {}) {
+  const gap = 22;
+  const lines = (chars: number, width: number, fs: number) => Math.max(1, Math.ceil((chars * fs * em) / width));
   const paragraphs = [cv.criteria, cv.vision].filter(Boolean);
   for (const fs of [32, 30, 28, 26, 24, 22, 21, 20]) {
     const pad = Math.round(fs * 0.28);
@@ -831,6 +866,186 @@ async function renderLentera(card: CardContent, slide: "intro" | "profile"): Pro
   );
 }
 
+/* ── "asanikah" template: @asanikah.pk (Pakistan). Deep green, cream and gold in a thin gold frame:
+   a cover with the 3D avatar in a gold ring, a details table on cream paper, then "Looking for" and how to proceed.
+   Drawn as parts, so the same design makes the three 4:5 carousel slides and the layers of the 9:16 Reel. ── */
+const AN = {
+  green: "#0F3D33", green2: "#165446", deep: "#0A2C25", cream: "#F7F1E6", paper: "#FFFAF1", gold: "#C9A24A", gold2: "#E5C77F",
+  ink: "#1D2A26", muted: "#6B756F", line: "#E6DCC8", soft: "#E9E1D1",
+};
+type AnSlide = "cover" | "details" | "looking";
+type AnPart = "brandDark" | "brandLight" | "avatar" | "coverText" | "badges" | "coverFoot" | "paper" | "details" | "detailsFoot" | "points" | "cta" | "lookingFoot";
+
+async function asanikahFonts(card: CardContent) {
+  const { kicker, headline, lines } = asanikahLines(card);
+  const table = card.cv?.groups.length ? card.cv.groups.flatMap((g) => g.rows) : card.rows;
+  const all = [kicker.toUpperCase(), headline, ...lines, card.code, card.intro, ...lookingFor(card), ...table.map((r) => r.label + r.value), ASANIKAH_CTA.ask, ASANIKAH_CTA.note, ASANIKAH_CTA.urdu, "DM the admin"].join("");
+  const sans = `${all}@${card.page.handle}123/SWIPE FOR DETAILS →Swipe →No photo or name shared publiclyVerified profileFamily callConsentWe confirm with both families before any number is sharedDM “”Nikah, made easy·`;
+  const serif = `Asanikah${headline}Profile detailsLooking for“”${card.intro}`;
+  const [medium, semi, bold, display] = await Promise.all([
+    googleFont("Inter", "wght@500", sans), googleFont("Inter", "wght@600", sans), googleFont("Inter", "wght@700", sans),
+    googleFont("Cormorant+Garamond", "wght@700", serif),
+  ]);
+  return [
+    medium && { name: "Inter", data: medium, weight: 500 as const, style: "normal" as const },
+    semi && { name: "Inter", data: semi, weight: 600 as const, style: "normal" as const },
+    bold && { name: "Inter", data: bold, weight: 700 as const, style: "normal" as const },
+    display && { name: "Cormorant", data: display, weight: 700 as const, style: "normal" as const },
+  ].filter(Boolean) as { name: string; data: ArrayBuffer; weight: 500 | 600 | 700; style: "normal" }[];
+}
+
+// The double gold frame; sized outright because Satori doesn't stretch absolutely placed boxes inside a fragment
+const anFrames = (height: number) => [35, 48].map((inset, i) => (
+  <div key={inset} style={{ position: "absolute", left: inset, top: inset, width: CARD_SIZE.width - 2 * inset, height: height - 2 * inset, display: "flex", border: `2px solid rgba(201,162,74,${i ? 0.22 : 0.55})`, borderRadius: i ? 6 : 10 }} />
+));
+
+// Every part placed for a canvas of the given height. On a Reel the content keeps clear of Instagram's own buttons and caption,
+// and parts that appear one after another keep their places because each is drawn in the full column with the rest invisible.
+async function asanikahParts(card: CardContent, height: number, slideNo: string): Promise<Record<AnPart, React.ReactNode>> {
+  const reel = height > CARD_SIZE.height;
+  const box = { left: 90, right: 90, top: reel ? 210 : 85, bottom: reel ? 420 : 80 };
+  const { kicker, headline, lines } = asanikahLines(card);
+  const wants = lookingFor(card);
+  // The details table: the pasted CV as written, otherwise the card's own rows (gender is already on the cover)
+  const table = card.cv?.groups.length ? card.cv.groups.flatMap((g) => g.rows) : card.rows.filter((r) => r.key !== "gender");
+  const column = (children: React.ReactNode, key: string, justify: "center" | "flex-start" = "flex-start") => (
+    <div key={key} style={{ position: "absolute", left: box.left, right: box.right, top: box.top + 80, bottom: box.bottom + 60, display: "flex", flexDirection: "column", justifyContent: justify }}>{children}</div>
+  );
+  const hide = (on: boolean) => ({ opacity: on ? 1 : 0 });
+
+  const brand = (dark: boolean) => (
+    <div key={dark ? "bd" : "bl"} style={{ position: "absolute", left: box.left, right: box.right, top: box.top, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ display: "flex", fontFamily: "Cormorant", fontSize: 46, fontWeight: 700, color: dark ? AN.cream : AN.green }}>
+        Asa<span style={{ color: AN.gold }}>n</span>ikah
+      </div>
+      {slideNo && <div style={{ display: "flex", fontSize: 25, fontWeight: 500, letterSpacing: 3, color: dark ? AN.gold2 : AN.muted }}>{slideNo}</div>}
+    </div>
+  );
+  const foot = (left: string, right: string, dark: boolean, key: string) => (
+    <div key={key} style={{ position: "absolute", left: box.left, right: box.right, bottom: box.bottom, display: "flex", justifyContent: "space-between", fontSize: 26, fontWeight: 600, letterSpacing: dark ? 3 : 0, color: dark ? AN.gold2 : AN.muted }}>
+      <div style={{ display: "flex" }}>{left}</div>
+      <div style={{ display: "flex" }}>{right}</div>
+    </div>
+  );
+
+  const figure = await figureImage(card.figure, ASANIKAH_FIGURE_FILES);
+  const avatarSize = reel ? 400 : 330;
+  const headSize = headline.length <= 14 ? (reel ? 140 : 124) : headline.length <= 22 ? 96 : 76;
+  const badge = (label: string) => (
+    <div key={label} style={{ display: "flex", alignItems: "center", margin: "0 8px", padding: "14px 22px", borderRadius: 14, background: "rgba(229,199,127,0.12)", border: "2px solid rgba(229,199,127,0.35)", fontSize: 26, fontWeight: 600, color: AN.gold2 }}>
+      <div style={{ display: "flex", width: 12, height: 12, borderRadius: 99, background: AN.gold, marginRight: 12 }} />{label}
+    </div>
+  );
+  const cover = (show: "avatar" | "coverText" | "badges") => column(
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+      <img src={figure} width={avatarSize} height={avatarSize} style={{ borderRadius: 999, border: `8px solid ${AN.gold}`, ...hide(show === "avatar") }} />
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", ...hide(show === "coverText") }}>
+        <div style={{ display: "flex", marginTop: 40, padding: "14px 30px", borderRadius: 999, border: `2px solid ${AN.gold}`, fontSize: 30, fontWeight: 700, letterSpacing: 5, color: AN.gold2 }}>{card.code}</div>
+        <div style={{ display: "flex", marginTop: 34, fontSize: 32, fontWeight: 500, letterSpacing: 7, color: AN.gold2 }}>{kicker.toUpperCase()}</div>
+        <div style={{ display: "flex", marginTop: 10, fontFamily: "Cormorant", fontSize: headSize, fontWeight: 700, lineHeight: 1.02, color: AN.cream, textAlign: "center" }}>{headline}</div>
+        {lines.map((l) => (
+          <div key={l} style={{ display: "flex", marginTop: 14, fontSize: 38, fontWeight: 500, color: AN.soft, textAlign: "center" }}>{l}</div>
+        ))}
+      </div>
+      <div style={{ display: "flex", marginTop: 44, ...hide(show === "badges") }}>{["Verified profile", "Family call", "Consent"].map(badge)}</div>
+    </div>, show, "center");
+
+  // Every row must fit: the type steps down until the estimated lines fill the room
+  const labelCol = 360, valueCol = 900 - labelCol - 30;
+  const room = height - box.top - box.bottom - 80 - 60 - 170;
+  const lineCount = (chars: number, width: number, fs: number) => Math.max(1, Math.ceil((chars * fs * 0.55) / width));
+  const fs = [34, 32, 30, 28, 26, 24, 22, 20, 18].find((size) => {
+    const pad = Math.round(size * 0.42);
+    const h = table.reduce((sum, r) => sum + Math.max(lineCount(r.label.length, labelCol, size), lineCount(r.value.length, valueCol, size)) * size * 1.3 + pad * 2 + 2, 0);
+    return h <= room;
+  }) ?? 18;
+  const pad = Math.round(fs * 0.42);
+
+  const pointSize = wants.length > 4 ? 34 : 38;
+  const looking = (show: "points" | "cta") => column(
+    <div style={{ display: "flex", flex: 1, flexDirection: "column" }}>
+      <div style={{ display: "flex", flexDirection: "column", ...hide(show === "points") }}>
+        <div style={{ display: "flex", fontFamily: "Cormorant", fontSize: 80, fontWeight: 700, color: AN.cream }}>Looking for</div>
+        {wants.length > 0 && (
+          <div style={{ display: "flex", flexDirection: "column", marginTop: 34, padding: "34px 40px", borderRadius: 24, background: "rgba(255,255,255,0.06)", border: "2px solid rgba(229,199,127,0.3)" }}>
+            {wants.map((w, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "flex-start", padding: "10px 0" }}>
+                <div style={{ display: "flex", flexShrink: 0, width: 16, height: 16, borderRadius: 99, background: AN.gold, marginTop: pointSize * 0.45, marginRight: 26 }} />
+                <div style={{ display: "flex", fontSize: pointSize, fontWeight: 500, lineHeight: 1.4, color: "#EFE8DA" }}>{w}</div>
+              </div>
+            ))}
+          </div>
+        )}
+        {card.intro && (
+          <div style={{ display: "flex", marginTop: 34, fontFamily: "Cormorant", fontSize: wants.length ? 44 : 60, fontWeight: 700, lineHeight: 1.25, color: AN.cream }}>“{card.intro}”</div>
+        )}
+      </div>
+      <div style={{ display: "flex", flex: 1 }} />
+      <div style={{ display: "flex", flexDirection: "column", ...hide(show === "cta") }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "36px 30px", borderRadius: 24, background: AN.gold }}>
+          <div style={{ display: "flex", fontSize: 32, fontWeight: 600, color: AN.green }}>{ASANIKAH_CTA.ask}</div>
+          <div style={{ display: "flex", marginTop: 6, fontSize: 50, fontWeight: 700, color: AN.green }}>DM the admin: {card.code}</div>
+          <div style={{ display: "flex", marginTop: 10, fontSize: 26, fontWeight: 500, lineHeight: 1.35, color: AN.green, textAlign: "center" }}>{ASANIKAH_CTA.note}</div>
+        </div>
+        <div style={{ display: "flex", justifyContent: "center", marginTop: 26, fontSize: 28, fontWeight: 500, color: "#D9D0BD" }}>{ASANIKAH_CTA.urdu}</div>
+      </div>
+    </div>, show);
+
+  return {
+    brandDark: brand(true),
+    brandLight: brand(false),
+    avatar: cover("avatar"),
+    coverText: cover("coverText"),
+    badges: cover("badges"),
+    coverFoot: foot("Nikah, made easy", "SWIPE FOR DETAILS →", true, "cf"),
+    // The cream page, opaque: on a Reel it covers the green cover the way a new slide would
+    paper: (
+      <div key="paper" style={{ position: "absolute", left: 0, top: 0, width: CARD_SIZE.width, height, display: "flex", background: AN.paper }}>{anFrames(height)}</div>
+    ),
+    details: column(
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", marginTop: 10, fontFamily: "Cormorant", fontSize: 76, fontWeight: 700, color: AN.green }}>Profile details</div>
+        <div style={{ display: "flex", marginTop: 4, fontSize: 27, fontWeight: 600, letterSpacing: 4, color: AN.muted }}>{card.code}</div>
+        <div style={{ display: "flex", flexDirection: "column", marginTop: 30 }}>
+          {table.map((r, i) => (
+            <div key={i} style={{ display: "flex", padding: `${pad}px 0`, borderBottom: `2px solid ${AN.line}` }}>
+              <div style={{ display: "flex", width: labelCol, marginRight: 30, fontSize: fs, fontWeight: 500, lineHeight: 1.3, color: AN.muted }}>{r.label}</div>
+              <div style={{ display: "flex", width: valueCol, fontSize: fs, fontWeight: 600, lineHeight: 1.3, color: AN.ink }}>{r.value}</div>
+            </div>
+          ))}
+        </div>
+      </div>, "details"),
+    detailsFoot: foot("No photo or name shared publicly", "Swipe →", false, "df"),
+    points: looking("points"),
+    cta: looking("cta"),
+    lookingFoot: foot(`@${card.page.handle}`, "", true, "lf"),
+  };
+}
+
+// Some parts of the design on one canvas: on the green page, or on a transparent one to lay over the Reel's video
+async function renderAsanikahParts(card: CardContent, parts: AnPart[], { height = CARD_SIZE.height, bare = false, slideNo = "" } = {}): Promise<ImageResponse> {
+  const all = await asanikahParts(card, height, slideNo);
+  return new ImageResponse(
+    (
+      <div style={{ width: "100%", height: "100%", display: "flex", position: "relative", overflow: "hidden", fontFamily: "Inter",
+        ...(bare ? {} : { backgroundImage: `radial-gradient(circle at 50% 0%, ${AN.green2} 0%, ${AN.green} 60%, ${AN.deep} 100%)` }) }}>
+        {!bare && anFrames(height)}
+        {parts.map((p) => all[p])}
+      </div>
+    ),
+    { width: CARD_SIZE.width, height, fonts: await asanikahFonts(card) },
+  );
+}
+
+const AN_SLIDES: Record<AnSlide, AnPart[]> = {
+  cover: ["brandDark", "avatar", "coverText", "badges", "coverFoot"],
+  details: ["paper", "brandLight", "details", "detailsFoot"],
+  looking: ["brandDark", "points", "cta", "lookingFoot"],
+};
+const renderAsanikah = (card: CardContent, slide: AnSlide) =>
+  renderAsanikahParts(card, AN_SLIDES[slide], { slideNo: { cover: "1 / 3", details: "2 / 3", looking: "3 / 3" }[slide] });
+
 /* ── Reels: the design's parts laid over a plain background video on Cloudinary, each fading in on its own ── */
 export const REEL_SIZE = { width: 1080, height: 1920 };
 type ReelDesign = {
@@ -860,6 +1075,17 @@ const REELS: Partial<Record<CardContent["template"], ReelDesign>> = {
     timeline: [["introArt", 0, 900], ["introText", 0.6, 800], ["background", 3.6, 600], ["header", 0, 600], ["profile", 4.0, 700], ["cta", 4.8, 800]],
     stills: [["header", "introArt", "introText"], ["header", "profile", "cta"]],
     render: (card, parts, bare) => renderSakinah(card, parts as SakinahPart[], { height: REEL_SIZE.height, bare }),
+  },
+  // Three scenes, like the carousel: the cover, then the cream details page, then "Looking for" back on green
+  asanikah: {
+    video: "social-reels/base/asanikah-v2", still: "social-reels/base/asanikah-bg-v2",
+    timeline: [
+      ["brandDark", 0, 400], ["avatar", 0.2, 700], ["coverText", 0.9, 600], ["badges", 1.7, 500],
+      ["paper", 5.0, 500], ["brandLight", 5.0, 500], ["details", 5.4, 700],
+      ["background", 10.0, 500], ["brandDark", 10.0, 500], ["points", 10.4, 700], ["cta", 11.3, 600],
+    ],
+    stills: [["brandDark", "avatar", "coverText", "badges"], ["paper", "brandLight", "details"]],
+    render: (card, parts, bare) => renderAsanikahParts(card, parts as AnPart[], { height: REEL_SIZE.height, bare }),
   },
 };
 export const hasReel = (card: CardContent) => Boolean(REELS[card.template]);
@@ -935,6 +1161,8 @@ export async function renderSlides(card: CardContent, format: PostFormat = "caro
             ? await Promise.all([renderBersemi(card, "intro"), renderBersemi(card, "profile")])
           : card.template === "lentera"
             ? await Promise.all([renderLentera(card, "intro"), renderLentera(card, "profile")])
+          : card.template === "asanikah"
+            ? await Promise.all([renderAsanikah(card, "cover"), renderAsanikah(card, "details"), renderAsanikah(card, "looking")])
         : [await renderClassic(card)];
   return Promise.all(images.map((image) => image.arrayBuffer()));
 }
@@ -1076,6 +1304,75 @@ export async function mediaExists(mediaId: string): Promise<boolean | null> {
   }
 }
 
+/* The same card on the page's Facebook Page, next to Instagram. It never throws: the result is kept on the post
+   (fbStatus, fbPermalink, fbError) so a missing permission shows in the CRM without stopping the Instagram post.
+   A post already on Facebook is not posted there again when Instagram is retried. */
+async function shareToFacebook(ref: FirebaseFirestore.DocumentReference, handle: string, media: { images: string[] } | { video: string }, caption: string) {
+  try {
+    if ((await ref.get()).data()?.fbPostId) return;
+    // Loaded here: meta-social itself imports this file
+    const fb = await import("@/lib/meta-social");
+    const acct = await fb.metaAccount(handle);
+    if (!acct) throw new Error(`The poster can't see the Facebook Page linked to @${handle}.`);
+    const posted = "video" in media ? await fb.postFacebookVideo(acct, caption, media.video) : await fb.postFacebook(acct, caption, media.images);
+    await ref.update({ fbStatus: "published", fbPostId: posted.id, fbPermalink: posted.permalink, fbError: null, updatedAt: FieldValue.serverTimestamp() });
+  } catch (err) {
+    const raw = errorText(err);
+    const message = /pages_manage_posts|#200|permission/i.test(raw)
+      ? "Facebook needs the pages_manage_posts permission on the Meta token (regenerate it in Business Settings)."
+      : raw || "Facebook posting failed.";
+    await ref.update({ fbStatus: "failed", fbError: message, updatedAt: FieldValue.serverTimestamp() }).catch(() => undefined);
+  }
+}
+
+/* Every published profile also goes up as a story on the same Instagram: a Reel as its video, a carousel as its cover slide.
+   It never throws; the result is kept on the post (storyStatus, storyId, storyError). Without enough of the request left
+   (a Reel uses most of it) the story is left "waiting"; a video Instagram is still processing stays "publishing".
+   finishAutoStory picks both up the next time the posts are listed. Never posted twice for the same post. */
+async function autoStory(ref: FirebaseFirestore.DocumentReference, deadline: number) {
+  if (deadline - Date.now() < 15_000) {
+    await ref.update({ storyStatus: "waiting", storyError: null, updatedAt: FieldValue.serverTimestamp() }).catch(() => undefined);
+    return;
+  }
+  try {
+    const claimed = await adminDb().runTransaction(async (tx) => {
+      const now = (await tx.get(ref)).data();
+      if (!now || now.status !== "published" || (now.storyStatus && now.storyStatus !== "waiting")) return null;
+      tx.update(ref, { storyStatus: "publishing", storyError: null });
+      return now;
+    });
+    if (!claimed) return;
+    // Loaded here: both modules import this file
+    const [{ metaAccount }, stories] = await Promise.all([import("@/lib/meta-social"), import("@/lib/social-stories")]);
+    const card = (await stories.storyCards(claimed.page as string)).find((c) => c.candidateId === claimed.candidateId);
+    const media = card?.media[0];
+    if (!media) throw new Error("No picture or video to put on the story.");
+    const acct = await metaAccount(claimed.handle as string);
+    if (!acct) throw new Error(`The poster can't see @${claimed.handle}.`);
+    const story = await stories.postStory({
+      account: claimed.page as string, acct, media, note: `Auto story for ${claimed.code ?? "the profile post"}`,
+      candidateId: claimed.candidateId as string, actor: { uid: (claimed.byUid as string) ?? "auto", name: (claimed.byName as string) ?? "Auto" }, deadline,
+    });
+    await ref.update({ storyStatus: story.status, storyId: story.id, updatedAt: FieldValue.serverTimestamp() });
+  } catch (err) {
+    const message = errorText(err) || "The story could not be posted.";
+    // The video not being ready yet isn't a failure: try again on the next listing
+    const later = /still being prepared/i.test(message);
+    await ref.update({ storyStatus: later ? "waiting" : "failed", storyError: later ? null : message, updatedAt: FieldValue.serverTimestamp() }).catch(() => undefined);
+  }
+}
+
+// A post's story Instagram was still processing: publish it now if it's ready (called whenever the posts are listed)
+export async function finishAutoStory(ref: FirebaseFirestore.DocumentReference) {
+  const post = (await ref.get()).data();
+  if (post?.storyStatus === "waiting") return autoStory(ref, Date.now() + 40_000);
+  if (post?.storyStatus !== "publishing" || !post.storyId) return;
+  const { finishStory, SOCIAL_STORIES } = await import("@/lib/social-stories");
+  const result = await finishStory(adminDb().collection(SOCIAL_STORIES).doc(post.storyId as string));
+  if (result.status === "publishing") return;
+  await ref.update({ storyStatus: result.status, storyError: result.error ?? null, updatedAt: FieldValue.serverTimestamp() });
+}
+
 export class PostError extends Error {
   constructor(message: string, public status: number) { super(message); }
 }
@@ -1124,12 +1421,18 @@ export async function createPost({ candidateId, pageKey, choices, figure, format
       code: card.code, card, choices, changes, caption: text,
       format: reel ? "reel" : "carousel", status: "publishing", error: null, permalink: null, mediaId: null, imageUrl: null, imageUrls: [],
       videoUrl: null, containerId: null, igUserId: null, publishClaimed: false,
+      // Facebook is kept when it already went out, so retrying Instagram doesn't post it there twice
+      fbStatus: existing?.fbPostId ? existing.fbStatus : null, fbPostId: existing?.fbPostId ?? null,
+      fbPermalink: existing?.fbPermalink ?? null, fbError: null,
+      // Same for the story
+      storyStatus: existing?.storyStatus === "published" ? "published" : null, storyId: existing?.storyStatus === "published" ? existing.storyId ?? null : null, storyError: null,
       consentConfirmed: true, byUid: actor.uid, byName: actor.name,
       createdAt: existing?.createdAt ?? FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(),
     });
   });
 
   let publishedId: string | null = null;
+  let facebook: Promise<void> | null = null;
   try {
     const account = await instagramAccount(page.handle);
     if (!account) throw new Error(`The poster can't see @${page.handle}. Check its access in Meta Business Settings.`);
@@ -1140,22 +1443,31 @@ export async function createPost({ candidateId, pageKey, choices, figure, format
     if (reel) {
       const { videoUrl, coverUrl, profileUrl } = await buildReel(card, `${card.code}-${page.key}`);
       await ref.update({ imageUrl: coverUrl, imageUrls: [coverUrl, profileUrl], videoUrl, updatedAt: FieldValue.serverTimestamp() });
+      facebook = shareToFacebook(ref, page.handle, { video: videoUrl }, text);
       // Leave room inside the 60s request limit; whatever is left is finished by finishPost
-      return await publishReel(account.id, videoUrl, coverUrl, text, started + 50_000,
+      const result = await publishReel(account.id, videoUrl, coverUrl, text, started + 50_000,
         (containerId) => ref.update({ containerId, igUserId: account.id, updatedAt: FieldValue.serverTimestamp() }).then(() => undefined),
         async () => {
           const done = await claimAndPublish(ref);
           if (done) publishedId = "reel";
           return done;
         });
+      await facebook;
+      // Only once the Reel is live; if Instagram is still processing it, finishPost puts the story up afterwards
+      if (!result.pending) await autoStory(ref, started + 57_000);
+      return result;
     }
     const slides = await renderSlides(card);
     const imageUrls = await Promise.all(slides.map((png, i) => hostCard(png, `${card.code}-${page.key}-${i + 1}`)));
     await ref.update({ imageUrl: imageUrls[0], imageUrls, updatedAt: FieldValue.serverTimestamp() });
+    facebook = shareToFacebook(ref, page.handle, { images: imageUrls }, text);
     const { permalink } = await publishImages(account.id, imageUrls, text, markPublished);
     await ref.update({ permalink, updatedAt: FieldValue.serverTimestamp() });
+    await Promise.all([facebook, autoStory(ref, started + 57_000)]);
     return { permalink };
   } catch (err) {
+    // Facebook runs on its own; let it finish recording before this request ends
+    await facebook;
     // Once Instagram has confirmed the post it is live, whatever fails afterwards
     if (publishedId) return { permalink: null };
     const message = errorText(err) || "Posting failed.";
@@ -1177,6 +1489,7 @@ export async function finishPost(ref: FirebaseFirestore.DocumentReference): Prom
     }
     const done = await claimAndPublish(ref);
     if (!done) return { status: (await ref.get()).data()?.status ?? "publishing", permalink: null };
+    await autoStory(ref, Date.now() + 20_000);
     return { status: "published", permalink: done.permalink };
   } catch (err) {
     const message = errorText(err) || "Posting failed.";

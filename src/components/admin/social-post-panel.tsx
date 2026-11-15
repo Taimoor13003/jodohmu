@@ -16,6 +16,10 @@ export type PostRow = {
   candidateId: string; candidateName: string; page: string; handle: string; code: string;
   status: "publishing" | "published" | "failed" | "deleted"; format: PostFormat; videoUrl: string | null;
   permalink: string | null; imageUrl: string | null; imageUrls: string[];
+  // The same post on the page's Facebook Page
+  fbStatus: "published" | "failed" | null; fbPermalink: string | null; fbError: string | null;
+  // The automatic story on the same Instagram
+  storyStatus: "published" | "publishing" | "failed" | null; storyError: string | null;
   error: string | null; changes: string[]; caption: string; byName: string; at: string | null;
 };
 
@@ -360,9 +364,21 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
               <div className="flex items-center gap-2 rounded-xl bg-emerald-50 px-3 py-2.5 text-[13px] font-semibold text-emerald-800">
                 <CheckCircle2 className="h-4 w-4 shrink-0" />
                 <span className="flex-1">{t(`Sudah diposting di @${pageInfo.handle}`, `Already posted on @${pageInfo.handle}`)}{existing.byName && ` · ${existing.byName}`}</span>
-                {existing.permalink && <a href={existing.permalink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 font-bold underline">{t("Lihat", "View")}<ExternalLink className="h-3 w-3" /></a>}
+                {existing.permalink && <a href={existing.permalink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 font-bold underline">Instagram<ExternalLink className="h-3 w-3" /></a>}
+                {existing.fbPermalink && <a href={existing.fbPermalink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 font-bold underline">Facebook<ExternalLink className="h-3 w-3" /></a>}
               </div>
-            ) : (
+            ) : null}
+            {existing?.status === "published" && existing.storyStatus && (
+              <p className={`rounded-xl px-3 py-2 text-[12px] font-semibold ${existing.storyStatus === "failed" ? "bg-amber-50 text-amber-800" : "bg-emerald-50 text-emerald-800"}`}>
+                {existing.storyStatus === "published" ? t("Story juga sudah tayang.", "Also on the story.")
+                  : existing.storyStatus === "publishing" ? t("Story sedang diproses Instagram…", "Instagram is processing the story…")
+                  : `${t("Story gagal: ", "Story failed: ")}${existing.storyError ?? ""}`}
+              </p>
+            )}
+            {existing?.status === "published" && existing.fbStatus === "failed" && (
+              <p className="rounded-xl bg-amber-50 px-3 py-2 text-[12px] font-semibold text-amber-800">{t("Facebook gagal: ", "Facebook failed: ")}{existing.fbError}</p>
+            )}
+            {existing?.status !== "published" && (
               <>
                 {existing?.status === "deleted" && (
                   <p className="rounded-xl bg-slate-100 px-3 py-2 text-[12px] font-semibold text-slate-600">{t("Posting sebelumnya sudah dihapus di Instagram, jadi bisa diposting lagi.", "The earlier post was deleted on Instagram, so this can be posted again.")}</p>
@@ -397,7 +413,7 @@ export function SocialComposer({ candidateId, profile, lang, page, onPageChange,
                     <Send className="h-4 w-4" />{t(`Posting ke @${pageInfo.handle}`, `Post to @${pageInfo.handle}`)}
                   </button>
                 )}
-                <p className="text-center text-[11px]" style={{ color: C.muted }}>{t("Posting langsung tampil publik di Instagram.", "Posts go public on Instagram straight away.")}</p>
+                <p className="text-center text-[11px]" style={{ color: C.muted }}>{t("Posting langsung tampil publik di Instagram (feed + story) dan halaman Facebook-nya.", "Posts go public on Instagram (feed + story) and its Facebook Page straight away.")}</p>
               </>
             )}
           </div>

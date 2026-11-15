@@ -326,7 +326,13 @@ function ClientCards({ page, lang, selectedId, onSelect }: {
                     <div className="min-w-0 flex-1 text-[12px]">
                       <p className="flex items-center gap-1 font-bold" style={{ color: C.text }}><CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />{p.candidateName || p.code}</p>
                       <p style={{ color: C.muted }}>{p.code}{p.at && ` · ${new Date(p.at).toLocaleDateString(lang === "id" ? "id-ID" : "en-GB", { day: "numeric", month: "short" })}`}{p.byName && ` · ${p.byName}`}</p>
-                      {p.permalink && <a href={p.permalink} target="_blank" rel="noopener noreferrer" className="mt-1 inline-flex items-center gap-1 font-bold" style={{ color: C.navy }}>{t("Lihat post", "View post")}<ExternalLink className="h-3 w-3" /></a>}
+                      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5">
+                        {p.permalink && <a href={p.permalink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-bold" style={{ color: C.navy }}>Instagram<ExternalLink className="h-3 w-3" /></a>}
+                        {p.fbPermalink && <a href={p.fbPermalink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-bold" style={{ color: C.navy }}>Facebook<ExternalLink className="h-3 w-3" /></a>}
+                        {p.fbStatus === "failed" && <span className="font-semibold text-amber-700" title={p.fbError ?? ""}>{t("Facebook gagal", "Facebook failed")}</span>}
+                        {p.storyStatus === "published" && <span className="font-semibold text-emerald-700">Story ✓</span>}
+                        {p.storyStatus === "failed" && <span className="font-semibold text-amber-700" title={p.storyError ?? ""}>{t("Story gagal", "Story failed")}</span>}
+                      </div>
                     </div>
                   </div>
                 ))}

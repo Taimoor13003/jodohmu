@@ -216,6 +216,13 @@ export async function postFacebook(acct: MetaAccount, text: string, imageUrls: s
   return { id, permalink: permalink_url ?? null };
 }
 
+// A video (a sub-page Reel) as a Page video post; Facebook fetches the file from its URL and processes it on its own
+export async function postFacebookVideo(acct: MetaAccount, text: string, videoUrl: string): Promise<{ id: string; permalink: string | null }> {
+  const { id } = await graph<{ id: string }>(acct.pageToken, `${acct.pageId}/videos`, { method: "POST", params: { file_url: videoUrl, description: text } });
+  const { permalink_url } = await graph<{ permalink_url?: string }>(acct.pageToken, id, { params: { fields: "permalink_url" } }).catch(() => ({ permalink_url: undefined }));
+  return { id, permalink: permalink_url ? new URL(permalink_url, "https://www.facebook.com").toString() : null };
+}
+
 // Instagram needs at least one image; several become a carousel
 export async function postInstagram(acct: MetaAccount, text: string, imageUrls: string[]): Promise<{ id: string; permalink: string | null }> {
   if (!acct.igId) throw new Error("No Instagram account is linked to this Page.");

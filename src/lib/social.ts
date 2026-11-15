@@ -7,14 +7,15 @@ import type { SocialAccountKey } from "@/lib/social-accounts";
 
 export const SOCIAL_POSTS = "social_posts";
 
-export type SocialPageKey = "nikahin_foreigner" | "nikah_lagiyuk" | "taaruf_sekarang" | "temu_chindo" | "kristenmatch" | "poligami_indonesia";
+export type SocialPageKey = "nikahin_foreigner" | "nikah_lagiyuk" | "taaruf_sekarang" | "temu_chindo" | "kristenmatch" | "poligami_indonesia" | "asanikah";
 export type SocialLang = "id" | "en";
 // "classic": one Indonesian card. "hello": the @nikahin_foreigner Canva look, an intro slide with a silhouette plus a profile slide.
 // "sakinah": the @taaruf_sekarang Canva look, sage fading to navy, "Hallo, saya dari …" intro slide plus a profile slide.
 // "mahligai": the @poligami.indonesia look, light and modern with front-facing figures; rosewood for women, midnight blue for men.
 // "bersemi": the @nikah_lagiyuk look, a sunrise on cream paper: the silhouette stands against a rising sun, the profile is a ledger.
 // "lentera": the @temu_chindo look, red lacquer and gold: the silhouette stands in a gold moon gate, the code sits in a gold seal.
-export type TemplateKey = "classic" | "hello" | "sakinah" | "mahligai" | "bersemi" | "lentera";
+// "asanikah": the @asanikah.pk look (Pakistan), deep green, cream and gold: a 3D avatar in a gold ring, a details table, then "Looking for".
+export type TemplateKey = "classic" | "hello" | "sakinah" | "mahligai" | "bersemi" | "lentera" | "asanikah";
 // A swipeable image post, or a short 9:16 video (pages whose template has a Reel design)
 export type PostFormat = "carousel" | "reel";
 // How long each template's Reel runs, and the second its intro gives way to the profile
@@ -22,6 +23,8 @@ export const REEL_TIMING: Partial<Record<TemplateKey, { seconds: number; cut: nu
   hello: { seconds: 14, cut: 7 },
   // The profile is a full CV, so it gets most of the time
   sakinah: { seconds: 12, cut: 4 },
+  // Cover, details, then "Looking for": the details get the most time
+  asanikah: { seconds: 15, cut: 5 },
 };
 
 export const SOCIAL_PAGES: {
@@ -45,12 +48,13 @@ export const SOCIAL_PAGES: {
   { key: "temu_chindo", handle: "temu_chindo", label: "Chindo", accent: "#B4232C", template: "lentera", lang: "id", connected: true, hashtags: "#chindo #cariJodoh #perkenalan", codePrefix: "TC" },
   { key: "kristenmatch", handle: "kristenmatch.indo", label: "Kristen", accent: "#1D4E89", template: "classic", lang: "id", connected: false, hashtags: "#jodohkristen #cariJodoh #perkenalan", codePrefix: "KM" },
   { key: "poligami_indonesia", handle: "poligami.indonesia", label: "Poligami Indonesia", accent: "#6B4A2B", template: "mahligai", lang: "id", connected: true, hashtags: "#poligami #nikahsyari #cariJodoh #perkenalan", codePrefix: "PI" },
+  { key: "asanikah", handle: "asanikah.pk", label: "Pakistan", accent: "#0F3D33", template: "asanikah", lang: "en", connected: true, hashtags: "#rishta #rishtapakistan #nikah #rishtalahore #rishtakarachi #rishtaislamabad #rishtauk #zarooraterishta", codePrefix: "AN", reel: true },
 ];
 
 export const findPage = (key: string) => SOCIAL_PAGES.find((p) => p.key === key) ?? null;
 // Templates with an intro slide carry a silhouette the team can change
 export const hasFigure = (pageKey: SocialPageKey) => findPage(pageKey)?.template !== "classic";
-export const slideCount = (pageKey: SocialPageKey) => (hasFigure(pageKey) ? 2 : 1);
+export const slideCount = (pageKey: SocialPageKey) => (findPage(pageKey)?.template === "asanikah" ? 3 : hasFigure(pageKey) ? 2 : 1);
 export const formatsFor = (pageKey: SocialPageKey): PostFormat[] => (findPage(pageKey)?.reel ? ["reel", "carousel"] : ["carousel"]);
 export const reelTiming = (pageKey: SocialPageKey) => REEL_TIMING[findPage(pageKey)?.template ?? "classic"] ?? null;
 
@@ -78,6 +82,7 @@ export function suggestPages(p: Profile): SocialPageKey[] {
   if (religion === "islam") out.push("taaruf_sekarang");
   if (/chin|tionghoa|chindo/.test(ethnicity)) out.push("temu_chindo");
   if (/kristen|christ|katolik|catholic/.test(religion)) out.push("kristenmatch");
+  if (/pakistan/i.test(nationality)) out.push("asanikah");
   return out;
 }
 
@@ -141,7 +146,7 @@ const TEMPLATE_FIELDS: Record<TemplateKey, [SocialFieldKey, FieldMode][]> = {
   ],
   // Mirrors the Canva template: intro slide "Hi! I'm 27 y.o / from Indonesia", then Gender, Nationality, Age, Status, Education
   hello: [
-    ["name", "hide"], ["from", "show"], ["gender", "show"], ["nationality", "show"], ["age", "show"], ["marital", "show"],
+    ["cv", "custom"], ["name", "hide"], ["from", "show"], ["gender", "show"], ["nationality", "show"], ["age", "show"], ["marital", "show"],
     ["education", "show"], ["city", "hide"], ["occupation", "hide"], ["religion", "hide"], ["height", "hide"], ["intro", "custom"],
   ],
   // Mirrors the Canva template: intro slide "Hallo, saya dari Jakarta / 41 Tahun", then Domisili, Status, Lulusan, Pekerjaan, Suku, Rencana Menikah
@@ -163,11 +168,17 @@ const TEMPLATE_FIELDS: Record<TemplateKey, [SocialFieldKey, FieldMode][]> = {
     ["name", "hide"], ["age", "show"], ["city", "show"], ["religion", "show"], ["marital", "show"], ["occupation", "show"],
     ["education", "show"], ["height", "show"], ["ethnicity", "hide"], ["children", "hide"], ["plan", "custom"], ["intro", "custom"],
   ],
+  // Pakistani rishta posts: the pasted CV (sect, caste, family, siblings…) is the details slide; its "Looking for" is the last slide
+  asanikah: [
+    ["cv", "custom"], ["name", "hide"], ["gender", "show"], ["age", "show"], ["city", "show"], ["height", "show"], ["education", "show"],
+    ["occupation", "show"], ["marital", "show"], ["ethnicity", "show"], ["religion", "hide"], ["intro", "custom"],
+  ],
 };
 // Words a template uses on the card instead of the usual label
 const CARD_LABELS: Partial<Record<TemplateKey, Partial<Record<SocialFieldKey, string>>>> = {
   sakinah: { education: "Lulusan" },
   mahligai: { education: "Lulusan" },
+  asanikah: { occupation: "Profession", ethnicity: "Qaum · Caste" },
 };
 // Details that go on the intro slide (or the title) rather than in the list of rows
 const NOT_ROWS: Record<TemplateKey, SocialFieldKey[]> = {
@@ -177,6 +188,7 @@ const NOT_ROWS: Record<TemplateKey, SocialFieldKey[]> = {
   mahligai: ["name", "from", "age"],
   bersemi: ["name", "from", "age"],
   lentera: ["name", "from", "age"],
+  asanikah: ["name", "from", "age"],
 };
 
 export const fieldsFor = (pageKey: SocialPageKey) => {
@@ -245,7 +257,7 @@ export type CvRow = { label: string; value: string };
 // Groups are objects, not nested lists: Firestore can't store a list inside a list
 export type CvContent = { groups: { rows: CvRow[] }[]; criteria: string; vision: string };
 
-const CV_SKIP = /^(nama|kontak|contact|no\.? ?(hp|wa|telp)|whatsapp|wa\b|email|e-mail|telp|telepon|instagram|ig\b|foto|photo)/i;
+const CV_SKIP = /^(nama|name\b|full name|kontak|contact|no\.? ?(hp|wa|telp)|whatsapp|wa\b|email|e-mail|telp|telepon|instagram|ig\b|foto|photo)/i;
 // How often someone prays is for the matchmaker, not a public post. Only the form's question line, so a vision line mentioning sholat stays
 const CV_PRIVATE = /^(sholat|shalat|salat|solat|prayers?)\b[^:]*:/i;
 const scrub = (v: string) => v
@@ -278,8 +290,8 @@ export function parseCv(raw: string): CvContent | null {
     }
     const label = clean.slice(0, at).replace(/\s+/g, " ").trim();
     const value = clean.slice(at + 1).trim();
-    if (/kr[ie]+teria/i.test(label)) { criteria = value; last = "criteria"; continue; }
-    if (/^(visi|misi)/i.test(label)) { vision = value; last = "vision"; continue; }
+    if (/kr[ie]+teria|looking for/i.test(label)) { criteria = value; last = "criteria"; continue; }
+    if (/^(visi|misi|vision|mission)/i.test(label)) { vision = value; last = "vision"; continue; }
     const row = { label: capitalize(label), value };
     groups[groups.length - 1].push(row);
     last = row;
@@ -291,6 +303,11 @@ export function parseCv(raw: string): CvContent | null {
   };
   return out.groups.length || out.criteria || out.vision ? out : null;
 }
+// What the two long answers are called on the slide and in the caption
+export const CV_PARAGRAPHS: Record<SocialLang, [string, string]> = {
+  id: ["Kriteria calon", "Visi misi pernikahan"],
+  en: ["Partner criteria", "Marriage vision"],
+};
 const cvValue = (cv: CvContent | null, label: RegExp) => cv?.groups.flatMap((g) => g.rows).find((r) => label.test(r.label))?.value ?? "";
 
 export type CardRow = { key: SocialFieldKey; label: string; value: string; icon: IconKey | null };
@@ -337,15 +354,15 @@ export function buildCard(pageKey: SocialPageKey, candidateId: string, profile: 
     .filter((r) => r.value);
   const cv = fieldsFor(pageKey).some((f) => f.key === "cv") ? parseCv(value("cv")) : null;
   // The intro slide's city and age follow the CV: it is what the candidate wrote most recently
-  const cvCity = cvValue(cv, /domisili/i).split(/[/,]/)[0].trim();
+  const cvCity = cvValue(cv, /domisili|city|location|live/i).split(/[/,]/)[0].trim();
   if (cvCity && choices.city?.mode !== "hide") {
-    const city = { key: "city" as const, label: "Domisili", value: titleCase(cvCity), icon: "pin" as const };
+    const city = { key: "city" as const, label: FIELD_DEFS.city.cardLabel[page.lang], value: titleCase(cvCity), icon: "pin" as const };
     const at = rows.findIndex((r) => r.key === "city");
     if (at >= 0) rows[at] = city; else rows.push(city);
   }
   // "2000/26" or "26 tahun": the last two-digit number
-  const cvAge = Array.from(cvValue(cv, /umur|usia/i).matchAll(/\b(1[89]|[2-7]\d)\b/g)).pop()?.[1];
-  const age = cvAge && choices.age?.mode !== "hide" ? `${cvAge} tahun` : value("age");
+  const cvAge = Array.from(cvValue(cv, /umur|usia|^age/i).matchAll(/\b(1[89]|[2-7]\d)\b/g)).pop()?.[1];
+  const age = cvAge && choices.age?.mode !== "hide" ? (page.lang === "en" ? cvAge : `${cvAge} tahun`) : value("age");
   return {
     template: page.template,
     lang: page.lang,
@@ -392,8 +409,54 @@ export function lenteraLines(card: CardContent) {
   return { greeting: "Kenalan yuk", big: city || "Salam kenal", sub: age };
 }
 
+// The words on the cover of the "asanikah" template: "RISHTA · FEMALE / 27 · Lahore / Doctor · Never married"
+export function asanikahLines(card: CardContent) {
+  const cvRows = card.cv?.groups.flatMap((g) => g.rows) ?? [];
+  const row = (key: SocialFieldKey) => card.rows.find((r) => r.key === key)?.value ?? "";
+  const fromCv = (label: RegExp) => cvRows.find((r) => label.test(r.label))?.value ?? "";
+  // A pasted CV is what the family wrote most recently, so it wins over the stored profile
+  const gender = fromCv(/^gender/i) || row("gender");
+  const city = row("city").replace(/\s*\(.*?\)\s*/g, " ").trim();
+  const headline = [card.age, city].filter(Boolean).join(" · ") || card.name || "Rishta";
+  const short = (v: string) => v.split(",")[0].trim();
+  const line1 = [short(fromCv(/profession|occupation|job/i) || row("occupation")), fromCv(/marital/i) || row("marital")].filter(Boolean).join(" · ");
+  const line2 = [fromCv(/sect|maslak|firqa/i).replace(/\s*,\s*/g, " "), fromCv(/qaum|caste|biradari/i) || row("ethnicity")].filter(Boolean).join(" · ");
+  return { kicker: ["Rishta", gender].filter(Boolean).join(" · "), headline, lines: [line1, line2].filter(Boolean) };
+}
+// "Looking for" as short points: the CV's answer split at line breaks, semicolons or full stops
+export function lookingFor(card: CardContent) {
+  const raw = card.cv?.criteria ?? "";
+  return raw.split(/\s*(?:;|\n|•|(?<=\.)\s)\s*/).map((s) => s.replace(/[.\s]+$/, "").trim()).filter(Boolean).slice(0, 6);
+}
+// The last slide's call to action. No prices on the post: the admin explains them in the chat
+export const ASANIKAH_CTA = {
+  ask: "Think it’s a match?",
+  note: "Message the admin with this code. Numbers are shared only after both families agree.",
+  urdu: "Rishta pasand aaya? Yeh code admin ko DM karein.",
+};
+
 export function defaultCaption(pageKey: SocialPageKey, card: CardContent) {
   const page = findPage(pageKey)!;
+  if (page.template === "asanikah") {
+    const { kicker, headline, lines } = asanikahLines(card);
+    const details = card.cv?.groups.length
+      ? card.cv.groups.map((g) => g.rows.map((r) => `▫️ ${r.label}: ${r.value}`).join("\n"))
+      : [card.rows.map((r) => `▫️ ${r.label}: ${r.value}`).join("\n")];
+    const wants = lookingFor(card);
+    return [
+      `${kicker} · ${headline}`,
+      ...lines,
+      "",
+      `Profile ${card.code}`,
+      ...details.flatMap((block) => [block, ""]),
+      ...(wants.length ? ["Looking for:", ...wants.map((w) => `• ${w}`), ""] : []),
+      ...(card.intro ? [`"${card.intro}"`, ""] : []),
+      `${ASANIKAH_CTA.ask} DM the admin with code ${card.code}. Numbers are shared only after both families agree.`,
+      `Rishta pasand aaya? Code ${card.code} admin ko DM karein.`,
+      "",
+      page.hashtags,
+    ].join("\n");
+  }
   if (page.template === "lentera") {
     const { big, sub } = lenteraLines(card);
     return [
@@ -447,6 +510,25 @@ export function defaultCaption(pageKey: SocialPageKey, card: CardContent) {
       ...(card.intro ? ["", `"${card.intro}"`] : []),
       "",
       `Info lebih lanjut? DM kami segera dengan kode ${card.code}, yuk!`,
+      "",
+      page.hashtags,
+    ].join("\n");
+  }
+  if (page.template === "hello" && card.cv) {
+    const { title, sub } = helloLines(card);
+    const { groups, criteria, vision } = card.cv;
+    return [
+      `${title} ${sub} 👋`.replace(/\s+/g, " ").trim(),
+      "",
+      `🌍 PROFILE · ${card.code} 🌍`,
+      // Only what was filled in, as the candidate wrote it: each group, then the long answers
+      ...[
+        ...groups.map((g) => g.rows.map((r) => `${r.label} : ${r.value}`).join("\n")),
+        [criteria && `💫 ${CV_PARAGRAPHS.en[0]} : ${criteria}`, vision && `💫 ${CV_PARAGRAPHS.en[1]} : ${vision}`].filter(Boolean).join("\n"),
+      ].filter(Boolean).flatMap((block) => ["", block]),
+      "",
+      `More info? DM us with code ${card.code}.`,
+      `Info lebih lanjut? Kirim DM dengan kode ${card.code}.`,
       "",
       page.hashtags,
     ].join("\n");

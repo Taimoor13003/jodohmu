@@ -55,11 +55,19 @@ export default function SocialPostHistory({ candidateId, lang }: { candidateId: 
                     </span>
                     {p.permalink && (
                       <a href={p.permalink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-[11.5px] font-bold" style={{ color: C.navy }}>
-                        {t("Lihat post", "View post")}<ExternalLink style={{ width: 11, height: 11 }} />
+                        Instagram<ExternalLink style={{ width: 11, height: 11 }} />
+                      </a>
+                    )}
+                    {p.fbPermalink && (
+                      <a href={p.fbPermalink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-[11.5px] font-bold" style={{ color: C.navy }}>
+                        Facebook<ExternalLink style={{ width: 11, height: 11 }} />
                       </a>
                     )}
                   </div>
                   {p.error && <p className="text-[12px] font-semibold" style={{ color: STATUS.failed.fg }}>{p.error}</p>}
+                  {p.fbStatus === "failed" && <p className="text-[12px] font-semibold text-amber-700">Facebook: {p.fbError}</p>}
+                  {p.storyStatus === "published" && <p className="text-[12px] font-semibold text-emerald-700">{t("Juga di story", "Also on the story")}</p>}
+                  {p.storyStatus === "failed" && <p className="text-[12px] font-semibold text-amber-700">Story: {p.storyError}</p>}
                   <div>
                     <p className="text-[10.5px] font-bold uppercase tracking-wide" style={{ color: C.muted }}>{t("Diubah dari profil", "Changed from the profile")}</p>
                     {p.changes.length ? (

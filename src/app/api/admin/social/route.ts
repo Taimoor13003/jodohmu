@@ -6,7 +6,7 @@ import {
   SOCIAL_POSTS, buildCard, customLimit, defaultChoices, fieldsFor, findPage, formatsFor,
   type FieldChoices, type FieldMode, type FigureChoice, type PostFormat, type SocialPageKey,
 } from "@/lib/social";
-import { PostError, createPost, finishPost, mediaExists, metaToken, renderSlides } from "@/lib/social-server";
+import { PostError, createPost, finishAutoStory, finishPost, mediaExists, metaToken, renderSlides } from "@/lib/social-server";
 import { LeadError, addLead, cardSubject, editLead, inboxSync, listCardPeople, tagLead } from "@/lib/social-leads";
 
 export const runtime = "nodejs";
@@ -44,6 +44,12 @@ const toPost = (x: FirebaseFirestore.DocumentData) => ({
   format: ((x.format as PostFormat | undefined) ?? "carousel"),
   videoUrl: (x.videoUrl as string | null) ?? null,
   permalink: (x.permalink as string | null) ?? null,
+  fbStatus: (x.fbStatus as "published" | "failed" | null) ?? null,
+  fbPermalink: (x.fbPermalink as string | null) ?? null,
+  fbError: (x.fbError as string | null) ?? null,
+  // "waiting" (not started yet) shows the same as "publishing"
+  storyStatus: x.storyStatus === "waiting" ? "publishing" as const : (x.storyStatus as "published" | "publishing" | "failed" | null) ?? null,
+  storyError: (x.storyError as string | null) ?? null,
   imageUrl: (x.imageUrl as string | null) ?? null,
   imageUrls: (x.imageUrls as string[] | undefined) ?? (x.imageUrl ? [x.imageUrl as string] : []),
   error: (x.error as string | null) ?? null,
@@ -68,6 +74,8 @@ export async function GET(req: NextRequest) {
     const posts = await Promise.all(snap.docs.map(async (d) => {
       // A Reel Instagram was still processing gets published as soon as it's ready
       if (d.data().status === "publishing" && d.data().containerId) await finishPost(d.ref).catch(() => null);
+      // So does its story
+      if (["publishing", "waiting"].includes(d.data().storyStatus)) await finishAutoStory(d.ref).catch(() => null);
       const x = (await d.ref.get()).data()!;
       if (x.status === "published" && x.mediaId && (await mediaExists(x.mediaId)) === false) {
         await d.ref.update({ status: "deleted", deletedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp() });
@@ -83,7 +91,11 @@ export async function GET(req: NextRequest) {
       listCardPeople(),
       inboxSync(findPage(page)!.key),
     ]);
-    return NextResponse.json({ connected: Boolean(metaToken()), posts: postSnap.docs.map((d) => toPost(d.data())), profiles, threadsSync });
+    // Stories Instagram was still processing go up as soon as they're ready
+    const waiting = postSnap.docs.filter((d) => ["publishing", "waiting"].includes(d.data().storyStatus));
+    await Promise.all(waiting.map((d) => finishAutoStory(d.ref).catch(() => null)));
+    const posts = waiting.length ? await Promise.all(postSnap.docs.map(async (d) => (await d.ref.get()).data()!)) : postSnap.docs.map((d) => d.data());
+    return NextResponse.json({ connected: Boolean(metaToken()), posts: posts.map(toPost), profiles, threadsSync });
   }
   return NextResponse.json({ error: "Missing candidateId or page" }, { status: 400 });
 }
