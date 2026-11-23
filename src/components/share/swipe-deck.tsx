@@ -431,9 +431,14 @@ export function SwipeDeck({
 
           <motion.div
             key={profile.slot}
-            className="absolute inset-0 touch-pan-y"
+            // framer-motion puts touch-action: pan-y on a draggable; iOS Safari then won't scroll the
+            // card's own overflow area, so the details below the photo can't be reached. Let the browser
+            // handle touches (!touch-auto beats the inline style) and lock each drag to one axis, so a
+            // vertical move scrolls the card and a sideways one swipes it.
+            className="absolute inset-0 !touch-auto"
             style={{ x, rotate, cursor: "grab" }}
             drag={exit ? false : "x"}
+            dragDirectionLock
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={0.7}
             dragTransition={{ bounceStiffness: 320, bounceDamping: 26 }}
