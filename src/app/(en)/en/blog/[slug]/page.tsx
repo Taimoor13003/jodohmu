@@ -16,6 +16,7 @@ import paketPearl from "@/content/blog/paket-pearl-jodohmu.json";
 import paketRuby from "@/content/blog/paket-ruby-jodohmu.json";
 import perkenalanPertama from "@/content/blog/perkenalan-pertama-dan-keluarga.json";
 import registrasi from "@/content/blog/registrasi-jodohmu.json";
+import menikahLagi from "@/content/blog/menikah-lagi-setelah-cerai.json";
 import stigmaJanda from "@/content/blog/stigma-janda-di-indonesia.json";
 import trenWna from "@/content/blog/tren-menikah-dengan-wna.json";
 
@@ -25,6 +26,12 @@ type ArticleJson = typeof apaItuJodohmu;
 type EnglishPost = { content: ArticleJson; title: string; description: string; keywords?: string[] };
 
 const englishPosts: Record<string, EnglishPost> = {
+  "/blog/menikah-lagi-setelah-cerai": {
+    content: menikahLagi as ArticleJson,
+    title: "Remarrying After Divorce: Rules, Documents and Guidance",
+    description: "Remarrying after divorce in Indonesia: waiting periods, KUA and civil registry documents, what faiths say, children, and how Jodohmu supports divorced people.",
+    keywords: ["remarrying after divorce", "remarriage after divorce", "how to remarry after divorce", "remarry in Indonesia", "waiting period after divorce Indonesia", "iddah after divorce", "matchmaker for divorced people", "divorced woman marry foreigner Indonesia"],
+  },
   "/blog/dating-app-vs-biro-jodoh": {
     content: datingAppVsBiroJodoh as ArticleJson,
     title: "Dating Apps vs Matchmaking: Which Leads to Marriage?",

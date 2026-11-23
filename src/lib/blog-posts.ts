@@ -12,6 +12,7 @@ export type BlogPost = {
 };
 
 export const blogPosts: BlogPost[] = [
+  { slug: "/blog/menikah-lagi-setelah-cerai", enSlug: "/en/blog/remarrying-after-divorce", articleKey: "blogArticle.menikahLagiSetelahCerai", datePublished: "2026-11-23", dateModified: "2026-11-23", heroImage: "/images/blog/menikah-lagi-hero.png", readTime: 10 },
   { slug: "/blog/dating-app-vs-biro-jodoh", enSlug: "/en/blog/dating-apps-vs-matchmaking", articleKey: "blogArticle.datingAppVsBiroJodoh", datePublished: "2026-10-25", dateModified: "2026-10-25", heroImage: "/images/blog/default-article-hero.png", readTime: 12 },
   { slug: "/blog/cara-kerja-jodohmu", enSlug: "/en/blog/how-jodohmu-works", articleKey: "blogArticle.caraKerjaJodohmu", datePublished: "2026-10-25", dateModified: "2026-10-25", heroImage: "/images/blog/apa-itu-jodohmu-hero.png", readTime: 13 },
   { slug: "/blog/perkenalan-pertama-dan-keluarga", enSlug: "/en/blog/first-introductions-and-family", articleKey: "blogArticle.perkenalanPertamaDanKeluarga", datePublished: "2026-10-25", dateModified: "2026-10-25", heroImage: "/images/blog/joble-hero.png", readTime: 12 },
