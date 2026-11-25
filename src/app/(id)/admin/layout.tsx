@@ -222,6 +222,7 @@ const NAV = [
   { href: "/admin/knowledge",  label: "Pengetahuan",    icon: <BookOpen       className="w-full h-full" />, color: "#B45309", bg: "#FFFBEB" },
   { href: "/admin/candidates", label: "Kandidat",      icon: <UserCheck      className="w-full h-full" />, color: "#C4294A", bg: "#FFF1F2" },
   { href: "/admin/chat",       label: "Chat",           icon: <MessageCircle  className="w-full h-full" />, color: "#0369A1", bg: "#EFF6FF" },
+  { href: "/admin/matches",    label: "Saran Jodoh",    icon: <Heart          className="w-full h-full" />, color: "#BE123C", bg: "#FFF1F2" },
   { href: "/admin/shares",     label: "Tautan Profil",  icon: <Link2          className="w-full h-full" />, color: "#7C3AED", bg: "#F5F3FF" },
   { href: "/admin/subpages",   label: "Subpages",       icon: <Instagram      className="w-full h-full" />, color: "#DB2777", bg: "#FDF2F8" },
   { href: "/admin/workers",    label: "Workers",        icon: <Briefcase      className="w-full h-full" />, color: "#14B8A6", bg: "#F0FDFA" },
@@ -237,7 +238,7 @@ function Sidebar({ open, onClose, onSidebarEnter, onSidebarLeave, onLogout, role
   permissions: string[];
 }) {
   const pathname = usePathname();
-  const workerLinks = ["/admin/candidates", "/admin/chat", "/admin/shares", ...(permissions.includes("calldesk") ? ["/admin/calls"] : []), ...(permissions.includes("mitra") ? ["/admin/mitra"] : []), ...(permissions.includes("social") ? ["/admin/subpages"] : [])];
+  const workerLinks = ["/admin/candidates", "/admin/matches", "/admin/chat", "/admin/shares", ...(permissions.includes("calldesk") ? ["/admin/calls"] : []), ...(permissions.includes("mitra") ? ["/admin/mitra"] : []), ...(permissions.includes("social") ? ["/admin/subpages"] : [])];
   const nav = role === "worker"
     ? NAV.filter(item => workerLinks.includes(item.href))
     : NAV;

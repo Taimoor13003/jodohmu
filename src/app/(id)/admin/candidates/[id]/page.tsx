@@ -12,6 +12,7 @@ import { auth } from "@/lib/firebase";
 import { LIVING_WITH_OPTIONS } from "@/lib/share-display";
 import SharePanel from "@/components/admin/share-panel";
 import CandidateInvite from "@/components/admin/candidate-invite";
+import MatchSuggestionsCard from "@/components/admin/match-suggestions";
 import SocialPostPanel from "@/components/admin/social-post-panel";
 import { ageFromDob } from "@/lib/age";
 import {
@@ -1712,6 +1713,16 @@ else imgs.forEach(function(i){if(i.complete)dp();else{i.onload=dp;i.onerror=dp}}
 
           {/* ── RIGHT CONTENT ─────────────────────────────────────────── */}
           <div className="flex-1 min-w-0 flex flex-col gap-4">
+
+            {/* ── Match suggestions ───────────────────────────────────── */}
+            <MatchSuggestionsCard lang={lang} candidate={{
+              uid: id,
+              name: name && name !== "—" ? name : "—",
+              gender: gender !== "—" ? gender : null,
+              age: age !== "—" ? age : null,
+              city: raw(data, "location") !== "—" ? raw(data, "location") : null,
+              photo: photos[0] ?? null,
+            }} />
 
             {/* ── Tentang Saya ────────────────────────────────────────── */}
             {!hasData("tentang-saya") && editingSection !== "tentang-saya"
