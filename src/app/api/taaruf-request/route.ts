@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
+import { alertInterest } from "@/lib/interest-alerts";
 
 export async function POST(req: NextRequest) {
   const token = req.headers.get("authorization")?.replace("Bearer ", "");
@@ -40,6 +41,15 @@ export async function POST(req: NextRequest) {
       message:        body.message ?? "",
       status:         "pending",
       createdAt:      FieldValue.serverTimestamp(),
+    });
+
+    await alertInterest({
+      targetUid:  body.targetUid,
+      likerUid:   decoded.uid,
+      likerName:  decoded.name ?? null,
+      likerEmail: decoded.email ?? null,
+      source:     "profile_link",
+      message:    body.message ?? null,
     });
 
     return NextResponse.json({ id: ref.id });

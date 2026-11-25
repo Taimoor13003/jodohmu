@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 import { z } from "zod";
 import { adminDb } from "@/lib/firebase-admin";
+import { alertInterest } from "@/lib/interest-alerts";
 import { defaultAvatarFor } from "@/lib/share-avatars";
 import { checkProfileAnswers, swipeQuestionId } from "@/lib/share-questions";
 import { projectProfile } from "@/lib/share-sections";
@@ -101,9 +102,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
       );
     }
 
+    let newYes = false;
     const decidedSlots = await adminDb().runTransaction(async tx => {
       const existing = await tx.get(responseRef);
       const decisions: Record<string, string> = { ...(existing.data()?.decisions ?? {}) };
+      newYes = body.decision === "yes" && decisions[candidateId] !== "yes";
       decisions[candidateId] = body.decision;
       const complete = share.candidateIds.every(id => decisions[id]);
 
@@ -125,6 +128,17 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
 
       return share.candidateIds.map((id, i) => (decisions[id] ? i : -1)).filter(i => i >= 0);
     });
+
+    if (newYes) {
+      await alertInterest({
+        targetUid:  candidateId,
+        likerUid:   viewer.uid,
+        likerName:  viewer.name,
+        likerEmail: viewer.email,
+        source:     "share_link",
+        shareToken: token,
+      });
+    }
 
     return NextResponse.json({
       success: true,

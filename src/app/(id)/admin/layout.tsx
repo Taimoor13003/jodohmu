@@ -10,13 +10,20 @@ import { useAuth } from "@/context/AuthContext";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   Users, Briefcase, UserCheck, MessageCircle,
-  Globe, LogOut, Menu, Bell, MessageSquareText, Link2, PhoneCall, Wallet, BookOpen, Handshake, Instagram,
+  Globe, LogOut, Menu, Bell, Heart, MessageSquareText, Link2, PhoneCall, Wallet, BookOpen, Handshake, Instagram,
 } from "lucide-react";
 import LogoIcon from "@/assets/jodohmu-logo.png";
 
 interface AdminNotification {
   id: string;
+  type: string;
   uid: string;
+  likerName: string | null;
+  likerEmail: string | null;
+  likerUid: string | null;
+  likerIsCandidate: boolean;
+  source: "profile_link" | "share_link" | null;
+  message: string | null;
   name: string;
   phone: string | null;
   waLink: string | null;
@@ -155,15 +162,36 @@ function NotificationBell() {
                   background: "#EEF2F7", color: "#9B2242",
                   display: "flex", alignItems: "center", justifyContent: "center",
                 }}>
-                  <MessageSquareText style={{ width: 14, height: 14 }} />
+                  {n.type === "profile_interest"
+                    ? <Heart style={{ width: 14, height: 14, fill: "currentColor" }} />
+                    : <MessageSquareText style={{ width: 14, height: 14 }} />}
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ fontSize: 12.5, fontWeight: 700, color: "#0F172A", marginBottom: 2 }}>
-                    {n.name} {!n.read && <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#C4294A", marginLeft: 4 }} />}
+                    {n.type === "profile_interest" ? `${n.likerName ?? "Someone"} likes ${n.name}` : n.name}
+                    {!n.read && <span style={{ display: "inline-block", width: 6, height: 6, borderRadius: "50%", background: "#C4294A", marginLeft: 4 }} />}
                   </p>
-                  <p style={{ fontSize: 11.5, color: "#64748B", marginBottom: 4 }}>
-                    New profile — discovery call not done yet{n.city ? ` · ${n.city}` : ""}
-                  </p>
+                  {n.type === "profile_interest" ? (
+                    <>
+                      <p style={{ fontSize: 11.5, color: "#64748B", marginBottom: 2 }}>
+                        Wants an introduction · from {n.source === "share_link" ? "a shared link" : "the profile link"}
+                        {n.likerEmail ? ` · ${n.likerEmail}` : ""}{n.city ? ` · ${n.city}` : ""}
+                      </p>
+                      {n.message && (
+                        <p style={{ fontSize: 11.5, color: "#334155", fontStyle: "italic", marginBottom: 2 }}>“{n.message}”</p>
+                      )}
+                      {n.likerIsCandidate && n.likerUid && (
+                        <a href={`/admin/candidates/${n.likerUid}`} onClick={e => { e.stopPropagation(); markRead(n.id); }}
+                          style={{ display: "inline-block", fontSize: 11, fontWeight: 700, color: "#9B2242", textDecoration: "none", marginBottom: 4 }}>
+                          Open {n.likerName ?? "their"} profile →
+                        </a>
+                      )}
+                    </>
+                  ) : (
+                    <p style={{ fontSize: 11.5, color: "#64748B", marginBottom: 4 }}>
+                      New profile — discovery call not done yet{n.city ? ` · ${n.city}` : ""}
+                    </p>
+                  )}
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     {n.waLink && (
                       <a href={n.waLink} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}

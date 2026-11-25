@@ -30,6 +30,12 @@ export async function GET(req: NextRequest) {
           age: data.age ?? null,
           city: data.city ?? null,
           email: data.email ?? null,
+          likerName: data.likerName ?? null,
+          likerEmail: data.likerEmail ?? null,
+          likerUid: data.likerUid ?? null,
+          likerIsCandidate: !!data.likerIsCandidate,
+          source: data.source ?? null,
+          message: data.message ?? null,
           read: !!data.read,
           createdAt: data.createdAt?.toDate?.()?.toISOString() ?? null,
         };
