@@ -3,7 +3,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { ArrowRight, Heart, Loader2, MessageSquarePlus, Plus, Search, Trash2, X } from "lucide-react";
+import { ArrowRight, Check, ExternalLink, Heart, HelpCircle, Loader2, MessageSquarePlus, Plus, Search, Trash2, X } from "lucide-react";
+import { displayValue } from "@/lib/share-display";
+import { fitChecks, fitSummary } from "@/lib/match-fit";
 import { auth } from "@/lib/firebase";
 import {
   STATUS_META,
@@ -43,13 +45,14 @@ function fmtDate(iso: string, lang: Lang) {
 }
 
 /* ── small pieces ─────────────────────────────────────────────────────── */
-export function Avatar({ p, size = 40 }: { p: SuggestionPerson; size?: number }) {
+export function Avatar({ p, size = 40, square = false }: { p: SuggestionPerson; size?: number; square?: boolean }) {
+  const radius = square ? Math.round(size * 0.22) : size;
   return p.photo ? (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={p.photo} alt={p.name} className="rounded-full object-cover object-top shrink-0" style={{ width: size, height: size }} />
+    <img src={p.photo} alt={p.name} className="object-cover object-top shrink-0" style={{ width: size, height: size, borderRadius: radius }} />
   ) : (
-    <div className="rounded-full shrink-0 flex items-center justify-center text-white font-bold"
-      style={{ width: size, height: size, fontSize: size * 0.38, background: p.gender === "female" ? "#C4294A" : "#1B3A6B" }}>
+    <div className="shrink-0 flex items-center justify-center text-white font-bold"
+      style={{ width: size, height: size, borderRadius: radius, fontSize: size * 0.38, background: p.gender === "female" ? "#C4294A" : "#1B3A6B" }}>
       {p.name.slice(0, 1).toUpperCase()}
     </div>
   );
@@ -57,6 +60,134 @@ export function Avatar({ p, size = 40 }: { p: SuggestionPerson; size?: number })
 
 function personLine(p: SuggestionPerson) {
   return [p.age, p.city].filter(Boolean).join(" · ");
+}
+
+const val = (p: SuggestionPerson, field: string, lang: Lang) => displayValue(p.facts?.[field], lang, field);
+
+/** Short facts about who the person is, in reading order. */
+function personChips(p: SuggestionPerson, lang: Lang): string[] {
+  const l = (id: string, en: string) => (lang === "id" ? id : en);
+  const kids = Number(p.facts?.childrenCount) || 0;
+  const status = val(p, "maritalStatus", lang);
+  const job = val(p, "occupation", lang) ?? val(p, "jobPosition", lang);
+  const height = val(p, "height", lang);
+  return [
+    val(p, "nationality", lang),
+    status && (kids ? `${status} · ${kids} ${l("anak", kids === 1 ? "child" : "children")}` : status),
+    job,
+    val(p, "educations", lang),
+    val(p, "religiousPracticeLevel", lang),
+    p.gender === "female" ? val(p, "hijab", lang) && `${l("Hijab", "Hijab")}: ${val(p, "hijab", lang)}` : val(p, "beard", lang) && `${l("Jenggot", "Beard")}: ${val(p, "beard", lang)}`,
+    height && `${height} cm`,
+  ].filter((x): x is string => !!x);
+}
+
+/** One line on what the person is looking for. */
+function wantsLine(p: SuggestionPerson, lang: Lang): string | null {
+  const l = (id: string, en: string) => (lang === "id" ? id : en);
+  const f = p.facts ?? {};
+  const min = f.preferredMinAge, max = f.preferredMaxAge;
+  const parts = [
+    (min || max) && `${l("usia", "age")} ${min ?? "?"}–${max ?? "?"}`,
+    val(p, "preferredReligion", lang),
+    f.prefReligionLevel && f.prefReligionLevel !== "no_pref" && val(p, "prefReligionLevel", lang),
+    f.prefSmokingAcceptance === "not_accepted" && l("bukan perokok", "non-smoker"),
+    f.prefChildrenFromPrevious === "accepted" && l("menerima yang punya anak", "OK with children"),
+    f.prefChildrenFromPrevious === "not_accepted" && l("tanpa anak", "no children from before"),
+    f.prefMinHeight && `${f.prefMinHeight}+ cm`,
+  ].filter(Boolean) as string[];
+  const traits = typeof f.preferredPersonalityTraits === "string" ? f.preferredPersonalityTraits.trim() : "";
+  if (!parts.length && !traits) return null;
+  return [parts.join(", "), traits].filter(Boolean).join(" — ");
+}
+
+/** Who someone is and what they want: the team's at-a-glance view of a profile. */
+export function ProfileSnapshot({ p, lang, role, size = 64 }: { p: SuggestionPerson; lang: Lang; role?: string; size?: number }) {
+  const l = (id: string, en: string) => (lang === "id" ? id : en);
+  const chips = personChips(p, lang);
+  const wants = wantsLine(p, lang);
+  const about = typeof p.facts?.aboutMe === "string" ? p.facts.aboutMe : "";
+  return (
+    <div className="flex gap-3.5 min-w-0">
+      <Avatar p={p} size={size} square />
+      <div className="min-w-0 flex-1">
+        {role && <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{role}</p>}
+        <div className="flex flex-wrap items-baseline gap-x-2">
+          <Link href={`/admin/candidates/${p.uid}`} className="text-[15px] font-bold text-slate-900 hover:underline">{p.name}</Link>
+          <span className="text-[12.5px] text-slate-500">{personLine(p)}</span>
+        </div>
+        {chips.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-1.5">
+            {chips.map(c => <span key={c} className="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">{c}</span>)}
+          </div>
+        )}
+        {about && <p className="text-[12px] text-slate-500 mt-1.5 leading-snug line-clamp-2">{about}</p>}
+        {wants && (
+          <p className="text-[12px] mt-1.5 leading-snug text-slate-600 line-clamp-2">
+            <span className="font-semibold" style={{ color: "#9B2242" }}>{l("Mencari", "Looking for")}: </span>{wants}
+          </p>
+        )}
+        <div className="flex gap-3 mt-1.5">
+          <Link href={`/admin/candidates/${p.uid}`} className="text-[11.5px] font-semibold text-slate-500 hover:text-slate-900">{l("Profil admin", "Admin page")} →</Link>
+          {p.linkActive && (
+            <a href={`/profile/${p.uid}`} target="_blank" rel="noopener noreferrer" className="text-[11.5px] font-semibold text-slate-500 hover:text-slate-900 inline-flex items-center gap-1">
+              {l("Link profil", "Profile link")} <ExternalLink className="w-3 h-3" />
+            </a>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const LEVEL_META = {
+  strong:  { id: "Cocok", en: "Strong fit", color: "#047857", bg: "#ECFDF5", border: "#A7F3D0" },
+  mixed:   { id: "Sebagian cocok", en: "Mixed fit", color: "#B45309", bg: "#FFFBEB", border: "#FDE68A" },
+  weak:    { id: "Kurang cocok", en: "Weak fit", color: "#B91C1C", bg: "#FEF2F2", border: "#FECACA" },
+  unknown: { id: "Data belum cukup", en: "Not enough info", color: "#475569", bg: "#F1F5F9", border: "#E2E8F0" },
+} as const;
+
+export function FitBadge({ client, candidate, lang }: { client: SuggestionPerson; candidate: SuggestionPerson; lang: Lang }) {
+  const sum = fitSummary(fitChecks(client, candidate));
+  const m = LEVEL_META[sum.level];
+  return (
+    <span className="text-[11px] font-bold px-2 py-0.5 rounded-full border whitespace-nowrap" style={{ color: m.color, background: m.bg, borderColor: m.border }}>
+      {m[lang]}{sum.good + sum.bad > 0 ? ` · ${sum.good}/${sum.good + sum.bad}` : ""}
+    </span>
+  );
+}
+
+/** Why the two fit (or don't), checked against each other's stated wishes. */
+export function FitPanel({ client, candidate, lang }: { client: SuggestionPerson; candidate: SuggestionPerson; lang: Lang }) {
+  const l = (id: string, en: string) => (lang === "id" ? id : en);
+  const checks = fitChecks(client, candidate);
+  const sum = fitSummary(checks);
+  const m = LEVEL_META[sum.level];
+  const order = { bad: 0, unknown: 1, good: 2 } as const;
+  return (
+    <div className="rounded-xl p-3" style={{ background: m.bg, border: `1px solid ${m.border}` }}>
+      <div className="flex items-center justify-between gap-2 mb-1.5">
+        <p className="text-[12.5px] font-bold" style={{ color: m.color }}>{m[lang]}</p>
+        <p className="text-[11px] text-slate-500">
+          {l(`${sum.good} cocok · ${sum.bad} bentrok · ${sum.unknown} perlu dicek`, `${sum.good} fit · ${sum.bad} clash · ${sum.unknown} to check`)}
+        </p>
+      </div>
+      {checks.length === 0 ? (
+        <p className="text-[12px] text-slate-500">{l("Belum ada kriteria yang bisa dibandingkan. Lengkapi kriteria pasangan di profil.", "Nothing to compare yet. Fill in partner criteria on the profiles.")}</p>
+      ) : (
+        <ul className="flex flex-col gap-1">
+          {[...checks].sort((a, b) => order[a.result] - order[b.result]).map(c => (
+            <li key={c.key} className="flex items-start gap-1.5 text-[12px] leading-snug text-slate-700">
+              {c.result === "good" ? <Check className="w-3.5 h-3.5 mt-px shrink-0 text-emerald-600" />
+                : c.result === "bad" ? <X className="w-3.5 h-3.5 mt-px shrink-0 text-red-600" />
+                : <HelpCircle className="w-3.5 h-3.5 mt-px shrink-0 text-amber-600" />}
+              <span>{c.text[lang]}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 }
 
 export function StatusSelect({ value, lang, onChange, disabled }: {
@@ -89,6 +220,8 @@ export function SuggestionRow({ s, show, lang, onChanged, onDeleted }: {
   const [busy, setBusy] = useState(false);
   const [noteOpen, setNoteOpen] = useState(false);
   const [note, setNote] = useState("");
+  const [editingReason, setEditingReason] = useState(false);
+  const [reason, setReason] = useState(s.reason);
 
   const patch = async (body: Record<string, unknown>, optimistic: Partial<Suggestion>) => {
     setBusy(true);
@@ -113,6 +246,11 @@ export function SuggestionRow({ s, show, lang, onChanged, onDeleted }: {
     setNote(""); setNoteOpen(false);
   };
 
+  const saveReason = async () => {
+    await patch({ reason }, { reason: reason.trim() });
+    setEditingReason(false);
+  };
+
   const remove = async () => {
     if (!confirm(l("Hapus saran ini?", "Remove this suggestion?"))) return;
     try {
@@ -121,60 +259,62 @@ export function SuggestionRow({ s, show, lang, onChanged, onDeleted }: {
     } catch (e) { toast.error((e as Error).message); }
   };
 
-  const lead = show === "client" ? s.client : s.candidate;
+  const statusColor = STATUS_META[s.status].color;
 
   return (
-    <div className="rounded-xl border p-3.5" style={{ borderColor: "#E2E8F0", background: "#fff" }}>
-      <div className="flex items-start gap-3">
+    <div className="rounded-2xl border bg-white overflow-hidden" style={{ borderColor: "#E2E8F0", borderLeft: `4px solid ${statusColor}` }}>
+      {/* who */}
+      <div className="p-4">
         {show === "both" ? (
-          <div className="flex items-center shrink-0">
-            <Avatar p={s.candidate} size={38} />
-            <div className="-ml-2.5 ring-2 ring-white rounded-full"><Avatar p={s.client} size={38} /></div>
+          <div className="grid md:grid-cols-[1fr_auto_1fr] gap-3 items-start">
+            <ProfileSnapshot p={s.candidate} lang={lang} role={l("Profil yang disarankan", "Suggested profile")} size={56} />
+            <div className="hidden md:flex items-center justify-center pt-6"><Heart className="w-4 h-4" style={{ color: "#C4294A" }} /></div>
+            <ProfileSnapshot p={s.client} lang={lang} role={l("Untuk klien", "For client")} size={56} />
           </div>
-        ) : <Avatar p={lead} size={42} />}
+        ) : (
+          <ProfileSnapshot p={show === "client" ? s.client : s.candidate} lang={lang}
+            role={show === "client" ? l("Disarankan ke", "Suggested to") : l("Profil yang disarankan", "Suggested profile")} />
+        )}
+      </div>
 
-        <div className="flex-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-            {show === "both" ? (
-              <p className="text-[13.5px] font-bold text-slate-900">
-                <Link href={`/admin/candidates/${s.candidateUid}`} className="hover:underline">{s.candidate.name}</Link>
-                <ArrowRight className="inline w-3.5 h-3.5 mx-1 text-slate-400 -translate-y-px" />
-                <Link href={`/admin/candidates/${s.clientUid}`} className="hover:underline">{s.client.name}</Link>
-              </p>
-            ) : (
-              <Link href={`/admin/candidates/${lead.uid}`} className="text-[13.5px] font-bold text-slate-900 hover:underline">{lead.name}</Link>
-            )}
-            {show !== "both" && personLine(lead) && <span className="text-[12px] text-slate-500">{personLine(lead)}</span>}
+      {/* why + where it stands */}
+      <div className="px-4 pb-4 grid md:grid-cols-2 gap-3">
+        <FitPanel client={s.client} candidate={s.candidate} lang={lang} />
+        <div className="flex flex-col gap-2 min-w-0">
+          <div className="flex items-center justify-between gap-2">
+            <StatusSelect value={s.status} lang={lang} onChange={setStatus} disabled={busy} />
+            <button onClick={remove} title={l("Hapus", "Remove")} className="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50">
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
           </div>
-          {show === "both" && (
-            <p className="text-[11.5px] text-slate-500 mt-0.5">
-              {l("Profil", "Profile")}: {personLine(s.candidate) || "—"} · {l("untuk klien", "for client")}: {personLine(s.client) || "—"}
-            </p>
-          )}
-          {s.reason && <p className="text-[12.5px] text-slate-600 mt-1 leading-snug">{s.reason}</p>}
-          <p className="text-[11px] text-slate-400 mt-1">
+          <p className="text-[11px] text-slate-400">
             {l("Disarankan", "Suggested")} {s.createdByName ? `${l("oleh", "by")} ${s.createdByName} ` : ""}{timeAgo(s.createdAt, lang)}
             {s.sentAt && <> · {l("dikirim", "sent")} {timeAgo(s.sentAt, lang)}</>}
           </p>
-        </div>
 
-        <div className="flex items-center gap-1.5 shrink-0">
-          <StatusSelect value={s.status} lang={lang} onChange={setStatus} disabled={busy} />
-          <button onClick={remove} title={l("Hapus", "Remove")} className="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50">
-            <Trash2 className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      </div>
+          {editingReason ? (
+            <div className="flex flex-col gap-1.5">
+              <textarea autoFocus rows={2} value={reason} onChange={e => setReason(e.target.value)}
+                className="w-full text-[12.5px] rounded-lg px-3 py-2 border resize-none focus:outline-none focus:border-slate-400" style={{ borderColor: "#E2E8F0" }} />
+              <div className="flex gap-2 justify-end">
+                <button onClick={() => { setEditingReason(false); setReason(s.reason); }} className="text-[12px] font-semibold px-3 py-1 rounded-lg text-slate-500 hover:bg-slate-100">{l("Batal", "Cancel")}</button>
+                <button onClick={saveReason} className="text-[12px] font-bold px-3 py-1 rounded-lg text-white" style={{ background: "#1B3A6B" }}>{l("Simpan", "Save")}</button>
+              </div>
+            </div>
+          ) : (
+            <button onClick={() => setEditingReason(true)} className="text-left rounded-lg px-3 py-2 text-[12.5px] hover:bg-slate-50 border border-dashed" style={{ borderColor: "#E2E8F0" }}>
+              <span className="font-semibold text-slate-700">{l("Kenapa cocok", "Why we suggested it")}: </span>
+              <span className={s.reason ? "text-slate-600" : "text-slate-400"}>{s.reason || l("belum ditulis — klik untuk menambah", "not written yet — click to add")}</span>
+            </button>
+          )}
 
-      {(s.notes.length > 0 || noteOpen) && (
-        <div className="mt-3 ml-[54px] flex flex-col gap-1.5">
           {s.notes.map(n => (
             <div key={n.id} className="rounded-lg px-3 py-2 text-[12.5px]" style={{ background: "#F8FAFC" }}>
               <p className="text-slate-700 whitespace-pre-wrap leading-snug">{n.text}</p>
               <p className="text-[10.5px] text-slate-400 mt-0.5">{n.byName} · {n.at ? fmtDate(n.at, lang) : ""}</p>
             </div>
           ))}
-          {noteOpen && (
+          {noteOpen ? (
             <div className="flex flex-col gap-1.5">
               <textarea autoFocus rows={2} value={note} onChange={e => setNote(e.target.value)}
                 onKeyDown={e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) addNote(); }}
@@ -189,14 +329,13 @@ export function SuggestionRow({ s, show, lang, onChanged, onDeleted }: {
                 </button>
               </div>
             </div>
+          ) : (
+            <button onClick={() => setNoteOpen(true)} className="self-start inline-flex items-center gap-1 text-[11.5px] font-semibold text-slate-500 hover:text-slate-800">
+              <MessageSquarePlus className="w-3.5 h-3.5" /> {l("Tambah catatan / feedback", "Add note / feedback")}
+            </button>
           )}
         </div>
-      )}
-      {!noteOpen && (
-        <button onClick={() => setNoteOpen(true)} className="mt-2 ml-[54px] inline-flex items-center gap-1 text-[11.5px] font-semibold text-slate-500 hover:text-slate-800">
-          <MessageSquarePlus className="w-3.5 h-3.5" /> {l("Tambah catatan / feedback", "Add note / feedback")}
-        </button>
-      )}
+      </div>
     </div>
   );
 }
@@ -230,6 +369,13 @@ export function AddSuggestion({ fixed, fixedRole, lang, exclude, onAdded, onClos
       .then(r => { peopleCache = r.people; setPeople(r.people); })
       .catch(e => toast.error((e as Error).message));
   }, []);
+
+  // The page only knows the basics about `fixed`; swap in the full record so the fit check has data
+  useEffect(() => {
+    const full = fixed && people?.find(x => x.uid === fixed.uid);
+    if (!full) return;
+    if (fixedRole === "client") setClient(full); else setCandidate(full);
+  }, [people, fixed, fixedRole]);
 
   // Which slot the search fills next
   const slot: "client" | "candidate" = fixed ? (fixedRole === "client" ? "candidate" : "client") : (!client ? "client" : "candidate");
@@ -329,8 +475,9 @@ export function AddSuggestion({ fixed, fixedRole, lang, exclude, onAdded, onClos
                   <Avatar p={p} size={34} />
                   <div className="min-w-0">
                     <p className="text-[13px] font-semibold text-slate-900 truncate">{p.name}</p>
-                    <p className="text-[11.5px] text-slate-500 truncate">{[p.gender === "female" ? l("Wanita", "Woman") : p.gender === "male" ? l("Pria", "Man") : null, personLine(p)].filter(Boolean).join(" · ")}</p>
+                    <p className="text-[11.5px] text-slate-500 truncate">{[p.gender === "female" ? l("Wanita", "Woman") : p.gender === "male" ? l("Pria", "Man") : null, personLine(p), val(p, "nationality", lang), val(p, "maritalStatus", lang)].filter(Boolean).join(" · ")}</p>
                   </div>
+                  {other && <span className="ml-auto"><FitBadge client={slot === "candidate" ? other : p} candidate={slot === "candidate" ? p : other} lang={lang} /></span>}
                 </button>
               ))}
             </div>
@@ -338,7 +485,8 @@ export function AddSuggestion({ fixed, fixedRole, lang, exclude, onAdded, onClos
         )}
 
         {ready && (
-          <div className="px-5 pt-4">
+          <div className="px-5 pt-4 overflow-y-auto">
+            <div className="mb-3"><FitPanel client={client!} candidate={candidate!} lang={lang} /></div>
             <p className="text-[12px] font-semibold text-slate-600 mb-1.5">{l("Kenapa cocok? (opsional)", "Why they fit (optional)")}</p>
             <textarea autoFocus rows={3} value={reason} onChange={e => setReason(e.target.value)}
               placeholder={l("Mis. sama-sama ingin menikah segera, beda usia pas, sama-sama terbuka pindah", "e.g. both want to marry soon, age gap fits, both open to relocating")}

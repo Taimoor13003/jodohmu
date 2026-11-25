@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { FieldValue, type DocumentData, type Timestamp } from "firebase-admin/firestore";
 import { adminDb } from "@/lib/firebase-admin";
 import { withLiveAge } from "@/lib/age";
-import { authenticateTeam, canManageCandidate, type TeamActor } from "@/lib/team-access";
+import { authenticateTeam, canManageCandidate, canManageSuggestionFor, hasPermission, type TeamActor } from "@/lib/team-access";
 import {
+  FACT_FIELDS,
   SUGGESTIONS_COLLECTION,
   type Suggestion,
   type SuggestionNote,
@@ -16,9 +17,16 @@ export const dynamic = "force-dynamic";
 const iso = (v: unknown) => (v as Timestamp | undefined)?.toDate?.()?.toISOString() ?? null;
 const str = (v: unknown) => (typeof v === "string" && v.trim() && v !== "—" ? v.trim() : null);
 
-function person(uid: string, d: DocumentData | undefined): SuggestionPerson {
+function person(uid: string, d: DocumentData | undefined, withFacts = true): SuggestionPerson {
   const data = d ? withLiveAge(d as Record<string, unknown>) : {};
   const photos = Array.isArray(data.photoUrls) ? (data.photoUrls as string[]) : [];
+  const facts: Record<string, unknown> = {};
+  if (withFacts) {
+    for (const f of FACT_FIELDS) {
+      const v = data[f];
+      if (v !== undefined && v !== null && v !== "" && v !== "—" && !(Array.isArray(v) && v.length === 0)) facts[f] = v;
+    }
+  }
   return {
     uid,
     name: str(data.fullName) ?? str(data.name) ?? "—",
@@ -26,6 +34,7 @@ function person(uid: string, d: DocumentData | undefined): SuggestionPerson {
     age: str(data.age),
     city: str(data.location),
     photo: photos[0] ?? null,
+    ...(withFacts ? { facts, linkActive: !!data.profileLinkActive } : {}),
   };
 }
 
@@ -82,7 +91,7 @@ export async function GET(req: NextRequest) {
 
     const uid = params.get("uid");
     if (uid) {
-      if (!(await canManageCandidate(actor, uid))) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      if (!(await canManageSuggestionFor(actor, uid))) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       const [asClient, asCandidate] = await Promise.all([
         db.collection(SUGGESTIONS_COLLECTION).where("clientUid", "==", uid).get(),
         db.collection(SUGGESTIONS_COLLECTION).where("candidateUid", "==", uid).get(),
@@ -96,7 +105,7 @@ export async function GET(req: NextRequest) {
 
     const snap = await db.collection(SUGGESTIONS_COLLECTION).get();
     let docs = snap.docs.map(d => ({ id: d.id, data: d.data() }));
-    if (actor.role !== "admin") {
+    if (!(await hasPermission(actor, "matches"))) {
       const allowed = await Promise.all(docs.map(d => canManageCandidate(actor, d.data.clientUid)));
       docs = docs.filter((_, i) => allowed[i]);
     }
@@ -117,7 +126,7 @@ export async function POST(req: NextRequest) {
   const candidateUid = body?.candidateUid?.trim();
   if (!clientUid || !candidateUid) return NextResponse.json({ error: "Pick both people" }, { status: 400 });
   if (clientUid === candidateUid) return NextResponse.json({ error: "Can't suggest someone to themselves" }, { status: 400 });
-  if (!(await canManageCandidate(actor, clientUid))) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!(await canManageSuggestionFor(actor, clientUid))) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const db = adminDb();
   try {

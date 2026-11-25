@@ -36,7 +36,20 @@ export interface SuggestionPerson {
   age: string | null;
   city: string | null;
   photo: string | null;
+  /** Profile facts and partner preferences used to describe the person and check the fit. */
+  facts?: Record<string, unknown>;
+  linkActive?: boolean;
 }
+
+/** Fields copied into `facts` (team-only screens; never sent to the public). */
+export const FACT_FIELDS = [
+  "nationality", "ethnicity", "maritalStatus", "childrenCount", "occupation", "jobPosition", "employmentStatus",
+  "incomeRange", "educations", "religion", "religiousPracticeLevel", "prayerHabit", "hijab", "beard", "height",
+  "smokingStatus", "maritalTimeline", "aboutMe", "openToForeigner",
+  "preferredMinAge", "preferredMaxAge", "preferredReligion", "prefReligionLevel", "prefPreviousStatus",
+  "prefChildrenFromPrevious", "openToDivorcedOrWidowed", "prefMinHeight", "prefMaxHeight", "prefSmokingAcceptance",
+  "preferredLocationOfSpouse", "prefDomicile", "preferredPersonalityTraits", "physicalPreferences", "spouseDealBreakers",
+] as const;
 
 export interface Suggestion {
   id: string;

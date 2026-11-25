@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { useLanguage } from "@/context/LanguageContext";
 import { auth } from "@/lib/firebase";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -26,25 +27,28 @@ interface UserRow {
   canEdit: boolean;
 }
 
-const STATUS_OPTIONS: { value: string; label: string; className: string }[] = [
-  { value: "new_lead",                label: "New Lead",               className: "bg-amber-50 text-amber-700 border-amber-200" },
-  { value: "awaiting_discovery_call", label: "Discovery Call Pending", className: "bg-sky-50 text-sky-700 border-sky-200" },
-  { value: "registered_looking",      label: "Searching Matches",      className: "bg-amber-50 text-amber-700 border-amber-200" },
-  { value: "matched",                 label: "Matched",                className: "bg-indigo-50 text-indigo-700 border-indigo-200" },
-  { value: "in_taaruf",               label: "In Ta'aruf",             className: "bg-violet-50 text-violet-700 border-violet-200" },
-  { value: "family_meeting",          label: "Family Meeting Stage",   className: "bg-rose-50 text-rose-700 border-rose-200" },
-  { value: "closed_success",          label: "Closed — Success",       className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  { value: "closed_withdrawn",        label: "Closed — Withdrawn",     className: "bg-gray-100 text-gray-500 border-gray-200" },
+const STATUS_OPTIONS: { value: string; id: string; en: string; className: string }[] = [
+  { value: "new_lead",                id: "Lead Baru",                  en: "New Lead",               className: "bg-amber-50 text-amber-700 border-amber-200" },
+  { value: "awaiting_discovery_call", id: "Menunggu Discovery Call",    en: "Discovery Call Pending", className: "bg-sky-50 text-sky-700 border-sky-200" },
+  { value: "registered_looking",      id: "Mencari Pasangan",           en: "Searching Matches",      className: "bg-amber-50 text-amber-700 border-amber-200" },
+  { value: "matched",                 id: "Sudah Dipasangkan",          en: "Matched",                className: "bg-indigo-50 text-indigo-700 border-indigo-200" },
+  { value: "in_taaruf",               id: "Dalam Perkenalan",           en: "In Introduction",        className: "bg-violet-50 text-violet-700 border-violet-200" },
+  { value: "family_meeting",          id: "Tahap Pertemuan Keluarga",   en: "Family Meeting Stage",   className: "bg-rose-50 text-rose-700 border-rose-200" },
+  { value: "closed_success",          id: "Selesai — Berhasil",         en: "Closed — Success",       className: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+  { value: "closed_withdrawn",        id: "Selesai — Mundur",           en: "Closed — Withdrawn",     className: "bg-gray-100 text-gray-500 border-gray-200" },
 ];
 
-const STATUS_BADGE: Record<string, { label: string; className: string }> = Object.fromEntries(
-  STATUS_OPTIONS.map(s => [s.value, { label: s.label, className: s.className }])
+const STATUS_BADGE: Record<string, { className: string }> = Object.fromEntries(
+  STATUS_OPTIONS.map(s => [s.value, { className: s.className }])
 );
 
 const LEAD_STATUSES = new Set(["new_lead", "awaiting_discovery_call"]);
 
 export default function CandidatesPage() {
   const { role, loading: authLoading } = useAuth();
+  const { lang } = useLanguage();
+  const l = (id: string, en: string) => (lang === "en" ? en : id);
+  const genderLabel = (g: string | null) => g === "male" ? l("Pria", "Male") : g === "female" ? l("Wanita", "Female") : (g ?? "—");
   const [users, setUsers] = useState<UserRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"all" | "leads" | "mine">("all");
@@ -98,7 +102,7 @@ export default function CandidatesPage() {
     } catch (err) {
       console.error(err);
       setUsers(previous);
-      alert(err instanceof Error ? err.message : "Failed to update status");
+      alert(err instanceof Error ? err.message : l("Gagal mengubah status", "Failed to update status"));
     } finally {
       setSavingStatusUid(null);
     }
@@ -151,8 +155,8 @@ export default function CandidatesPage() {
     return (
       <div className="container mx-auto max-w-3xl p-6">
         <Card>
-          <CardHeader><CardTitle>Unauthorized</CardTitle></CardHeader>
-          <CardContent>You need admin access to view this page.</CardContent>
+          <CardHeader><CardTitle>{l("Tidak punya akses", "Unauthorized")}</CardTitle></CardHeader>
+          <CardContent>{l("Halaman ini hanya untuk admin.", "You need admin access to view this page.")}</CardContent>
         </Card>
       </div>
     );
@@ -162,11 +166,11 @@ export default function CandidatesPage() {
     <div className="container mx-auto max-w-5xl p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-[#9B2242]">Candidates</h1>
+          <h1 className="text-3xl font-bold text-[#9B2242]">{l("Kandidat", "Candidates")}</h1>
           <p className="text-muted-foreground">
             {role === "worker"
-              ? "Clients you added or are assigned to are under My clients. Newest first."
-              : "All registered candidates in the matchmaking program."}
+              ? l("Klien yang Anda tambahkan atau ditugaskan ke Anda ada di Klien saya. Terbaru di atas.", "Clients you added or are assigned to are under My clients. Newest first.")
+              : l("Semua kandidat yang terdaftar di program perjodohan.", "All registered candidates in the matchmaking program.")}
           </p>
         </div>
 
@@ -181,7 +185,7 @@ export default function CandidatesPage() {
           }}
         >
           <UserPlus style={{ width: 16, height: 16 }} />
-          Add candidate
+          {l("Tambah kandidat", "Add candidate")}
         </button>
       </div>
 
@@ -191,32 +195,32 @@ export default function CandidatesPage() {
             onClick={() => setFilter("mine")}
             className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition ${filter === "mine" ? "bg-[#0b3a86] text-white border-[#0b3a86]" : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"}`}
           >
-            My clients ({mineCount})
+            {l("Klien saya", "My clients")} ({mineCount})
           </button>
         )}
         <button
           onClick={() => setFilter("all")}
           className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition ${filter === "all" ? "bg-[#0b3a86] text-white border-[#0b3a86]" : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"}`}
         >
-          All ({users.length})
+          {l("Semua", "All")} ({users.length})
         </button>
         <button
           onClick={() => setFilter("leads")}
           className={`px-3.5 py-1.5 rounded-full text-xs font-bold border transition ${filter === "leads" ? "bg-[#9B2242] text-white border-[#9B2242]" : "bg-white text-slate-500 border-slate-200 hover:bg-slate-50"}`}
         >
-          New Leads ({leadCount})
+          {l("Lead Baru", "New Leads")} ({leadCount})
         </button>
       </div>
 
       <div className="flex flex-wrap items-end gap-3 rounded-xl border border-slate-200 bg-white p-4">
         <div className="flex flex-col gap-1">
-          <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">City</label>
+          <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{l("Kota", "City")}</label>
           <select
             value={cityFilter}
             onChange={e => setCityFilter(e.target.value)}
             className="h-9 rounded-lg border border-slate-200 px-2.5 text-sm text-slate-700"
           >
-            <option value="all">All cities</option>
+            <option value="all">{l("Semua kota", "All cities")}</option>
             {cityOptions.map(city => (
               <option key={city} value={city}>{city}</option>
             ))}
@@ -224,20 +228,20 @@ export default function CandidatesPage() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Gender</label>
+          <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{l("Jenis kelamin", "Gender")}</label>
           <select
             value={genderFilter}
             onChange={e => setGenderFilter(e.target.value)}
             className="h-9 rounded-lg border border-slate-200 px-2.5 text-sm text-slate-700"
           >
-            <option value="all">All</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
+            <option value="all">{l("Semua", "All")}</option>
+            <option value="male">{l("Pria", "Male")}</option>
+            <option value="female">{l("Wanita", "Female")}</option>
           </select>
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Age range</label>
+          <label className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">{l("Rentang usia", "Age range")}</label>
           <div className="flex items-center gap-2">
             <input
               type="number"
@@ -264,39 +268,39 @@ export default function CandidatesPage() {
             onClick={resetFilters}
             className="h-9 rounded-lg border border-slate-200 px-3 text-xs font-semibold text-slate-500 hover:bg-slate-50"
           >
-            Clear filters
+            {l("Hapus filter", "Clear filters")}
           </button>
         )}
 
         <div className="ml-auto text-xs text-muted-foreground self-end pb-1.5">
-          Showing {visibleUsers.length} of {users.length}
+          {l(`Menampilkan ${visibleUsers.length} dari ${users.length}`, `Showing ${visibleUsers.length} of ${users.length}`)}
         </div>
       </div>
 
       <Card className="border-0 shadow-xl">
         <CardContent className="p-0">
           {loading ? (
-            <div className="p-8 text-center text-muted-foreground">Loading...</div>
+            <div className="p-8 text-center text-muted-foreground">{l("Memuat…", "Loading…")}</div>
           ) : visibleUsers.length === 0 ? (
             <div className="p-8 text-center text-muted-foreground">
               {filter === "leads"
-                ? "No new leads right now."
+                ? l("Belum ada lead baru.", "No new leads right now.")
                 : filter === "mine"
-                  ? "You haven't added any clients yet — use “Add candidate” to create one."
-                  : "No candidates found."}
+                  ? l("Anda belum menambahkan klien — pakai “Tambah kandidat” untuk membuatnya.", "You haven't added any clients yet — use “Add candidate” to create one.")
+                  : l("Tidak ada kandidat.", "No candidates found.")}
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
+                  <TableHead>{l("Nama", "Name")}</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead>City</TableHead>
-                  <TableHead>Age</TableHead>
-                  <TableHead>Gender</TableHead>
+                  <TableHead>{l("Telepon", "Phone")}</TableHead>
+                  <TableHead>{l("Kota", "City")}</TableHead>
+                  <TableHead>{l("Usia", "Age")}</TableHead>
+                  <TableHead>{l("Gender", "Gender")}</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Created</TableHead>
+                  <TableHead>{l("Dibuat", "Created")}</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
@@ -310,23 +314,23 @@ export default function CandidatesPage() {
                       <TableCell className="text-muted-foreground">{u.phone ?? "—"}</TableCell>
                       <TableCell className="text-muted-foreground">{u.location ?? "—"}</TableCell>
                       <TableCell className="text-muted-foreground">{u.age ?? "—"}</TableCell>
-                      <TableCell className="text-muted-foreground capitalize">{u.gender ?? "—"}</TableCell>
+                      <TableCell className="text-muted-foreground capitalize">{genderLabel(u.gender)}</TableCell>
                       <TableCell>
                         <select
                           value={u.personStatus ?? ""}
                           disabled={!u.canEdit || savingStatusUid === u.uid}
-                          title={u.canEdit ? undefined : "Only the assigned worker or an admin can change this"}
+                          title={u.canEdit ? undefined : l("Hanya worker yang ditugaskan atau admin yang bisa mengubah ini", "Only the assigned worker or an admin can change this")}
                           onChange={e => updateStatus(u.uid, e.target.value)}
                           className={`px-2 py-1 rounded-full border text-[11px] font-bold whitespace-nowrap disabled:opacity-50 ${badge ? badge.className : "bg-gray-100 text-gray-400 border-gray-200"}`}
                         >
-                          {!u.personStatus && <option value="" disabled>— Set status —</option>}
+                          {!u.personStatus && <option value="" disabled>{l("— Pilih status —", "— Set status —")}</option>}
                           {STATUS_OPTIONS.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            <option key={opt.value} value={opt.value}>{opt[lang === "en" ? "en" : "id"]}</option>
                           ))}
                         </select>
                       </TableCell>
                       <TableCell className="text-muted-foreground text-sm">
-                        {u.createdAt ? u.createdAt.toLocaleDateString() : "—"}
+                        {u.createdAt ? u.createdAt.toLocaleDateString(lang === "en" ? "en-GB" : "id-ID") : "—"}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-3">
@@ -334,12 +338,12 @@ export default function CandidatesPage() {
                             href={`/admin/candidates/${u.uid}`}
                             className="inline-flex items-center gap-1 text-xs font-semibold text-[#9B2242] hover:underline"
                           >
-                            View profile <ExternalLink className="h-3 w-3" />
+                            {l("Lihat profil", "View profile")} <ExternalLink className="h-3 w-3" />
                           </Link>
                           <Link
                             href={`/admin/chat?uid=${u.uid}&name=${encodeURIComponent(u.name)}`}
                             className="inline-flex items-center justify-center w-7 h-7 rounded-full hover:bg-slate-100 transition text-slate-400 hover:text-[#0b3a86]"
-                            title={`Chat with ${u.name}`}
+                            title={l(`Chat dengan ${u.name}`, `Chat with ${u.name}`)}
                           >
                             <MessageCircle className="h-4 w-4" />
                           </Link>
@@ -347,12 +351,12 @@ export default function CandidatesPage() {
                             <select
                               value=""
                               onChange={e => router.push(`/admin/subpages?page=${e.target.value}&profile=${u.uid}`)}
-                              title="Post this profile on one of our Instagram subpages"
+                              title={l("Posting profil ini ke salah satu subpage Instagram kami", "Post this profile on one of our Instagram subpages")}
                               className="h-7 rounded-full border border-slate-200 bg-white px-2 text-[11px] font-semibold text-slate-500 hover:border-slate-300"
                             >
-                              <option value="" disabled>Post to subpage…</option>
+                              <option value="" disabled>{l("Posting ke subpage…", "Post to subpage…")}</option>
                               {SOCIAL_PAGES.map(p => (
-                                <option key={p.key} value={p.key}>@{p.handle}{p.connected ? "" : " (not connected)"}</option>
+                                <option key={p.key} value={p.key}>@{p.handle}{p.connected ? "" : l(" (belum terhubung)", " (not connected)")}</option>
                               ))}
                             </select>
                           )}

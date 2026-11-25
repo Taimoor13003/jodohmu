@@ -31,3 +31,17 @@ export async function canManageCandidate(actor: TeamActor, candidateId: string):
   const assigned: string[] = snap.data()?.assignedWorkers ?? [];
   return assigned.includes(actor.uid);
 }
+
+/** Whether a worker has been given an extra permission (admins have them all). */
+export async function hasPermission(actor: TeamActor, permission: string): Promise<boolean> {
+  if (actor.role === "admin") return true;
+  if (actor.role !== "worker") return false;
+  const snap = await adminDb().collection("user_roles").doc(actor.uid).get();
+  const perms: string[] = snap.data()?.permissions ?? [];
+  return perms.includes(permission);
+}
+
+/** Match suggestions: everyone with the "matches" permission, otherwise only for clients the worker manages. */
+export async function canManageSuggestionFor(actor: TeamActor, clientUid: string): Promise<boolean> {
+  return (await hasPermission(actor, "matches")) || canManageCandidate(actor, clientUid);
+}

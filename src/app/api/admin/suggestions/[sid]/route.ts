@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { FieldValue } from "firebase-admin/firestore";
 import { randomBytes } from "crypto";
 import { adminDb } from "@/lib/firebase-admin";
-import { authenticateTeam, canManageCandidate } from "@/lib/team-access";
+import { authenticateTeam, canManageSuggestionFor } from "@/lib/team-access";
 import { SUGGESTIONS_COLLECTION, isStatus } from "@/lib/match-suggestions";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +13,7 @@ async function load(req: NextRequest, sid: string) {
   const ref = adminDb().collection(SUGGESTIONS_COLLECTION).doc(sid);
   const snap = await ref.get();
   if (!snap.exists) return { error: 404 as const };
-  if (!(await canManageCandidate(actor, snap.data()!.clientUid))) return { error: 403 as const };
+  if (!(await canManageSuggestionFor(actor, snap.data()!.clientUid))) return { error: 403 as const };
   return { actor, ref, data: snap.data()! };
 }
 
