@@ -305,6 +305,12 @@ export default function ShareView({ token }: { token: string }) {
   const { lang, setLang } = useLanguage();
   const l = (lang === "en" ? "en" : "id") as Lang;
   const toggleLang = () => setLang(l === "id" ? "en" : "id");
+  // Links for foreign clients carry ?lang=en so they open in English
+  useEffect(() => {
+    const wanted = new URLSearchParams(window.location.search).get("lang");
+    if (wanted === "en" || wanted === "id") setLang(wanted);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const { user, loading: authLoading } = useAuth();
   const reduceMotion = useReducedMotion();
 

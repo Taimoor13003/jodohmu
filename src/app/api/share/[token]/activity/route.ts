@@ -26,7 +26,7 @@ const bodySchema = z.object({
   seconds: z.number().int().min(0).max(120).default(0),
   photo: z.boolean().default(false),
   /** a suspected screenshot or print attempt on the page */
-  capture: z.enum(["printscreen", "shortcut", "print"]).optional(),
+  capture: z.enum(["printscreen", "shortcut", "print", "gesture"]).optional(),
 });
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ token: string }> }) {

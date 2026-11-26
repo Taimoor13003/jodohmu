@@ -80,7 +80,7 @@ export interface ShareViewEvent {
   tier: AudienceTier;
   countedAsOpen: boolean;
   /** set when the event is a suspected screenshot or print attempt */
-  capture: "printscreen" | "shortcut" | "print" | null;
+  capture: "printscreen" | "shortcut" | "print" | "gesture" | null;
   visit: VisitContext | null;
 }
 

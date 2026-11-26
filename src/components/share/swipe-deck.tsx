@@ -275,9 +275,14 @@ function CardFace({ profile, lang, interactive, onOpenPhoto, note }: {
 
 /* ── capture deterrence ──
    A web page cannot block OS screenshots. What it can do is hide content
-   whenever the page isn't the active window, and refuse to print. */
+   whenever the page isn't the active window, refuse to print, and blank the
+   card the moment three fingers touch the screen: many Android phones
+   (Xiaomi, Oppo, Vivo, Realme, Samsung) take a screenshot with a
+   three-finger swipe, and the touches reach the page before the capture.
+   The power + volume button combo sends the page nothing, so it can't be
+   caught here. */
 
-export type CaptureKind = "printscreen" | "shortcut" | "print";
+export type CaptureKind = "printscreen" | "shortcut" | "print" | "gesture";
 
 /* ── the deck: fills whatever space its parent gives it ── */
 
@@ -320,10 +325,16 @@ export function SwipeDeck({
   useEffect(() => {
     const hide = () => setShielded(true);
     const show = () => setShielded(false);
-    const flash = (kind: CaptureKind) => {
+    let lastFlash = 0;
+    const flash = (kind: CaptureKind, ms = 1600) => {
       hide();
-      window.setTimeout(show, 1600);
-      captureRef.current?.(kind);
+      window.setTimeout(show, ms);
+      // one swipe fires many touch events; log it once
+      if (Date.now() - lastFlash > 3000) captureRef.current?.(kind);
+      lastFlash = Date.now();
+    };
+    const onTouch = (e: TouchEvent) => {
+      if (e.touches.length >= 3) flash("gesture", 2500);
     };
     const onVisibility = () => (document.visibilityState === "hidden" ? hide() : show());
     const onKeyDown = (e: KeyboardEvent) => {
@@ -345,7 +356,11 @@ export function SwipeDeck({
     document.addEventListener("visibilitychange", onVisibility);
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
+    window.addEventListener("touchstart", onTouch, { passive: true, capture: true });
+    window.addEventListener("touchmove", onTouch, { passive: true, capture: true });
     return () => {
+      window.removeEventListener("touchstart", onTouch, { capture: true });
+      window.removeEventListener("touchmove", onTouch, { capture: true });
       window.removeEventListener("blur", hide);
       window.removeEventListener("focus", show);
       document.removeEventListener("visibilitychange", onVisibility);
