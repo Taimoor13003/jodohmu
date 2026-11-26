@@ -8,9 +8,12 @@ import { displayValue } from "@/lib/share-display";
 import { fitChecks, fitSummary } from "@/lib/match-fit";
 import { auth } from "@/lib/firebase";
 import {
+  ORIGIN_META,
+  SUGGESTION_ORIGINS,
   STATUS_META,
   SUGGESTION_STATUSES,
   type Suggestion,
+  type SuggestionOrigin,
   type SuggestionPerson,
   type SuggestionStatus,
 } from "@/lib/match-suggestions";
@@ -203,6 +206,50 @@ export function StatusSelect({ value, lang, onChange, disabled }: {
   );
 }
 
+/** Who started the match: the team's idea, or the candidate came to us asking for this profile. */
+export function OriginSelect({ value, lang, onChange, disabled }: {
+  value: SuggestionOrigin; lang: Lang; onChange: (o: SuggestionOrigin) => void; disabled?: boolean;
+}) {
+  const m = ORIGIN_META[value];
+  return (
+    <select value={value} disabled={disabled} onChange={e => onChange(e.target.value as SuggestionOrigin)}
+      title={m[lang]}
+      className="text-[11.5px] font-bold rounded-full pl-2.5 pr-6 py-1 border cursor-pointer focus:outline-none"
+      style={{ color: m.color, background: m.bg, borderColor: m.border }}>
+      {SUGGESTION_ORIGINS.map(o => <option key={o} value={o}>{ORIGIN_META[o].short[lang]}</option>)}
+    </select>
+  );
+}
+
+/** Two-button switch used when adding a suggestion. */
+export function OriginToggle({ value, lang, onChange, candidateName, clientName }: {
+  value: SuggestionOrigin; lang: Lang; onChange: (o: SuggestionOrigin) => void; candidateName?: string; clientName?: string;
+}) {
+  const l = (id: string, en: string) => (lang === "id" ? id : en);
+  const opts: { o: SuggestionOrigin; title: string; sub: string }[] = [
+    { o: "team", title: l("Ide tim", "Our idea"), sub: l("Tim yang menyarankan pasangan ini", "The team thinks they'd suit each other") },
+    { o: "candidate_request", title: l("Kandidat yang meminta", "Candidate asked"),
+      sub: candidateName && clientName
+        ? l(`${candidateName} menghubungi kami untuk profil ${clientName}`, `${candidateName} reached out to us for ${clientName}'s profile`)
+        : l("Kandidat menghubungi kami untuk profil ini", "The candidate reached out to us for this profile") },
+  ];
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      {opts.map(({ o, title, sub }) => {
+        const on = value === o, m = ORIGIN_META[o];
+        return (
+          <button key={o} type="button" onClick={() => onChange(o)}
+            className="text-left rounded-xl px-3 py-2 border transition-colors"
+            style={on ? { background: m.bg, borderColor: m.color } : { borderColor: "#E2E8F0" }}>
+            <span className="block text-[12.5px] font-bold" style={{ color: on ? m.color : "#334155" }}>{title}</span>
+            <span className="block text-[11px] text-slate-500 leading-snug">{sub}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 /* ── one suggestion ───────────────────────────────────────────────────── */
 /**
  * `show` picks whose card leads the row: on a client's page we show the suggested
@@ -259,10 +306,20 @@ export function SuggestionRow({ s, show, lang, onChanged, onDeleted }: {
     } catch (e) { toast.error((e as Error).message); }
   };
 
+  const setOrigin = (origin: SuggestionOrigin) => patch({ origin }, { origin });
+
   const statusColor = STATUS_META[s.status].color;
+  const asked = s.origin === "candidate_request";
 
   return (
     <div className="rounded-2xl border bg-white overflow-hidden" style={{ borderColor: "#E2E8F0", borderLeft: `4px solid ${statusColor}` }}>
+      {asked && (
+        <div className="px-4 py-2 text-[12px] font-semibold flex items-center gap-1.5 border-b"
+          style={{ background: ORIGIN_META.candidate_request.bg, color: ORIGIN_META.candidate_request.color, borderColor: ORIGIN_META.candidate_request.border }}>
+          <Heart className="w-3.5 h-3.5 fill-current" />
+          {l(`${s.candidate.name} menghubungi kami dan meminta profil ${s.client.name}`, `${s.candidate.name} reached out to us asking for ${s.client.name}'s profile`)}
+        </div>
+      )}
       {/* who */}
       <div className="p-4">
         {show === "both" ? (
@@ -282,13 +339,16 @@ export function SuggestionRow({ s, show, lang, onChanged, onDeleted }: {
         <FitPanel client={s.client} candidate={s.candidate} lang={lang} />
         <div className="flex flex-col gap-2 min-w-0">
           <div className="flex items-center justify-between gap-2">
-            <StatusSelect value={s.status} lang={lang} onChange={setStatus} disabled={busy} />
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <StatusSelect value={s.status} lang={lang} onChange={setStatus} disabled={busy} />
+              <OriginSelect value={s.origin} lang={lang} onChange={setOrigin} disabled={busy} />
+            </div>
             <button onClick={remove} title={l("Hapus", "Remove")} className="p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50">
               <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>
           <p className="text-[11px] text-slate-400">
-            {l("Disarankan", "Suggested")} {s.createdByName ? `${l("oleh", "by")} ${s.createdByName} ` : ""}{timeAgo(s.createdAt, lang)}
+            {asked ? l("Dicatat", "Logged") : l("Disarankan", "Suggested")} {s.createdByName ? `${l("oleh", "by")} ${s.createdByName} ` : ""}{timeAgo(s.createdAt, lang)}
             {s.sentAt && <> · {l("dikirim", "sent")} {timeAgo(s.sentAt, lang)}</>}
           </p>
 
@@ -303,7 +363,7 @@ export function SuggestionRow({ s, show, lang, onChanged, onDeleted }: {
             </div>
           ) : (
             <button onClick={() => setEditingReason(true)} className="text-left rounded-lg px-3 py-2 text-[12.5px] hover:bg-slate-50 border border-dashed" style={{ borderColor: "#E2E8F0" }}>
-              <span className="font-semibold text-slate-700">{l("Kenapa cocok", "Why we suggested it")}: </span>
+              <span className="font-semibold text-slate-700">{asked ? l("Catatan permintaan", "About the request") : l("Kenapa cocok", "Why we suggested it")}: </span>
               <span className={s.reason ? "text-slate-600" : "text-slate-400"}>{s.reason || l("belum ditulis — klik untuk menambah", "not written yet — click to add")}</span>
             </button>
           )}
@@ -360,6 +420,7 @@ export function AddSuggestion({ fixed, fixedRole, lang, exclude, onAdded, onClos
   const [client, setClient] = useState<SuggestionPerson | null>(fixed && fixedRole === "client" ? fixed : null);
   const [candidate, setCandidate] = useState<SuggestionPerson | null>(fixed && fixedRole === "candidate" ? fixed : null);
   const [reason, setReason] = useState("");
+  const [origin, setOrigin] = useState<SuggestionOrigin>("team");
   const [saving, setSaving] = useState(false);
   const [sameGender, setSameGender] = useState(false);
 
@@ -400,7 +461,7 @@ export function AddSuggestion({ fixed, fixedRole, lang, exclude, onAdded, onClos
     setSaving(true);
     try {
       const r = await teamFetch<{ suggestion: Suggestion }>("/api/admin/suggestions", {
-        method: "POST", body: JSON.stringify({ clientUid: client.uid, candidateUid: candidate.uid, reason }),
+        method: "POST", body: JSON.stringify({ clientUid: client.uid, candidateUid: candidate.uid, reason, origin }),
       });
       toast.success(l("Saran disimpan", "Suggestion saved"));
       onAdded(r.suggestion);
@@ -486,8 +547,10 @@ export function AddSuggestion({ fixed, fixedRole, lang, exclude, onAdded, onClos
 
         {ready && (
           <div className="px-5 pt-4 overflow-y-auto">
+            <p className="text-[12px] font-semibold text-slate-600 mb-1.5">{l("Siapa yang memulai?", "Who started this?")}</p>
+            <div className="mb-3"><OriginToggle value={origin} lang={lang} onChange={setOrigin} candidateName={candidate!.name} clientName={client!.name} /></div>
             <div className="mb-3"><FitPanel client={client!} candidate={candidate!} lang={lang} /></div>
-            <p className="text-[12px] font-semibold text-slate-600 mb-1.5">{l("Kenapa cocok? (opsional)", "Why they fit (optional)")}</p>
+            <p className="text-[12px] font-semibold text-slate-600 mb-1.5">{origin === "candidate_request" ? l("Catatan permintaan (opsional)", "About the request (optional)") : l("Kenapa cocok? (opsional)", "Why they fit (optional)")}</p>
             <textarea autoFocus rows={3} value={reason} onChange={e => setReason(e.target.value)}
               placeholder={l("Mis. sama-sama ingin menikah segera, beda usia pas, sama-sama terbuka pindah", "e.g. both want to marry soon, age gap fits, both open to relocating")}
               className="w-full text-[13px] rounded-xl px-3 py-2.5 border resize-none focus:outline-none focus:border-slate-400" style={{ borderColor: "#E2E8F0" }} />

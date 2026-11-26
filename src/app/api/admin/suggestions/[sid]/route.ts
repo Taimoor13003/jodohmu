@@ -3,7 +3,7 @@ import { FieldValue } from "firebase-admin/firestore";
 import { randomBytes } from "crypto";
 import { adminDb } from "@/lib/firebase-admin";
 import { authenticateTeam, canManageSuggestionFor } from "@/lib/team-access";
-import { SUGGESTIONS_COLLECTION, isStatus } from "@/lib/match-suggestions";
+import { SUGGESTIONS_COLLECTION, isOrigin, isStatus } from "@/lib/match-suggestions";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +24,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ si
   if ("error" in found) return NextResponse.json({ error: "Not allowed" }, { status: found.error });
   const { actor, ref, data } = found;
 
-  const body = await req.json().catch(() => null) as { status?: string; reason?: string; note?: string; removeNoteId?: string } | null;
+  const body = await req.json().catch(() => null) as { status?: string; origin?: string; reason?: string; note?: string; removeNoteId?: string } | null;
   if (!body) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
 
   const now = new Date().toISOString();
@@ -37,6 +37,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ si
       update.history = FieldValue.arrayUnion({ status: body.status, byName: actor.name, at: now });
       if (body.status === "sent" && !data.sentAt) update.sentAt = FieldValue.serverTimestamp();
     }
+  }
+  if (body.origin !== undefined) {
+    if (!isOrigin(body.origin)) return NextResponse.json({ error: "Unknown origin" }, { status: 400 });
+    update.origin = body.origin;
   }
   if (typeof body.reason === "string") update.reason = body.reason.trim().slice(0, 2000);
 

@@ -9,6 +9,7 @@ import {
   type Suggestion,
   type SuggestionNote,
   type SuggestionPerson,
+  isOrigin,
   isStatus,
 } from "@/lib/match-suggestions";
 
@@ -52,6 +53,7 @@ async function hydrate(docs: { id: string; data: DocumentData }[]): Promise<Sugg
     client: person(data.clientUid, byUid.get(data.clientUid)),
     candidate: person(data.candidateUid, byUid.get(data.candidateUid)),
     status: isStatus(data.status) ? data.status : "backlog",
+    origin: isOrigin(data.origin) ? data.origin : "team",
     reason: data.reason ?? "",
     notes: ((data.notes ?? []) as (Omit<SuggestionNote, "at"> & { at: unknown })[])
       .map(n => ({ ...n, at: typeof n.at === "string" ? n.at : iso(n.at) ?? "" })),
@@ -121,7 +123,7 @@ export async function POST(req: NextRequest) {
   const actor = await team(req);
   if (!actor) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  const body = await req.json().catch(() => null) as { clientUid?: string; candidateUid?: string; reason?: string } | null;
+  const body = await req.json().catch(() => null) as { clientUid?: string; candidateUid?: string; reason?: string; origin?: string } | null;
   const clientUid = body?.clientUid?.trim();
   const candidateUid = body?.candidateUid?.trim();
   if (!clientUid || !candidateUid) return NextResponse.json({ error: "Pick both people" }, { status: 400 });
@@ -144,6 +146,7 @@ export async function POST(req: NextRequest) {
       clientUid,
       candidateUid,
       status: "backlog",
+      origin: isOrigin(body?.origin) ? body!.origin : "team",
       reason,
       notes: [],
       history: [{ status: "backlog", byName: actor.name, at: new Date().toISOString() }],

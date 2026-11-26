@@ -4,13 +4,14 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Heart, Loader2, Plus, Search, Send, Sparkles, ThumbsUp, Users } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 import { AddSuggestion, ProfileSnapshot, SuggestionRow, teamFetch } from "@/components/admin/match-suggestions";
-import { STATUS_META, SUGGESTION_STATUSES, type Suggestion, type SuggestionPerson, type SuggestionStatus } from "@/lib/match-suggestions";
+import { ORIGIN_META, STATUS_META, SUGGESTION_STATUSES, type Suggestion, type SuggestionOrigin, type SuggestionPerson, type SuggestionStatus } from "@/lib/match-suggestions";
 import { fitChecks, fitSummary } from "@/lib/match-fit";
 import { displayValue } from "@/lib/share-display";
 
 type Filter = "open" | "all" | SuggestionStatus;
 type FitFilter = "any" | "strong" | "mixed" | "weak" | "unknown";
 type Group = "client" | "none";
+type OriginFilter = "any" | SuggestionOrigin;
 
 /** Statuses that still need the team to do something. */
 const OPEN: SuggestionStatus[] = ["backlog", "sent", "interested"];
@@ -32,6 +33,7 @@ export default function AdminMatchesPage() {
   const [filter, setFilter] = useState<Filter>("open");
   const [fitFilter, setFitFilter] = useState<FitFilter>("any");
   const [clientFilter, setClientFilter] = useState<string>("all");
+  const [originFilter, setOriginFilter] = useState<OriginFilter>("any");
   const [group, setGroup] = useState<Group>("client");
   const [q, setQ] = useState("");
   const [adding, setAdding] = useState<SuggestionPerson | null | false>(false);
@@ -71,16 +73,18 @@ export default function AdminMatchesPage() {
       .filter(s => filter === "all" ? true : filter === "open" ? OPEN.includes(s.status) : s.status === filter)
       .filter(s => clientFilter === "all" || s.clientUid === clientFilter)
       .filter(s => fitFilter === "any" || fitOf.get(s.id) === fitFilter)
+      .filter(s => originFilter === "any" || s.origin === originFilter)
       .filter(s => !term || [haystack(s.client, lang), haystack(s.candidate, lang), s.reason, ...s.notes.map(n => n.text)]
         .some(v => v?.toLowerCase().includes(term)));
-  }, [rows, filter, clientFilter, fitFilter, fitOf, q, lang]);
+  }, [rows, filter, clientFilter, fitFilter, originFilter, fitOf, q, lang]);
 
   const groups = useMemo(() => {
     if (group === "none") return [{ key: "all", client: null as SuggestionPerson | null, items: visible }];
     const map = new Map<string, Suggestion[]>();
     for (const s of visible) map.set(s.clientUid, [...(map.get(s.clientUid) ?? []), s]);
     return Array.from(map.entries())
-      .map(([key, items]) => ({ key, client: items[0].client, items }))
+      // Candidates who asked for this client come first: they are already keen
+      .map(([key, items]) => ({ key, client: items[0].client, items: [...items].sort((a, b) => Number(b.origin === "candidate_request") - Number(a.origin === "candidate_request")) }))
       .sort((a, b) => b.items.filter(s => s.status === "backlog").length - a.items.filter(s => s.status === "backlog").length);
   }, [visible, group]);
 
@@ -154,6 +158,11 @@ export default function AdminMatchesPage() {
               <option value="weak">{l("Kurang cocok", "Weak fit")}</option>
               <option value="unknown">{l("Data belum cukup", "Not enough info")}</option>
             </select>
+            <select value={originFilter} onChange={e => setOriginFilter(e.target.value as OriginFilter)} className={selectCls} style={{ borderColor: "#E2E8F0" }}>
+              <option value="any">{l("Semua sumber", "Any source")}</option>
+              <option value="candidate_request">{ORIGIN_META.candidate_request[lang]} ({(rows ?? []).filter(s => s.origin === "candidate_request").length})</option>
+              <option value="team">{ORIGIN_META.team[lang]} ({(rows ?? []).filter(s => s.origin === "team").length})</option>
+            </select>
             <div className="inline-flex rounded-xl p-1 h-10" style={{ background: "#F1F5F9" }}>
               {(["client", "none"] as const).map(g => (
                 <button key={g} onClick={() => setGroup(g)} className="text-[12px] font-semibold px-3 rounded-lg"
@@ -205,7 +214,13 @@ export default function AdminMatchesPage() {
                         <ProfileSnapshot p={g.client} lang={lang} role={l("Klien", "Client")} size={72} />
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        <div className="flex gap-1">
+                        <div className="flex flex-wrap justify-end gap-1">
+                          {g.items.some(s => s.origin === "candidate_request") && (
+                            <span className="text-[10.5px] font-bold px-2 py-0.5 rounded-full border"
+                              style={{ color: ORIGIN_META.candidate_request.color, background: ORIGIN_META.candidate_request.bg, borderColor: ORIGIN_META.candidate_request.border }}>
+                              ♥ {g.items.filter(s => s.origin === "candidate_request").length} {l("meminta profilnya", "asked for this profile")}
+                            </span>
+                          )}
                           {SUGGESTION_STATUSES.filter(st => g.items.some(s => s.status === st)).map(st => (
                             <span key={st} className="text-[10.5px] font-bold px-2 py-0.5 rounded-full border"
                               style={{ color: STATUS_META[st].color, background: STATUS_META[st].bg, borderColor: STATUS_META[st].border }}>

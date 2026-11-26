@@ -21,6 +21,19 @@ export const STATUS_META: Record<SuggestionStatus, { id: string; en: string; col
   dropped:        { id: "Dibatalkan",      en: "Dropped",        color: "#475569", bg: "#F1F5F9", border: "#E2E8F0" },
 };
 
+/** Who started it: the team's own idea, or the candidate asked us for this client's profile. */
+export const SUGGESTION_ORIGINS = ["team", "candidate_request"] as const;
+export type SuggestionOrigin = (typeof SUGGESTION_ORIGINS)[number];
+
+export const ORIGIN_META: Record<SuggestionOrigin, { id: string; en: string; short: { id: string; en: string }; color: string; bg: string; border: string }> = {
+  team:              { id: "Saran dari tim",                    en: "Suggested by the team",           short: { id: "Saran tim", en: "Team idea" },          color: "#475569", bg: "#F8FAFC", border: "#E2E8F0" },
+  candidate_request: { id: "Kandidat yang meminta profil ini",  en: "Candidate asked for this profile", short: { id: "Diminta kandidat", en: "Candidate asked" }, color: "#BE185D", bg: "#FDF2F8", border: "#FBCFE8" },
+};
+
+export function isOrigin(v: unknown): v is SuggestionOrigin {
+  return typeof v === "string" && (SUGGESTION_ORIGINS as readonly string[]).includes(v);
+}
+
 export interface SuggestionNote {
   id: string;
   text: string;
@@ -58,6 +71,7 @@ export interface Suggestion {
   client: SuggestionPerson;
   candidate: SuggestionPerson;
   status: SuggestionStatus;
+  origin: SuggestionOrigin;
   reason: string;
   notes: SuggestionNote[];
   createdByName: string;
