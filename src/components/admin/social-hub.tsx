@@ -6,11 +6,15 @@ import {
 } from "lucide-react";
 import { authFetch } from "@/components/admin/share-api";
 import { findSocialAccount, type SocialAccountKey } from "@/lib/social-accounts";
+import { X_TEXT_LIMIT, fitX, xLength } from "@/lib/x-text";
 
 type Lang = "id" | "en";
 type Platform = "threads" | "instagram" | "facebook";
 type PlatformState = { connected: boolean; label: string | null; error: string | null };
-type Card = { candidateId: string; code: string; candidateName: string; caption: string; imageUrls: string[]; at: string | null; sharedTo: Platform[] };
+type Card = { candidateId: string; code: string; candidateName: string; caption: string; imageUrls: string[]; at: string | null; sharedTo: Platform[]; sharedToX: boolean };
+// X is posting only: no inbox, so it sits beside the three platforms rather than among them
+type XState = { configured: boolean; connected: boolean; label: string | null; error: string | null; handle: string };
+type Result = { ok: boolean; permalink?: string | null; error?: string };
 type Post = { platform: Platform; id: string; text: string; permalink: string | null; timestamp: string; imageUrl: string | null; replyCount: number; open: number };
 type Item = {
   platform: Platform; id: string; postId: string; text: string; username: string; timestamp: string; permalink: string | null;
@@ -19,7 +23,7 @@ type Item = {
 };
 export type HubData = {
   threadsConfigured: boolean; accounts: { key: SocialAccountKey; threads: boolean }[];
-  platforms: Record<Platform, PlatformState>; posts: Post[]; items: Item[]; cards: Card[];
+  platforms: Record<Platform, PlatformState>; posts: Post[]; items: Item[]; cards: Card[]; x: XState;
 };
 type Act = (body: Record<string, unknown>) => Promise<Record<string, unknown>>;
 
@@ -38,6 +42,16 @@ function ago(iso: string, lang: Lang) {
   const h = Math.floor(mins / 60);
   if (h < 24) return `${h}h`;
   return `${Math.floor(h / 24)}d`;
+}
+
+const X_COLOR = "#0F1419";
+const X_MAX_IMAGES = 4;
+function XBadge({ size = "sm" }: { size?: "sm" | "xs" }) {
+  return (
+    <span title="X" className={`inline-grid shrink-0 place-items-center rounded-full font-black leading-none text-white ${size === "sm" ? "h-5 w-5 text-[11px]" : "h-4 w-4 text-[9px]"}`} style={{ background: X_COLOR }}>
+      𝕏
+    </span>
+  );
 }
 
 function Badge({ platform, size = "sm" }: { platform: Platform; size?: "sm" | "xs" }) {
@@ -96,14 +110,15 @@ export default function SocialHub({ accountKey, lang, notice, onAccounts }: {
   useEffect(() => { setData(null); load(); }, [load]);
 
   const act: Act = (body) => authFetch<Record<string, unknown>>("/api/admin/hub", { method: "POST", body: JSON.stringify({ account: accountKey, ...body }) });
-  const connectThreads = async () => {
+  const connect = async (action: "connect" | "connect_x") => {
     try {
-      const { url } = await act({ action: "connect" });
+      const { url } = await act({ action });
       window.location.href = url as string;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not start the Threads login");
+      setError(err instanceof Error ? err.message : "Could not start the login");
     }
   };
+  const connectThreads = () => connect("connect");
 
   if (!data) {
     return (
@@ -141,14 +156,29 @@ export default function SocialHub({ accountKey, lang, notice, onAccounts }: {
             </div>
           );
         })}
+        <div className="flex items-center gap-2 rounded-xl border bg-white px-3 py-2 text-[12.5px]" style={{ borderColor: data.x.error ? "#FDA4AF" : C.border }}>
+          <XBadge />
+          <span className="font-bold" style={{ color: C.text }}>X</span>
+          {data.x.connected ? (
+            <span className="flex items-center gap-1" style={{ color: "#047857" }}><CheckCircle2 className="h-3.5 w-3.5" />{data.x.label}</span>
+          ) : data.x.configured ? (
+            <button type="button" onClick={() => connect("connect_x")} title={t(`Masuk sebagai @${data.x.handle} di x.com dulu`, `Log into @${data.x.handle} on x.com first`)}
+              className="rounded-md px-2 py-0.5 font-bold text-white" style={{ background: account.accent }}>
+              {data.x.error ? t("Hubungkan lagi", "Reconnect") : t(`Hubungkan @${data.x.handle}`, `Connect @${data.x.handle}`)}
+            </button>
+          ) : (
+            <span style={{ color: C.muted }}>{t("belum disiapkan", "not set up")}</span>
+          )}
+        </div>
       </div>
       {ORDER.filter((p) => data.platforms[p].error).map((p) => (
         <p key={p} className="rounded-lg bg-rose-50 px-3 py-2 text-[12.5px] font-semibold text-rose-700">{META[p].name}: {data.platforms[p].error}</p>
       ))}
+      {data.x.error && <p className="rounded-lg bg-rose-50 px-3 py-2 text-[12.5px] font-semibold text-rose-700">X: {data.x.error}</p>}
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,430px)_1fr]">
         <div className="min-w-0 space-y-5">
-          <Composer key={accountKey} live={live} accent={account.accent} handle={account.handle} cards={data.cards} lang={lang} act={act} onPosted={load} />
+          <Composer key={accountKey} live={live} xLive={data.x.connected} accent={account.accent} handle={account.handle} cards={data.cards} lang={lang} act={act} onPosted={load} />
           <RecentPosts posts={data.posts} lang={lang} />
         </div>
         <Inbox items={data.items} posts={data.posts} live={live} accent={account.accent} lang={lang} act={act} loading={loading} onChanged={load} />
@@ -157,8 +187,8 @@ export default function SocialHub({ accountKey, lang, notice, onAccounts }: {
   );
 }
 
-function Composer({ live, accent, handle, cards, lang, act, onPosted }: {
-  live: Platform[]; accent: string; handle: string; cards: Card[]; lang: Lang; act: Act; onPosted: () => void;
+function Composer({ live, xLive, accent, handle, cards, lang, act, onPosted }: {
+  live: Platform[]; xLive: boolean; accent: string; handle: string; cards: Card[]; lang: Lang; act: Act; onPosted: () => void;
 }) {
   const t = (id: string, en: string) => (lang === "id" ? id : en);
   const [targets, setTargets] = useState<Platform[]>(live.filter((p) => p !== "instagram"));
@@ -167,7 +197,10 @@ function Composer({ live, accent, handle, cards, lang, act, onPosted }: {
   const [card, setCard] = useState<Card | null>(null);
   const [busy, setBusy] = useState<"upload" | "post" | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [results, setResults] = useState<Partial<Record<Platform, { ok: boolean; permalink?: string | null; error?: string }>> | null>(null);
+  const [results, setResults] = useState<Partial<Record<Platform | "x", Result>> | null>(null);
+  // X goes with every post by default; its text follows the main text, cut to 280, until edited by hand
+  const [xOn, setXOn] = useState(xLive);
+  const [xDraft, setXDraft] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   // A card is already on Instagram (that's where it came from); elsewhere only once
@@ -175,6 +208,10 @@ function Composer({ live, accent, handle, cards, lang, act, onPosted }: {
   const chosen = targets.filter((p) => live.includes(p) && !blocked(p));
   const limit = Math.min(...(chosen.length ? chosen : live).map((p) => META[p].limit));
   const over = text.length > limit;
+  const toX = xLive && xOn && !(card?.sharedToX);
+  const xText = xDraft ?? fitX(text);
+  const xOver = toX && xLength(xText) > X_TEXT_LIMIT;
+  const count = chosen.length + (toX ? 1 : 0);
 
   const toggle = (p: Platform) => setTargets((prev) => (prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]));
   const pickCard = (id: string) => {
@@ -185,6 +222,8 @@ function Composer({ live, accent, handle, cards, lang, act, onPosted }: {
       setImages(c.imageUrls);
       setText(c.caption);
       setTargets(live.filter((p) => !c.sharedTo.includes(p)));
+      setXOn(!c.sharedToX);
+      setXDraft(null);
     } else {
       setImages([]);
     }
@@ -212,17 +251,20 @@ function Composer({ live, accent, handle, cards, lang, act, onPosted }: {
     setError(null);
     setResults(null);
     try {
-      const res = await act({ action: "post", platforms: chosen, text, imageUrls: images, candidateId: card?.candidateId ?? null });
+      const res = await act({ action: "post", platforms: chosen, text, imageUrls: images, candidateId: card?.candidateId ?? null, x: toX, xText });
       const r = res.results as NonNullable<typeof results>;
       setResults(r);
       // Keep the draft if anything failed, so it can be retried on just those platforms
       const failed = chosen.filter((p) => !r[p]?.ok);
-      if (!failed.length) {
+      const xFailed = toX && !r.x?.ok;
+      if (!failed.length && !xFailed) {
         setText("");
         setImages([]);
         setCard(null);
+        setXDraft(null);
       } else {
         setTargets(failed);
+        setXOn(xFailed);
       }
       onPosted();
     } catch (err) {
@@ -252,13 +294,24 @@ function Composer({ live, accent, handle, cards, lang, act, onPosted }: {
             </button>
           );
         })}
+        {(() => {
+          const why = !xLive ? t("belum terhubung", "not connected") : card?.sharedToX ? t("sudah diposting", "already posted") : "";
+          return (
+            <button type="button" disabled={Boolean(why)} onClick={() => setXOn(!xOn)} title={why}
+              className="inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[12.5px] font-bold transition disabled:cursor-not-allowed disabled:opacity-40"
+              style={toX ? { background: X_COLOR, borderColor: X_COLOR, color: "white" } : { borderColor: C.border, color: C.body }}>
+              <span className="font-black leading-none">𝕏</span>X
+              {why && <span className="font-medium opacity-80">· {why}</span>}
+            </button>
+          );
+        })()}
       </div>
 
       {cards.length > 0 && (
         <select value={card?.candidateId ?? ""} onChange={(e) => pickCard(e.target.value)} className="mt-3 h-9 w-full rounded-lg border px-2 text-sm" style={{ borderColor: C.border }}>
           <option value="">{t("Bagikan kartu klien dari Instagram… (opsional)", "Share a client card from Instagram… (optional)")}</option>
           {cards.map((c) => {
-            const left = live.filter((p) => !c.sharedTo.includes(p));
+            const left = [...live.filter((p) => !c.sharedTo.includes(p)), ...(xLive && !c.sharedToX ? ["x"] : [])];
             return <option key={c.candidateId} value={c.candidateId} disabled={!left.length}>{c.code} · {c.candidateName}{!left.length ? ` (${t("sudah di semua", "everywhere already")})` : ""}</option>;
           })}
         </select>
@@ -268,8 +321,28 @@ function Composer({ live, accent, handle, cards, lang, act, onPosted }: {
         className="mt-3 w-full resize-y rounded-lg border p-3 text-sm" style={{ borderColor: over ? "#E11D48" : C.border, color: C.text }} />
       <div className="flex items-center justify-between text-[11.5px]" style={{ color: over ? "#E11D48" : C.muted }}>
         <span>{over && t(`Terlalu panjang (maks ${limit} untuk ${chosen.includes("threads") ? "Threads" : "platform ini"})`, `Too long (max ${limit}${chosen.includes("threads") ? " for Threads" : ""})`)}</span>
-        <span>{text.length}/{limit}</span>
+        <span>{text.length}/{Number.isFinite(limit) ? limit : "∞"}</span>
       </div>
+
+      {toX && (
+        <div className="mt-3 rounded-lg border p-2.5" style={{ borderColor: xOver ? "#E11D48" : C.border }}>
+          <div className="flex items-center justify-between text-[11.5px] font-bold" style={{ color: C.label }}>
+            <span className="flex items-center gap-1.5"><XBadge size="xs" />{t("Versi X (maks 280)", "X version (max 280)")}</span>
+            {xDraft !== null && (
+              <button type="button" onClick={() => setXDraft(null)} className="font-semibold underline" style={{ color: C.navy }}>{t("Ikuti teks utama", "Follow main text")}</button>
+            )}
+          </div>
+          <textarea value={xText} onChange={(e) => setXDraft(e.target.value)} rows={3}
+            className="mt-1.5 w-full resize-y rounded-md border p-2 text-[13px]" style={{ borderColor: C.border, color: C.text }} />
+          <div className="flex items-center justify-between text-[11px]" style={{ color: xOver ? "#E11D48" : C.muted }}>
+            <span>
+              {xDraft === null && xText !== text.trim() && t("Dipotong otomatis; edit untuk menyesuaikan.", "Cut automatically; edit to adjust.")}
+              {images.length > X_MAX_IMAGES && ` ${t(`X hanya mengambil ${X_MAX_IMAGES} gambar pertama.`, `X takes only the first ${X_MAX_IMAGES} images.`)}`}
+            </span>
+            <span>{xLength(xText)}/{X_TEXT_LIMIT}</span>
+          </div>
+        </div>
+      )}
 
       {images.length > 0 && (
         <div className="mt-2 flex gap-2 overflow-x-auto">
@@ -295,10 +368,10 @@ function Composer({ live, accent, handle, cards, lang, act, onPosted }: {
             {busy === "upload" ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImagePlus className="h-4 w-4" />}{t("Gambar", "Images")}
           </button>
         )}
-        <button type="button" onClick={post} disabled={busy !== null || over || !chosen.length || (!text.trim() && !images.length)}
+        <button type="button" onClick={post} disabled={busy !== null || over || xOver || !count || (!text.trim() && !images.length)}
           className="ml-auto inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-bold text-white disabled:opacity-50" style={{ background: accent }}>
           {busy === "post" ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-          {chosen.length > 1 ? t(`Posting ke ${chosen.length}`, `Post to ${chosen.length}`) : t("Posting", "Post")}
+          {count > 1 ? t(`Posting ke ${count}`, `Post to ${count}`) : t("Posting", "Post")}
         </button>
       </div>
       {error && <p className="mt-2 text-sm font-semibold text-rose-700">{error}</p>}
@@ -311,6 +384,13 @@ function Composer({ live, accent, handle, cards, lang, act, onPosted }: {
               {results[p]!.permalink && <a href={results[p]!.permalink!} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 underline">{t("Lihat", "View")}<ExternalLink className="h-3 w-3" /></a>}
             </p>
           ))}
+          {results.x && (
+            <p className={`flex items-center gap-1.5 text-[12.5px] font-semibold ${results.x.ok ? "text-emerald-700" : "text-rose-700"}`}>
+              <XBadge size="xs" />
+              {results.x.ok ? t("Terposting.", "Posted.") : `${t("Gagal", "Failed")}: ${results.x.error}`}
+              {results.x.permalink && <a href={results.x.permalink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 underline">{t("Lihat", "View")}<ExternalLink className="h-3 w-3" /></a>}
+            </p>
+          )}
         </div>
       )}
     </div>

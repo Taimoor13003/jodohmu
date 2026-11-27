@@ -12,6 +12,7 @@ import {
 import {
   HUB_POSTS, facebookInbox, instagramInbox, metaAccount, metaTokenInfo, metaHide, metaReply, postFacebook, postInstagram, recordHubPost, type MetaAccount,
 } from "@/lib/meta-social";
+import { X_POSTS, disconnectX, postX, xAuthorizeUrl, xConfigured, xStatuses } from "@/lib/x";
 import { PLATFORMS, markDone, type InboxItem, type InboxPost, type Platform } from "@/lib/social-inbox";
 
 export const runtime = "nodejs";
@@ -44,13 +45,16 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ meta, threads: { connected: threads.connected, expiresAt: threads.expiresAt }, threadsConfigured: threadsConfigured() });
   }
 
-  const [statuses, meta, cardSnap, threadsShared, hubShared] = await Promise.all([
+  const [statuses, meta, cardSnap, threadsShared, hubShared, xAll, xShared] = await Promise.all([
     accountStatuses(),
     metaAccount(account.handle).catch(() => null),
     db.collection(SOCIAL_POSTS).where("page", "==", key).where("status", "==", "published").get(),
     db.collection(THREADS_POSTS).where("account", "==", key).get(),
     db.collection(HUB_POSTS).where("account", "==", key).get(),
+    xStatuses(),
+    db.collection(X_POSTS).where("account", "==", key).get(),
   ]);
+  const xStatus = xAll.find((s) => s.key === key)!;
   const threadsStatus = statuses.find((s) => s.key === key)!;
 
   const platforms: Record<Platform, PlatformState> = {
@@ -86,6 +90,8 @@ export async function GET(req: NextRequest) {
   };
   threadsShared.docs.forEach((d) => share(d.data().candidateId, "threads"));
   hubShared.docs.forEach((d) => share(d.data().candidateId, d.data().platform as Platform));
+  // X is posting only (no inbox), so its shares are kept apart from the inbox platforms
+  const xSharedIds = new Set(xShared.docs.map((d) => d.data().candidateId).filter(Boolean));
   const cards = cardSnap.docs.map((d) => {
     const x = d.data();
     share(x.candidateId, "instagram");
@@ -94,12 +100,13 @@ export async function GET(req: NextRequest) {
       caption: (x.caption as string) ?? "", imageUrls: ((x.imageUrls as string[] | undefined) ?? []).filter(Boolean), at: iso(x.publishedAt),
     };
   }).filter((c) => c.imageUrls.length).sort((a, b) => (b.at ?? "").localeCompare(a.at ?? ""))
-    .map((c) => ({ ...c, sharedTo: Array.from(sharedTo.get(c.candidateId) ?? []) }));
+    .map((c) => ({ ...c, sharedTo: Array.from(sharedTo.get(c.candidateId) ?? []), sharedToX: xSharedIds.has(c.candidateId) }));
 
   return NextResponse.json({
     threadsConfigured: threadsConfigured(),
     accounts: statuses.map((s) => ({ key: s.key, threads: s.connected })),
     platforms, posts, items, cards,
+    x: { configured: xConfigured(), connected: xStatus.connected, label: xStatus.username ? `@${xStatus.username}` : null, error: xStatus.error, handle: account.xHandle },
   });
 }
 
@@ -112,7 +119,9 @@ async function needMeta(handle: string): Promise<MetaAccount> {
 /* POST /api/admin/hub — { action, account, … }
    post { platforms, text, imageUrls, candidateId? } → a result per platform
    reply { platform, id, text }; hide { platform, id, hide }; done { platform, id, done }
-   upload { dataUrl } → { url }; connect → { url } (Threads login); disconnect (Threads) */
+   post also takes x: true and xText (the shortened X version), reported as results.x
+   upload { dataUrl } → { url }; connect → { url } (Threads login); disconnect (Threads)
+   connect_x → { url } (X login); disconnect_x */
 export async function POST(req: NextRequest) {
   const actor = await requireAdmin(req);
   if (!actor) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -128,6 +137,12 @@ export async function POST(req: NextRequest) {
       case "connect":
         if (!threadsConfigured()) return NextResponse.json({ error: "Add THREADS_APP_ID and THREADS_APP_SECRET first." }, { status: 400 });
         return NextResponse.json({ url: authorizeUrl(key, actor.uid) });
+      case "connect_x":
+        if (!xConfigured()) return NextResponse.json({ error: "Add X_CLIENT_ID and X_CLIENT_SECRET first." }, { status: 400 });
+        return NextResponse.json({ url: xAuthorizeUrl(key, actor.uid) });
+      case "disconnect_x":
+        await disconnectX(key);
+        return NextResponse.json({ success: true });
       case "disconnect":
         await disconnectAccount(key);
         return NextResponse.json({ success: true });
@@ -140,15 +155,23 @@ export async function POST(req: NextRequest) {
       }
       case "post": {
         const targets = (Array.isArray(body.platforms) ? body.platforms : []).filter((p): p is Platform => PLATFORMS.includes(p as Platform));
-        if (!targets.length) return NextResponse.json({ error: "Choose where to post." }, { status: 400 });
+        const toX = body.x === true;
+        if (!targets.length && !toX) return NextResponse.json({ error: "Choose where to post." }, { status: 400 });
         const text = str(body.text).trim();
         const imageUrls = (Array.isArray(body.imageUrls) ? body.imageUrls : []).filter((u): u is string => typeof u === "string" && u.startsWith("https://"));
         const candidateId = str(body.candidateId) || null;
         const meta = targets.some((p) => p !== "threads") ? await needMeta(account.handle) : null;
 
         // Each platform is tried even if another fails, and reported separately
-        const results: Partial<Record<Platform, { ok: boolean; permalink?: string | null; error?: string }>> = {};
-        await Promise.all(targets.map(async (p) => {
+        const results: Partial<Record<Platform | "x", { ok: boolean; permalink?: string | null; error?: string }>> = {};
+        const sendX = async () => {
+          try {
+            results.x = { ok: true, permalink: (await postX({ key, text: str(body.xText) || text, imageUrls, candidateId, actor })).permalink };
+          } catch (err) {
+            results.x = { ok: false, error: errorText(err) };
+          }
+        };
+        await Promise.all([...(toX ? [sendX()] : []), ...targets.map(async (p) => {
           try {
             let permalink: string | null;
             if (p === "threads") {
@@ -162,7 +185,7 @@ export async function POST(req: NextRequest) {
           } catch (err) {
             results[p] = { ok: false, error: errorText(err) };
           }
-        }));
+        })]);
         return NextResponse.json({ results });
       }
       case "reply":

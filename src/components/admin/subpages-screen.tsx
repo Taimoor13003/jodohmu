@@ -53,7 +53,7 @@ export default function SubpagesScreen() {
   const [threadsOn, setThreadsOn] = useState<HubData["accounts"]>([]);
   // Outreach opens on the plan for every account; picking an account tab shows just that one
   const [outreachScope, setOutreachScope] = useState<"all" | "page">("all");
-  const notice = params.get("connected") ? t("Threads terhubung.", "Threads connected.") : null;
+  const notice = params.get("connected") === "x" ? t("X terhubung.", "X connected.") : params.get("connected") ? t("Threads terhubung.", "Threads connected.") : null;
   const loginError = params.get("error");
 
   return (
