@@ -938,7 +938,6 @@
         "basic": {
           "name": "Basic",
           "price": "Rp 2.5 jt",
-          "discountedPrice": "Rp 1.25 jt",
           "afterReg": "Rp 2 jt",
           "features": [
             "60-minute intake interview",
@@ -957,7 +956,6 @@
         "standard": {
           "name": "Standard",
           "price": "Rp 5.5 jt",
-          "discountedPrice": "Rp 2.75 jt",
           "afterReg": "Rp 5 jt",
           "features": [
             "In-depth 90-minute intake",
@@ -976,7 +974,6 @@
         "silver": {
           "name": "VIP Silver",
           "price": "Rp 15 jt",
-          "discountedPrice": "Rp 7.5 jt",
           "afterReg": "Rp 14.5 jt",
           "features": [
             "Multi-session in-depth intake",
@@ -996,7 +993,6 @@
         "gold": {
           "name": "VIP Gold",
           "price": "Rp 30–40 jt",
-          "discountedPrice": "Rp 15–20 jt",
           "afterReg": "",
           "features": [
             "All Silver services",
@@ -1016,7 +1012,6 @@
           "name": "Pearl",
           "tagline": "Your first step toward a serious marriage",
           "price": "Rp 2,5 juta",
-          "discountedPrice": "Rp 1,25 juta",
           "duration": "3 months · registration included",
           "features": [
             "60-minute intake call with your matchmaker (Dokcin)",
@@ -1032,7 +1027,6 @@
           "name": "Ruby",
           "tagline": "Serious, structured, and handled with care",
           "price": "Rp 15 juta",
-          "discountedPrice": "Rp 7,5 juta",
           "duration": "6 months · registration included",
           "features": [
             "60-minute in-depth intake interview",

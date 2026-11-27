@@ -942,7 +942,6 @@
         "basic": {
           "name": "Basic",
           "price": "Rp 2,5 jt",
-          "discountedPrice": "Rp 1,25 jt",
           "afterReg": "Rp 2 jt",
           "features": [
             "Intake interview 60 menit",
@@ -961,7 +960,6 @@
         "standard": {
           "name": "Standard",
           "price": "Rp 5,5 jt",
-          "discountedPrice": "Rp 2,75 jt",
           "afterReg": "Rp 5 jt",
           "features": [
             "Intake mendalam 90 menit",
@@ -980,7 +978,6 @@
         "silver": {
           "name": "VIP Silver",
           "price": "Rp 15 jt",
-          "discountedPrice": "Rp 7,5 jt",
           "afterReg": "Rp 14,5 jt",
           "features": [
             "Intake multi-sesi mendalam",
@@ -1000,7 +997,6 @@
         "gold": {
           "name": "VIP Gold",
           "price": "Rp 30–40 jt",
-          "discountedPrice": "Rp 15–20 jt",
           "afterReg": "",
           "features": [
             "Semua layanan Silver",
@@ -1020,7 +1016,6 @@
           "name": "Pearl",
           "tagline": "Langkah pertama menuju pernikahan yang serius",
           "price": "Rp 2,5 juta",
-          "discountedPrice": "Rp 1,25 juta",
           "duration": "3 bulan · registrasi termasuk",
           "features": [
             "Panggilan intake 60 menit bersama matchmaker (Dokcin) Anda",
@@ -1036,7 +1031,6 @@
           "name": "Ruby",
           "tagline": "Serius, terstruktur, dan ditangani dengan penuh perhatian",
           "price": "Rp 15 juta",
-          "discountedPrice": "Rp 7,5 juta",
           "duration": "6 bulan · registrasi termasuk",
           "features": [
             "Sesi wawancara mendalam 60 menit",
