@@ -1109,10 +1109,13 @@ export async function buildReel(card: CardContent, name: string): Promise<{ vide
   if (!design || !seconds) throw new Error("This page has no Reel design yet.");
   // A part that appears twice (a button on both halves) is hosted once
   const parts = Array.from(new Set(design.timeline.map(([part]) => part))).filter((part) => part !== "background");
+  // Layer names are new on every build: Cloudinary keeps the video it made for a URL, so reusing
+  // the names after an edit or a repost would hand back the old video (old avatar, old details)
+  const build = `${name}-${Date.now().toString(36)}`;
   const [layers, stills] = await Promise.all([
     Promise.all(parts.map(async (part) => {
       const png = await (await design.render(card, [part], true)).arrayBuffer();
-      return hostLayer(png, `${name}-${part}`);
+      return hostLayer(png, `${build}-${part}`);
     })),
     renderReelStills(card, design).then((images) => Promise.all(images.map((i) => i.arrayBuffer())))
       .then((pngs) => Promise.all(pngs.map((png, i) => hostCard(png, `${name}-reel-${i + 1}`)))),
