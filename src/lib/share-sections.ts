@@ -200,6 +200,8 @@ const FIELD_GENDER: Record<string, "male" | "female"> = {
   // each side is only asked what they hope for in the other
   roleExpectationsHusband: "female",
   roleExpectationsWife: "male",
+  // a woman's income is never shown on a link; it stays in the CRM
+  incomeRange: "male",
 };
 
 /** Whether a field has something real to show for this candidate. */

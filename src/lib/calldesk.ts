@@ -47,11 +47,16 @@ export const TEAM_PERMISSIONS = [
     label: { id: "Kelola semua Saran Jodoh", en: "Manage all match suggestions" },
     hint: { id: "Bisa melihat dan mengubah semua saran jodoh, bukan hanya untuk klien sendiri.", en: "Can see and change every match suggestion, not only those for their own clients." },
   },
+  {
+    value: "all_profiles",
+    label: { id: "Kelola semua profil", en: "Manage all profiles" },
+    hint: { id: "Bisa mengubah dan membagikan profil semua klien, bukan hanya yang ditugaskan.", en: "Can edit and share every client profile, not only the ones assigned to them." },
+  },
 ] as const;
 export type TeamPermission = (typeof TEAM_PERMISSIONS)[number]["value"];
 
 // Permissions that stand on their own; every other extra permission builds on Call Desk access
-const STANDALONE_PERMISSIONS = ["mitra", "social", "matches"];
+const STANDALONE_PERMISSIONS = ["mitra", "social", "matches", "all_profiles"];
 
 export const normalizePermissions = (requested: readonly string[]) => {
   const known = TEAM_PERMISSIONS.map((p) => p.value as string).filter((p) => requested.includes(p));

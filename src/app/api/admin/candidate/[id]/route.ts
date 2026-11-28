@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
 import { ageFromDob, withLiveAge } from "@/lib/age";
+import { canManageCandidate } from "@/lib/team-access";
 
 async function resolveRole(uid: string): Promise<string | null> {
   const snap = await adminDb().collection("user_roles").doc(uid).get();
@@ -12,10 +13,8 @@ async function canAccess(requesterUid: string, candidateId: string): Promise<{ o
   const role = await resolveRole(requesterUid);
   if (role === "admin") return { ok: true, canEdit: true };
   if (role === "worker") {
-    const doc = await adminDb().collection("candidate_intake").doc(candidateId).get();
-    const assigned: string[] = doc.data()?.assignedWorkers ?? [];
-    // Workers can view any candidate, but only edit the ones assigned to them
-    return { ok: true, canEdit: assigned.includes(requesterUid) };
+    // Workers can view any candidate, but only edit the ones assigned to them (or all, with "all_profiles")
+    return { ok: true, canEdit: await canManageCandidate({ uid: requesterUid, role }, candidateId) };
   }
   // Candidate can view their own profile
   if (role === "candidate" && requesterUid === candidateId) {

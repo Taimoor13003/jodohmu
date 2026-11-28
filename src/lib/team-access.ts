@@ -21,19 +21,21 @@ export async function authenticateTeam(authHeader: string | null): Promise<TeamA
 }
 
 /**
- * Admins reach every candidate; workers only the ones assigned to them.
- * Mirrors the rule already enforced in /api/admin/candidate/[id].
+ * Admins reach every candidate; workers the ones assigned to them, or every
+ * candidate when they hold the "all_profiles" permission. Every route that
+ * edits or shares a candidate goes through this.
  */
-export async function canManageCandidate(actor: TeamActor, candidateId: string): Promise<boolean> {
+export async function canManageCandidate(actor: Pick<TeamActor, "uid" | "role">, candidateId: string): Promise<boolean> {
   if (actor.role === "admin") return true;
   if (actor.role !== "worker") return false;
+  if (await hasPermission(actor, "all_profiles")) return true;
   const snap = await adminDb().collection("candidate_intake").doc(candidateId).get();
   const assigned: string[] = snap.data()?.assignedWorkers ?? [];
   return assigned.includes(actor.uid);
 }
 
 /** Whether a worker has been given an extra permission (admins have them all). */
-export async function hasPermission(actor: TeamActor, permission: string): Promise<boolean> {
+export async function hasPermission(actor: Pick<TeamActor, "uid" | "role">, permission: string): Promise<boolean> {
   if (actor.role === "admin") return true;
   if (actor.role !== "worker") return false;
   const snap = await adminDb().collection("user_roles").doc(actor.uid).get();

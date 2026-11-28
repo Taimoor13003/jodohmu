@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
+import { canManageCandidate } from "@/lib/team-access";
 
 async function getRole(uid: string) {
   const snap = await adminDb().collection("user_roles").doc(uid).get();
   return snap.data()?.role ?? null;
 }
 
-// Admins may manage CRM for any candidate; workers only for clients assigned to them
+// Admins may manage CRM for any candidate; workers for clients assigned to them (or all, with "all_profiles")
 async function requireCrmAccess(req: NextRequest, candidateId: string) {
   const token = req.headers.get("authorization")?.replace("Bearer ", "");
   if (!token) return null;
@@ -15,11 +16,7 @@ async function requireCrmAccess(req: NextRequest, candidateId: string) {
     const decoded = await adminAuth().verifyIdToken(token);
     const role = await getRole(decoded.uid);
     if (role === "admin") return decoded;
-    if (role === "worker") {
-      const doc = await adminDb().collection("candidate_intake").doc(candidateId).get();
-      const assigned: string[] = doc.data()?.assignedWorkers ?? [];
-      if (assigned.includes(decoded.uid)) return decoded;
-    }
+    if (role === "worker" && (await canManageCandidate({ uid: decoded.uid, role }, candidateId))) return decoded;
     return null;
   } catch {
     return null;

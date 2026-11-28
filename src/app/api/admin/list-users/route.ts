@@ -13,7 +13,9 @@ export async function GET(req: NextRequest) {
     const token = authHeader.replace("Bearer ", "");
     const decoded = await adminAuth().verifyIdToken(token);
 
-    const requesterRole = (await adminDb().collection("user_roles").doc(decoded.uid).get()).data()?.role;
+    const requesterData = (await adminDb().collection("user_roles").doc(decoded.uid).get()).data();
+    const requesterRole = requesterData?.role;
+    const editsAll = requesterRole === "admin" || (Array.isArray(requesterData?.permissions) && requesterData.permissions.includes("all_profiles"));
     // Admins can list any role; workers may only list candidates (scoped to their own assignments below)
     if (requesterRole !== "admin" && !(requesterRole === "worker" && req.nextUrl.searchParams.get("role") === "candidate")) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -65,8 +67,9 @@ export async function GET(req: NextRequest) {
         (u as Record<string, unknown>).location = intake?.location ?? null;
         (u as Record<string, unknown>).age = intake ? (withLiveAge(intake).age ?? null) : null;
         (u as Record<string, unknown>).gender = intake?.gender ?? null;
-        // Workers see every candidate but may only edit the ones assigned to them
-        (u as Record<string, unknown>).canEdit = requesterRole === "admin" || assigned.includes(decoded.uid);
+        // Workers see every candidate but may only edit the ones assigned to them (or all, with "all_profiles")
+        (u as Record<string, unknown>).canEdit = editsAll || assigned.includes(decoded.uid);
+        (u as Record<string, unknown>).assignedToMe = assigned.includes(decoded.uid);
       }
     }
 

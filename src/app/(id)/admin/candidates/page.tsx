@@ -25,6 +25,7 @@ interface UserRow {
   age: string | number | null;
   gender: string | null;
   canEdit: boolean;
+  assignedToMe: boolean;
 }
 
 const STATUS_OPTIONS: { value: string; id: string; en: string; className: string }[] = [
@@ -71,8 +72,9 @@ export default function CandidatesPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Failed");
       setUsers(
-        (data.users as Array<{ uid: string; name: string; email: string; role: string; phone: string | null; personStatus: string | null; createdAt: string | null; location: string | null; age: string | number | null; gender: string | null; canEdit?: boolean }>).map(u => ({
+        (data.users as Array<{ uid: string; name: string; email: string; role: string; phone: string | null; personStatus: string | null; createdAt: string | null; location: string | null; age: string | number | null; gender: string | null; canEdit?: boolean; assignedToMe?: boolean }>).map(u => ({
           canEdit: false,
+          assignedToMe: u.canEdit ?? false,
           ...u,
           createdAt: u.createdAt ? new Date(u.createdAt) : null,
         }))
@@ -109,14 +111,14 @@ export default function CandidatesPage() {
   };
 
   const leadCount = users.filter(u => LEAD_STATUSES.has(u.personStatus ?? "")).length;
-  const mineCount = users.filter(u => u.canEdit).length;
+  const mineCount = users.filter(u => u.assignedToMe).length;
 
   const cityOptions = Array.from(
     new Set(users.map(u => u.location?.trim()).filter((v): v is string => !!v))
   ).sort((a, b) => a.localeCompare(b));
 
   const visibleUsers = users.filter(u => {
-    if (filter === "mine" && !u.canEdit) return false;
+    if (filter === "mine" && !u.assignedToMe) return false;
     if (filter === "leads" && !LEAD_STATUSES.has(u.personStatus ?? "")) return false;
     if (cityFilter !== "all" && (u.location ?? "").trim() !== cityFilter) return false;
     if (genderFilter !== "all" && (u.gender ?? "") !== genderFilter) return false;
